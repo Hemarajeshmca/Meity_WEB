@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <row>
+    <type>FIG</type>
+    <code>101</code>
+    <name>FIG1</name>
+    <village_covered>village1,village2,village3</village_covered>
+    <status>active</status>
+  </row>
+  <row>
+    <type>FIG</type>
+    <code>102</code>
+    <name>FIG2</name>
+    <village_covered>village101</village_covered>
+    <status>active</status>
+  </row>
+</root>

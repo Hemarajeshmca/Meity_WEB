@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <row>
+    <org>FPO Level</org>
+    <org>Milk Aggregator Org Level</org>
+    <level>Org1</level>
+    <level>Org2</level>
+    <level>Org2</level>
+    <upload>Farmer Registration</upload>
+    <upload>Share Application</upload>
+    <upload>Loan Application</upload>  
+  </row>
+</root>

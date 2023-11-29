@@ -1,0 +1,1484 @@
+﻿@{
+    ViewBag.Form = "Aggregator";
+    ViewBag.helpName = "AggregatorOrgForm.html";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+
+<form id="Aggregator_profile" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+
+            <div class="row">
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="txtFarmer_code" class="col-sm-5 control-label required">Aggregator Org.Code </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtFarmer_code" name="orgn_code" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="txt_Attr_rowid" class="col-sm-5 control-label ">Orgn row id:</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txt_Attr_rowid" name="orgn_rowid" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="Cmborgtype" class="col-sm-5 control-label required">Aggregator Org.Type :</label>
+                        <div class="col-sm-5">
+                            <input id="Cmborgtype" name="orgn_type" style="width: 100%" data-role="filtercombo">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="CmborgtypeTn" class="col-sm-5 control-label">பால் ஒருங்கிணைக்கும் நிறுவன வகை</label>
+                        <div class="col-sm-5">
+                            <input id="CmborgtypeTn" name="orgn_type" style="width: 100%" data-role="filtercombo">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="Cmbinttype" class="col-sm-5 control-label">Intermediate Aggregator Type :</label>
+                        <div class="col-sm-5">
+                            <input id="Cmbinttype" name="orgn_subtype" style="width: 100%" data-role="filtercombo">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="CmbinttypeTn" class="col-sm-5 control-label">இடை ஒருங்கிணைக்கும் வகை</label>
+                        <div class="col-sm-5">
+                            <input id="CmbinttypeTn" name="orgn_subtype" style="width: 100%" data-role="filtercombo">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="txtFarmer_nameEng" class="col-sm-5 control-label required">Aggregator Org.Name </label>
+                        <div class="col-sm-5">
+                            <input type="text" id="txtFarmer_nameEng" name="orgn_name" class="form-control" data-toggle="tooltip" data-placement="bottom" placeholder="">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="txtFarmer_nameTn" class="col-sm-5 control-label">பால் ஒருங்கிணைக்கும் நிறுவன பெயர்</label>
+                        <div class="col-sm-5">
+                            <input type="text" id="txtFarmer_nameTn" name="orgn_ll_name" class="form-control" data-toggle="tooltip" data-placement="bottom" placeholder="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="facilitorg" class="col-sm-5 control-label required">Facilitator Organization :</label>
+                        <div class="col-sm-5">
+                            <input id="facilitorg" name="parent_code" style="width: 100%" data-role="filtercombo">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="facilitorgIn" class="col-sm-5 control-label">அனுசரணையாளர் அமைப்பு </label>
+                        <div class="col-sm-5">
+                            <input id="facilitorgIn" name="parent_code" style="width: 100%" data-role="filtercombo">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:10px">
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="txt_version_no" class="col-sm-5 control-label">version_no</label>
+                        <div class="col-sm-4">
+                            <input type="number" id="txt_version_no" name="version_no" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="txt_orgn_level" class="col-sm-5 control-label">orgn_level</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txt_orgn_level" name="orgn_level" class="form-control" maxlength="10" value="ORG_AGG">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="txt_primary_lang_code" class="col-sm-5 control-label">primary_lang_code</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txt_primary_lang_code" value="en_US" name="primary_lang_code" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="txt_secondary_lang_code" class="col-sm-5 control-label">secondary_lang_code</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txt_secondary_lang_code" value="ta_IN" name="secondary_lang_code" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="status_code" class="col-sm-5 control-label">Status_code</label>
+                        <div class="col-sm-4">
+                            <input type="text" value="A" id="txt_status_code" name="status_code" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="txtMode" class="col-sm-5 control-label">Mode</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtMode" name="mode_flag" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="facilitorg" class="col-sm-5 control-label required">Facilitator Organization :</label>
+                        <div class="col-sm-5">
+                            <input id="facilitorg" name="parent_desc" style="width: 100%" data-role="filtercombo">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="row_timestamp" class="col-sm-5 control-label">Timestamp:</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txt_row_timestamp" name="row_timestamp" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <section class="col-md-12">
+                    <div id="tab_list" class="col-md-12">
+                        <ul class="nav nav-tabs">
+
+                            <li class="active">
+                                <a href="#Address" id="" role="tab" data-toggle="tab">
+                                    Address
+                                </a>
+                            </li>
+
+
+                            <li>
+                                <a href="#BankDetails" id="" role="tab" data-toggle="tab">
+                                    Bank Details
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#Users" id="" role="tab" data-toggle="tab">
+                                    Users
+                                </a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div class="tab-pane fade active in" id="Address">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div id="grid_Address"></div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="BankDetails">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div id="grid_Bank"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="Users">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div id="grid_User"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<script>
+    click_act_name = "AggregatorOrgsList";
+    click_ctrl_name = "AggregatorOrgs";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+
+<script src="~/API_Scripts/AggregatorOrg_retrieveAggregatorOrgn_APIClient.js"></script>
+<script src="~/API_Scripts/AggregatorOrg_retrieveAggregatorOrgnList_APIClient.js"></script>
+<script src="~/API_Scripts/AggregatorOrg_saveAggregatorOrgn_APIClient.js"></script>
+<script src="~/API_Scripts/AggregatorOrgs.js"></script>
+<script src="~/API_Scripts/retrieveAggregatorOrgs_Model.js"></script>
+<script src="~/API_Scripts/retrieveAggregatorOrgsList_Model.js"></script>
+<script src="~/API_Scripts/saveAggregatorOrgs_Model.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/CommonScripts/common.js"></script>
+<script src="~/CommonScripts/tamil.js"></script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#Aggregator_profile");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+
+        $(".file_attach").attr("hdrtitle", "Aggregator ");
+        $(".notes").attr("hdrtitle", "Aggregator ");
+        $("#lblForm_menuid").text("AGGR_SETUP");
+
+        grid_Address_details([]);
+        grid_Bank_Detail([]);
+        grid_User([]);
+        $("#hide_div").hide();
+        translate();
+
+        Screen_Id = "MAPAGGR";
+        permission = sec_Permission(Screen_Id);
+
+        setlocalStorage("status", "Active");
+        setlocalStorage('status_code', "A");
+
+        //organ type
+        var ORG_TYPE = "";
+        $("#Cmborgtype").empty();
+        ORG_TYPE = grid_comboScreen_mastercodes("AGGR_ORG_TYPE");
+        filter_combobox("Cmborgtype", ORG_TYPE);
+
+        //organ type tamil
+        var map_in3 = "";
+        $("#CmborgtypeTn").empty();
+        map_in3 = grid_comboScreen_tamil("AGGR_ORG_TYPE");
+        filter_combobox("CmborgtypeTn", map_in3, "taIN");
+      
+
+        //facilitor organ
+        var ORGFO = "";
+        $("#facilitorg").empty();
+        ORGFO = grid_comboScreen_mastercodes("ORGFO");
+        filter_combobox("facilitorg", ORGFO);
+
+        //facilitor organ Tamil
+        var map_in1 = "";
+        $("#facilitorgIn").empty();
+        map_in1 = grid_comboScreen_tamil("ORGFO");
+        filter_combobox("facilitorgIn", map_in1);
+
+        // int organ
+        var INTER_TYPE = "";
+        $("#Cmbinttype").empty();
+        INTER_TYPE = grid_comboScreen_mastercodes("AGGR_INTER_TYPE");
+        filter_combobox("Cmbinttype", INTER_TYPE);
+
+        // int organ Tamil
+        var map_in2 = "";
+        $("#CmbinttypeTn").empty();
+        map_in2 = grid_comboScreen_tamil("AGGR_INTER_TYPE");
+        filter_combobox("CmbinttypeTn", map_in2);
+
+        if (getlocalStorage('btn_clk_val') == "Create") {
+            $('#divCreate #review').hide();
+            $("#txtMode").val("I");
+            $("#bottom_menus").hide();
+            $("#DocStat").val("New");
+        }
+        else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
+            $('#divEdit #reviewEd').hide();
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("Aggregator_profile");
+                var obj_val = JSON.parse(formval);
+                obj_val.orgn_code = data.orgn_code;
+                obj_val.orgn_rowid = data.orgn_rowid;
+                obj_val.version_no = data.version_no;
+
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                retrieve_AggregatorOrgs_details(data);
+                $("#txtMode").val("U");
+                setlocalStorage('doc_no', $("#txtFarmer_code").val());
+                setlocalStorage('doc_row_id', $("#txt_Attr_rowid").val());              
+            }
+        }
+    });
+
+    function clear_val() {
+    }
+
+    function get_AggregatorOrgs_details(res) {
+        try{
+        var formval = form_Serialize("Aggregator_profile");
+        var obj_val = JSON.parse(formval);
+        obj_val.orgn_code = res.orgn_code;
+        obj_val.orgn_rowid = res.orgn_rowid;
+        obj_val.version_no = res.version_no;
+        retrieve_AggregatorOrgs_details(obj_val);
+        $("#txtFarmer_code").val(res.orgn_code);
+        $("#txt_Attr_rowid").val(res.orgn_rowid);
+        $("#txt_version_no").val(res.version_no);
+        $("#txtMode").val("U");
+        setlocalStorage('doc_no', $("#txtFarmer_code").val());
+        setlocalStorage('doc_row_id', $("#txt_Attr_rowid").val());
+        setlocalStorage('doc_ver_no', $("#txt_version_no").val());
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+
+<script>
+    function load_master_code() {
+        try{
+            debugger;
+            var data = {};
+            var context = WebAPIProxy.getContext();
+            data.userId = context.userId
+            data.orgnId = context.orgnId
+            data.locnId = context.locnId
+            data.localeId = context.localeId
+        data.screen_Id = "MAPAGGR";
+        var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+</script>
+
+<script>
+    $("#facilitorg").change(function () {
+        var c = $('#facilitorg');
+        var formval = c.data('kendoComboBox').value();
+        $("#facilitorgIn").data("kendoComboBox").value(formval);
+    });
+    $("#Cmbinttype").change(function () {
+        var c = $('#Cmbinttype');
+        var formval = c.data('kendoComboBox').value();
+        $("#CmbinttypeTn").data("kendoComboBox").value(formval);
+    });
+
+    //on click funtion condition
+    $("#Cmborgtype").change(function () {
+        var c = $('#Cmborgtype');
+        var formval = c.data('kendoComboBox').value();
+        $("#CmborgtypeTn").data("kendoComboBox").value(formval);
+        if (formval == "AGGR_ORG_FINAL") {
+            $('#Cmbinttype').data("kendoComboBox").value('');
+            $('#CmbinttypeTn').data("kendoComboBox").value('');
+            $("#Cmbinttype").data("kendoComboBox").enable(false);
+            $("#CmbinttypeTn").data("kendoComboBox").enable(false);
+        }
+        else {
+            $("#Cmbinttype").data("kendoComboBox").enable(true);
+            $("#CmbinttypeTn").data("kendoComboBox").enable(true);
+        }
+    });
+
+    //tamil translate script
+    function translate() {
+        try {
+        $("#txtFarmer_nameEng").focusout(function () {
+            var txt = convertTamil1($("#txtFarmer_nameEng").val());
+            $("#txtFarmer_nameTn").val(txt);
+        });
+        $("#txtFarmer_nameTn").on("keypress", function (e) {
+
+            convertThis(e);
+        });
+
+    }
+    catch (err) {            
+        javascript_log4j_root(arguments.callee.name, err);
+    }
+    }
+
+
+</script>
+
+<script>
+    var addr_type_desc_list = "";
+    var orgn_state_desc_list = "";
+    var orgn_village_desc_list = "";
+    var orgn_dist_desc_list = "";
+    var orgn_taluk_desc_list = "";
+    var orgn_panchayat_desc_list = "";
+    var status_desc_list = "";
+    function grid_Address_details(data) {
+        try {
+            $("#grid_Address").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+
+                                orgn_pincode: { type: "string", validation: { required: { message: "Pincode cannot be blank" } } },
+                                //----
+                                addr_type: { type: "string", required: true },
+                                addr_type_desc: {
+                                    validation: {
+                                        dropdownlistValidation: function (input) {
+                                            if (input.is("[name='addr_type_desc']")) {
+                                                var isValid = true;
+                                                input.attr("data-dropdownlistValidation-msg", "Address Type cannot be blank"); if (input.val().length <= 0) {
+                                                    isValid = false;
+                                                }
+                                                return isValid;
+                                            }
+                                            return true;
+                                        }
+                                    }
+                                },
+
+                                state: { type: "string", required: true },
+                                orgn_state_desc: {
+                                    validation: {
+                                        dropdownlistValidation: function (input) {
+                                            if (input.is("[name='orgn_state_desc']")) {
+                                                var isValid = true;
+                                                input.attr("data-dropdownlistValidation-msg", "State Type cannot be blank"); if (input.val().length <= 0) {
+                                                    isValid = false;
+                                                }
+                                                return isValid;
+                                            }
+                                            return true;
+                                        }
+                                    }
+                                },
+
+                                orgn_dist: { type: "string", required: true },
+                                orgn_dist_desc: {
+                                    validation: {
+                                        dropdownlistValidation: function (input) {
+                                            if (input.is("[name='orgn_dist_desc']")) {
+                                                var isValid = true;
+                                                input.attr("data-dropdownlistValidation-msg", "District Type cannot be blank"); if (input.val().length <= 0) {
+                                                    isValid = false;
+                                                }
+                                                return isValid;
+                                            }
+                                            return true;
+                                        }
+                                    }, editable: false
+                                },
+                                //----
+                                orgn_panchayat: { type: "string", required: true },
+                                orgn_panchayat_desc: {
+                                    validation: {
+                                        dropdownlistValidation: function (input) {
+                                            if (input.is("[name='orgn_panchayat_desc']")) {
+                                                var isValid = true;
+                                                input.attr("data-dropdownlistValidation-msg", "Grama panchayat Type cannot be blank"); if (input.val().length <= 0) {
+                                                    isValid = false;
+                                                }
+                                                return isValid;
+                                            }
+                                            return true;
+                                        }
+                                    }, editable: false
+                                },
+
+                                orgn_taluk: { type: "string", required: true },
+                                orgn_taluk_desc: {
+                                    validation: {
+                                        dropdownlistValidation: function (input) {
+                                            if (input.is("[name='orgn_taluk_desc']")) {
+                                                var isValid = true;
+                                                input.attr("data-dropdownlistValidation-msg", "Taluk Type cannot be blank"); if (input.val().length <= 0) {
+                                                    isValid = false;
+                                                }
+                                                return isValid;
+                                            }
+                                            return true;
+                                        }
+                                    }, editable: false
+                                },
+
+                                orgn_village: { type: "string", required: true },
+                                orgn_village_desc: {
+                                    validation: {
+                                        dropdownlistValidation: function (input) {
+                                            if (input.is("[name='orgn_village_desc']")) {
+                                                var isValid = true;
+                                                input.attr("data-dropdownlistValidation-msg", "Village Type cannot be blank"); if (input.val().length <= 0) {
+                                                    isValid = false;
+                                                }
+                                                return isValid;
+                                            }
+                                            return true;
+                                        }
+                                    }
+                                },
+
+                                orgn_add1: {
+                                    validation: {
+                                        required: { message: "Addr1 cannot be blank" },
+                                        maxlength:
+                                    function (input) {
+                                        if (input.val().length > 50) {
+                                            input.attr("data-maxlength-msg", "Max length is 50");
+                                            return false;
+                                        }
+                                        return true;
+                                    }
+                                    }
+                                },
+                                orgn_addr2: {
+                                    validation: {
+                                        required: { message: "Addr2 cannot be blank" },
+                                        maxlength:
+                                    function (input) {
+                                        if (input.val().length > 50) {
+                                            input.attr("data-maxlength-msg", "Max length is 50");
+                                            return false;
+                                        }
+                                        return true;
+                                    }
+                                    }
+                                },
+
+                                status_code: { type: "string", required: true },
+                                status_desc: {
+                                    defaultValue: "Active", editable: false,
+                                    validation: {
+                                        dropdownlistValidation: function (input) {
+                                            if (input.is("[name='status_desc']")) {
+                                                var isValid = true;
+                                                input.attr("data-dropdownlistValidation-msg", "Status Type cannot be blank"); if (input.val().length <= 0) {
+                                                    isValid = false;
+                                                }
+                                                return isValid;
+                                            }
+                                            return true;
+                                        }
+                                    }
+                                },
+
+
+
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+                toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 400,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_Address').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                edit: OnEdit,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [{
+                    command: [
+            {
+                name: "Delete",
+                id: "Delete",
+                imageClass: "fa fa-close",
+                click: function (e) {
+                    // e.preventDefault();
+                    var grid = $("#grid_Address").data("kendoGrid");
+                    var dataItem = $("#grid_Address").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                    DeleteWindowEvent(e, dataItem, grid);
+                    e.stopImmediatePropagation()
+                }
+            },
+                    ], title: "Action", width: "50px",
+                },
+                 {
+                     field: "orgnaddr_rowid",
+                     title: "orgnaddr_rowid",
+                     hidden: true,
+                 },
+                 {
+                     field: "addr_type",
+                     title: "addr_type",
+
+                     hidden: true,
+                 },
+                 {
+                     field: "addr_type_desc",
+                     title: "Addr Type",
+                     editor: function (container, options) {
+                         combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "addr_type", "grid_Address")
+                     },
+                     width: 100,
+
+                 },
+                  {
+                      field: "orgn_country_desc",
+                      title: "Country",
+                      editor: function (container, options) {
+                          combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "orgn_country", "grid_Address")
+                      },
+                      width: 100,
+                  },
+                 {
+                     field: "orgn_state",
+                     title: "orgn_state",
+                     hidden: true,
+                 },
+                 {
+                     field: "orgn_state_desc",
+                     title: "State",
+                     editor: function (container, options) {
+                         combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "orgn_state", "grid_Address")
+                     },
+                     width: 100,
+
+                 },
+                 {
+                     field: "orgn_village",
+                     title: "orgn_village",
+                     width: 100,
+                     hidden: true,
+                 },
+                 {
+                     field: "orgn_village_desc",
+                     title: "Village",
+                     editor: '<div class="input-group input-group-sm"><input type="text" readonly name="orgn_village_desc" maxlength="10" style="width:100px;color:black"  onkeypress="return speical_char(event)" data-bind="value:orgn_village_desc"/><span class="input-group-btn" style="padding-right: 150px;"><a class="HelpWindow fa fa-search fa-lg" data-toggle="modal" href="/HelpFilter/HelpFilter" hdrtitle="Details" searchid="S02" data-target="#HelpModal" onclick=transfer(this,"grid","grid_Address","grid_Address_details") title="Search" style="font-size: 15px; padding-left: 10px;"></a> </span> </div>',
+                     width: 150,
+
+                 },
+                 {
+                     field: "orgn_dist",
+                     title: "orgn_dist",
+                     width: 100,
+                     hidden: true,
+                 },
+                 {
+                     field: "orgn_dist_desc",
+                     title: "District",
+                     width: 100,
+
+                 },
+                  {
+                      field: "orgn_taluk",
+                      title: "orgn_taluk",
+                      width: 100,
+                      hidden: true,
+                  },
+                 {
+                     field: "orgn_taluk_desc",
+                     title: "Taluk",
+                     width: 100,
+                 },
+
+                  {
+                      field: "orgn_panchayat",
+                      title: "orgn_panchayat",
+                      width: 100,
+                      hidden: true,
+                  },
+                   {
+                       field: "orgn_panchayat_desc",
+                       title: "Gram Panchayat",
+                       width: 100,
+                   },
+
+                 {
+                     field: "orgn_add1",
+                     title: "Addr Line 1",
+
+                     width: 100,
+
+                 },
+                 {
+                     field: "orgn_addr2",
+                     title: "Addr Line 2",
+                     width: 100
+                 },
+                 {
+                     field: "orgn_pincode_desc",
+                     title: "Pin Code",
+                     hidden: true,
+                  
+                 },
+                 {
+                     field: "orgn_pincode",
+                     title: "PinCode",
+                     width: 100,
+                     editor: function (container, options) {
+                         numeric_editor(container, options.field, '6', '0');
+                     },
+
+                 },
+                  {
+                      field: "orgn_country",
+                      title: "Country",
+                      hidden: true,
+                  },
+
+                 {
+                     field: "status_code",
+                     title: "status_code",
+                     hidden: true,
+                     width: 100,
+                 },
+                {
+                    field: "status_desc",
+                    title: "Status",
+                    editor: function (container, options) {
+                        combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "status_code", "grid_Address")
+                    },
+                    width: 100,
+                },
+                {
+                    field: "mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }],
+                editable: true
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    load_master_code();
+    addr_type_desc_list = grid_comboScreen_mastercodes("QCD_ADDRTYPE");
+    orgn_state_desc_list = grid_comboScreen_mastercodes("QCD_UN_STATE");
+
+    orgn_panchayat_desc_list = grid_comboScreen_mastercodes("QCD_UN_GRAMPAN");
+    orgn_country_desc_list = grid_comboScreen_mastercodes("QCD_COUNTRY");
+    status_desc_list = grid_comboScreen_mastercodes("STATUS");
+</script>
+
+<script>
+    var bank_acc_type_desc_list = "";
+    var bank_desc_list = "";
+    var branch_desc_list = "";
+    var dflt_cr_acc_desc_list = "";
+    var dflt_dr_acc_desc_list = "";
+    var bank_acc_purpose_desc_list = "";
+    var status_desc_list = "";
+    function grid_Bank_Detail(data) {
+        try {
+            $("#grid_Bank").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                bank_acc_no: { type: "string", validation: { required: { message: "Bank Account No. cannot be blank" } } },
+
+                                bank_acc_type: { type: "string", required: true },
+                                bank_acc_type_desc: {
+                                    validation: {
+                                        dropdownlistValidation: function (input) {
+                                            if (input.is("[name='bank_acc_type_desc']")) {
+                                                var isValid = true;
+                                                input.attr("data-dropdownlistValidation-msg", "Bank Account cannot be blank"); if (input.val().length <= 0) {
+                                                    isValid = false;
+                                                }
+                                                return isValid;
+                                            }
+                                            return true;
+                                        }
+                                    }
+                                },
+                                bank_code: { type: "string", required: true },
+                                bank_desc: {
+                                    validation: {
+                                        dropdownlistValidation: function (input) {
+                                            if (input.is("[name='bank_desc']")) {
+                                                var isValid = true;
+                                                input.attr("data-dropdownlistValidation-msg", "Bank cannot be blank"); if (input.val().length <= 0) {
+                                                    isValid = false;
+                                                }
+                                                return isValid;
+                                            }
+                                            return true;
+                                        }
+                                    }
+                                },
+                                branch_code: { type: "string" },
+                                ifsc_code: { type: "string", validation: { required: { message: "IFSC Code cannot be blank" } }, editable: false },
+                                account_no: { type: "string" },
+                                dflt_cr_acc: { type: "string", required: true },
+                                dflt_cr_acc_desc: {
+                                    validation: {
+                                        dropdownlistValidation: function (input) {
+                                            if (input.is("[name='dflt_cr_acc_desc']")) {
+                                                var isValid = true;
+                                                input.attr("data-dropdownlistValidation-msg", "Default Credit cannot be blank"); if (input.val().length <= 0) {
+                                                    isValid = false;
+                                                }
+                                                return isValid;
+                                            }
+                                            return true;
+                                        }
+                                    }
+                                },
+
+                                dflt_dr_acc: { type: "string", required: true },
+                                dflt_dr_acc_desc: {
+                                    validation: {
+                                        dropdownlistValidation: function (input) {
+                                            if (input.is("[name='dflt_dr_acc_desc']")) {
+                                                var isValid = true;
+                                                input.attr("data-dropdownlistValidation-msg", "Default Debit cannot be blank"); if (input.val().length <= 0) {
+                                                    isValid = false;
+                                                }
+                                                return isValid;
+                                            }
+                                            return true;
+                                        }
+                                    }
+                                },
+                                bank_acc_purpose: { type: "string", required: true },
+                                bank_acc_purpose_desc: {
+                                    validation: {
+                                        dropdownlistValidation: function (input) {
+                                            if (input.is("[name='bank_acc_purpose_desc']")) {
+                                                var isValid = true;
+                                                input.attr("data-dropdownlistValidation-msg", "Account Purpose cannot be blank"); if (input.val().length <= 0) {
+                                                    isValid = false;
+                                                }
+                                                return isValid;
+                                            }
+                                            return true;
+                                        }
+                                    }
+                                }, 
+                                status_code: { type: "string", required: true },
+                                status_desc: {
+                                    defaultValue: "Active", editable: false,
+                                    validation: {
+                                        dropdownlistValidation: function (input) {
+                                            if (input.is("[name='status_desc']")) {
+                                                var isValid = true;
+                                                input.attr("data-dropdownlistValidation-msg", "Status Type cannot be blank"); if (input.val().length <= 0) {
+                                                    isValid = false;
+                                                }
+                                                return isValid;
+                                            }
+                                            return true;
+                                        }
+                                    }
+                                },
+                                mode_flag: { type: "string", defaultValue: "I" },
+                            }
+                        }
+                    }
+                },
+                toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 400,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_Bank').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                edit: OnEdit,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [{
+                    command: [
+            {
+                name: "Delete",
+                id: "Delete",
+                imageClass: "fa fa-close",
+                click: function (e) {                  
+                    var grid = $("#grid_Bank").data("kendoGrid");
+                    var dataItem = $("#grid_Bank").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                    DeleteWindowEvent(e, dataItem, grid);
+                    e.stopImmediatePropagation()
+                }
+            },
+                    ], title: "Action", width: "50px",
+                },
+                {
+                    field: "orgnbank_rowid",
+                    title: "orgnbank_rowid",
+                    hidden: true
+                },
+                {
+                    field: "bank_acc_no",
+                    title: "Account No",
+                    width: 100,
+                   
+                },
+                 {
+                     field: "bank_acc_type",
+                     title: "bank_acc_type",
+                     hidden: true
+                 },
+                {
+                    field: "bank_acc_type_desc",
+                    title: "Account Type",
+                    editor: function (container, options) {
+                        combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "bank_acc_type", "grid_Bank")
+                    },
+                    width: 100,
+                },
+                {
+                    field: "bank_code",
+                    title: "bank_code",
+                    hidden: true
+                },
+                 {
+                     field: "bank_desc",
+                     title: "Bank Name",
+                     editor: function (container, options) {
+                         combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "bank_code", "grid_Bank")
+                     },
+                     width: 200,
+
+                 },
+                  {
+                      field: "branch_code",
+                      title: "Branch",
+                      editor: '<div class="input-group input-group-sm"><input type="text" readonly name="branch_code" maxlength="50" style="width:190px;color:black"  onkeypress="return speical_char(event)" data-bind="value:branch_code"/><span class="input-group-btn" style="padding-right: 150px;"><a class="HelpWindow fa fa-search fa-lg" data-toggle="modal" href="/HelpFilter/HelpFilter" hdrtitle="Bank Details" searchid="S01" data-target="#HelpModal" onclick=transfer(this,"grid","grid_Bank","grid_Bank_Detail") title="Search" style="font-size: 15px; padding-left: 10px;"></a> </span> </div>',
+                      width: 250,
+                  },
+                  {
+                      field: "ifsc_code",
+                      title: "IFSC code",
+                      width: 100,
+                  },
+              
+                 {
+                     field: "dflt_cr_acc",
+                     title: "dflt_cr_acc",
+                     hidden: true
+                 },
+
+                  {
+                      field: "dflt_cr_acc_desc",
+                      title: "Default Credit A/C",
+                      editor: function (container, options) {
+                          combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "dflt_cr_acc", "grid_Bank")
+                      },
+                      width: 100,
+
+                  },
+                   {
+                       field: "dflt_dr_acc",
+                       title: "dflt_dr_acc",
+                       hidden: true
+                   },
+                   {
+                       field: "dflt_dr_acc_desc",
+                       title: "Default Debit A/C",
+                       editor: function (container, options) {
+                           combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "dflt_dr_acc", "grid_Bank")
+                       },
+                       width: 100,
+
+                   },
+                    {
+                        field: "bank_acc_purpose",
+                        title: "bank_acc_purpose",
+                        hidden: true
+                    },
+                   {
+                       field: "bank_acc_purpose_desc",
+                       title: "Account Purpose",
+                       editor: function (container, options) {
+                           combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "bank_acc_purpose", "grid_Bank")
+                       },
+                       width: 100,
+
+                   },
+                   {
+                       field: "status_code",
+                       title: "status_code",
+                       hidden: true
+                   },
+                 {
+                     field: "status_desc",
+                     title: "Status",
+                     editor: function (container, options) {
+                         combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "status_code", "grid_Bank")
+                     },
+                     width: 100,
+                 },
+                {
+                    field: "mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }],
+                editable: true
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    bank_acc_type_desc_list = grid_comboScreen_mastercodes("QCD_BANKACCTYPE");
+    bank_desc_list = grid_comboScreen_mastercodes("BANK");
+
+    dflt_cr_acc_desc_list = grid_comboScreen_mastercodes("QCD_YESNO");
+    dflt_dr_acc_desc_list = grid_comboScreen_mastercodes("QCD_YESNO");
+    bank_acc_purpose_desc_list = grid_comboScreen_mastercodes("QCD_BANKACCPUR");
+    status_desc_list = grid_comboScreen_mastercodes("STATUS");
+    function OnEdit(e) {
+        try{
+        setDefaultValues(e);
+        e.container.find("input[name='bank_acc_no']").attr('maxlength', '20');
+        e.container.find("input[name='bank_acc_no']").attr('onkeypress', 'return event.charCode >= 48 && event.charCode <= 57');
+
+        e.container.find("input[name='aggrloc_shortdesc']").attr('maxlength', '25');
+        e.container.find("input[name='aggrloc_name']").attr('maxlength', '100');
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+
+<script>
+    function grid_User(data) {
+        try {
+            $("#grid_User").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                user_id: { type: "string" },
+                                user_name: { type: "string" },
+                                location_code: { type: "string" },
+                                location_name: { type: "string" },
+                                email: { type: "string" },
+                                mobile_no: { type: "string" },
+                                valid_till: { type: "date" },
+                                status: { type: "string" },
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+
+                height: 300,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                    {
+                        field: "aggrlocuser_rowid",
+                        title: "aggrlocuser_rowid",
+                        hidden: true
+                    },
+                     {
+                         field: "aggrloc_code",
+                         title: "Location Code",
+                         width: 100,
+
+                     },
+                     {
+                         field: "aggrorgn_code",
+                         title: "aggrorgn_code",
+                         width: 100,
+                         hidden: true
+                     },
+                     {
+                         field: "aggrloc_type",
+                         title: "Location Name",
+                         width: 100,
+                         hidden: true
+                     },
+                     {
+                         field: "aggrloc_type_desc",
+                         title: "Location Name",
+                         width: 100,
+
+                     },
+                 {
+                     field: "role_code",
+                     title: "User ID",
+                     width: 100,
+
+                 },
+                 {
+                     field: "user_code",
+                     title: "user_code",
+                     width: 100,
+                     hidden: true,
+                 },
+                 {
+                     field: "user_name",
+                     title: "User Name",
+                     width: 100,
+
+                 },
+                 {
+                     field: "email_id",
+                     title: "Email",
+                     width: 100,
+
+                 },
+                 {
+                     field: "contact_no",
+                     title: "Mobile No",
+                     width: 100
+                 }, {
+                     field: "valid_till",
+                     title: "Valid Till",
+                     hidden: true
+                 },
+                 {
+                     field: "status_code",
+                     title: "status_code",
+                     hidden: true
+                 },
+                  {
+                      field: "status_desc",
+                      title: "Status",
+                      width: 100,
+
+                  },
+
+                {
+                    field: "mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }],
+                editable: true
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<script>
+    function save() {
+        try{
+        if ($("#txt_Attr_rowid").val() == "") {
+            $("#txt_Attr_rowid").val('0');
+        }
+
+        if ($("#txt_version_no").val() == "") {
+            $("#txt_version_no").val('1');
+        }
+
+        if ($("#txtMode").val() == "S") {
+            $("#txtMode").val('U');
+        }
+
+        $("#CmbinttypeTn").data("kendoComboBox").enable(true);
+        $("#Cmbinttype").data("kendoComboBox").enable(true);
+
+        var formval = form_Serialize("Aggregator_profile");
+        var obj_val = JSON.parse(formval);
+
+        $("#CmbinttypeTn").data("kendoComboBox").enable(false);
+        $("#Cmbinttype").data("kendoComboBox").enable(false);
+
+        //address
+        var grid_val = JSON.stringify($("#grid_Address").data().kendoGrid._data);
+        var Bind = {};
+        Bind = grid_val;
+        var result = JSON.parse(Bind);      
+        $.each(result, function (index, value) {
+            var row_id = value.orgnaddr_rowid;
+            if (row_id == undefined) {
+                result[index].orgnaddr_rowid = "0";
+            }
+            var mmode = result[index].mode_flag;
+            if (mmode == "S") {
+                result[index].mode_flag = "U";
+            }
+
+        });
+        var obj_grid_val = result;
+
+        //bank
+        var grid_val1 = JSON.stringify($("#grid_Bank").data().kendoGrid._data);
+        var Bind1 = {};
+        Bind1 = grid_val1;
+        var result1 = JSON.parse(Bind1);
+        $.each(result1, function (index, value) {
+            var bank_rowid = value.orgnbank_rowid;
+            if (bank_rowid == undefined) {
+                result1[index].orgnbank_rowid = "0";
+            }
+            var mmode = result1[index].mode_flag;
+            if (mmode == "S") {
+                result1[index].mode_flag = "U";
+            }
+        });
+        var obj_grid_val1 = result1;
+
+        //user
+        var grid_val2 = JSON.stringify($("#grid_User").data().kendoGrid._data);
+        var Bind2 = {};
+        Bind2 = grid_val2;
+        var result2 = JSON.parse(Bind2);
+        //result.orgn_rowid = "0";
+        $.each(result2, function (index, value) {
+
+            var row_width = value.aggrlocuser_rowid;
+            if (row_width == undefined) {
+                result2[index].aggrlocuser_rowid = "0";
+            }
+        });
+        var obj_grid_val2 = result2;
+
+        var data = {};
+        data.context = WebAPIProxy.getContext();
+        data.context.Header = obj_val;
+        data.context.Address = obj_grid_val;
+        data.context.Bank = obj_grid_val1;
+        data.context.User = obj_grid_val2;
+        save_AggregatorOrgs_details(data);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function DeleteDetails() {
+        try {
+        $("#txtMode").val('D');
+        save();
+    }
+    catch (err) {            
+        javascript_log4j_root(arguments.callee.name, err);
+    }
+    }
+
+
+    function generate_AggregatorOrgs_header(res) {
+        try{
+        $("#txt_Attr_rowid").val(res.orgn_rowid);
+        $("#txtFarmer_code").val(res.orgn_code);
+        $("#txtFarmer_code").attr("readonly", "");
+        $("#txt_version_no").val(res.version_no);      
+        $("#txtFarmer_nameEng").val(res.orgn_name);
+        $("#txtFarmer_nameTn").val(res.orgn_ll_name);
+        $("#txt_orgn_level").val(res.orgn_level);
+        $('#Cmborgtype').data("kendoComboBox").value(res.orgn_type);
+        $('#CmborgtypeTn').data("kendoComboBox").value(res.orgn_type);
+        $('#Cmbinttype').data("kendoComboBox").value(res.orgn_subtype);
+        $('#CmbinttypeTn').data("kendoComboBox").value(res.orgn_subtype);
+        $('#facilitorg').data("kendoComboBox").value(res.parent_code);
+        $('#facilitorgIn').data("kendoComboBox").value(res.parent_code);
+
+        $("#txt_primary_lang_code").val(res.primary_lang_code);
+        $("#txt_secondary_lang_code").val(res.secondary_lang_code);
+        $("#txt_status_code").val(res.status_code);
+        $("#DocStat").val(res.status_desc);
+        $("#txtMode").val(res.mode_flag);
+        $("#txt_row_timestamp").val(res.row_timestamp);
+        if (res.orgn_type == "AGGR_ORG_FINAL") {
+            $("#Cmbinttype").data("kendoComboBox").enable(false);
+            $("#CmbinttypeTn").data("kendoComboBox").enable(false);
+        }
+        else {
+            $("#Cmbinttype").data("kendoComboBox").enable(true);
+            $("#CmbinttypeTn").data("kendoComboBox").enable(true);
+        }
+    }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function generate_AggregatorOrgs_Address(res) {
+        try {
+        if (res != null) {
+            var data = changedataType(res);
+            grid_Address_details(data);
+        }
+        else {
+
+            grid_Address_details([]);
+        }
+    }
+    catch (err) {            
+        javascript_log4j_root(arguments.callee.name, err);
+    }
+    }
+
+    function generate_AggregatorOrgs_Bank(res) {
+        try{
+        if (res != null) {
+            var data = changedataType(res);
+            grid_Bank_Detail(data);
+        }
+        else {
+
+            grid_Bank_Detail([]);
+        }
+    }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function generate_AggregatorOrgs_User(res) {
+        try {
+        if (res != null) {
+            var data = changedataType(res);
+            grid_User(data);
+        }
+        else {
+
+            grid_User([]);
+        }
+    }
+    catch (err) {            
+        javascript_log4j_root(arguments.callee.name, err);
+    }
+    }
+
+
+
+//look up functions
+    function grid_control() {
+        try{
+        var control_Name = [
+            { "dataCol": "branch_name", "grid_row_col": "branch_code" },
+            { "dataCol": "ifsc_code", "grid_row_col": "ifsc_code" },
+            { "dataCol": "", "grid_row_col": "bank_code" },
+            { "dataCol": "", "grid_row_col": "bank_desc" },
+            { "dataCol": "", "grid_row_col": "orgnbank_rowid" },
+            { "dataCol": "", "grid_row_col": "bank_acc_no" },
+            { "dataCol": "", "grid_row_col": "bank_acc_type" },
+            { "dataCol": "", "grid_row_col": "bank_acc_type_desc" },
+            { "dataCol": "", "grid_row_col": "dflt_dr_acc" },
+            { "dataCol": "", "grid_row_col": "dflt_dr_acc_desc" },
+            { "dataCol": "", "grid_row_col": "dflt_cr_acc" },
+            { "dataCol": "", "grid_row_col": "dflt_cr_acc_desc" },
+            { "dataCol": "", "grid_row_col": "bank_acc_purpose" },
+            { "dataCol": "", "grid_row_col": "bank_acc_purpose_desc" },
+            { "dataCol": "", "grid_row_col": "status_code" },
+            { "dataCol": "", "grid_row_col": "status_desc" },
+            { "dataCol": "", "grid_row_col": "mode_flag" },
+            { "dataCol": "", "grid_row_col": "uid" },
+
+               //{ "dataCol": "orgn_village", "grid_row_col": "orgn_village_desc" },
+         { "dataCol": "orgn_state", "grid_row_col": "orgn_state" },
+            { "dataCol": "orgn_state_desc", "grid_row_col": "orgn_state_desc" },
+            { "dataCol": "orgn_village", "grid_row_col": "orgn_village" },
+            { "dataCol": "orgn_village_desc", "grid_row_col": "orgn_village_desc" },
+            { "dataCol": "orgn_dist", "grid_row_col": "orgn_dist" },
+            { "dataCol": "orgn_dist_desc", "grid_row_col": "orgn_dist_desc" },
+            { "dataCol": "orgn_taluk", "grid_row_col": "orgn_taluk" },
+            { "dataCol": "orgn_taluk_desc", "grid_row_col": "orgn_taluk_desc" },
+            { "dataCol": "orgn_grampan", "grid_row_col": "orgn_panchayat" },
+            { "dataCol": "orgn_grampan_desc", "grid_row_col": "orgn_panchayat_desc" },
+            { "dataCol": "", "grid_row_col": "status_code" },
+            { "dataCol": "", "grid_row_col": "status_desc" },
+            { "dataCol": "", "grid_row_col": "addr_type" },
+            { "dataCol": "", "grid_row_col": "addr_type_desc" },
+            { "dataCol": "", "grid_row_col": "orgn_country_desc" },
+
+            { "dataCol": "", "grid_row_col": "orgn_add1" },
+            { "dataCol": "", "grid_row_col": "orgn_addr2" },
+            { "dataCol": "", "grid_row_col": "orgn_pincode" },
+            { "dataCol": "", "grid_row_col": "orgn_pincode_desc" },
+            { "dataCol": "", "grid_row_col": "orgn_country" },
+
+            { "dataCol": "", "grid_row_col": "mode_flag" },
+            { "dataCol": "", "grid_row_col": "uid" }
+
+
+        ];
+        return control_Name
+    }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function controlName() {
+        try{
+        var control_Name = [
+        ];
+        return control_Name
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+
+    function trans_input_data() {
+        try {
+        var trans_coll = [
+            { "trasfer": "NO", "dataCol": "", "controlId": "", "grid_id": "", "grid_row_col": "" },
+             { "trasfer": "Yes", "dataCol": "bank_code", "controlId": "", "grid_id": "grid_Bank", "grid_row_col": "" },
+             { "trasfer": "Yes", "dataCol": "orgn_state_desc", "controlId": "", "grid_id": "grid_Address", "grid_row_col": "" }
+        ];
+        return trans_coll;
+    }
+    catch (err) {            
+        javascript_log4j_root(arguments.callee.name, err);
+    }
+    }
+
+
+</script>
+
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>
+

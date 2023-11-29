@@ -1,0 +1,247 @@
+﻿
+@{
+    ViewBag.List = "Employee";
+    Layout = "~/Views/Shared/ListViewLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-xs-12">
+        <div id="grid_emp_list"></div>
+
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $(".Export").attr("TreeId", "Templates/SpecialEntities");
+        $(".Export").attr("SubTreeId", "Employee");
+
+        $(".adv_filter").attr("hdrtitle", "Employee List");
+        $(".adv_filter").attr("fltid", "custMst");
+        list_grid_id = "grid_emp_list";
+        filterhover();
+        $("#list1").css("padding-top", "15px");
+
+    });
+    click_act_name = "Employee_Form";
+    click_ctrl_name = "SpecialEntities";
+    form_list_url = '/' + click_ctrl_name + '/' + click_act_name;
+
+</script>
+
+<script>
+    $("#btn_Edit").bind("click", function () {
+        btn_onClick('Edit');
+        location.href = "../Employee/Employee_Form";
+    });
+
+    $("#btn_View").bind("click", function () {
+        btn_onClick('View');
+        location.href = "../Employee/Employee_Form";
+    });
+
+    $("#btn_new").bind("click", function () {
+        btn_onClick('Create');
+        location.href = "../Employee/Employee_Form";
+    });
+
+</script>
+
+<script>
+    var data = [{
+        emp_code: "code1", emp_name: "name1", emp_unitlctn: "unitlocation1", emp_rph: "rph1", emp_usrid: "userid1", emp_pwd: "password1",
+        emp_email: "emailid1", emp_mobno: "mobileno1", emp_udf: "udf1", emp_status: "status1"
+    },
+       {
+           emp_code: "code2", emp_name: "name2", emp_unitlctn: "unitlocation2", emp_rph: "rph2", emp_usrid: "userid2", emp_pwd: "password2",
+           emp_email: "emailid2", emp_mobno: "mobileno2", emp_udf: "udf2", emp_status: "status2"
+       }];
+    $("#grid_emp_list").kendoGrid({
+        dataSource: {
+            data: data,
+            pageSize: 20,
+            change: function (e) {
+                setTimeout(function () {
+                    var gd = $("#grid_emp_list").data("kendoGrid");
+                    filter_row(gd);
+                    $('.k-i-close').css('display', 'none');
+                    $('button.k-button-icon').css('display', 'none');
+                    $('#grid_emp_list .k-input').prop('disabled', false);
+                    $('#grid_emp_list .k-input').prop('readonly', true);
+
+                }, 1);
+            },
+        },
+        toolbar: "<button type= 'button' id = 'Exportclick' class = 'k-grid-excel' style = 'display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+        excelExport: function (e) {
+            var chkall = $('#chkall').is(':checked');
+            var chkfilter = $('#chkfilter').is(':checked');
+            var chktemp = $('#chktemp').is(':checked');
+
+            var gd = $("#grid_emp_list").data("kendoGrid");
+            var len = gd.dataSource._data.length;
+            gd.dataSource.pageSize(len);
+            exportfunction(e, chkall, chkfilter, chktemp);
+            gd.dataSource.pageSize('10');
+        },
+        filterable: {
+            enabled: true,
+            delay: 1500,
+            mode: "menu, row",
+            height: 200,
+            click: function (e) {
+                var gd = $("#grid_emp_list").data("kendoGrid");
+                filter_row(gd);
+            }
+        },
+        filterMenuInit: function (e) {
+            var gd = $("#grid_emp_list").data("kendoGrid");
+            filter_row(gd);
+        },
+        dataBound: function (o) {
+            var gd = $("#grid_emp_list").data("kendoGrid");
+            for (var i = 0; i < gd.columns.length; i++) {
+                gd.showColumn(i);
+            }
+            $("div.k-group-indicator").each(function (i, v) {
+                gd.hideColumn($(v).data("field"));
+            })
+        },
+        height: 470,
+        sortable: true,
+        selectable: true,
+        //change: onChangeSelection,
+        selectable: "singl",   //  Grid Row Selection
+        pageable: {
+            refresh: false,
+            pageSizes: true,
+            buttonCount: 5
+        },
+        navigatable: true,
+        groupable: true,
+        columns: [
+               {
+                   title: "Sel", width: 40,
+                   template: '#=sel_checkbox()#'
+
+               },
+            {
+                field: "emp_code",
+                title: "Code",
+                filterable: {
+                    cell: {
+                        operator: "contains",
+                        inputWidth: 1500
+                    }
+                }
+            }, {
+                field: "emp_name",
+                title: "Name",
+                filterable: {
+                    cell: {
+                        operator: "contains",
+                        inputWidth: 1500
+                    }
+                }
+            },
+        {
+            field: "emp_unitlctn",
+            title: "Unit Location",
+            filterable: {
+                cell: {
+                    operator: "contains",
+                    inputWidth: 1500
+                }
+            }
+        },
+        {
+            field: "emp_rph",
+            title: "Rate per hour",
+            filterable: {
+                cell: {
+                    operator: "contains",
+                    inputWidth: 1500
+                }
+            }
+        },
+        {
+            field: "emp_usrid",
+            title: "User ID",
+            filterable: {
+                cell: {
+                    operator: "contains",
+                    inputWidth: 1500
+                }
+            }
+        },
+        {
+            field: "emp_pwd",
+            title: "Password",
+            filterable: {
+                cell: {
+                    operator: "contains",
+                    inputWidth: 1500
+                }
+            }
+        },
+        {
+            field: "emp_email",
+            title: "Email ID",
+            filterable: {
+                cell: {
+                    operator: "contains",
+                    inputWidth: 1500
+                }
+            }
+        },
+        {
+            field: "emp_mobno",
+            title: "Mobile number",
+            filterable: {
+                // ui: statusFilter,
+                cell: {
+
+                    operator: "contains",
+                    inputWidth: 1500
+                }
+            }
+        },
+        {
+            field: "emp_udf",
+            title: "UDFs",
+            filterable: {
+                cell: {
+                    operator: "contains",
+                    inputWidth: 1500
+                }
+            }
+        },
+        {
+            field: "emp_status",
+            title: "Status",
+            filterable: {
+                // ui: statusFilter,
+                cell: {
+
+                    operator: "contains",
+                    inputWidth: 1500
+                }
+            }
+        }]
+    });
+
+    $(".k-dropdown-operator").css('display', 'none');
+
+    $("#grid_emp_list .k-input").attr('disabled', 'false');
+
+
+    var gridRowID = -1;
+    function sel_checkbox() {
+        gridRowID++;
+        return '<input id="chk_sel_' + gridRowID + '" class="checkbox" type="checkbox" />';
+    }
+
+
+</script>
+
+
+

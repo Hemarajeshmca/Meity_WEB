@@ -1,0 +1,581 @@
+﻿@{
+    ViewBag.Form = "Transfer Register";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+<form id="frmTransfer_Register" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-12">
+                    <div class="col-sm-5">
+                        <div class="form-group">
+                            <label for="cmb_generate" class="col-sm-4 control-label required">Report name</label>
+                            <div class="col-sm-7">
+                                <input id="cmb_generate" name="Active_id" data-role="filtercombo" style="width:100%" disabled placeholder="Transfer certificate register" />
+                            </div>
+                            <input type="hidden" id="register_rowid" name="IOU_register_rowid" />
+                            <input type="hidden" id="register_type" name="In_register_type" value="QCD_SHA_TRN_REG" />
+                            <input type="hidden" id="register_no" name="IOU_register_no" />
+                            <input type="hidden" id="fpoorgn_code" name="In_fpoorgn_code" />
+                            <input type="hidden" id="status_code" name="In_status_code" />
+                            <input type="hidden" id="txtMode" name="In_mode_flag" value="I" />
+                            <input type="hidden" id="row_timestamp" name="In_row_timestamp" />
+                            <button id="btnFetch" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button" onclick=" return listLoad()"> <span class="glyphicon glyphicon-refresh"></span></button>
+                        </div>
+                    </div>
+                    <div class="col-xs-5">
+                        <div class="form-group">
+                            <label for="registerdate" class="col-md-4 control-label required">Report Date:</label>
+                            <div class=" col-sm-4">
+
+                                <input class="cusDate" type="date" data-role='datepicker' id="registerdate" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="In_register_date" style="width:100%" onkeypress="return date_validate(event)" />
+                                <span data-for='valid' class='k-invalid-msg'></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4 pull-right" style="padding-bottom:10px">
+                            <a data-toggle="modal" id="btnReport" type="button" class="Export btn btn-sm btn-info" href="~/Reportlist/Report" data-target="#ReportModal"><span class="glyphicon glyphicon-export"></span></a>
+                        </div>
+                        <div class="col-xs-12">
+                            <div id="grid_Drop_list"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+<script src="~/API_Scripts/FIS_Register_retrieveRegisterList_APIClient.js"></script>
+<script src="~/API_Scripts/retrieveRegisterList_Model.js"></script>
+<script src="~/API_Scripts/retrieveTransferRegister_Model.js"></script>
+<script src="~/API_Scripts/saveTransferRegister_Model.js"></script>
+<script src="~/API_Scripts/FIS_Register_retrieveTransferRegister_APIClient.js"></script>
+<script src="~/API_Scripts/FIS_Register_saveTransferRegister_APIClient.js"></script>
+<script src="~/API_Scripts/TransferRegister.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+
+<script>
+    click_act_name = "GeneratetransferRegister";
+    click_ctrl_name = "GeneratetransferRegister";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+<script>
+    $(document).ready(function () {
+        kendodate_format();
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#frmTransfer_Register");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        $(document).on('click', '#btnSave', function (e) {
+            debugger;
+            var Register_Date = $('#registerdate').val();
+            if (Register_Date != "" && Register_Date != null) {
+                $('#divCreate #btnSave').prop('disabled', true);
+            }
+            else {
+                $('#divCreate #btnSave').prop('disabled', false);
+            }
+        });
+        $("#common_id").text("Transfer Register ID");
+        var org_id = getlocalStorage('org_id');
+        var org_type = getlocalStorage('org_type');
+        $("#fpoorgn_code").val(org_id);
+        $('#divCreate #review').hide();
+        //$("#common_id").hide();
+
+        Screen_Id = "SRVTRF";
+        permission = sec_Permission(Screen_Id);
+        setlocalStorage("status", "Active");
+        setlocalStorage('status_code', "A");
+        gridFilter([]);
+        if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
+            $("#btnFetch").hide();
+            $('#divEdit #reviewEd').hide();
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("frmTransfer_Register");
+                var obj_val = JSON.parse(formval);
+                $("#register_rowid").val(data.Out_register_rowid);
+                $("#register_no").val(data.Out_register_no);
+                
+                obj_val.In_register_rowid = data.Out_register_rowid;
+                obj_val.In_fpoorgn_code = getlocalStorage('org_id');
+
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, In_register_rowid: Context.Header.In_register_rowid, In_fpoorgn_code: Context.Header.In_fpoorgn_code }),
+                    url: "/GeneratetransferRegister/FetchServiceList",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        debugger;
+                        if (response.context.Header != null) {
+                            generate_TransferRegister_header(response.context.Header)
+                            //listgrid(response.context.List);
+                            //SetPager(response.context.Filter.out_record_count)
+                        }
+                        if (response.context.Detail != null) {
+                            generate_TransferRegister_detail(response.context.Detail)
+                        }
+                      
+                        else {
+                            gridFilter([]);
+                        }
+                        if (response.ApplicationException != null ) {
+                            kendoAlert(response.ApplicationException.errorDescription);
+                        }
+                    },
+                    error: function (er) {
+                        alert(er)
+                        console.log(er)
+                    }
+
+                });
+                //retrieve_TransferRegister_details(data);
+
+                $("#txtMode").val("U");
+                
+                setlocalStorage('doc_no', $("#register_no").val());
+                setlocalStorage('doc_row_id', $("#register_rowid").val());
+
+            }
+        }
+
+        $("#registerdate").kendoDatePicker({
+            max: new Date(), // sets max date to Jan 1st, 2013
+            format: "dd/MM/yyyy"
+        });
+    });
+</script>
+<script>
+    function gridFilter(data) {
+        try{
+        $("#grid_Drop_list").kendoGrid({
+            dataSource: {
+                data: data,
+                schema: {
+                    model: {
+                        fields: {
+
+                            service_req_no: { type: "string" },
+                            shareholder: { type: "string" },
+                            certificate_no: { type: "string" },
+                            distinct_from: { type: "string" },
+                            request_type: { type: "string" },
+                            request_sub: { type: "string" },
+                            request_date: { type: "string" },
+                            status: { type: "string" },
+                            mode_flag: { type: "string", defaultValue: "I" }
+                        }
+                    }
+                }
+            },
+
+            height: 400,
+            groupable: false,
+
+
+
+            sortable: true,
+            selectable: true,
+            navigatable: true,
+            columns: [
+             {
+                    field: "In_servicereq_rowid",
+                 title: "servicereq_rowid",
+                 hidden: true
+             },
+        {
+            field: "In_farmer_code",
+            title: "Farmer ID",
+            width: 150,
+
+        },
+        {
+            field: "In_fpomember_code",
+            title: "Member ID",
+            width: 150,
+
+        },
+        {
+            field: "In_member_name",
+            title: "Farmer Given Name",
+            width: 150,
+
+        },
+        {
+            field: "In_member_sur_name",
+            title: "Surname",
+            width: 150,
+
+        },
+        {
+            field: "In_certificate_sno",
+            title: "Certificate No",
+            width: 150,
+
+        },
+        {
+            field: "In_issued_date",
+            title: "Issued Date",
+            width: 150,
+
+        },
+
+           {
+               field: "In_dist_from",
+               title: "Distinct From",
+               width: 150,
+
+           },
+            {
+                field: "In_dist_to",
+                title: "Distinct To",
+                width: 150,
+
+            },
+             {
+                 field: "In_servicereq_no",
+                 title: "Service Request No",
+                 width: 150,
+
+             },
+              {
+                  field: "In_request_date",
+                  title: "Request Date",
+                  width: 150,
+
+              },
+            {
+                field: "In_request_type_desc",
+                title: "Request Type",
+                width: 160,
+
+            },
+             {
+                 field:  "In_request_type" ,
+                 title: "request_type_desc",
+                 width: 150,
+                 hidden: true
+
+             },
+
+            {
+                field: "In_requestsub_type",
+                title: "Request Sub Type",
+                width: 150,
+                hidden: true
+            },
+             {
+                 field: "In_requestsub_type_desc",
+                 title: "requestsub_type_desc",
+                 hidden: true
+             },
+              {
+                  field: "In_chklist_status_flag",
+                  title: "chklist_status_flag",
+                  hidden: true
+              },
+               {
+                   field: "In_sr_comments",
+                   title: "sr_comments",
+                   hidden: true
+               },
+            {
+                field: "In_status_desc",
+                title: "Status",
+                width: 150,
+            },
+
+             {
+                 field: "In_mode_flag",
+                 title: "mode_flag",
+                 hidden: true
+             },
+        {
+            field: "In_status_code",
+            title: "status_code",
+            hidden: true
+        },
+            {
+                field: "In_row_timestamp",
+                title: "row_timestamp",
+                hidden: true
+            }],
+
+        });
+    }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>
+    function save() {
+        try{
+        if ($("#txtMode").val() == "S") {
+            $("#txtMode").val('U');
+
+        }
+
+        var formval = form_Serialize("frmTransfer_Register");
+        var obj_val = JSON.parse(formval);
+        if ($("#register_rowid").val() == undefined || $("#register_rowid").val() == "") {
+            obj_val.IOU_register_rowid = 0;
+        }
+        else {
+            obj_val.IOU_register_rowid = $("#register_rowid").val();
+        }
+        if ($("#register_no").val() == undefined || $("#register_no").val() == "") {
+            obj_val.IOU_register_no = 0;
+        }
+        else {
+            obj_val.IOU_register_no = $("#register_no").val();
+        }
+        if ($("#fpoorgn_code").val() == undefined || $("#fpoorgn_code").val() == "") {
+            obj_val.In_fpoorgn_code = 0;
+        }
+        else {
+            obj_val.In_fpoorgn_code = $("#fpoorgn_code").val();
+        }
+        if ($("#register_type").val() == undefined || $("#register_type").val() == "") {
+            obj_val.In_register_type = 0;
+        }
+        else {
+            obj_val.In_register_type = $("#register_type").val();
+        }
+            if (obj_val.In_register_date == undefined || obj_val.In_register_date == "") {
+                obj_val.In_register_date = 0;
+        }
+        else {
+                obj_val.In_register_date = getFormated_StringDate(obj_val.In_register_date);
+        }
+
+        if ($("#status_code").val() == undefined || $("#status_code").val() == "") {
+            obj_val.In_status_code = 0;
+        }
+        else {
+            obj_val.In_status_code = $("#status_code").val();
+        }
+            if (obj_val.In_mode_flag == undefined || obj_val.In_mode_flag == "") {
+                obj_val.In_mode_flag = 0;
+        }
+
+        if ($("#row_timestamp").val() == undefined || $("#row_timestamp").val() == "") {
+            obj_val.In_row_timestamp = 0;
+        }
+        else {
+            obj_val.In_row_timestamp = $("#row_timestamp").val();
+        }
+
+        var grid_val = JSON.stringify($("#grid_Drop_list").data().kendoGrid._data);
+        var Bind = {};
+        Bind = grid_val;
+        var result = JSON.parse(Bind);
+        if (result.length == 0) {
+            kendoAlert("Atleast one record needs to be entered");
+            return false;
+        }
+        $.each(result, function (index, value) {
+            var servicereq_rowid = result[index].In_servicereq_rowid;
+            if (servicereq_rowid == undefined || servicereq_rowid == "")
+            {
+                result[index].In_servicereq_rowid = "0";
+            }
+            var mmode = result[index].In_mode_flag;
+            if (mmode == "S") {
+                result[index].In_mode_flag = "U";
+            }
+        });
+        var obj_gridval = result;
+        var data_save = {};
+        data_save.context = WebAPIProxy.getContext();
+        data_save.context.Header = obj_val;
+        data_save.context.Detail = obj_gridval;
+            var Context = data_save.context;
+
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ orgnId: Context.orgnId, locnId: Context.locnId, userId: Context.userId, localeId: Context.localeId, Header: Context.Header, Detail: Context.Detail }),
+                url: "/GeneratetransferRegister/SaveObjRegister",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    var Res = JSON.parse(response);
+                    if (Res != null) {
+                        var msg = Res.ApplicationException;
+                        //retrive_SingleFetch_Details(Res.context);
+                        if (Res.ApplicationException == null || Res.ApplicationException == "") {
+                            kendoAlert("Transfer register details saved successfully");
+                            get_TransferRegister_header(Res)
+                        }
+                        else {
+                            kendoAlert(Res.ApplicationException.errorDescription);
+                        }
+
+
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+        //save_TransferRegister_details(data_save);
+    }
+        catch (err) {            
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>
+    function listLoad() {
+        try{
+        var formval = form_Serialize("frmTransfer_Register");
+        var obj_val = JSON.parse(formval);
+            obj_val.In_register_rowid = "0";
+            obj_val.In_fpoorgn_code = getlocalStorage('org_id');
+
+        var data = {};
+        data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_val;
+            var Context = data.context;
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, In_register_rowid: Context.Header.In_register_rowid, In_fpoorgn_code: Context.Header.In_fpoorgn_code }),
+                url: "/GeneratetransferRegister/FetchServiceList",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    if (response.context.Header != null) {
+                        generate_TransferRegister_header(response.context.Header)
+                        //listgrid(response.context.List);
+                        //SetPager(response.context.Filter.out_record_count)
+                    }
+                    if (response.context.Detail != null) {
+                        generate_TransferRegister_detail(response.context.Detail)
+                    }
+                  
+                    else {
+                        gridFilter([]);
+                    }
+                    if (response.ApplicationException != null) {
+                        kendoAlert(response.ApplicationException.errorDescription);
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+        //retrieve_TransferRegister_details(data);
+
+        var colCount = $("#grid_Drop_list").find('.k-grid-header colgroup > col').length;
+
+        //If There are no results place an indicator row
+        if ($("#grid_Drop_list").data("kendoGrid").dataSource._view.length == 0) {
+            $("#grid_Drop_list").find('.k-grid-content tbody')
+                .append('<tr class="kendo-data-row"><td colspan="' +
+                    colCount +
+               '" style="text-align:center; padding-top:10px;background-color:#AFE4FA"><b>No pending FPO transfer applications. </b></td></tr>');
+        }
+        }
+        catch (err) {            
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_TransferRegister_header(res) {
+        try{
+            $("#txtcommon_id").val(res.In_register_no);
+            $("#DocStat").val(res.In_status_desc);
+            $("#registerdate").val(res.In_register_date);
+        }
+        catch (err) {            
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+        function generate_TransferRegister_detail(res) {
+            try{
+        if (res != null) {
+            var data = changedataType(res);
+
+            gridFilter(data);
+        }
+        else {
+            gridFilter([]);
+        }
+            }
+            catch (err) {            
+                javascript_log4j_root(arguments.callee.name, err);
+            }
+        }
+    function get_TransferRegister_header(res)
+            {
+        try{
+        var formval = form_Serialize("frmTransfer_Register");
+            var obj_val = JSON.parse(formval);
+
+            obj_val.ioU_register_rowid = res.context.header.ioU_register_rowid;
+            obj_val.In_fpoorgn_code = getlocalStorage('org_id');
+
+        var data = {};
+        data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_val;
+            var Context = data.context;
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, In_register_rowid: Context.Header.IOU_register_rowid, In_fpoorgn_code: Context.Header.In_fpoorgn_code }),
+                url: "/GeneratetransferRegister/FetchServiceList",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    if (response.context.Header != null) {
+                        generate_TransferRegister_header(response.context.Header)
+                        //listgrid(response.context.List);
+                        //SetPager(response.context.Filter.out_record_count)
+                    }
+                    if (response.context.Detail != null) {
+                        generate_TransferRegister_detail(response.context.Detail)
+                    }
+                    else {
+                        gridFilter([]);
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+
+        //retrieve_TransferRegister_details(data);
+    }
+
+        catch (err) {            
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>

@@ -1,0 +1,370 @@
+﻿@{
+    ViewBag.List = "Customer Registration";
+    Layout = "~/Views/Shared/ListViewLayout.cshtml";
+}
+<form id="frm_customer_details" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="gd_cusdtl">
+                <div id="cusdtl_grid"></div>
+            </div>
+
+        </div>
+    </div>
+</form>
+<script src="~/API_Scripts/CustomerDet_retrieveCustomerList_APIClient.js"></script>
+<script src="~/API_Scripts/retrieveCustomerList_Model.js"></script>
+<script src="~/API_Scripts/CustomerDetails.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+        $(".adv_filter").attr("hdrtitle", "Customer Details List Record");
+        $(".adv_filter").attr("fltid", "Customer");
+        $(".Export").attr("hdrtitle", "Customer Details List");
+        $(".Export").attr("SubTreeId", "ESPUSRMGMT");
+        list_grid_id = "cusdtl_grid";
+        Screen_Id = "ESPUSRMGMT";
+        $("#btn_new").hide();
+        permission = sec_Permission(Screen_Id);
+        page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+        filterhover();
+    });
+</script>
+
+
+
+<script>
+    function listpageloadfetch() {
+        try {
+            var formval = form_Serialize("frm_customer_details");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_FromValue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_FromValue = ".";
+            }
+            obj_val.FilterBy_ToValue = ".";
+
+            obj_val.from_index = "0"
+            obj_val.to_index = "0"
+            obj_val.record_count = "0"
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Filter = obj_val;
+            retrieve_customerdtl_list(data);
+            //setlocalStorage('flt_condition', "");
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function CustomerdetailGrid(data) {
+
+        $("#cusdtl_grid").kendoGrid(
+            {
+                dataSource: {
+                    data: data,
+                    pageSize: 20,
+                    change: function (e) {
+                        setTimeout(function () {
+                            var gd = $("#cusdtl_grid").data("kendoGrid");
+                            filter_row(gd);
+                            $('.k-i-close').css('display', 'none');
+                            $('button.k-button-icon').css('display', 'none');
+                            $('#cusdtl_grid .k-input').prop('disabled', false);
+                            $('#cusdtl_grid .k-input').prop('readonly', true);
+
+                        }, 1);
+                    },
+                },
+                toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                excelExport: function (e) {
+                    var gd = $("#cusdtl_grid").data("kendoGrid");
+                    var len = gd.dataSource._data.length;
+                    var chkall = $('#chkall').is(':checked');
+                    var chkfilter = $('#chkfilter').is(':checked');
+                    var chktemp = $('#chktemp').is(':checked');
+                    var twokendobox = true;
+                    gd.dataSource.pageSize(len);
+                    if (e.sender.dataSource._data.length == len) {
+                        twokendobox = false;
+                        exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                    }
+                    else {
+                        exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                    }
+                    gd.dataSource.pageSize('10');
+                    return false;
+                },
+                filterable: {
+                    enabled: true,
+                    delay: 1500,
+                    mode: "menu, row",
+                    height: 200,
+                    click: function (e) {
+                        var gd = $("#gd_cusdtl").data("kendoGrid");
+                        filter_row(gd);
+                    }
+                },
+                filterMenuInit: function (e) {
+                    var gd = $("#gd_cusdtl").data("kendoGrid");
+                    filter_row(gd);
+                },
+          
+                height: 450,
+                sortable: true,
+                selectable: true,
+                change: selectRow,
+                selectable: "singl",   //  Grid Row Selection
+                pageable: {
+                    refresh: false,
+                    pageSizes: true,
+                    buttonCount: 5
+                },
+                navigatable: true,
+                groupable: false,
+
+                columns: [
+                       //{
+                       //    title: "Sel", width: 40,
+                       //    template: '#=sel_checkbox()#'
+
+                       //},
+                       {
+                           field: "user_type_code",
+                           title: "user_type_code",
+                           hidden: true,
+                           width: 1,
+
+                       },
+                       {
+                           field: "user_type",
+                           title: "user_type",
+                           hidden: true,
+                           width: 1,
+
+                       },
+
+                    {
+                        field: "user_code",
+                        title: "User ID",
+                        width: 100,
+
+                    },
+                    {
+                        field: "farmer_code",
+                        title: "farmer_code",
+                        hidden: true,
+                        width: 1,
+
+                    },
+
+                     {
+                         field: "user_name",
+                         title: "User Name",
+                         width: 100,
+                     },
+                     {
+                         field: "user_pwd",
+                         title: "user_pwd",
+                         hidden: true,
+                         width: 1,
+
+                     },
+                      {
+                          field: "role_code",
+                          title: "role_code",
+                          hidden: true,
+                          width: 1,
+
+                      },
+                        {
+                            field: "role_desc",
+                            title: "role_desc",
+                            hidden: true,
+                            width: 1,
+
+                        },
+                        {
+                            field: "facilitator_orgn_code",
+                            title: "facilitator_orgn_code",
+                            hidden: true,
+                            width: 1,
+
+                        },
+                         {
+                             field: "facilitator_orgn",
+                             title: "facilitator_orgn",
+                             hidden: true,
+                             width: 1,
+
+                         },
+                         {
+                             field: "contact_no",
+                             title: "contact_no",
+                             hidden: true,
+                             width: 1,
+
+                         },
+                         {
+                             field: "email_id",
+                             title: "email_id",
+                             hidden: true,
+                             width: 1,
+
+                         },
+                      {
+                          field: "valid_till",
+                          title: "valid_till",
+                          hidden: true,
+                          width: 1,
+
+                      },
+
+
+                {
+                    field: "status_code",
+                    title: "Status",
+                    width: 100,
+                },
+                ]
+
+            });
+
+
+
+        $(".k-dropdown-operator").css('display', 'none');
+        $("#cusdtl_grid .k-input").attr('disabled', 'false');
+
+        
+
+    }
+    function selectRow() {
+        var grid = $("#cusdtl_grid").data("kendoGrid");
+        var selectedItem = grid.dataItem(grid.select());
+        setlocalStorage("ls_pageList", selectedItem);
+    }
+    var gridRowID = -1;
+    function sel_checkbox() {
+        gridRowID++;
+        return '<input id="chk_sel_' + gridRowID + '" class="checkbox" type="checkbox" />';
+    }
+</script>
+
+<script>
+    click_act_name = "ESPUserDefinition";
+    click_ctrl_name = "ESPUserDefinitionForm";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+
+</script>
+<script>
+    $("#btn_Edit").bind("click", function () {
+        getSerializedSelectedRows('edit');
+    });
+
+    $("#btn_View").bind("click", function () {
+        getSerializedSelectedRows('view');
+    });
+
+    $("#btn_new").bind("click", function () {
+        btn_onClick('Create');
+        location.href = "../ESPUserDefinition/ESPUserDefinitionForm";
+    });
+    function getSerializedSelectedRows(mode) {
+        try {
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var items = getlocalStorage("ls_pageList");
+                if (items.length == 0) {
+                    kendoAlert("Please select records");
+                }
+                else {
+                    if (mode == "edit") {
+                        btn_onClick('Edit');
+                        location.href = "../ESPUserDefinition/ESPUserDefinitionForm";
+                    }
+                    else if (mode == "view") {
+                        btn_onClick('View');
+                        location.href = "../ESPUserDefinition/ESPUserDefinitionForm";
+                    }
+                }
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+<script>
+    function generate_productmaster_list(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                $("#gd_product").empty();
+                $("#gd_product").append("<div id='product_grid'></div>");
+                ProductMasterGrid(data);
+            }
+            else {
+                ProductMasterGrid([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function listRefresh() {
+        try {
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<script>
+    function generate_customerdtl_list(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                $("#cusdtl_grid").empty();
+                $("#cusdtl_grid").append("<div id='cusdtl_grid'></div>");
+                CustomerdetailGrid(data);
+            }
+            else {
+                CustomerdetailGrid([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function listRefresh() {
+        try {
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+
+
+
+

@@ -1,0 +1,475 @@
+﻿@{
+    ViewBag.Form = "FPO Expenses";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+<form id="FPOExpenses_form" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtexpenseid" class="col-sm-4 control-label required">Expense ID:</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txtexpenseid" name="expense_code" class="form-control" maxlength="30" disabled >
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="cmb_finyear" class="col-sm-5 control-label required">Financial Year:</label>
+                        <div class="col-sm-6">
+                            <input id="cmb_finyear" name="finyear_code" style="width: 100%">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txttotalexpence" class="col-sm-4 control-label required">Total Expense</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txttotalexpence" name="totalexpense_Amt" class="form-control" style="text-align:right" maxlength="10" disabled >
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="status_code" class="col-sm-5 control-label">Status_code</label>
+                        <div class="col-sm-4">
+                            <input type="text" value="A" id="txt_status_code" name="status_code" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="txtMode" class="col-sm-5 control-label">Mode</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtMode" name="mode_flag" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="row_timestamp" class="col-sm-5 control-label">Timestamp:</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txt_row_timestamp" name="row_timestamp" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="txt_exp_rowid" class="col-sm-5 control-label ">Exp row id:</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txt_exp_rowid" name="expense_rowid" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-xs-12">
+                <div id="FPOExpenses_grid">
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    click_act_name = "FPOExpenseList";
+    click_ctrl_name = "FPOExpense";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+<script src="~/API_Scripts/Fpo_expense_retrieveFPOExpense_APIClient.js"></script>
+<script src="~/API_Scripts/Fpo_expense_retrieveFPOExpenseList_APIClient.js"></script>
+<script src="~/API_Scripts/Fpo_expense_saveFPOExpense_APIClient.js"></script>
+<script src="~/API_Scripts/FpoExpence.js"></script>
+<script src="~/API_Scripts/retrieveFPOExpense_Model.js"></script>
+<script src="~/API_Scripts/retrieveFPOExpenseList_Model.js"></script>
+<script src="~/API_Scripts/saveFPOExpense_Model.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+
+<script>
+    $(document).ready(function () {
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#FPOExpenses_form");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        //button enable disable
+        $("#divEdit").hide();
+        $("#hide_div").hide();
+        $("#divCreate").hide();
+        $("#bottom_menus").hide();
+        $("#divUserRole8").show();
+
+        $(".file_attach").attr("hdrtitle", "FPO Expenses");
+        $(".notes").attr("hdrtitle", "FPO Expenses");
+        $("#lblForm_menuid").text("FPOEXPENSE");
+
+        Screen_Id = "FPOEXPENSE";
+        permission = sec_Permission(Screen_Id);
+        load_master_code();
+        //fin year
+        var fin_year = "";
+        $("#cmb_finyear").empty();
+        fin_year = grid_comboScreen_mastercodes("FY");
+        filter_combobox("cmb_finyear", fin_year);
+
+        Expenses_grid([]);
+        if (getlocalStorage('btn_clk_val') == "Create") {
+            $('#divCreate #review').hide();
+            $("#txtMode").val("I");
+            $("#bottom_menus").hide();
+            $("#DocStat").val("New");
+        }
+        else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
+            $('#divEdit #reviewEd').hide();
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("FPOExpenses_form");
+                var obj_val = JSON.parse(formval);               
+                obj_val.expense_rowid = data.expense_rowid;
+                obj_val.expense_code = data.expense_code;
+
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                retrieve_fpoexpence_details(data);
+                $("#txtMode").val("U");
+            }
+        }
+    });
+
+
+</script>
+<script>
+    function load_master_code() {
+        try {
+            debugger;
+            var data = {};
+            var context = WebAPIProxy.getContext();
+            data.userId = context.userId
+            data.orgnId = context.orgnId
+            data.locnId = context.locnId
+            data.localeId = context.localeId
+            data.screen_Id = "FPOEXPENSE";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+</script>
+
+
+<script>
+    //var data = [];
+    function Expenses_grid(data) {
+        try {
+            $("#FPOExpenses_grid").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                sl_no: { type: "string" },
+                                attribute_group: { type: "string" },
+                                expense_date: { type: "date" },
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+                toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 400,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#FPOExpenses_grid').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                edit: OnEdit,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [{
+                    command: [
+            {
+                name: "Delete",
+                id: "Delete",
+                imageClass: "fa fa-close",
+                click: function (e) {
+                    // e.preventDefault();
+                    var grid = $("#FPOExpenses_grid").data("kendoGrid");
+                    var dataItem = $("#FPOExpenses_grid").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                    DeleteWindowEvent(e, dataItem, grid);
+                    e.stopImmediatePropagation()
+                }
+            },
+                    ], title: "&nbsp;", width: "25px",
+                },
+                  {
+                      field: "expensedtl_rowid",
+                      title: "expensedtl_rowid",
+                      width: 1,
+                      hidden: true,
+                  },
+                  {
+                      field: "businessactivity_code",
+                      title: "businessactivity_code",
+                      width: 1,
+                      hidden: true,
+                  },
+
+                 {
+                     field: "businessactivity_desc",
+                     title: "Business Activity",
+                     editor: function (container, options) {
+                         combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "businessactivity_code", "FPOExpenses_grid")
+                     },
+                     width: 100,
+
+                 },
+                 {
+                     field: "expensehead_code",
+                     title: "expensehead_code",
+                     width: 1,
+                     hidden: true,
+                 },
+                 {
+                     field: "expense_code",
+                     title: "expense_code",
+                     width: 1,
+                     hidden: true,
+                 },
+                {
+                    field: "expensehead_desc",
+                    title: "Expense Head",
+                    editor: function (container, options) {
+                        combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "expensehead_code", "FPOExpenses_grid")
+                    },
+                    width: 100,
+                },
+                {
+                    field: "expense_desc",
+                    title: "Description",
+                    width: 100,
+                },
+                {
+                    field: "expense_date",
+                    title: "Incurred On",
+                    width: 100,
+                    format: "{0:dd/MM/yyyy}"
+                },
+                {
+                    field: "expense_amount",
+                    title: "Amount",
+                    width: 100,
+                    attributes: { style: "text-align:right;" },
+                    editor: function (container, options) {
+                        item_rate(container, options.field, '9', '2');
+                    },
+                },
+                 {
+                      field: "status_code",
+                      title: "status_code",
+                      hidden: true,
+                      width: 100,
+               },
+            {
+                field: "status_desc",
+                title: "Status",
+                editor: function (container, options) {
+                    combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "status_code", "FPOExpenses_grid")
+                },
+                hidden: true,
+                width: 100,
+            },
+            {
+                field: "row_timestamp",
+                title: "row_timestamp",
+                hidden: true
+            },
+                {
+                    field: "mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }],
+                editable: true
+
+
+
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+    load_master_code();
+    businessactivity_desc_list = grid_comboScreen_mastercodes("QCD_FPO_BUSSACTY");
+    expensehead_desc_list = grid_comboScreen_mastercodes("QCD_FPO_EXPHEAD");
+    status_desc_list = grid_comboScreen_mastercodes("STATUS");
+    function OnEdit(e) {
+        setDefaultValues(e);
+    e.container.find("input[name='expense_amount']").focusout(function () {
+        
+        var grid = $("#FPOExpenses_grid").data("kendoGrid");
+            var gridData = grid.dataSource.view();
+            var EXP_rate = 0;
+            for (var i = 0; i < gridData.length; i++) {
+                if (gridData[i].rating != '') {
+                    EXP_rate += gridData[i].expense_amount != undefined ? parseFloat(gridData[i].expense_amount) : parseFloat(0);
+                }
+            }
+            $('#txttotalexpence').val(EXP_rate).toFixed(2);
+  
+    });
+    }
+</script>
+<script>
+    function save() {
+        try {
+            if ($("#txt_exp_rowid").val() == "") {
+                $("#txt_exp_rowid").val('0');
+            }
+            if ($("#txtexpenseid").val() == "") {
+                $("#txtexpenseid").val('0');
+            }
+            if ($("#txttotalexpence").val() == "") {
+                $("#txttotalexpence").val('0');
+            }
+            if ($("#txt_row_timestamp").val() == "") {
+                $("#txt_row_timestamp").val('0');
+            }
+            if ($("#txtMode").val() == "") {
+                $("#txtMode").val('I');
+            }
+            if ($("#DocStat").val() == "Active") {
+                $("#txtMode").val('U');
+            }          
+            $("#txtexpenseid").removeAttr("disabled");
+            $("#txttotalexpence").removeAttr("disabled");
+            var formval = form_Serialize("FPOExpenses_form");
+            var obj_val = JSON.parse(formval);
+            $("#txtexpenseid").attr("disabled", "disabled");
+            $("#txttotalexpence").attr("disabled", "disabled");
+            var grid_val = JSON.stringify($("#FPOExpenses_grid").data().kendoGrid._data);
+            var Bind = {};
+            Bind = grid_val;
+            var result = JSON.parse(Bind);
+            $.each(result, function (index, value) {
+                var row_id = value.expensedtl_rowid;
+                if (row_id == undefined || row_id == "") {
+                    result[index].expensedtl_rowid = "0";
+                }
+                var row_id1 = value.row_timestamp;
+                if (row_id1 == undefined || row_id1 == "") {
+                    result[index].row_timestamp = "0";
+                }
+                var row_id2 = value.expense_code;
+                if (row_id2 == undefined || row_id2 == "") {
+                    result[index].expense_code = "0";
+                }
+                var row_id3 = value.status_code;
+                if (row_id3 == undefined || row_id3 == "") {
+                    result[index].status_code = "A";
+                }
+                if ((result[index].expense_date == null) || (result[index].expense_date == "")) {
+                    var d1 = new Date();
+                    var date1 = kendo.parseDate(d1);
+                    value = kendo.toString(date1, "MM/dd/yyyy");
+                    result[index].expense_date = value
+                }
+                else {
+                    var d = value.expense_date;
+                    var date = kendo.parseDate(d);
+                    value = kendo.toString(date, "MM/dd/yyyy");
+                    result[index].expense_date = value;
+                }
+
+                var mode = value.mode_flag;
+                if (mode == "S") {
+                    result[index].mode_flag = "U";
+                }
+
+            });
+            var obj_grid_val = result;
+
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_val;
+            data.context.FpoExpenseDtl = obj_grid_val;
+            save_fpoexpence_details(data);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>
+  function generate_fpoexpence_header(res) {
+        try {
+            $("#txt_exp_rowid").val(res.expense_rowid);
+
+            $("#txtexpenseid").val(res.expense_code);
+
+            $('#cmb_finyear').data("kendoComboBox").value(res.finyear_code);
+            $("#txtexpenseid").val(res.expense_code);
+
+            $("#txttotalexpence").val(res.totalexpense_Amt);
+            $("#DocStat").val(res.status_desc);
+
+            $("#txtMode").val(res.mode_flag);
+
+            $("#txt_row_timestamp").val(res.row_timestamp);
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+  function generate_fpoexpence_detail(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+
+                Expenses_grid(data);
+            }
+            else {
+                Expenses_grid([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+  function get_fpoexpence_details(res) {
+      try {
+          $("#txtexpenseid").removeAttr("disabled");
+          $("#txtexpenseid").val(res.expense_code);
+          var formval = form_Serialize("FPOExpenses_form");
+          var obj_val = JSON.parse(formval);         
+          obj_val.expense_rowid = res.expense_rowid;
+          obj_val.expense_code = res.expense_code;
+          $("#txtexpenseid").val(res.expense_code);
+          retrieve_fpoexpence_details(obj_val);
+          $("#txt_exp_rowid").val(res.expense_rowid);
+          $("#txtexpenseid").removeAttr("disabled");
+          $("#txtMode").val("U");
+         
+      }
+      catch (err) {
+          javascript_log4j_root(arguments.callee.name, err);
+      }
+  }
+</script>

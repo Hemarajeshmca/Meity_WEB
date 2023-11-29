@@ -1,0 +1,654 @@
+﻿
+@{
+    ViewBag.Form = "FPO Income & Expense Report";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+<form id="expensereport_form" class="form-horizontal">
+    <div class="box-body" style="padding-top:6px;padding-bottom:2px">
+        <div class="row" style="padding-top:10px; padding-bottom:15px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtreport" class="col-sm-4 control-label ">Report</label>
+                        <div class="col-sm-6">
+                            <input id="cmbreport_name" name="Report_code" data-role="filtercombo" style="width:100%">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="cmbbus_acty" class="col-sm-4 control-label ">Business Activity</label>
+                        <div class="col-sm-6">
+                            <input id="cmbbus_acty" name="businessactivity_code" data-role="filtercombo" style="width:100%">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtreport_run" class=" col-sm-4 control-label">Report Date</label>
+                        <div class=" col-sm-4">
+                            <input class="cusDate" data-role='datepicker' id="txtValidity" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="Report_date" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="cmb_freq" class="col-sm-4 control-label ">Frequency</label>
+                        <div class="col-sm-6">
+                            <input id="cmb_freq" name="frequency_code" data-role="filtercombo" style="width:100%">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtreport_run" class=" col-sm-4 control-label">Form Date</label>
+                        <div class=" col-sm-4">
+                            <input class="cusDate" data-role='datepicker' id="txtValidity1" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="from_date" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtins_mon" class=" col-sm-4 control-label">TO Date</label>
+                        <div class=" col-sm-4">
+                            <input class="cusDate" data-role='datepicker' id="txtValidity2" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="to_date" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" style="float:right" type="button" onclick="listLoad()" data-original-title="Refresh"> <span class="glyphicon glyphicon-refresh"></span></button>
+        </div>
+    </div>
+    <div class="panel panel-default" id="divincomeexpense">
+        <fieldset>
+            @*<legend>INCOME & EXPENSES</legend>*@
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-12">
+                    <div id="grid_income_expense"></div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div class="panel panel-default" id="divICDPRODUCT">
+        <fieldset>
+            @*<legend>ICD DEMAND PRODUCT REPORT</legend>*@
+           
+            <div class="col-sm-12" >
+                <div id="grid_icdproduct"></div>
+            </div>             
+          
+        </fieldset>
+    </div>  
+    <div class="panel panel-default" id="divICDFARMR">
+        <fieldset>
+            @*<legend>ICD FARMER</legend>*@
+            <div class="col-xs-12">
+                <div id="grid_icdfarmer" >
+                </div>
+            </div>
+
+        </fieldset>
+    </div> 
+</form>
+<script>
+    click_act_name = "home";
+    click_ctrl_name = "home";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+<script src="~/API_Scripts/getIncome_ExpenseReport_Model.js"></script>
+<script src="~/API_Scripts/incme_exp_rpt_getIncome_ExpenseReport_APIClient.js"></script>
+<script src="~/API_Scripts/FPOincomeexpenseRPT.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script>
+    $(document).ready(function () {
+        kendodate_format();
+        $("#Topsubheader").show();
+        $("#main-footer").hide();
+        $("#btndiv").show();
+        $("#frmlayerdiv").hide();
+        $("#div4").show();
+        $("#div1").show();
+        $("#div2").show();
+        $("#div3").show();
+        $("#divUserRole7").show();
+        $("#divUserRole7 #btnReport").hide();
+        $("#divCreate").hide();
+        $("#divEdit").hide();
+        $("#divView").hide();
+        $("#divReView").hide();
+        $(".edtviw_item").hide();
+        $(".create_item").hide();
+        jQuery("label[for='modevalue']").html("");
+        converse_var = true;
+        $("#bottom_menus").hide();
+
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#expensereport_form");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+       
+        $(".file_attach").attr("hdrtitle", "FL-Instalment Dues Generation");
+        $(".notes").attr("hdrtitle", "FL-Instalment Dues Generation");
+        $("#lblForm_menuid").text("FPOINEXP");
+
+        Screen_Id = "FPOINEXP";
+        permission = sec_Permission(Screen_Id);
+        load_master_code();
+
+        //frequency
+        var cmb_freqency = "";
+        $("#cmb_freq").empty();
+        cmb_freqency = grid_comboScreen_mastercodes("QCD_REPAY");
+        filter_combobox("cmb_freq", cmb_freqency);
+
+
+        //bussiness_actityt
+        var bussiness_actityt = "";
+        $("#cmbbus_acty").empty();
+        bussiness_actityt = grid_comboScreen_mastercodes("QCD_FPO_BUSSACTY");
+        filter_combobox("cmbbus_acty", bussiness_actityt);
+
+
+        //report
+        var report = "";
+        $("#cmbreport_name").empty();
+        report = grid_comboScreen_mastercodes("QCD_FPO_Report");
+        filter_combobox("cmbreport_name", report);
+
+      
+        GRIDICDFARMER();
+        GRIDINCEXP();
+        GRIDICDPRDCT();
+
+        var container = $("#txtValidity");
+        kendo.init(container);
+        container.kendoValidator({
+            rules: {
+                checkdate: function (input) {
+                    if (input.attr("data-role") == "datepicker") {
+                        var res = isDate(input.val());
+                        return res;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+            }
+        });
+        var container = $("#txtValidity1");
+        kendo.init(container);
+        container.kendoValidator({
+            rules: {
+                checkdate: function (input) {
+                    if (input.attr("data-role") == "datepicker") {
+                        var res = isDate(input.val());
+                        return res;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+            }
+        });
+        $("#txtValidity").kendoDatePicker({
+            value: new Date(),
+            max: new Date(), // sets max date to Jan 1st, 2013
+            format: "dd/MM/yyyy"
+        });
+        $("#divincomeexpense").hide();
+        $("#divICDPRODUCT").hide();
+        $("#divICDFARMR").hide();
+    });
+</script>
+<script>
+    function load_master_code() {
+        try {
+            debugger;
+            var data = {};
+            var context = WebAPIProxy.getContext();
+            data.userId = context.userId
+            data.orgnId = context.orgnId
+            data.locnId = context.locnId
+            data.localeId = context.localeId
+            data.screen_Id = "FPOINEXP";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+</script>
+<script>
+    $(function () {
+        $("#cmbreport_name").change(function () {
+            var val = $('#cmbreport_name').data("kendoComboBox").value();
+            console.log(val);
+            if (val == "QCD_FPO_ICDDEMFAR") {
+                $("#divincomeexpense").hide();
+                $("#divICDPRODUCT").hide();
+                $("#divICDFARMR").show();
+                $('#cmbbus_acty').data("kendoComboBox").enable(false);
+                $('#cmbbus_acty').data("kendoComboBox").value("ICD")
+               
+            }
+            if (val == "QCD_FPO_InExp") {
+                $("#divincomeexpense").show();
+                $("#divICDPRODUCT").hide();
+                $("#divICDFARMR").hide();
+                $('#cmbbus_acty').data("kendoComboBox").enable(true);
+                $('#cmbbus_acty').data("kendoComboBox").value("")
+               
+            }
+            if (val == "QCD_FPO_ICDDEMPRDCT") {
+                $("#divincomeexpense").hide();
+                $("#divICDPRODUCT").show();
+                $("#divICDFARMR").hide();
+                $('#cmbbus_acty').data("kendoComboBox").enable(false);
+                $('#cmbbus_acty').data("kendoComboBox").value("ICD")
+               
+            }
+        });
+    });
+    
+</script>
+<script>
+    //var data = [];
+    function GRIDINCEXP(data) {
+        try {
+            $("#grid_income_expense").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                fig_name: { type: "string" },
+                                farmer_member_id: { type: "string" },
+                                farmer_name: { type: "string" },
+                                lan: { type: "string" },
+                                instalment_no: { type: "string" },
+                                instalment_amount: { type: "string" },
+                                instalment_date: { type: "string" },
+                                paymode: { type: "string" },
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+
+                height: 300,
+                groupable: true,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                     {
+                         field: "businessactivity_code",
+                         title: "businessactivity_code",
+                         hidden: true
+                     },
+                    {
+                        field: "businessactivity_desc",
+                        title: "Business Activity",
+                        width: 100
+                    },
+                     {
+                         field: "finyear_code",
+                         title: "finyear_code",
+                         hidden: true
+                     },
+                    {
+                        field: "finyear_desc",
+                        title: "FY",
+                        width: 100
+                    },
+                {
+                    field: "bi_annual",
+                    title: "Bi-Annual",
+                    width: 100
+                },
+
+                  {
+                      field: "Quaters",
+                      title: "Quarters",
+                      width: 100
+                  },
+                  {
+                      field: "month",
+                      title: "Month",
+                      width: 100
+                  },
+                   {
+                       field: "date",
+                       title: "Date",
+                       width: 100
+                   },
+                    {
+                        field: "income",
+                        title: "Income(AMT IN INR)",
+                        width: 100
+                    },
+                    {
+                        field: "expense",
+                        title: "Expense(AMT IN INR)",
+                        width: 100
+                    },
+                {
+                    field: "mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+
+</script>
+<script>
+    //var data = [];
+    function GRIDICDPRDCT(data) {
+        try {
+            $("#grid_icdproduct").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                farmer_member_id: { type: "string" },
+                                farmer_name: { type: "string" },
+                                lan: { type: "string" },
+                                instalment_no: { type: "string" },
+                                instalment_amount: { type: "string" },
+                                instalment_date: { type: "string" },
+                                cheque_no: { type: "string" },
+                                box_no: { type: "string" },
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+                height: 250,
+                groupable: true,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                     {
+                         field: "product_catg_code",
+                         title: "product_catg_code",
+                         hidden: true
+                     },
+                   {
+                       field: "product_catg_desc",
+                       title: "Product Category",
+                       width: 100,
+                   },
+                    {
+                        field: "product_subcatg_code",
+                        title: "product_subcatg_code",
+                        hidden: true
+                    },
+                      {
+                          field: "product_subcatg_desc",
+                          title: "Product Sub-Category",
+
+                          width: 100,
+
+                      },
+                      {
+                          field: "product_name",
+                          title: "Product Name",
+                          width: 150,
+                      },
+                      {
+                          field: "product_code",
+                          title: "Product Code",
+
+                          width: 100,
+
+                      },
+                    {
+                        field: "product_desc",
+                        title: "product_desc",
+                        hidden: true
+                    },
+
+
+                      {
+                          field: "qty",
+                          title: "Req. Qty",
+                          width: 100,
+                      },
+                      {
+                          field: "month_year",
+                          title: "Req. Month & Year",
+                          width: 100,
+                      },
+
+                 {
+                     field: "no_of_farmers",
+                     title: "No. of Farmers",
+                     width: 100,
+                 },
+
+                {
+                    field: "mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+</script>
+<script>
+    //var data = [];
+    function GRIDICDFARMER(data) {
+        try {
+            $("#grid_icdfarmer").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                date_prenset: { type: "string" },
+                                instal_amt: { type: "string" },
+                                debit_acc_no: { type: "string" },
+                                credit_acc: { type: "string" },
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+
+                height: 250,
+                groupable: true,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                    {
+                        field: "farmer_code",
+                        title: "Farmer Code",
+                        width: 100,
+                    },
+                     {
+                         field: "farmer_desc",
+                         title: "farmer_desc",
+                         hidden: true
+                     },
+                      {
+                          field: "farmer_name",
+                          title: "Farmer Name",
+                          width: 100,
+                      },
+                      {
+                          field: "product_name",
+                          title: "Product Name",
+                          editor: '<div class="input-group input-group-sm"><input type="text" readonly name="product_name" maxlength="10" style="width:100px;color:black"  onkeypress="return speical_char(event)" data-bind="value:product_name"/><span class="input-group-btn" style="padding-right: 150px;"><a class="HelpWindow fa fa-search fa-lg" data-toggle="modal" href="/HelpFilter/HelpFilter" hdrtitle="Details" searchid="S15" data-target="#HelpModal" onclick=transfer(this,"grid","grid_icdgen","ICDGenerationgrid") title="Search" style="font-size: 15px; padding-left: 10px;"></a> </span> </div>',
+                          width: 150,
+                      },
+                      {
+                          field: "product_code",
+                          title: "Product Code",
+
+                          width: 100,
+
+                      },
+                         {
+                             field: "product_desc",
+                             title: "product_desc",
+                             hidden: true
+                         },
+                  {
+                      field: "product_catg_code",
+                      title: "product_catg_code",
+                      hidden: true
+                  },
+                   {
+                       field: "product_catg_desc",
+                       title: "Product Category",
+                       width: 100,
+                   },
+                    {
+                        field: "product_subcatg_code",
+                        title: "product_subcatg_code",
+                        hidden: true
+                    },
+                      {
+                          field: "product_subcatg_desc",
+                          title: "Product Sub-Category",
+
+                          width: 100,
+
+                      },
+
+
+                      {
+                          field: "qty",
+                          title: "Req. Qty",
+                          width: 100,
+                      },
+                      {
+                          field: "month_year",
+                          title: "Req. Month & Year",
+                          width: 100,
+                      },
+
+                 {
+                     field: "remarks",
+                     title: "Remarks",
+                     width: 100,
+                 },
+
+                {
+                    field: "mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+</script>
+<script>
+    function generate_FPOIncExp_Header(res) {
+        try {           
+            $('#cmb_freq').data("kendoComboBox").value(res.frequency_code);
+            $('#cmbbus_acty').data("kendoComboBox").value(res.businessactivity_code);
+            $('#cmbreport_name').data("kendoComboBox").value(res.Report_code);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_FPOIncExp_Income_expensedtl(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                GRIDINCEXP(data);
+            }
+            else {
+
+                GRIDINCEXP([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_FPOIncExp_ICDemand_prddtl(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                GRIDICDPRDCT(data);
+            }
+            else {
+
+                GRIDICDPRDCT([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_FPOIncExp_ICDemand_fardtl(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                GRIDICDFARMER(data);
+            }
+            else {
+
+                GRIDICDFARMER([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+   
+</script>
+<script>
+    function listLoad() {
+        try {
+            var formval = form_Serialize("expensereport_form");
+            var obj_val = JSON.parse(formval);
+            var c = $('#cmbreport_name');
+            var s = $('#cmbbus_acty');
+            if ($('#cmbreport_name').data("kendoComboBox").value() == "") {
+                kendoAlert("Report Name cannot be blank");
+            }
+
+            if ($('#cmbbus_acty').data("kendoComboBox").value() == "") {
+                kendoAlert("Bussiness Activity cannot be blank");
+            }
+            obj_val.Report_date = '';
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Header = obj_val;
+            retrieve_FPOIncExp_list(data);
+            return false;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>

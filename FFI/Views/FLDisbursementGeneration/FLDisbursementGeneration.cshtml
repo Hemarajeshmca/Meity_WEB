@@ -1,0 +1,374 @@
+﻿@{
+    ViewBag.Form = "Disbursement Advice Generation";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+<form id="frm_disbursementgen" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-12">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="cmb_sanction" class="col-sm-4 control-label required">Select List</label>
+                            <div class="col-sm-6">
+                                <input id="cmb_sanction" name="status_option" data-role="filtercombo" style="width:100%" />
+                            </div>
+                            <button title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button"
+                                    data-original-title="Refresh" onclick="listRefresh()">
+                                <span class="glyphicon glyphicon-refresh"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div id="gd_loanDisbursementgen">
+                                <div id="FarmerloanDisbursementgen_grid"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="~/API_Scripts/Loan_Disbursement_retrieveFLDisbursementAdviceGen_APIClient.js"></script>
+<script src="~/API_Scripts/Loan_Disbursement_saveFLDisbursementAdviceGen_APIClient.js"></script>
+<script src="~/API_Scripts/retrieveFLDisbursementAdviceGen_Model.js"></script>
+<script src="~/API_Scripts/saveFLDisbursementAdviceGen_Model.js"></script>
+<script src="~/API_Scripts/FLDisbursementAdvice.js"></script>
+<script src="~/CommonScripts/Common_func.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/CommonScripts/report.js"></script>
+<script>
+    click_act_name = "home ";
+    click_ctrl_name = "home";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+
+</script>
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#frm_disbursementgen");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+
+        $(".adv_filter").attr("hdrtitle", "Disbursement Advice List");
+        $(".adv_filter").attr("fltid", "Disbursement Advice Details");
+        $(".Export").attr("hdrtitle", "Disbursement Advice List");
+        $(".Export").attr("SubTreeId", "FLDISBAG");
+
+        Screen_Id = "FLDISBAG";
+        load_master_code();
+
+        permission = sec_Permission(Screen_Id);
+        page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+         
+        master_applysubvention();
+        $("#divUserRole16 #btnnew").hide();
+        $("#divUserRole16 #btnReport").hide();
+        $("#divUserRole16 #btnview").hide();
+        var combo_data = "";
+        $("#cmb_sanction").empty();
+        combo_data = grid_comboScreen_mastercodes("QCD_FL_Disbadvice");
+        filter_combobox("cmb_sanction", combo_data);
+
+        listgrid([]);
+    });
+</script>
+<script>
+    function load_master_code() {
+        debugger;
+        var data = {};
+        var context = WebAPIProxy.getContext();
+        data.userId = context.userId
+        data.orgnId = context.orgnId
+        data.locnId = context.locnId
+        data.localeId = context.localeId
+        data.screen_Id = "FLDISBAG";
+        var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+    }
+</script>
+
+<script>
+    function listpageloadfetch() {
+        try {
+            if ($('#cmb_sanction').data("kendoComboBox").value() == "QCD_FL_Disbapproved") {
+                $("#divUserRole16 #btnnew").show();
+                $("#divUserRole16 #btnReport").hide();
+                selectitem = false;
+            }
+            else {
+                $("#divUserRole16 #btnnew").hide();
+                $("#divUserRole16 #btnReport").show();
+                //$("#closure_grid").data("kendoGrid").hideColumn(0);
+                //grid.hideColumn("loan_rowid");
+                //selectitem=true;
+            }
+            var formval = form_Serialize("frm_disbursementgen");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_Fromvalue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_Fromvalue = ".";
+            }
+            obj_val.FilterBy_Tovalue = ".";
+            if (obj_val.status_option == "" || obj_val.status_option == undefined)
+            {
+                obj_val.status_option = "V";
+            }
+           
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Filter = obj_val;
+            retrieve_FarmerLoanDisbursement_details(data);
+            var colCount = $("#FarmerloanDisbursementgen_grid").find('.k-grid-header colgroup > col').length;
+
+            //If There are no results place an indicator row
+            if ($("#FarmerloanDisbursementgen_grid").data("kendoGrid").dataSource._view.length == 0) {
+                $("#FarmerloanDisbursementgen_grid").find('.k-grid-content tbody')
+                    .append('<tr class="kendo-data-row"><td colspan="' +
+                        colCount +
+                   '" style="text-align:center; padding-top:10px;background-color:#AFE4FA"><b> No pending records available for the selected status; please try later!!!</b></td></tr>');
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    var status_Priority = [];
+    function listgrid(data) {
+        try {
+            $.each(data, function (index, value) {
+                var flag = false;
+                $.each(status_Priority, function (sindex, svalue) {
+                    if (svalue == value.status_desc) {
+                        flag = true;
+                    }
+                });
+                if (flag == false) {
+                    status_Priority.push(value.status_desc);
+                }
+            });
+            $("#FarmerloanDisbursementgen_grid").kendoGrid({
+                dataSource: {
+                    data: data,
+                    pageSize: 20,
+                    change: function (e) {
+                        setTimeout(function () {
+                            var gd = $("#FarmerloanDisbursementgen_grid").data("kendoGrid");
+                            filter_row(gd);
+                            $('.k-i-close').css('display', 'none');
+                            $('button.k-button-icon').css('display', 'none');
+                            $('#apply_grid .k-input').prop('disabled', false);
+                            $('#apply_grid .k-input').prop('readonly', true);
+
+                        }, 1);
+                    },
+                },
+                toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                excelExport: function (e) {
+                    var chkall = $('#chkall').is(':checked');
+                    var chkfilter = $('#chkfilter').is(':checked');
+                    var chktemp = $('#chktemp').is(':checked');
+                    var gd = $("#apply_grid").data("kendoGrid");
+                    var len = gd.dataSource._data.length;
+                    gd.dataSource.pageSize(len);
+                    exportfunction(e, chkall, chkfilter, chktemp);
+                    gd.dataSource.pageSize('10');
+                },
+                
+                change: selectRow,
+                height: 450,
+                sortable: true,
+                selectable: true,
+                selectable: "multiple, row",
+                pageable: {
+                    refresh: false,
+                    pageSizes: true,
+                    buttonCount: 5
+                },
+                navigatable: true,
+                groupable: false,
+
+                columns: [
+                       
+                 
+                     {
+                         field: "fpomember_code",
+                         title: "Member ID",
+                         width: 200,
+                     },
+                      {
+                          field: "farmer_name",
+                          title: "Farmer Name",
+                          width: 200,
+                      },
+                      {
+                          field: "app_date",
+                          title: "Application Date",
+                          width: 200,
+                      },
+
+                    {
+                        field: "loanapp_no",
+                        title: "Application Ref No",
+                        width: 200,
+
+                    },
+                      {
+                          field: "loanscheme_desc",
+                          title: "FL Scheme",
+                          width: 200,
+                      },
+                    {
+                        field: "loan_no",
+                        title: "Loan Account No.",
+                        width: 200,
+                    },
+                    {
+                        field: "loan_amount",
+                        title: "LOAN Amount",
+                        width: 200,
+                    },
+                    {
+                        field: "disb_advice_no",
+                        title: "Disb.Advice No",
+                        width: 200,
+
+                    },
+
+
+                ]
+
+            });
+            $(".k-dropdown-operator").css('display', 'none');
+            $("#FarmerloanDisbursementgen_grid .k-input").attr('disabled', 'false');
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+
+    }
+    function statusFilter(element) {    // Dropdown list functionality
+        element.kendoDropDownList({
+            dataSource: status_Priority,
+            optionLabel: "--Select Value--"
+        });
+    }
+    var gridRowID = -1;
+    function sel_checkbox() {
+        gridRowID++;
+        return '<input id="chk_sel_' + gridRowID + '" class="checkbox" type="checkbox" />';
+    }
+    function selectRow() {
+        try {
+            var grid = $("#FarmerloanDisbursementgen_grid").data("kendoGrid");
+            var selectedItem = grid.dataItem(grid.select());
+            setlocalStorage("ls_pageList", selectedItem);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+
+    }
+</script>
+<script>
+
+    function save() {
+
+        try {
+            var formval = form_Serialize("frm_disbursementgen");
+            var obj_val1 = JSON.parse(formval);
+            var org_id = getlocalStorage('org_id');
+            obj_val1.fpoorgn_code = org_id;
+            var grid_val = JSON.stringify($("#FarmerloanDisbursementgen_grid").data().kendoGrid._data);
+            var Bind = {};
+            Bind = grid_val;
+            var result = JSON.parse(Bind);
+            if (result.length == 0) {
+                kendoAlert("There is no records to generate");
+                //mandatory_check = false;
+                return false;
+            }
+            $.each(result, function (index, value) {
+            
+                var mmode = result[index].mode_flag;
+                if (mmode == "S") {
+                    result[index].mode_flag = "U";
+                }
+
+            });
+            var obj_grid_val = result;
+            var data_save = {};
+            data_save.context = WebAPIProxy.getContext();
+            data_save.context.Filter = obj_val1;
+            data_save.context.List = obj_grid_val;
+            save_FLDisbursementAdviceGen_details(data_save);
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>
+    function generate_FLDisbursementAdviceGen_list(res) {
+
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                $("#gd_loanDisbursementgen").empty();
+                $("#gd_loanDisbursementgen").append("<div id='FarmerloanDisbursementgen_grid'></div>");
+                listgrid(data);
+            }
+            else {
+                listgrid([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function get_FLDisbursementAdviceGen_details()
+    {
+        try {
+            var formval = form_Serialize("frm_disbursementgen");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_Fromvalue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_Fromvalue = ".";
+            }
+            obj_val.FilterBy_Tovalue = ".";
+            obj_val.status_option = "V";      
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Filter = obj_val;
+            retrieve_FarmerLoanDisbursement_details(data);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function listRefresh() {
+        try {
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>

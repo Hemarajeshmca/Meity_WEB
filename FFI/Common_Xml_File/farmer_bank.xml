@@ -1,0 +1,14 @@
+﻿<root>
+  <row>
+    <farmerbank_rowid>1</farmerbank_rowid>
+    <farmer_code>MUTHU0001</farmer_code>
+    <version_no>1</version_no>
+    <bank_acc_no>057101000027284</bank_acc_no>
+    <bank_acc_type>QCD-ACC-SAVINGS</bank_acc_type>
+    <bank_code>SBI</bank_code>
+    <ifsc_code>SBIN0000441</ifsc_code>
+    <dflt_dr_acc>QCD-YES</dflt_dr_acc>
+    <dflt_cr_acc>QCD-NO</dflt_cr_acc>
+    <status_code>Active</status_code>
+  </row>
+</root>

@@ -1,0 +1,541 @@
+﻿@{
+    ViewBag.Form = "FPO-Wise Daily Sowing Report";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+<style>
+    a.k-button.k-button-icontext.k-grid-Edit, a.k-button.k-button-icontext.k-grid-View, a.k-button.k-button-icontext.k-grid-Delete, a.k-button.k-button-icontext.k-grid-edit {
+        background-color: #00c0ef;
+        border-color: #00c0ef;
+    }
+
+    #display_loading {
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        transform: translate(-50%, 50%);
+        display: none;
+    }
+
+    body {
+        background-color: #ffffff;
+    }
+    button#btnExport {
+        background-color: #00c0ef;
+        border-color: #00acd6;
+        margin-top: -6%;
+        display: inline-block;
+        padding: 6px 12px;
+        margin-bottom: 0;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1.42857143;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        -ms-touch-action: manipulation;
+        touch-action: manipulation;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        background-image: none;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        color: #fff;
+    }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.min.js"></script>
+<form id="frm_mobileprogressreport" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:2px;padding-top:12px;">
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-3">
+
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <button id="refresh" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button"
+                                            data-original-title="Refresh" onclick="listRefresh()" style="margin-left: 1407%; margin-top: 5%; ">
+                                        Generate Report
+                                    </button>
+                                    @*<label id="lblprog" style="color:red;display:none"> In Progress..Please Wait </label>*@
+                                    <div id="display_loading" style="z-index: 999;"><img src="https://i.stack.imgur.com/rBLb3.gif" style="height:100px; width:100px;"></div>
+
+                                    <button id="btnExport" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button" data-original-title="Export" style="margin-left: 1585%;  background-color: #00c0ef ;border-color: #00acd6; margin-top: -79% ;">
+                                        @*<span class="fa fa-file-excel-o"></span>*@
+                                        Export to Excel
+                                    </button>
+                                    <input type="hidden" id="hdn_inputstring">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pull-right">
+                            <div>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div id="gd_sowingprogress">
+                                    <div id="sowingprogress_grid"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script src="~/CommonScripts/Common_func.js"></script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+<script src="~/CommonScripts/ExportExcel.js"></script>
+
+<script>
+    click_act_name = "home ";
+    click_ctrl_name = "home";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+
+</script>
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+        debugger;
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#frm_mobileprogressreport");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        $("#Topsubheader").show();
+        $("#bottomFooter").show();
+        $("#bottom_menus").hide();
+        $("#btndiv").show();
+        $("#frmlayerdiv").hide();
+        $("#divCreate").hide();
+        $("#divEdit").hide();
+        $("#divView").show();
+        $("#DocStat").show();
+        $(".edtviw_item").show();
+        $(".create_item").hide();
+        $("#btnExport").hide();
+
+        Screen_Id = "FARMSOWINGDETCRPT";
+        permission = sec_PermissionNew(Screen_Id);
+        page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+        var security = permission;
+        console.log(security);
+        if (security['print'] == true) {
+            $("#btnExport").show();
+        }
+        else {
+            $("#btnExport").hide();
+        }
+        /*  Prema added for fpo based abd ri user base loading*/
+        var role = getlocalStorage("orgn_level");
+        if (role == "ORG_FO") {
+            $("#RIform").show();
+            $("#FPOform").show();
+            filter_combobox("cmb_RIBelongform", getlocalStorage("rilist"));
+            filter_combobox("cmb_FPOBelongform", getlocalStorage("fpolist"));
+            var cmb_riform3 = $("#cmb_RIBelongform").data("kendoComboBox");
+            cmb_riform3.value(getlocalStorage("org_id"));
+            $("#cmb_FPOBelongform").data("kendoComboBox").value("ALL");
+            $("#cmb_RIBelongform").data("kendoComboBox").enable(false);
+            $("#cmb_FPOBelongform").data("kendoComboBox").enable(true);
+        }
+        if (role == "ORG_PF") {
+            $("#RIform").show();
+            $("#FPOform").show();
+            filter_combobox("cmb_RIBelongform", getlocalStorage("rilist"));
+            $("#cmb_RIBelongform").data("kendoComboBox").value("ALL");
+            filter_combobox("cmb_FPOBelongform", getlocalStorage("fpolist"));
+            $("#cmb_FPOBelongform").data("kendoComboBox").value("ALL");
+            $("#cmb_RIBelongform").data("kendoComboBox").enable(true);
+            $("#cmb_FPOBelongform").data("kendoComboBox").enable(true);
+            fpoload();
+        }
+        if (role == "ORG_FPO") {
+            $("#RIform").show();
+            $("#FPOform").show();
+            filter_combobox("cmb_RIBelongform", getlocalStorage("rilist"));
+            filter_combobox("cmb_FPOBelongform", getlocalStorage("fpolist"));
+            var cmb_riform3 = $("#cmb_RIBelongform").data("kendoComboBox");
+            cmb_riform3.value(getlocalStorage("parent_code"));
+            $("#cmb_RIBelongform").data("kendoComboBox").enable(false);
+            $("#cmb_FPOBelongform").data("kendoComboBox").enable(false);
+            var cmap_inselform = $("#cmb_FPOBelongform").data("kendoComboBox");
+            cmap_inselform.value(getlocalStorage("org_code"));
+        }
+        /*  prema ended*/
+        $("#btnExport").kendoButton({
+            click: function () {
+                debugger;
+                 var InputString = $("#hdn_inputstring").val();
+            var data = {};
+            data.userId = getlocalStorage("User_Id_Value");
+            var user_code = data.userId;
+                var Report_Name = "FPO-Wise Daily Sowing Report";
+            var flag = 1;
+            var data = { report_name: Report_Name, input_string: InputString, flag: flag, userid: user_code };
+         $.ajax({
+            url: '@Url.Action("ExportExcelDownload", "ReportFarmerBasicInfo")',
+            type: "post",
+            contentType: 'application/x-www-form-urlencoded',
+            data: data,
+            success: function (response1) {
+            debugger;
+            if (response1 != null) {
+                debugger;
+
+            }
+
+          },
+         error: function (er) {
+         alert(er)
+        console.log(er)
+        }
+         });
+                $("#grids").data("kendoGrid").saveAsExcel();
+              //  ExportButtonClick();
+            }
+        })
+
+    });
+
+     $("#cmb_RIBelongform").change(function () {
+        debugger;
+        $("#cmb_FPOBelongform").data("kendoComboBox").value("ALL");
+             var selected_value = $(this).val();
+        var data1 = { RI_Code: selected_value}
+            $.ajax({
+            url: '@Url.Action("GetFPOlistRIBASE", "Login")',
+            type: "post",
+            contentType: 'application/x-www-form-urlencoded',
+            data: data1,
+            success: function (response1) {
+            debugger;
+                var url_path = JSON.parse(response1);
+                var itemArrFPO = [];
+                for (var i = 0; i < url_path.Table.length; i++) {
+                    var list = {};
+                    list.id = url_path.Table[i].serial_number;
+                    list.code = url_path.Table[i].dist_code;
+                    list.desc = url_path.Table[i].Member_district_name;
+                    itemArrFPO.push(list);
+                }
+                filter_combobox("cmb_FPOBelongform", itemArrFPO);
+            },
+                error: function (er)
+                {
+                alert(er)
+                console.log(er)
+                }
+            });
+     });
+
+     function fpoload() {
+        var data = {};
+            data.userId = getlocalStorage("User_Id_Value");
+        var orgnid = $("#cmb_RIBelongform").data("kendoComboBox").value();
+            var user_code = data.userId;
+            var data1 = {User_code: user_code, orgn_code: orgnid}
+            $.ajax({
+            url: '@Url.Action("GetFPOlist", "Login")',
+            type: "post",
+            contentType: 'application/x-www-form-urlencoded',
+            data: data1,
+            success: function (response1) {
+            debugger;
+                var url_path = JSON.parse(response1);
+                var itemArrFPO = [];
+                for (var i = 0; i < url_path.Table.length; i++) {
+                    var list = {};
+                    list.id = url_path.Table[i].serial_number;
+                    list.code = url_path.Table[i].dist_code;
+                    list.desc = url_path.Table[i].Member_district_name;
+                    itemArrFPO.push(list);
+                }
+                filter_combobox("cmb_FPOBelongform", itemArrFPO);
+            },
+                error: function (er)
+                {
+                alert(er)
+                console.log(er)
+                }
+            });
+    }
+
+    $(function () {
+        $('#refresh').click(function () {
+            debugger;
+            $('#refresh').hide();
+            var orgcode = $("#cmb_FPOBelongform").data("kendoComboBox").value();
+            var parentcode = $("#cmb_RIBelongform").data("kendoComboBox").value();
+            var user_code = getlocalStorage("User_Id_Value");
+            var data2 = { fpo_code: orgcode, parent_code: parentcode, user: user_code }
+            $('#refresh').hide();
+            $("#btnExport").hide();
+            $("#clear").hide();
+            $("#display_loading").show();
+            $(".panel-default").css("opacity", 0.2);
+            setTimeout(function () {
+                $(".panel-default").css("opacity", 1);
+                $("#display_loading").css({ "display": "none" });
+            }, 8500);
+            var ABC = "Input";
+            var InputString = ABC.concat(" ", "{", orgcode, ",", parentcode, ",", user_code, "}");
+            console.log(InputString);
+            $("#hdn_inputstring").val(InputString);
+            $.ajax({
+                url: '@Url.Action("getsowingreport", "ReportFarmerBasicInfo")',
+                type: "post",
+                timeout: 10000000,
+                contentType: 'application/x-www-form-urlencoded',
+                data: data2,
+                success: function (response1) {
+                    debugger;
+                    var Data1 = JSON.parse(response1);
+                    if (Data1.length == 0) {
+                        kendoAlert('No Records found');
+                    }
+                    $('#refresh').show();
+                    Screen_Id = "FARMSOWINGDETCRPT";
+                    permission = sec_PermissionNew(Screen_Id);
+                    var security = permission;
+                    console.log(security);
+                    if (security['print'] == true) {
+                        $("#btnExport").show();
+                    }
+                    else {
+                        $("#btnExport").hide();
+                    }
+                    $("#clear").show();
+                            $("#display_loading").hide();
+                            $("#exportExcel").show();
+                            var columns = [];
+                            var chkval = Data1;
+                            var arr = [];
+                            $.each(chkval, function (i, e) {
+                                debugger;
+                                $.each(e, function (key, val) {
+                                    arr.push(val);
+                                });
+
+                            });
+                            if (arr == "No Records Found!" || arr == "Error in Data!") {
+                                alert("No Records found..!");
+                                return false;
+                            }
+                            var data = Data1;
+                            // var data2 = JSON.parse(result.Data2);
+                            var i = 0;
+
+                            var entryIndex = "entries[" + i + "]";
+                            for (var key in data[0]) {
+                                debugger;
+                                var propType = typeof data[0][key];
+
+                                if (key == "Ko Id") {
+                                    columns.push({
+                                        field: entryIndex,
+                                        title: key,
+                                        type: propType,
+                                        width: 200,
+
+                                    });
+                                } else
+                                    if (key != "") {
+                                        columns.push({
+                                            field: entryIndex,
+                                            title: key,
+                                            type: propType,
+                                            filterable: {
+                                                extra: false,
+                                                operators: {
+                                                    string: {
+                                                        contains: "Contains"
+                                                    }
+                                                }
+                                            },
+                                            width: 200,
+                                            //attributes: { style: "text-align: right;" }
+                                        });
+                                    }
+                                i = i + 1;
+                                entryIndex = "entries[" + i + "]";
+
+                            }
+                            debugger;
+
+                            var rows = [];
+                            var data1 = Data1;
+
+                            $.each(data1, function (i, e) {
+                                var entryArray = [];
+                                $.each(e, function (key, val) {
+                                    entryArray.push(val);
+                                });
+                                rows.push(kendo.observable({
+                                    entries: entryArray
+                                }));
+                            });
+
+                            var viewModel = kendo.observable({
+                                gridRows: rows
+
+                            });
+
+                            var configuration = {
+                                //dataBound: onDataBound,
+                                height: 450,
+                                navigatable: true,
+                                groupable: false,
+                                editable: false,
+                                sortable: true,
+                                scrollable: true,
+                                filterable: true,
+                                pagable: true,
+                                pageSize: 5,
+                                resizable: true,
+                                persistSelection: true,
+                                selectable: "false",
+                                columns: columns,
+                                //toolbar: ["excel"],
+                                //excel: {
+                                //    fileName: "SowingProgressReport.xlsx",
+                                //    filterable: true,
+                                //    allPages: false
+                                //},
+                                rows: viewModel
+                            };
+                            $("#example").remove();
+                            $('#sowingprogress_grid').append('<div id="example" style="position:relative" class="k-content"><table id="grids"  data-bind="source: gridRows" style="position:relative;overflow:scroll;width:100%"></table></div>');
+                            var timeEditGrid = $("#grids").kendoGrid(configuration).data("kendoGrid");
+                            kendo.bind($("#grids"), viewModel);
+
+                        },
+
+                       error: function (er) {
+                           $('#refresh').show();
+                           $("#btnExport").show();
+                           $("#clear").show();
+                           $("#display_loading").hide();
+                            alert(er)
+                            console.log(er)
+                        }
+                    });
+            return false;
+        });
+    });
+    //test purpose venkat added 12-02-2021
+    // add the grid options here
+    function populateGrid(response) {
+        debugger;
+        try {
+            var columns = generateColumns(response);
+            var gridOptions = {
+                dataSource: {
+                    transport: {
+                        read: function (options) {
+                            options.success(response);
+                        }
+                    },
+                    pageSize: 10,
+                    page: 1
+                },
+                sortable: true,
+                resizable: true,
+                selectable: true,
+                scrollable: true,
+                navigatable: true,
+                columns: columns,
+                editable: true
+            };
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+
+        // reuse the same grid, swapping its options as needed
+        var grid = $("#sowingprogress_grid").data("kendoGrid");
+        if (grid) {
+            grid.setOptions(gridOptions);
+        } else {
+            $("#sowingprogress_grid").kendoGrid(gridOptions);
+        }
+    }
+
+
+    function generateColumns(response) {
+        debugger;
+        var columnNames = Object.keys(response[0]);
+        return columnNames.map(function (name) {
+            debugger;
+           // var isIdColumn = name.indexOf("ID") > -1 || name.indexOf("Id") > -1;
+            var isIdColumn = false;
+            return {
+                field: name,
+                width: isIdColumn ? 50 : 180,
+                title: isIdColumn ? "Id" : name
+            };
+        })
+    }
+</script>
+
+
+
+<script>
+    function listpageloadfetch() {
+        try {
+            var formval = form_Serialize("frm_mobileprogressreport");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_Fromvalue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_Fromvalue = ".";
+            }
+            obj_val.FilterBy_Tovalue = ".";
+            if (obj_val.status_option == "" || obj_val.status_option == undefined) {
+                obj_val.status_option = "V";
+            }
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Filter = obj_val;
+            var colCount = $("#sowingprogress_grid").find('.k-grid-header colgroup > col').length;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<script>
+    function listRefresh() {
+        debugger;
+        try {
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<style>
+    .k-footerTemplate {
+        text-align: right;
+    }
+</style>
+
+
+

@@ -1,0 +1,265 @@
+﻿@{
+    ViewBag.Form = "Maintain Capital Structure";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+<form id="Capital_form" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-xs-6">
+                    <div class=" form-group">
+                        <label for="txtAuthorized_capital" class=" col-sm-5 control-label">Authorized Capital (Rs)</label>
+                        <div class=" col-sm-3">
+                            <input type="text" class="form-control" name="authorized_capital" id="txtAuthorized_capital" maxlength="10" onkeypress="return isNumberKey(event)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-xs-6">
+                    <div class=" form-group">
+                        <label for="txtPaid_id" class=" col-sm-5 control-label">Paid Up Capital (Rs)</label>
+                        <div class=" col-sm-3">
+                            <input type="text" id="txtPaid_id" name="paid_capital" class="form-control" maxlength="50"readonly>
+                            @*<input type="text" id="txtPaid_id" name="paid_capital" placeholder="10000" class="form-control" maxlength="50" disabled>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-xs-6">
+                    <div class=" form-group">
+                        <label for="txtMaxShare" class=" col-sm-5 control-label">Max Shares Per Applicant</label>
+                        <div class=" col-sm-3">
+                            <input type="text" id="txtMaxShare" name="max_shares_per_applicant" class="form-control" maxlength="6" onkeypress="return isNumberKey(event)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-xs-6">
+                    <div class=" form-group">
+                        <label for="txtPrice" class=" col-sm-5 control-label">Price Per Share (Rs)</label>
+                        <div class=" col-sm-3">
+                            <input type="text" class="form-control" name="share_price" id="txtPrice" maxlength="10" onkeypress="return isNumberKey(event)">
+                            <input type="hidden" name="status_code" id="status_code" value="">
+                            <input type="hidden" name="status_desc" id="status_desc" value="">
+                            <input type="hidden" name="mode_flag" id="mode_flag" value="">
+                            <input type="hidden" name="row_timestamp" id="row_timestamp" value="">
+                            <input type="hidden" name="capital_rowid" id="capital_rowid" value="">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <div id="grid_Drop_list">
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script src="~/API_Scripts/Capital.js"></script>
+<script src="~/API_Scripts/Capital_retrieveCaptial_APIClient.js"></script>
+<script src="~/API_Scripts/Capital_saveCapital_APIClient.js"></script>
+<script src="~/API_Scripts/retrieveCaptial_Model.js"></script>
+<script src="~/API_Scripts/saveCapital_Model.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+
+<script>
+    $(document).ready(function () {
+        master_milkmap();
+        //form serialize get method
+        var formval = form_Serialize("Capital_form");
+        var obj_val = JSON.parse(formval);
+        var org_id = getlocalStorage('org_id');
+        obj_val.fpoorgn_code = org_id;
+        obj_val.capital_rowid = 0;
+        $("#RIform").hide();
+        $("#FPOform").hide();
+       
+        //var data = {};
+        //data.context = WebAPIProxy.getContext();
+        //data.context.Header = obj_val;
+        //retrieve_Capital_details(data);
+        retrieve_Capital_details();
+
+        setlocalStorage("status", "Active");
+
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#Capital_form");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+
+    });
+    function clear_val() {
+        $("#txtAuthorized_capital").val("");
+        $("#txtPaid_id").val("");
+        $("#txtMaxShare").val("");
+        $("#txtPrice").val("");
+        $("#status_code").val("");
+    }
+</script>
+
+<script>
+
+    function retrieve_Capital_details() {
+        debugger;
+        try {
+            var formval = form_Serialize("Capital_form");
+            var obj_val = JSON.parse(formval);
+            var org_id = getlocalStorage('org_id');
+            obj_val.fpoorgn_code = org_id;
+            obj_val.capital_rowid = 0;
+
+        var data = {};
+        data.context = WebAPIProxy.getContext();
+        data.context.Header = obj_val;
+        var Context = data.context;
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({ orgnId: Context.orgnId, locnId: Context.locnId, userId: Context.userId, localeId: Context.localeId, Filter: Context.Header }),
+            url: "/Capital/GetCaptialDetails",
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                debugger;
+                if (response.context != null) {
+                    generate_Capital_Header(response)
+
+                }
+             
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+
+        });
+
+
+    }
+        catch (err) {
+        javascript_log4j_root(arguments.callee.name, err.message);
+    }
+
+
+    }
+
+    function save() {
+        try {
+            debugger;
+            if ($("#mode_flag").val() == "S") {
+                $("#mode_flag").val('U');
+            }
+            else {
+                $("#mode_flag").val('I');
+            }
+            var formval = form_Serialize("Capital_form");
+            var obj_val = JSON.parse(formval);
+            var org_id = getlocalStorage('org_id');
+            obj_val.fpoorgn_code = org_id;
+            if ($("#capital_rowid").val() == "" || $("#capital_rowid").val() == undefined) {
+                obj_val.capital_rowid = 0;
+            }
+
+            obj_val.paid_capital = 100000;
+            if ($("#status_code").val() == "") {
+                $("#status_code").val("A");
+            }
+            //$("#txtAuthorized_capital").val(res.context.Header.In_authorized_capital);
+            //$("#txtPaid_id").val(res.context.Header.In_paid_capital);
+            //$("#mode_flag").val(res.context.Header.In_mode_flag);
+            //$("#capital_rowid").val(res.context.Header.IOU_capital_rowid);
+            //$("#txtMaxShare").val(res.context.Header.In_max_shares_per_applicant);
+            //$("#txtPrice").val(res.context.Header.In_share_price);
+
+            obj_val.IOU_capital_rowid = obj_val.capital_rowid;
+            obj_val.IOU_fpoorgn_code = obj_val.fpoorgn_code;
+            obj_val.In_authorized_capital = obj_val.authorized_capital;
+            obj_val.In_paid_capital = obj_val.paid_capital;
+            obj_val.In_max_shares_per_applicant = obj_val.max_shares_per_applicant;
+            obj_val.In_share_price = obj_val.share_price;
+            obj_val.In_status_code = obj_val.status_code;
+            obj_val.In_mode_flag = obj_val.mode_flag;
+            obj_val.In_row_timestamp = obj_val.row_timestamp;
+            
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_val;
+            var Context = data.context;
+            //save_Capital_details(data);
+
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ orgnId: Context.orgnId, locnId: Context.locnId, userId: Context.userId, localeId: Context.localeId, Header: Context.Header }),
+                url: "/Capital/SaveCapital",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    if (response != null) {
+                        //generate_FpoMap_Map(response)
+                        kendoAlert("Capital Details Saved Successfully");
+                       
+                    }
+                  
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+
+
+
+            var org_id = getlocalStorage('org_id');
+            obj_val.fpoorgn_code = org_id;
+            obj_val.capital_rowid = 0;
+
+            //var data = {};
+            //data.context = WebAPIProxy.getContext();
+            //data.context.Header = obj_val;
+            //retrieve_Capital_details(data);
+            retrieve_Capital_details();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+
+    function generate_Capital_Header(res) {
+        try {
+            debugger;
+            $("#txtAuthorized_capital").val(res.context.Header.In_authorized_capital);
+            $("#txtPaid_id").val(res.context.Header.In_paid_capital);
+            $("#mode_flag").val(res.context.Header.In_mode_flag);
+            $("#capital_rowid").val(res.context.Header.IOU_capital_rowid);
+            $("#txtMaxShare").val(res.context.Header.In_max_shares_per_applicant);
+            $("#txtPrice").val(res.context.Header.In_share_price);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+</script>
+
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>

@@ -1,0 +1,433 @@
+﻿@{
+    ViewBag.List = "Buyer Master List";
+    Layout = "~/Views/Shared/ListViewLayout.cshtml";
+}
+<form id="frm_ICD_SUPList" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="gd_FPOREG">
+                <div id="SUPMSTGrid"></div>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+
+
+<script>
+    var menuId = "";
+    var permission = "";
+        $(document).ready(function () {
+        $(".adv_filter").attr("hdrtitle", "Buyer Master List");
+        $(".adv_filter").attr("fltid", "fporeg");
+        $(".Export").attr("hdrtitle", "Buyer Master List");
+        $(".Export").attr("SubTreeId", "Buyer Master List");
+        list_grid_id = "SUPMSTGrid";
+        Screen_Id = "PWNEWBUYERMAS";
+        permission = sec_Permission(Screen_Id);
+        page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+            filterhover();
+            listpageloadfetch();
+    });
+</script>
+
+<script>
+    function listpageloadfetch() {
+        try {
+            debugger;
+            var formval = form_Serialize("frm_ICD_SUPList");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_FromValue = getlocalStorage('flt_condition');
+            }
+            else
+            {
+                obj_val.FilterBy_FromValue = ".";
+            }
+            obj_val.FilterBy_ToValue = ".";
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Filter = obj_val;
+            var Context = data.context;
+            $.ajax({
+                type: "POST",
+                url: '/PAWHSNEWBuyerMaster/BuyerMasterList',
+                dataType: 'json',
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, FilterBy_Option: Context.Filter.FilterBy_Option, FilterBy_Code: Context.Filter.FilterBy_Code, FilterBy_Fromvalue: Context.Filter.FilterBy_FromValue, FilterBy_ToValue: Context.Filter.FilterBy_ToValue }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    if (response.context.List != null)
+                    {
+                      generate_buyer_list(response.context.List);
+                      
+                    }
+                    else
+                    {
+                       SUPMSTGrid([]);
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    var status_Priority = [];
+    function SUPMSTGrid(data) {
+        try {
+            $.each(data, function (index, value) {
+                var flag = false;
+                $.each(status_Priority, function (sindex, svalue) {
+                    if (svalue == value.status_desc) {
+                        flag = true;
+                    }
+                });
+                if (flag == false) {
+                    status_Priority.push(value.status_desc);
+                }
+            });
+            $("#SUPMSTGrid").kendoGrid(
+                {
+                    excel: {
+                        fileName: "PAWHS Buyer Master.xlsx",
+                        filterable: true,
+                        allPages: false
+                    },
+                    dataSource: {
+                        data: data,
+                        pageSize: 20,
+                        change: function (e) {
+                            setTimeout(function () {
+                                var gd = $("#SUPMSTGrid").data("kendoGrid");
+                                filter_row(gd);
+                                $('.k-i-close').css('display', 'none');
+                                $('button.k-button-icon').css('display', 'none');
+                                $('#SUPMSTGrid .k-input').prop('disabled', false);
+                                $('#SUPMSTGrid .k-input').prop('readonly', true);
+                            }, 1);
+                        },
+                    },
+                    toolbar: "<button type= 'button' id = 'Exportclick' class = 'k-grid-excel' style = 'display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                    excelExport: function (e) {
+                    //    var gd = $("#SUPMSTGrid").data("kendoGrid");
+                    //    var len = gd.dataSource._data.length;
+                    //    var chkall = $('#chkall').is(':checked');
+                    //    var chkfilter = $('#chkfilter').is(':checked');
+                    //    var chktemp = $('#chktemp').is(':checked');
+                    //    var twokendobox = true;
+                    //    gd.dataSource.pageSize(len);
+                    //    if (e.sender.dataSource._data.length == len) {
+                    //        twokendobox = false;
+                    //        exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                    //    }
+                    //    else {
+                    //        exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                    //    }
+                    //    gd.dataSource.pageSize('10');
+                    //    return false;
+                    //},
+                        debugger;
+
+                        //Mohan Changes 07-10-2020
+                        var gd = $("#SUPMSTGrid").data("kendoGrid");
+                        var gd_fi = $("#SUPMSTGrid").data("kendoGrid").dataSource;
+
+                        var filters = gd_fi.filter();
+                        var allData = gd_fi.data();
+                        var query = new kendo.data.Query(allData);
+                        var data = query.filter(filters).data;
+                        var data_tt = gd.dataSource.data();
+
+
+                        var sheet = e.workbook.sheets[0];
+                        var gridColumns = gd.columns;
+
+                        var columnCells = [];
+                        for (var c = 0; c < gridColumns.length; c++) {
+                            var fieldName = gd.columns[c].hidden;
+                            if (typeof (fieldName) === "undefined") {
+                                var cellValue = gridColumns[c].title ? gridColumns[c].title : gridColumns[c].field;
+                                columnCells.push({ value: cellValue, autoWidth: true, background: "#7a7a7a", color: "#fff" });
+                            }
+                        }
+
+                        var rows = [{ cells: columnCells, type: "header" }];
+
+
+                        for (var i = 0; i < data.length; i++) {
+                            var rowCells = [];
+                            for (var j = 0; j < gridColumns.length; j++) {
+
+                                var fieldName = gd.columns[j].hidden;
+                                if (typeof (fieldName) === "undefined") {
+                                    var cellValue = data[i][gridColumns[j].field];
+                                    rowCells.push({ value: cellValue });
+                                }
+                            }
+                            rows.push({ cells: rowCells, type: "data" });
+                        }
+
+                        sheet.rows = rows;
+
+                        return false;
+                    },
+                    change: selectRow,
+                    height: 450,
+                    sortable: true,
+                    selectable: true,
+                    selectable: "singl",   //  Grid Row Selection
+                    pageable: {
+                        refresh: false,
+                        pageSizes: true,
+                        buttonCount: 5
+                    },
+                    filterable:true,
+                    navigatable: true,
+                    groupable: false,
+                    resizable: true,
+                    columns: [
+                        {
+                            field: "Out_buyer_rowid",
+                            title: "Buyer Rowid", 
+                            hidden: true,
+                        },
+                        {
+                            field: "Out_version_no",
+                            title: "version_no", 
+                            hidden: true,
+                        },
+                        {
+                            field: "Out_pan_no",
+                            title: "PAN no", 
+                            hidden: true,
+                        },
+                        {
+                            field: "Out_buyer_code",
+                            title: "Buyer Code",
+                            filterable: {
+                                extra: false,
+                                operators: {
+                                    string: {
+                                        contains: "Contains"
+                                    }
+                                }
+                            }, 
+                           width:100,
+                        }, 
+                        {
+                            field: "Out_buyer_name",
+                            title: "Buyer Name",
+                            filterable: {
+                                extra: false,
+                                operators: {
+                                    string: {
+                                        contains: "Contains"
+                                    }
+                                }
+                            }, 
+                            width: 100,
+                        },
+                        {
+                            field: "Out_buyer_type",
+                            title: "Buyer Type",
+                            filterable: {
+                                extra: false,
+                                operators: {
+                                    string: {
+                                        contains: "Contains"
+                                    }
+                                }
+                            }, 
+                            width: 100,
+                        }, 
+
+                        {
+                            field: "Out_contact_person",
+                            title: "Contact Person",
+                            filterable: {
+                                extra: false,
+                                operators: {
+                                    string: {
+                                        contains: "Contains"
+                                    }
+                                }
+                            }, 
+                            width: 100,
+                        },
+
+                        {
+                            field: "Out_mob_no",
+                            title: "Contact Mobile No",
+                            filterable: {
+                                extra: false,
+                                operators: {
+                                    string: {
+                                        contains: "Contains"
+                                    }
+                                }
+                            },                            
+                            width: 100,
+                        },
+
+                        {
+                            field: "Out_whatsapp_no",
+                            title: "Contact Whatsapp No",
+                            filterable: {
+                                extra: false,
+                                operators: {
+                                    string: {
+                                        contains: "Contains"
+                                    }
+                                }
+                            },                            
+                            width: 100,
+                        }, 
+
+                        {
+                            field: "Out_emailid",
+                            title: "Buyer Email ID",
+                            filterable: {
+                                extra: false,
+                                operators: {
+                                    string: {
+                                        contains: "Contains"
+                                    }
+                                }
+                            },
+                            width: 120,
+                             
+                        },
+
+                        {
+                            field: "Out_onboarding_date",
+                            title: "Buyer Onboarding Date",
+                            filterable: {
+                                extra: false,
+                                operators: {
+                                    string: {
+                                        contains: "Contains"
+                                    }
+                                }
+                            },
+                            width: 100, 
+                        }, 
+
+                        {
+                            field: "Out_status_code",
+                            title: "status_code", 
+                            hidden: true,
+                        },
+                        {
+                            field: "Out_status_desc",
+                            title: "Status", 
+                            hidden: true,
+                        },
+                        {
+                            field: "Out_row_timestamp",
+                            title: "row_timestamp", 
+                            hidden: true,
+                        },
+                    ]
+
+                });
+            $(".k-dropdown-operator").css('display', 'none');
+            $("#SUPMSTGrid .k-input").attr('disabled', 'false');
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function statusFilter(element) {    // Dropdown list functionality
+        element.kendoDropDownList({
+            dataSource: status_Priority,
+            optionLabel: "--Select Value--"
+        });
+    }
+    function selectRow() {
+        try {
+            var grid = $("#SUPMSTGrid").data("kendoGrid");
+            var selectedItem = grid.dataItem(grid.select());
+            setlocalStorage("ls_pageList", selectedItem);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<script>
+    $("#btn_Edit").bind("click", function () {
+        getSerializedSelectedRows('edit');
+    });
+
+    $("#btn_View").bind("click", function () {
+        getSerializedSelectedRows('view');
+    });
+
+    $("#btn_new").bind("click", function () {
+        btn_onClick('Create');
+        location.href = "../PAWHSNEWBuyerMaster/Buyermaster";
+    });
+    function getSerializedSelectedRows(mode) {
+        debugger;
+        try {
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var items = getlocalStorage("ls_pageList");
+                if (items.length == 0) {
+                    kendoAlert("Please select records");
+                }
+
+                else {
+                    if (mode == "edit") {
+                        btn_onClick('Edit');
+                        location.href = "../PAWHSNEWBuyerMaster/Buyermaster";
+                    }
+                    else if (mode == "view") {
+                        btn_onClick('View');
+                        location.href = "../PAWHSNEWBuyerMaster/Buyermaster";
+                    }
+                }
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+
+<script>
+    function generate_buyer_list(res) {
+        debugger;
+        if (res != null) {
+            var data = changedataType(res);
+            SUPMSTGrid(data);
+        }
+        else {
+            SUPMSTGrid([]);
+        }
+    }
+
+    function listRefresh() {
+        try {
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+
+
+

@@ -1,0 +1,510 @@
+﻿@{
+    ViewBag.Form = "Audit Trail Query";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+<form id="Audit_form" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px;height:570px">
+            <div class="row" style="padding-bottom:15px;padding-left:31px">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="cmb_Table_name" class="col-sm-4 control-label required" style="padding-left:0px;padding-right:0px">Table Name:</label>
+                        <div class="col-sm-8">
+                            <input id="cmb_Table_name" name="table_id" data-role="filtercombo" style="width:100%" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="cmb_Username" class="col-sm-4 control-label required" style="padding-left:0px;padding-right:0px">User Name:</label>
+                        <div class="col-sm-8">
+                            <input id="cmb_Username" name="user_name" data-role="filtercombo" style="width:100%" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="txtValidity_from" class=" col-sm-3 control-label">From:</label>
+                        <div class="col-sm-7">
+                            <input class="cusDate" data-role='datepicker' id="txtValidity_from" data-checkdate-msg="Enter Valid Date" name="valid_from" style="width:100%" onkeypress="return date_validate(event)" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="txtValidity_to" class=" col-sm-3 control-label">To:</label>
+                        <div class=" col-sm-7">
+                            <input class="cusDate" data-role='datepicker' id="txtValidity_to" data-checkdate-msg="Enter Valid Date" name="valid_to" style="width:100%" onkeypress="return date_validate(event)" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+
+                        </div>
+                    </div>
+                </div>                
+            </div>
+            
+                @*<div class="col-sm-2"><label style="padding-left:0px;margin-left:-15px"></label></div>
+                <div class="col-sm-7"></div>*@
+            @*<div class="row">
+                <div class="col-sm-3 pull-right">
+                 
+                    
+                </div>
+            </div>*@
+            <div class="row">
+                <section class="col-md-12" >
+                    <div id="tab_list" class="col-md-12">
+                        <ul class="nav nav-tabs">
+                            <li class="active">
+                                <a href="#Transactions" role="tab" data-toggle="tab">
+                                    Audit Query Result
+                                </a>
+                            </li>
+                            <li >
+                                <button type="button" class="Export btn btn-sm btn-info" id="btnExc" onclick="export_fuc1()" title="Export To Excel" style="width: 45px; height: 37px;margin-bottom:-23px"> <span class=" glyphicon glyphicon-export  "></span>  </button>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane fade active in" id="Transactions">
+                                <div class="panel panel-default">
+                                    <div class="panel-body" style="height:450px">
+                                        <div class="row" style="padding-bottom:15px">
+                                            <div class="col-xs-12">
+                                                <div id="grd_adt">
+                                                    <div id="grid_audit"></div>
+                                                    <div id="pager"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="~/API_Scripts/retrieveUserRole_Model.js"></script>
+<script src="~/API_Scripts/retrieveUserRoleList_Model.js"></script>
+<script src="~/API_Scripts/retriveUserRoleActivity_Model.js"></script>
+<script src="~/API_Scripts/saveUserRole_Model.js"></script>
+<script src="~/API_Scripts/userrole_detail_retrieveuserrole_activity_APIClient.js"></script>
+<script src="~/API_Scripts/userrole_detail_retrieveuserrole_APIClient.js"></script>
+<script src="~/API_Scripts/userrole_detail_retrieveuserrole_list_APIClient.js"></script>
+<script src="~/API_Scripts/userrole_detail_saveuserrole_APIClient.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/API_Scripts/UserRole.js"></script>
+<script>
+    click_act_name = "LocalizationDefinition_List";
+    click_ctrl_name = "LocalizationDefinition";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+<script>
+    $(document).ready(function () {
+        kendodate_format();
+        $(".Export").attr("hdrtitle", "Payment Advice List");
+        $(".Export").attr("SubTreeId", "");
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#Audit_form");
+        kendo.init(container);
+        container.kendoValidator({
+            rules: {
+                checkdate: function (input) {
+                    if (input.attr("data-role") == "datepicker") {
+                        var res = isDate(input.val());
+                        return res;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+            }
+        });
+        master_Run1();
+        load_master_code();
+        retrieve_userrole_list();
+        $("#btnReport").hide();
+        //getAudit_trial_Values();
+
+
+        var map_in = "";
+        $("#cmb_Table_name").empty();
+        map_in = grid_comboScreen_mastercodes("TABLE_LIST");
+        filter_combobox("cmb_Table_name", map_in);      
+       
+    });
+</script>
+<script>
+    function generate_userrole_list(res) {
+        var code = {};
+        var desc = {};        
+        var combo_data = [];
+            var data = changedataType(res);            
+            $.each(data, function (key, val) {               
+                combo_data.push({ code: data[key].user_code, desc: data[key].user_name });                   
+            });          
+            filter_combobox("cmb_Username", combo_data);
+    }
+    function run()
+    {
+        getAudit_trial_Values(0,20);
+    }
+
+    var pager_click = true;
+
+    function getAudit_trial_Values(st_index,end_index) {
+        try {
+            var data = {};
+            data.table_id = $('#cmb_Table_name').data("kendoComboBox").value();
+
+            if ($("#txtValidity_from").val() != "") {
+                data.from_date = getFormated_StringDate($("#txtValidity_from").val());
+            }
+            else {
+                data.from_date = "";
+            }
+           
+            if ($("#txtValidity_to").val() != "") {
+                data.to_date = getFormated_StringDate($("#txtValidity_to").val());
+            }
+            else {
+                data.to_date = "";
+            }
+           
+            data.audit_userid = $('#cmb_Username').data("kendoComboBox").value();
+            var context = WebAPIProxy.getContext();
+            data.orgnid=context.orgnId;
+            data.locnid=context.locnId;
+            data.userid=context.userId;
+            data.localeid = context.localeId;
+            data.startIndex = st_index;
+            data.endIndex = end_index;
+            data.recordCount = "10";
+            var audit_values = ajaxcall_param_new("/Audittrailquery/fetch_audit_trail_details", data);
+            if (audit_values != undefined) {
+                var audit_data = JSON.parse(audit_values);
+                if (audit_data.success == true) {
+                    var audit_file = JSON.parse(audit_data.set1);
+                    var row_count = JSON.parse(audit_data.set2);
+                    if (audit_file != null) {
+                        
+                        if (pager_click == true) {
+
+                            $("#grd_adt").empty();
+                            $("#grd_adt").append("<div id='grid_audit'></div>");
+                            $("#grd_adt").append("<div id='pager'></div>");
+                            SetPager(row_count);
+                        }
+                        else {
+                        }
+                        auditGrid(audit_file);                                               
+                    }
+                    else {
+                        if (pager_click == true) {
+                            $("#grd_adt").empty();
+                            $("#grd_adt").append("<div id='grid_audit'></div>");
+                            $("#grd_adt").append("<div id='pager'></div>");
+                            SetPager(row_count);
+                        }
+                        else {
+                        }
+                        auditGrid([]);                       
+                    }
+                }
+                else {
+                    var message = audit_data.msg;
+                    kendoAlert(message);
+                    $("#grd_adt").empty();
+                    $("#grd_adt").append("<div id='grid_audit'></div>");
+                    auditGrid([]);
+                }
+            }
+            else {
+                $("#grd_adt").empty();
+                $("#grd_adt").append("<div id='grid_audit'></div>");
+                auditGrid([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function getFields(data) {
+        try {
+            var fields = {};
+            $.each(data[0], function (key, value) {
+                if (key.indexOf(" ") > -1) {
+                    key = removeSpaces(key);
+                    fields[key] = { type: "string" };
+                } else {
+                    fields[key] = { type: "string" };
+                }
+
+            });
+            return fields;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function getColumns(data) {
+        try {
+            var columns = [];
+            var i = 0;
+            $.each(data[0], function (key, value) {
+                var col = {};
+                var dub_key = removeSpaces(key);
+                col.field = dub_key;
+                col.title = key;
+                col.width = "100px";
+                columns.push(col);
+            });
+            return columns;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function removeSpaces(sKey) {
+        try {
+            if (sKey.indexOf(" ") > -1) {
+                var spt = sKey.split(" ");
+                var sptResult = "";
+                $.each(spt, function (key, value) {
+                    sptResult += value;
+                });
+                return sptResult;
+            } else {
+                return sKey;
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function formatData(data) {
+        try {
+            var arr = [];
+            $.each(data, function (key, value) {
+                var obj = {};
+                $.each(value, function (sKey, sValue) {
+                    sKey = removeSpaces(sKey);
+                    obj[sKey] = sValue;
+                });
+                arr.push(obj);
+            });
+            return arr;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function auditGrid(data) {
+        try {
+            var fields = getFields(data);
+            var columns = getColumns(data);
+            data = formatData(data);
+            $("#grid_audit").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: fields
+                        }
+                    },
+                   // pageSize: 20,
+                },
+                toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                excelExport: function (e) {
+                    var gd = $("#grid_audit").data("kendoGrid");
+                    var len = gd.dataSource._data.length;
+                    var chkall = $('#chkall').is(':checked');
+                    var chkfilter = $('#chkfilter').is(':checked');
+                    var chktemp = $('#chktemp').is(':checked');
+                    var twokendobox = true;
+                    gd.dataSource.pageSize(len);
+                    if (e.sender.dataSource._data.length == len) {
+                        twokendobox = false;
+                        exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                    }
+                    else {
+                        exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                    }
+                    gd.dataSource.pageSize('10');
+                    return false;
+                },
+
+                //headerAttributes: {
+                //    style: "width: 100%"
+                //},
+                height: 380,
+                sortable: true,
+                resizable: true,
+                scrollable: true,
+                //pageable: {
+                //    pageSizes: true,
+                //    buttonCount: 5
+                //},
+                columns: columns,
+            }).data("kendoGrid");
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+<script>
+    var pager_ds = [];
+    function SetPager(no_of_rec) {
+        var arr = [];
+        var obj = {};
+        var pages = no_of_rec / 20;
+        for (var i = 0 ; i < pages; i++) {
+            obj[i] = "page_" + i;
+            arr.push(obj);
+        }
+        pager_ds = new kendo.data.DataSource({
+            data: arr,
+            pageSize: 1
+        });
+
+        SetPagerDS(pager_ds, no_of_rec);
+    }
+
+    function SetPagerDS(page_source, noofrecords) {
+        $("#pager").kendoPager({
+            dataSource: page_source,
+            change: function (o) {
+                fetchPageDetail('pager');
+                return;
+            },
+            refresh: false,
+            pageSize: 1,
+            input: true,
+            numeric: true,
+            info: true,
+            messages: {
+                of: "of {0}",
+                display: '<span style="color:blue; font-weight : bold ">Total No of Records : </span>' + '<span style="color:red" >' + noofrecords + '</span>' //"<B>Total No of Records :</B> " +   noofrecords + " data items"
+            }
+        });
+        page_source.read();
+    }
+
+
+    function fetchPageDetail(pager_id) {
+        var st_index = getStartIndex(pager_id);
+        var end_index = getEndIndex(pager_id, st_index);
+        pager_click = false;
+        getAudit_trial_Values(st_index, end_index);
+    }
+
+    function export_fuc1() {
+        $('.k-grid-excel').click();
+
+    }
+    function exportfunction(e) {
+        //  e.preventDefault();
+        var detail = {};
+        var sdata = {};
+        if (sdata.griddata == "" || sdata.griddata == undefined) {
+            sdata.griddata = JSON.stringify(e.sender.dataSource._data);
+
+        }
+        //var detail = {};
+        //if (chkall == true) {
+        //    if (sdata.griddata == "" || sdata.griddata == undefined) {
+        //        sdata.griddata = JSON.stringify(e.sender.dataSource._data);
+
+        //    }
+        //}
+        //else if (chkfilter == true) {
+        //    if (e.sender.dataSource._view.length == 0) {
+        //        //if (twokendobox == false) {
+        //        //    kendoAlert('Sorry, no data found in the grid to Export');
+        //        //}
+        //        //return false;
+        //    }
+        //    else {
+        //        sdata.griddata = JSON.stringify(e.sender.dataSource._view);
+        //    }
+        //}
+        //else {
+        //   
+        //}
+        //sdata.chkall = chkall;
+        //sdata.chkfilter = chkfilter;
+        //sdata.chktemp = chktemp;
+        //sdata.SubTreeId = SubTreeId;
+        //sdata.TreeId = TreeId;
+
+        //if (gd._data.length == 0) {
+        //    if (twokendobox == false) {
+        //        kendoAlert('Sorry, no data found in the grid to Export');
+        //    }
+        //    return false;
+        //}
+        //else { 
+
+        var export_excel_data = ajaxcall_param("/Audittrailquery/Export_Excel", JSON.stringify(sdata));
+        if (export_excel_data != undefined) {
+            var exp_excel = JSON.parse(export_excel_data);
+            if (exp_excel.success == true) {
+                var pathname = window.location.pathname;
+                var url = window.location.href;
+                url = url.split("#");
+                url = url[0];
+                url = url.replace(pathname, "");
+                window.location.href = url + (exp_excel.path);
+                kendoAlert(exp_excel.msg);
+            }
+            //if (twokendobox == false) {
+            //    kendoAlert(exp_excel.msg);
+            //}
+            //e.preventDefault();
+            return false;
+        }
+    }
+
+</script>
+<script>
+    function load_master_code() {
+        debugger;
+        var data = {};
+        var context = WebAPIProxy.getContext();
+        data.userId = context.userId
+        data.orgnId = context.orgnId
+        data.locnId = context.locnId
+        data.localeId = context.localeId
+        data.screen_Id = "AUDIT";
+        var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+    }
+</script>
+
+<style>
+   
+
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>
+
+
+
+
+

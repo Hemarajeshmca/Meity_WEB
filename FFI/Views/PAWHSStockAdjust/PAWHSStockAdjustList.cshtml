@@ -1,0 +1,355 @@
+﻿
+@{
+    ViewBag.List = "Stock Adjustment List";
+    Layout = "~/Views/Shared/ListViewLayout.cshtml";
+}
+
+<form id="frm_productAdj_master" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="gd_stockadj">
+                <div id="stockadj_grid">
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@*<script>
+        click_act_name = "ProductAdjustmentForm";
+        click_ctrl_name = "ProductAdj";
+        form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+    </script>*@
+<script src="~/API_Scripts/stockAdjustment_master_getStockAdjustmentList_APIClient.js"></script>
+<script src="~/API_Scripts/getStockAdjustmentList_Model.js"></script>
+<script src="~/API_Scripts/StockAdjustment.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+        $(".Export").attr("SubTreeId", "PWNEWPROADJ");
+        $(".adv_filter").attr("hdrtitle", "Stock Adjustment");
+        $(".adv_filter").attr("fltid", "StockAdjustment");
+        $(".Export").attr("hdrtitle", "Stock Adjustment");
+        list_grid_id = "stockadj_grid";
+        Screen_Id = "PWNEWPROADJ";
+        permission = sec_Permission(Screen_Id);
+        page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+        filterhover();
+    });
+</script>
+<script>
+    function listpageloadfetch() {
+        debugger;
+        try {
+            var formval = form_Serialize("frm_productAdj_master");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_Fromvalue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_Fromvalue = ".";
+            }
+            obj_val.FilterBy_Tovalue = ".";
+
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Filter = obj_val;
+
+            //Stock Adjsutment List Loaded start 22-05-2020
+            var Context = data.context;
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, filterby_option: Context.Filter.FilterBy_Option, filterby_code: Context.Filter.FilterBy_Code, filterby_fromvalue: Context.Filter.FilterBy_Fromvalue, filterby_tovalue: Context.Filter.FilterBy_Tovalue }),
+                url: "/ProductAdj/fetchstockadjustmentlist",
+                dataType: "json",
+                contentType: 'application/json; charset-utf-8;',
+                success: function (response) {
+                    debugger;
+                    if (response.context != null) {
+                        debugger;
+                        generate_StockAdjustment_list(response.context.List);
+                    }
+                    else {
+                        stadjgrid([]);
+                    }
+                },
+                error: function (er) {
+                    alert(er);
+                    console.log(er);
+                }
+            });
+
+            //Stock Adjsutment List Loaded End 22-05-2020
+
+           // retrieve_StockAdjustment_list(data);
+            // setlocalStorage('flt_condition', "");
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err.message);
+        }
+    }
+    var status_Priority = [];
+    function stadjgrid(data) {
+        try {
+            $.each(data, function (index, value) {
+                var flag = false;
+                $.each(status_Priority, function (sindex, svalue) {
+                    if (svalue == value.status_desc) {
+                        flag = true;
+                    }
+                });
+                if (flag == false) {
+                    status_Priority.push(value.status_desc);
+                }
+            });
+    $("#stockadj_grid").kendoGrid(
+        {
+            dataSource: {
+                data: data,
+                pageSize: 20,
+                change: function (e) {
+                    setTimeout(function () {
+                        var gd = $("#stockadj_grid").data("kendoGrid");
+                        filter_row(gd);
+                        $('.k-i-close').css('display', 'none');
+                        $('button.k-button-icon').css('display', 'none');
+                        $('#stockadj_grid .k-input').prop('disabled', false);
+                        $('#stockadj_grid .k-input').prop('readonly', true);
+
+                    }, 1);
+                },
+            },
+            toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+            excelExport: function (e) {
+                var gd = $("#stockadj_grid").data("kendoGrid");
+                var len = gd.dataSource._data.length;
+                var chkall = $('#chkall').is(':checked');
+                var chkfilter = $('#chkfilter').is(':checked');
+                var chktemp = $('#chktemp').is(':checked');
+                var twokendobox = true;
+                gd.dataSource.pageSize(len);
+                if (e.sender.dataSource._data.length == len) {
+                    twokendobox = false;
+                    exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                }
+                else {
+                    exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                }
+                gd.dataSource.pageSize('10');
+                return false;
+            },
+            filterable: {
+                enabled: true,
+                delay: 1500,
+                mode: "menu, row",
+                height: 200,
+                click: function (e) {
+                    var gd = $("#stockadj_grid").data("kendoGrid");
+                    filter_row(gd);
+                }
+            },
+            filterMenuInit: function (e) {
+                var gd = $("#stockadj_grid").data("kendoGrid");
+                filter_row(gd);
+            },
+            change: selectRow,
+            height: 450,
+            sortable: true,
+            selectable: true,
+            selectable: "singl",   //  Grid Row Selection
+            pageable: {
+                refresh: false,
+                pageSizes: true,
+                buttonCount: 5
+            },
+            navigatable: true,
+            groupable: false,
+            columns: [
+                  {
+                    field: "Out_adjustment_rowid",
+                      title: "adjustment_rowid",
+                      hidden: true,
+                  },
+                    {
+                        field: "Out_ic_code",
+                        title: "Input Centre Code",
+                        hidden: true,
+                    },
+                {
+                    field: "Out_ic_name",
+                    title: "Input Centre Name",
+
+                    filterable: {
+                        cell: {
+                            operator: "contains",
+                            inputWidth: 1500
+                        }
+                    }
+                },
+                 {
+                     field: "Out_adjustment_no",
+                     title: "Adjustment No",
+                     filterable: {
+                         cell: {
+                             operator: "contains",
+                             inputWidth: 1500
+                         }
+                     }
+                 },
+                 {
+                     field: "Out_adjustment_date",
+                     title: "Adjustment Date",
+                     //template: "#= kendo.toString(kendo.parseDate(Adjustment Date, 'yyyy-MM-dd'), 'MM/dd/yyyy') #",
+                     filterable: {
+                         cell: {
+                             operator: "contains",
+                             inputWidth: 1500
+                         }
+                     }
+
+                 },
+
+                 {
+                     field: "Out_status_code",
+                     title: "Status Code",
+                     hidden: true,
+                 },
+                 {
+                     field: "Out_status_desc",
+                     title: "Status Description",
+                     hidden: true,
+                 },
+                  //{
+                  //    field: "product_category",
+                  //    title: "Product Category",
+                  //    filterable: {
+                  //        cell: {
+                  //            operator: "contains",
+                  //            inputWidth: 1500
+                  //        }
+                  //    },
+                  //},
+                  //{
+                  //    field: "product_sub_category",
+                  //    title: "Product Sub-Category",
+                  //    filterable: {
+                  //        cell: {
+                  //            operator: "contains",
+                  //            inputWidth: 1500
+                  //        }
+                  //    }
+                  //},
+            ]
+
+        });
+
+        $(".k-dropdown-operator").css('display', 'none');
+        $("#stockadj_grid .k-input").attr('disabled', 'false');
+    }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function statusFilter(element) {    // Dropdown list functionality
+        element.kendoDropDownList({
+            dataSource: status_Priority,
+            optionLabel: "--Select Value--"
+        });
+    }
+
+    function selectRow() {
+        try {
+            var grid = $("#stockadj_grid").data("kendoGrid");
+            var selectedItem = grid.dataItem(grid.select());
+            setlocalStorage("ls_pageList", selectedItem);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>
+    $("#btn_Edit").bind("click", function () {
+        getSerializedSelectedRows('edit');
+    });
+
+    $("#btn_View").bind("click", function () {
+        getSerializedSelectedRows('view');
+    });
+
+    $("#btn_new").bind("click", function () {
+        btn_onClick('Create');
+        location.href = "../ProductAdj/ProductAdjustmentForm";
+    });
+
+    function getSerializedSelectedRows(mode) {
+        try {
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var items = getlocalStorage("ls_pageList");
+                if (items.length == 0) {
+                    kendoAlert("Please select records");
+                }
+                else {
+                    if (mode == "edit") {
+                        btn_onClick('Edit');
+                        location.href = "../ProductAdj/ProductAdjustmentForm";
+                    }
+                    else if (mode == "view") {
+                        btn_onClick('View');
+                        location.href = "../ProductAdj/ProductAdjustmentForm";
+                    }
+                }
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>
+    function generate_StockAdjustment_list(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                $("#gd_stockadj").empty();
+                $("#gd_stockadj").append("<div id='stockadj_grid'></div>");
+                stadjgrid(data);
+            }
+            else {
+                stadjgrid([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function listRefresh() {
+        try {
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+

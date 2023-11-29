@@ -1,0 +1,561 @@
+﻿
+@{
+    ViewBag.Form = "Reports Launcher";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+<form id="Reportconfig" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:5px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="cmb_menu" class="col-sm-5 control-label required ">Module</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_menu" name="module_code" style="width: 100%" data-role="filtercombo" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtReportcode" class="col-sm-5 control-label required">Report Code:</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txtReportcode" name="report_code" class="form-control" maxlength="15" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtreportname" class="col-sm-4 control-label required">Report Name:</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txtreportname" name="report_name" class="form-control" maxlength="15" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:5px">
+                <div class="col-sm-5">
+                    <div class="form-group">
+                        <label for="txtreportsource" class="col-sm-4 control-label required">Report File :</label>
+                        <div class="col-sm-4">
+                            <input id="txtreportsource" type="text" name="report_source" class="form-control" style="width: 200%" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="txt_status_code" class="col-sm-5 control-label">Status_code</label>
+                        <div class="col-sm-4">
+                            <input type="text" value="A" id="txt_status_code" name="status_code" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="txtMode" class="col-sm-5 control-label">Mode</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtMode" name="mode_flag" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="txt_row_timestamp" class="col-sm-5 control-label">Timestamp:</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txt_row_timestamp" name="row_timestamp" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="txtreportType" class="col-sm-5 control-label">Report Type</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtreportType" name="report_type" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="txtreportrowid" class="col-sm-5 control-label">Report RowID</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtreportrowid" name="report_rowid" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <div id="grid_Drop_list">
+                </div>
+            </div>
+
+        </div>
+    </div>
+</form>
+
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/CommonScripts/report.js"></script>
+<script>
+    click_act_name = "ReportList";
+    click_ctrl_name = "Reportlist";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+
+
+<script>
+    $(document).ready(function () {
+
+        master_Run();
+        load_master_code();
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#Reportconfig");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        var list_in = "";
+        $("#cmb_menu").empty();
+        list_in = grid_comboScreen_mastercodes("MODULE");
+        filter_combobox("cmb_menu", list_in);
+        gridFilter([]);
+        Screen_Id = "REPORTS";
+        permission = sec_Master_Permission(Screen_Id);
+        $("#lblForm_menuid").text("REPO_CONFIG");
+        // $("#form_design").css("padding-top", "95px");
+        $(".notes").attr("hdrtitle", "Report Configuration");
+        $(".file_attach").attr("hdrtitle", "Report Configuration");
+        $("#hide_div").hide();
+        Screen_Id = "RPT_CONFIG";
+        $("#hide_div").hide();
+        $("#btn_run").hide();
+
+     
+        
+        if (getlocalStorage('btn_clk_val') == "Create") {
+            $('#divCreate #review').hide();
+            $("#bottom_menus").hide();
+            $("#txtMode").val("I");
+            $("#DocStat").val("New");
+
+        }
+        else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
+            //$('#divEdit #reviewEd').hide();
+            //$('#divEdit #btnApprove').hide();
+            //$('#divEdit #btnReject').hide();
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("Reportconfig");
+                var obj_val = JSON.parse(formval);
+                obj_val.report_rowid = data.report_rowid;
+                obj_val.report_code = data.report_code;
+                obj_val.module_code = data.module_code;
+                $("#txtreportrowid").val(data.report_rowid);
+                $("#txtReportcode").val(data.report_code);
+                $("#txtMode").val("U");
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                retrieve_ReportConfig_details(data);
+               
+                setlocalStorage('doc_no', $("#txtReportcode").val());
+                setlocalStorage('doc_row_id', $("#txtreportrowid").val());
+            }
+        }
+
+
+      
+        
+    });
+
+    function clear_val() {
+        $("#txtreportrowid").val("");
+        $("#txtReportcode").val("");
+        $("#txtreportname").val("");
+        $("#txtreportsource").val("");
+        $("#txt_status_code").val("");
+        $("#txtMode").val("");
+        $("#txt_row_timestamp").val("");
+
+        gridFilter([]);
+    }
+
+    function get_ReportsForm_details(id) {
+        //clear_val();
+
+        var formval = form_Serialize("Reportconfig");
+        var obj_val = JSON.parse(formval);
+        obj_val.report_rowid = $("#txtreportrowid").val();
+        obj_val.report_code = $("#txtReportcode").val();
+        var data = {};
+        data.context = WebAPIProxy.getContext();
+        data.context.Header = obj_val;
+        retrieve_ReportConfig_details(data);
+    }
+
+    $("Date").click(function (event) {
+        alert(event.target.id);
+    });
+
+</script>
+<script>
+    function load_master_code() {
+        try {
+            var data = {};
+            data.screen_Id = "RPT_CONFIG";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+<script>
+    var param_type_desc_list = "";
+    function gridFilter(data) {
+        try {
+            $("#grid_Drop_list").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                param_slno: { type: "string", editable: false },
+                                param_name: {
+                                    type: "string", editable: false
+                                },
+                                param_desc: { type: "string", editable: false },
+                                status_code: { type: "string", defaultValue: "A" },
+                                param_value: { type: "string", editable:true },
+                                param_type: { type: "string" },
+                                mandatory_flag: { type: "string" },
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+                //toolbar: "<a  class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 350,
+                groupable: false,
+                dataBinding: setDefaultValues,
+                dataBound: function (e) {
+                    grid = this;
+                    grid.tbody.find('tr').each(function () {
+                        var item = grid.dataItem(this);
+                        kendo.bind(this, item);
+                    });
+                },
+                //dataBound: function (e) {
+                //    resultData = e.sender._data;
+                //    var rows = $('#grid_Drop_list').data('kendoGrid').tbody.children();
+                //    setColor(rows, resultData);
+                //},
+                edit: OnEdit,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                    {                                   
+                     field: "param_slno",
+                     title: "Sl No",
+                     width: 50,
+                 },
+                 {
+                     field: "param_name",
+                     title: "Parameter Name",
+                     width: 100,
+                 },
+                  {
+                      field: "param_desc",
+                      title: "Parameter Desc",
+                      width: 80,                     
+                  },
+                 {
+                     field: "param_type",
+                     title: "param_type",
+                     width: 100,
+                     hidden: true,
+                 },
+
+                {
+                    field: "param_type_desc",
+                    title: "Parameter Type",
+                    width: 50
+                },
+                {
+                    field: "mandatory_flag",
+                    title: "Mandatory",
+                    template: '<input type="checkbox" #= mandatory_flag == "1" ? "checked=checked" : "" # class="chkbx1" ></input>',
+                    hidden: true,
+                    width: 50
+                },
+                 {
+                     field: "param_value",
+                     title: "Param Value",
+                     width: 80,
+                     hidden: true,                    
+                 },
+                  {
+                      field: "status_code",
+                      title: "status_code",
+                      hidden: true,
+                      width: 100,
+                  },
+            {
+                field: "status_desc",
+                title: "Status",
+                hidden: true,
+                width: 100,
+            },
+                {
+                    field: "param_value_desc",
+                    title: "Param Value",
+                    editor: function (container, options) {
+                        combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "", "grid_Drop_list")
+                    },
+                    template: '#=templatefields_report(param_type,param_desc)#',
+                    width: 100,
+                },
+                {
+                    field: "mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+    load_master_code();
+    param_type_desc_list = grid_comboScreen_mastercodes("QCD_MILK_CC");
+
+    function OnEdit(e) {
+        setDefaultValues(e);
+        e.container.find("input[name='param_slno']").attr('maxlength', '20');
+        e.container.find("input[name='param_slno']").attr('onkeypress', 'return event.charCode >= 48 && event.charCode <= 57');
+        e.container.find("input[name='param_value']").attr('maxlength', '100');
+        e.container.find("input[name='param_value']").attr('onkeypress', 'return event.charCode >= 48 && event.charCode <= 57');      
+       
+    }
+    function get()
+    {
+        var elements = document.getElementsByName("Rptdate");
+        var from = '';
+        var to = '';
+        for (var i = 0; i < elements.length; i++) {
+            from = elements[0].id;
+            to = elements[1].id;
+        }
+        var fromdate =document.getElementById(from).value;
+        var todate = document.getElementById(to).value;
+        if (Date.parse(fromdate) > Date.parse(todate)) {         
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1;
+            var yyyy = today.getFullYear();
+
+            if (dd < 10) {
+                dd = '0' + dd
+            }
+
+            if (mm < 10) {
+                mm = '0' + mm
+            }
+            today = mm + '-' + dd + '-' + yyyy;
+            document.getElementById(from).value = today;
+            document.getElementById(to).value = today;
+            kendoAlert("To Date should  be greater than From Date");
+        }       
+      
+       
+        document.getElementById(to).setAttribute("max", todate);
+    }
+
+    function getCurrentFiscalYear() {
+        //get current date
+        var today = new Date("2016/04/01");       
+        //get current month
+        var curMonth = today.getMonth();
+        today = today.getFullYear() + 1
+        var fiscalYr = [];
+        for (var i = 0; i < 3; i++) {
+            today = today + 1;
+            if (curMonth > 3)
+            {
+                var nextYr1 = (today + 1).toString();
+                fiscalYr.push({ code: today.toString() + "-" + nextYr1.charAt(2) + nextYr1.charAt(3), desc: today.toString() + "-" + nextYr1.charAt(2) + nextYr1.charAt(3) });
+                //fiscalYr = today.toString() + "-" + nextYr1.charAt(2) + nextYr1.charAt(3);
+            }
+            else {
+                var nextYr2 = today.toString();
+                fiscalYr.push({ code: (today - 1).toString() + "-" + nextYr2.charAt(2) + nextYr2.charAt(3), desc: (today - 1).toString() + "-" + nextYr2.charAt(2) + nextYr2.charAt(3) });
+
+                //fiscalYr = (today - 1).toString() + "-" + nextYr2.charAt(2) + nextYr2.charAt(3);
+            }
+        }
+
+        return fiscalYr;
+    }
+   
+  
+    function templatefields_report(attr_type, param_desc) {
+
+        
+        if (attr_type == "ET_TXT") {
+            gridRowID++;
+            return '<input id="txtString_' + gridRowID + '" type="text" data-bind="value:param_value_desc" maxlength="124" class="form-control pull-left"  style="width:90%; height:15px">';
+        }
+        else if (attr_type == "ET_DATE") {
+            gridRowID++;
+            return '<input id="txtDate_' + gridRowID + '" type="Date" name="Rptdate" data-bind="value:param_value_desc" class="form-control pull-left"  style="width:90%; height:15px"  onchange="get()" required  onkeydown="return false"  >';
+                     
+        }
+        else if (attr_type == "ET_NUM") {
+          
+                gridRowID++;
+           
+            return '<input id="txtInt_' + gridRowID + '" type="number" data-bind="value:param_value_desc"  class="form-control pull-left" style="width:90%; height:15px">';
+
+            
+        }                
+        else if (attr_type == "ET_QCD") {
+            gridRowID++;
+            var cmblist = load_master_code_list(param_desc);
+            var list = '<select id="cmb_' + gridRowID + '"  class="form-control pull-left"  data-bind="value:param_value_desc" p  style="width:90%; height:15px" />';
+            list += '<option value="" default disabled selected hidden >ALL</option>';
+            //for (var i = 0; i < cmblist.length; i++)
+            //{
+            //    list += '<option  value=' + cmblist[i].code + ' >' + cmblist[i].desc + '</option>';
+            //}
+            $.each(cmblist, function (key, value) {
+                if (value != null) {
+                    list += '<option  value=' + value.code + ' >' + value.desc + '</option>';
+                }
+            });
+            list += '</select>';
+            return list;
+        }
+    }
+
+
+</script>
+<script>
+    function load_master_code_list(master_code) {
+
+        var data = {};
+        var list = [];
+        if (master_code == "FY" )
+        {
+            list = getCurrentFiscalYear();
+            return list;
+        }
+      
+    else  {
+            list = grid_comboScreen_mastercodes("QCD_MILK_CC");
+            return list;
+            //data.mstcode = master_code;
+            //var parent_code = ajaxcall('/Home/screenId_mastercodelist');
+            //var mst_Dt = ajaxcall_param('/Home/getScreenIDcode', JSON.stringify(data));
+
+            //if (mst_Dt.toString() != "null" && mst_Dt != "[]")
+            //    list = JSON.parse(mst_Dt);//changed as getComboList
+            //else
+            //    list = [];
+            //return list;
+
+        }
+      
+    }
+
+    
+    function save() {
+        if ($("#txtreportrowid").val() == "") {
+            $("#txtreportrowid").val('0');
+        }
+
+
+        if ($("#txtMode").val() == "S") {
+            $("#txtMode").val('U');
+        }
+
+        var formval = form_Serialize("Reportconfig");
+        var obj_val = JSON.parse(formval);
+        var grid_val = JSON.stringify($("#grid_Drop_list").data().kendoGrid._data);
+        var Bind = {};
+        Bind = grid_val;
+        var result = JSON.parse(Bind);
+        if (result.length == 0) {
+            kendoAlert("Atleast one record needs to be entered");
+            //mandatory_check = false;
+            return false;
+        }
+        //  result.entity_rowid = "0";
+        $.each(result, function (index, value) {
+            var row_id = value.reportparam_rowid;
+            var row_idss = value.reportparam_rowid
+            var row_flag = value.mode_flag;
+            if (row_id == undefined) {
+                result[index].reportparam_rowid = "0";
+            }
+            if (row_flag == "S") {
+                result[index].mode_flag = "U";
+            }
+        });
+
+        var obj_grid_val = result;
+
+        var data = {};
+        data.context = WebAPIProxy.getContext();
+        data.context.Header = obj_val;
+        data.context.Param_detail = obj_grid_val;
+        save_ReportConfig_details(data);
+    }
+
+    function DeleteDetails() {
+        $("#txtMode").val('D');
+        save();
+    }
+
+
+    function generate_ReportConfig_header(res) {
+        //$("#txtreportrowid").val(res.report_rowid);
+        ////$("#txt_attr_code").val(res.entitygrp_code);
+        $("#txtReportcode").val(res.report_code);
+        $("#txtreportname").val(res.report_name);
+        $("#txtreportsource").val(res.report_source);
+        $('#cmb_menu').data("kendoComboBox").value(res.module_code);
+        //$("#txt_status_code").val(res.status_desc);
+        //$("#DocStat").val(res.status_desc);
+        //$("#txtMode").val(res.mode_flag);
+
+    }
+
+   
+
+    function generate_ReportConfig_detail(res) {
+        if (res != null) {
+            var data = changedataType(res);
+            gridFilter(data);
+        }
+        else {
+            gridFilter([]);
+        }
+    }
+</script>
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+
+  
+</style>
+
+
+

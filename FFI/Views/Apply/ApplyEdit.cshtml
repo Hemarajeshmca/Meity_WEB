@@ -1,0 +1,235 @@
+﻿@{
+    ViewBag.Form = "Apply For Shares";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+<form id="Reportconfig" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="box-body" style="padding-top:6px;padding-bottom:2px">
+
+
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-6">
+
+
+
+                    <div class="form-group">
+                        <label for="cmb_memId" class="col-sm-5 control-label required">Member ID</label>
+                        <div class="col-sm-5">
+                            <input id="cmb_memId" type="text" value="" style="width: 100%" disabled>
+
+
+                        </div>
+                        <div>
+                            @*<input id="Button1" type="button" value="Browse" onclick="popitup('../FPOSearch/FPOFarmerSearch')">*@
+                            <a data-toggle="modal" href="../FPOSearch/FPOFarmerSearch" data-target="#searchadvance" title="Farmer Search"><span class="glyphicon glyphicon-search"></span></a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-5">
+
+                        </div>
+                    </div>
+                    <div class=" form-group">
+                        <label for="txtfarmer_id" class=" col-sm-5 control-label">Farmer ID</label>
+                        <div class=" col-sm-5">
+                            <input type="text" id="txtfarmer_id" class="form-control" maxlength="50" disabled>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-5">
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="txtfarmer_name" class="col-sm-5 control-label">Farmer Given Name</label>
+                        <div class="col-sm-5">
+                            <input type="text" id="txtfarmer_name" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-5">
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtRoleId" class="col-sm-5 control-label ">Farmer Surname</label>
+                        <div class="col-sm-5">
+                            <input type="text" id="txtRoleId" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="file" class="col-sm-5 control-label">Farmer Photo </label>
+                        <img id="Profile_img" src="~/images/NoImage.png" class="col-sm-3 img-responsive profileImg" alt="User Image" height="60" width="60" />
+
+                        <div class="form-group">
+                            <div>
+                                <button title="" data-placement="top" class="btn btn-info" type="submit" data-original-title="Capture Signature"> <span class="glyphicon glyphicon-camera"></span></button>
+                                <input type="hidden" id="txtImageHidden" name="hdnImg" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="txtRoleDesc" class="col-sm-5 control-label required">Signature</label>
+
+                        <img id="Profile_img" src="~/images/1.JPG" class="col-sm-5 img-bordered-sm profileImg" alt="User Image" height="40" width="100" />
+                        <div class="form-group">
+                            <div>
+                                <button title="" data-placement="top" class="btn btn-info" type="submit" data-original-title="Capture Signature"> <span class="glyphicon glyphicon-camera"></span><sup><span class="glyphicon glyphicon-pencil"></span></sup></button>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+
+
+
+
+
+
+        </div>
+
+    </div>
+    <div class="panel panel-default">
+        <div class="box-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-top:10px; padding-bottom:15px">
+
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtapplied_on" class=" col-sm-5 control-label">Applied On</label>
+                        <div class=" col-sm-7">
+                            <input class="cusDate" data-role='datepicker' id="txtValidity" data-checkdate-msg="Enter Valid Date" name="valid_until" style="width:100%" onkeypress="return date_validate(event)" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtapplied_shares" class="col-sm-5 control-label required">Applied Shares</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtapplied_shares" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtamount_due" class="col-sm-5 control-label required">Amount Due</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtamount_due" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="cmb_paymethod" class="col-sm-5 control-label">Payment Method</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_paymethod" name="role_id" data-role="filtercombo" style="width:100%" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txt_payref" class="col-sm-5 control-label">Payment Reference</label>
+                        <div class="col-sm-7">
+                            <input id="txt_payref" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="cmb_paystatus" class="col-sm-5 control-label ">Payment Status</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_paystatus" name="role_id" data-role="filtercombo" style="width:100%" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+
+            </div>
+
+        </div>
+    </div>
+    <div>
+    </div>
+
+
+</form>
+<script>
+    click_act_name = "ApplyList";
+    click_ctrl_name = "Apply";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+<script>
+    $(document).ready(function () {
+
+        kendodate_format();
+        master_ApplyEdit();
+        $(".file_attach").attr("hdrtitle", "Apply For Shares");
+        $(".notes").attr("hdrtitle", "Apply For Shares");
+        $("#lblForm_menuid").text("APPLY_SHARES");
+
+        var container = $("#txtValidity");
+        kendo.init(container);
+        container.kendoValidator({
+            rules: {
+                checkdate: function (input) {
+                    if (input.attr("data-role") == "datepicker") {
+                        var res = isDate(input.val());
+                        return res;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+            }
+        });
+    });
+    var passdata = "";
+    var GetRoleData = ajaxcall_param("../Apply/Xmlcmb_Localbind", JSON.stringify(passdata));
+    var GetRoleDatajson = JSON.parse(GetRoleData);
+    var i;
+    var combo_data = [];
+    var items = {};
+    for (i = 0; i < GetRoleDatajson.length; i++) {
+        items[i] = GetRoleDatajson[i].Orgl
+        combo_data.push({ code: i, desc: items[i] });
+    }
+    filter_combobox("cmb_paymethod", combo_data);
+
+
+
+    var passdata = "";
+    var GetRoleData = ajaxcall_param("../Apply/Xmlcmb_Localbind1", JSON.stringify(passdata));
+    var GetRoleDatajson = JSON.parse(GetRoleData);
+    var i;
+    var combo_data1 = [];
+    var items = {};
+    for (i = 0; i < GetRoleDatajson.length; i++) {
+        items[i] = GetRoleDatajson[i].Org
+        combo_data1.push({ code: i, desc: items[i] });
+    }
+    filter_combobox("cmb_paystatus", combo_data1);
+    var combo_data2 = [];
+    filter_combobox("cmb_memId", combo_data2);
+
+
+
+
+</script>

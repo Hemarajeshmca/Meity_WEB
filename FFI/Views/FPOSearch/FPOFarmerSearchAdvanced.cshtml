@@ -1,0 +1,270 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Farmer Search Advanced</title>
+</head>
+<body>
+    <form class="form-horizontal" id="frm_repayment" data-role="validator" novalidate="novalidate">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Farmer Search</h4>
+        </div>
+        <div class="modal-header" style="height:49px">
+            <div class="col-sm-12" style="margin-top:-7px">
+                <div class="form-group" style="padding-bottom:10px">
+                    <div class="col-sm-3">
+                        <button type="button" class="btn btn-sm btn-primary" id="btnClose" onclick=closeModal(); style="width:85px">
+                            Close
+                        </button>
+                    </div>
+                    <div class="col-sm-10">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-body" style="height:550px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="textfarmer_id" class=" col-sm-5 control-label">Farmer ID</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="textfarmer_id" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtgiven_name" class="col-sm-5 control-label">Farmer Given Name</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txtgiven_name" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="given_name" class="col-sm-5 control-label ">Surname</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="given_name" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="cmb_gender" class=" col-sm-5 control-label">Gender</label>
+                        <div class=" col-sm-6">
+                            <input id="cmb_gender" data-role="filtercombo" style="width:100%">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="nopay_year" class=" col-sm-5 control-label">Registered Mobile No</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="nopay_year" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="cmb_state" class=" col-sm-5 control-label">State</label>
+                        <div class=" col-sm-6">
+                            <input id="cmb_state" data-role="filtercombo" style="width:100%">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="cmb_village" class=" col-sm-5 control-label">Village</label>
+                        <div class=" col-sm-6">
+                            <input id="cmb_village" data-role="filtercombo" style="width:100%">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="cmb_taluk" class=" col-sm-5 control-label">Taluk</label>
+                        <div class=" col-sm-6">
+                            <input id="cmb_taluk" data-role="filtercombo" style="width:100%" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="cmb_district" class=" col-sm-5 control-label">District</label>
+                        <div class=" col-sm-6">
+                            <input id="cmb_district" data-role="filtercombo" style="width:100%" disabled>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="cmb_gram" class=" col-sm-5 control-label">Gram Panchayat</label>
+                        <div class=" col-sm-6">
+                            <input id="cmb_gram" data-role="filtercombo" style="width:100%" disabled>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-12">
+                    <input id="Button1" type="button" value="Search" style="float:right">
+
+                </div>
+            </div>
+
+
+
+            <div class="col-xs-12">
+                <div id="locdec_list">
+                </div>
+            </div>
+        </div>
+        
+    </form>
+</body>
+</html>
+<style>
+    .breadcrumb > li + li:before {
+        color: #E6E6E6;
+    }
+</style>
+
+
+
+
+
+
+
+
+<script>
+    $(document).ready(function () {
+
+        $('#searchadvance').on('show.bs.modal', function (e) {
+            gridadvsearch([]);
+        });
+
+        $('#searchadvance').on('loaded.bs.modal', function (e) {
+            gridadvsearch([]);
+        });
+            
+
+        kendodate_format();
+        var combo_data1 = [{ code: 1, desc: "Male" },
+              { code: 1, desc: "Female" }];
+        filter_combobox("cmb_gender", combo_data1);
+        var combo_State = [{ code: 1, desc: "TamilNadu" }];
+        filter_combobox("cmb_state", combo_State);
+        var combo_Village = [{ code: 1, desc: "Kattupakkam" }, { code: 1, desc: "Kadaladi" }];
+        filter_combobox("cmb_village", combo_Village);
+        var combo_district = [{ code: 1, desc: "Kancheepuram" }, { code: 1, desc: "Tiruvallur" }];
+        filter_combobox("cmb_district", combo_district);
+        var combo_gram = [{ code: 1, desc: "Uthiramerur" }, { code: 1, desc: "Gingee" }];
+        filter_combobox("cmb_gram", combo_gram);
+        var combo_taluk = [{ code: 1, desc: "Kancheepuram" }, { code: 1, desc: "Tiruvallur" }];
+        filter_combobox("cmb_taluk", combo_taluk);
+        });
+   
+        function closeModal() {
+            $('#searchadvance').modal("hide");
+        }
+</script>
+<script>
+   // var data = [];
+    function gridadvsearch(data) {
+        try {
+
+            $("#locdec_list").kendoGrid({
+                dataSource: {
+                    data: data,
+                    pageSize: 20,
+
+                },
+
+                height: 250,
+                sortable: true,
+                selectable: true,
+                //change: onChangeSelection,
+                selectable: "singl",   //  Grid Row Selection
+                pageable: {
+                    refresh: false,
+                    pageSizes: true,
+                    buttonCount: 5
+                },
+                navigatable: true,
+                groupable: false,
+                columns: [
+                       {
+                           title: "Sel", width: 40,
+                           template: '#=sel_checkbox()#'
+
+                       },
+                    {
+                        field: "farmer_id",
+                        title: "Farmer ID",
+                        width: 80
+                    }, {
+                        field: "given_name",
+                        title: "Given Name",
+
+                    },
+                    {
+                        field: "given_surname",
+                        title: "Surname",
+                        width: 80
+                    },
+                    {
+                        field: "village",
+                        title: "Village",
+                        width: 70
+                    },
+                    {
+                        field: "gender",
+                        title: "Gender",
+                        width: 80
+                    },
+                    {
+                        field: "regis_mobile",
+                        title: "Registered Mobile No",
+
+                    },
+                {
+                    field: "status",
+                    title: "Status",
+
+                },
+                ]
+            });
+
+            $(".k-dropdown-operator").css('display', 'none');
+            $("#locdec_list .k-input").attr('disabled', 'false');
+
+            var gridRowID = -1;
+            function sel_checkbox() {
+                gridRowID++;
+                return '<input id="chk_sel_' + gridRowID + '" class="checkbox" type="checkbox" />';
+            }
+        }
+        catch (err) {
+            alert(err);
+
+        }
+    }
+</script>
+

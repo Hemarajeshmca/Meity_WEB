@@ -1,0 +1,641 @@
+﻿@{
+    ViewBag.List = "Farmer Registration";
+    ViewBag.helpName = "FarmerRegistration.html";
+    //Layout = "~/Views/Shared/ListViewLayout.cshtml";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+@*<div class="row">
+        <div class="col-xs-12">
+            <div id="LVMarker"></div>
+            <div id="pager"></div>
+        </div>
+    </div>*@
+<form id="frm_fdr_freg" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label for="cmb_menu" class="col-sm-5 control-label required ">Farmer Registration</label>
+                <div class="col-sm-3">
+                    <input id="test" type="button" value="ExportExcel" onclick="return download_excel()" />
+                    <a id="downloadpath" download href=""></a>
+                </div>
+                <div class="col-sm-3">
+                    <input id="test" type="button" value="ExportPDF" onclick="return download_PDF()" />
+                   
+                </div>
+            </div>
+            <div id="gd_LVMarker">
+                <div id="LVMarker"></div>
+                <div id="pager"></div>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    click_act_name = "ListViewMakerForm";
+    click_ctrl_name = "ListViewMaker";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+<script>
+    var menuId = "";
+    var permission = "";
+    var gridrecord;
+    $(document).ready(function () {
+        $(".adv_filter").attr("hdrtitle", "Farmer Registration Record");
+        $(".adv_filter").attr("fltid", "FDRREG");
+        $(".Export").attr("hdrtitle", "Farmer Registration List");
+        $(".Export").attr("SubTreeId", "Farmer_reg");
+        list_grid_id = "LVMarker";
+        Screen_Id = "FARMREG";
+        permission = sec_Permission(Screen_Id);
+        page_load_list_permission(permission)
+        listpageloadfetch(0, 20);
+        setlocalStorage("ls_pageList", "");
+        filterhover();
+    });
+
+    function download_excel() {
+        debugger;
+        var data = {};
+        data.menu = "";
+        var tab_values = ajaxcall_param("/FarmerRegRpt/downloadexcel", JSON.stringify(data));
+        if (tab_values != undefined) {
+            debugger;
+            var url_path = JSON.parse(tab_values);
+            $("#downloadpath").attr("href", url_path.path);
+            document.getElementById("downloadpath").click();
+        }
+        //insert_excel_history_log();
+        //fetch_excel_historylog();
+    }
+    //function download_PDF() {
+    //    debugger;
+    //    var data = {};
+    //    data.menu = "";
+    //    var tab_values = ajaxcall_param("/FarmerRegRpt/downloadpdf", JSON.stringify(data));
+    //    window.location.href = tab_values;  
+      
+    //}
+    function download_PDF() {
+        debugger;
+        var Invoice_No = "IN/10160";
+        var User_Id = "ICDTTF";
+        var Orgn_Id = "TTFPO/00001";
+        var exportURL = getRootUrl()  + "FarmerRegRpt/downloadpdf" + '/' +Invoice_No + User_Id + Orgn_Id;
+        window.location.href = exportURL;
+    } 
+    function getRootUrl() {
+        debugger;
+        return window.location.origin ? window.location.origin + '/' : window.location.protocol + '/' + window.location.host + '/';
+    } 
+    function listpageloadfetch(st_index, end_index) {
+        debugger;
+        try {
+            var formval = form_Serialize("frm_fdr_freg");
+            var obj_val = JSON.parse(formval);
+
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_FromValue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_FromValue = ".";
+            }
+            obj_val.FilterBy_ToValue = ".";
+            obj_val.from_index = st_index;
+            obj_val.to_index = end_index;
+            obj_val.record_count = "10";
+            if (obj_val.row_count == undefined) {
+                obj_val.row_count = "0";
+            }
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Filter = obj_val;
+            var Context = data.context;
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId }),
+                url: "/FarmerRegRpt/GetFarmersList",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    if (response.List != null) {
+                        generate_farmer_registration_list(response)
+                        //listgrid(response.context.List);
+                        //SetPager(response.context.Filter.out_record_count)
+                    }
+                    else {
+                        listgrid([]);
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err.message);
+        }
+    }
+
+    function generate_farmer_registration_list(res) {
+        debugger;
+        try {
+            if (res.List != null) {
+                var data = changedataType(res.List);
+                gridrecord = res.List;
+                //var row_count = res.context.Filter.out_record_count;
+                if (pager_click == true) {
+                    $("#gd_LVMarker").empty();
+                    $("#gd_LVMarker").append("<div id='LVMarker'></div>");
+                    $("#gd_LVMarker").append("<div id='pager'></div>");
+                    //SetPager(row_count);
+                }
+                listgrid(data);
+            }
+            else {
+                var row_count = res.context.Filter.out_record_count;
+                if (pager_click == true) {
+                    $("#gd_LVMarker").empty();
+                    $("#gd_LVMarker").append("<div id='LVMarker'></div>");
+                    $("#gd_LVMarker").append("<div id='pager'></div>");
+                    //SetPager(row_count);
+                }
+                else {
+                }
+                listgrid([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err.message);
+        }
+    }
+
+    var pager_ds = [];
+    function SetPager(no_of_rec) {
+        debugger;
+        try {
+            var arr = [];
+            var obj = {};
+            var pages = no_of_rec / 20;
+            for (var i = 0; i < pages; i++) {
+                obj[i] = "page_" + i;
+                arr.push(obj);
+            }
+            pager_ds = new kendo.data.DataSource({
+                data: arr,
+                pageSize: 1
+            });
+
+            SetPagerDS(pager_ds, no_of_rec);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err.message);
+        }
+    }
+
+    function SetPagerDS(page_source, noofrecords) {
+        debugger;
+        try {
+            $("#pager").kendoPager({
+                dataSource: page_source,
+                change: function (o) {
+                    fetchPageDetail('pager');
+                    return;
+                },
+                refresh: false,
+                pageSize: 1,
+                input: true,
+                numeric: true,
+                info: true,
+                messages: {
+                    of: "of {0}",
+                    display: '<span style="color:blue; font-weight : bold ">Total No of Records : </span>' + '<span style="color:red" >' + noofrecords + '</span>' //"<B>Total No of Records :</B> " +   noofrecords + " data items"
+                }
+            });
+            page_source.read();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err.message);
+        }
+        //pager.bind("change", fetchPageDetail('pager'));
+    }
+
+    var status_Priority = [];
+
+    function listgrid(data) {
+        try {
+            $.each(data, function (index, value) {
+                var flag = false;
+                $.each(status_Priority, function (sindex, svalue) {
+                    if (svalue == value.status_desc) {
+                        flag = true;
+                    }
+                });
+                if (flag == false) {
+                    status_Priority.push(value.status_desc);
+                }
+            });
+            $("#LVMarker").kendoGrid(
+                {
+                    excel: {
+                        fileName: "Farmer Registration.xlsx",
+                        filterable: true,
+                        allPages: false
+                    },
+                    dataSource: {
+                        data: data,
+                        pageSize: 20,
+                        change: function (e) {
+                            setTimeout(function () {
+                                var gd = $("#LVMarker").data("kendoGrid");
+                                filter_row(gd);
+                                $('.k-i-close').css('display', 'none');
+                                $('button.k-button-icon').css('display', 'none');
+                                $('#LVMarker .k-input').prop('disabled', false);
+                                $('#LVMarker .k-input').prop('readonly', true);
+
+                            }, 1);
+                        },
+                    },
+                    toolbar: "<button type= 'button' id = 'Exportclick' class = 'k-grid-excel' style = 'display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                    excelExport: function (e) {
+                        gridrecord;
+                        var gd = $("#LVMarker").data("kendoGrid");
+                        var len = gd.dataSource._data.length;
+                        var chkall = $('#chkall').is(':checked');
+                        var chkfilter = $('#chkfilter').is(':checked');
+                        var chktemp = $('#chktemp').is(':checked');
+                        var twokendobox = true;
+                        gd.dataSource.pageSize(len);
+                        if (e.sender.dataSource._data.length == len) {
+                            twokendobox = false;
+                            exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                        }
+                        else {
+                            exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                        }
+                        gd.dataSource.pageSize('10');
+                        return false;
+
+                        //Murali Changes 26-04-2020
+                        //var gd = $("#LVMarker").data("kendoGrid");
+                        //var gd_fi = $("#LVMarker").data("kendoGrid").dataSource;
+
+                        //var filters = gd_fi.filter();
+                        //var allData = gd_fi.data();
+                        //var query = new kendo.data.Query(allData);
+                        //var data = query.filter(filters).data;
+                        //var data_tt = gd.dataSource.data();
+
+
+                        //var sheet = e.workbook.sheets[0];
+                        //var gridColumns = gd.columns;
+
+                        //var columnCells = [];
+                        //for (var c = 0; c < gridColumns.length; c++) {
+                        //    var fieldName = gd.columns[c].hidden;
+                        //    if (typeof (fieldName) === "undefined") {
+                        //        var cellValue = gridColumns[c].title ? gridColumns[c].title : gridColumns[c].field;
+                        //        columnCells.push({ value: cellValue, autoWidth: true, background: "#7a7a7a", color: "#fff" });
+                        //    }
+                        //}
+
+                        //var rows = [{ cells: columnCells, type: "header" }];
+
+
+                        //for (var i = 0; i < data.length; i++) {
+                        //    var rowCells = [];
+                        //    for (var j = 0; j < gridColumns.length; j++) {
+
+                        //        var fieldName = gd.columns[j].hidden;
+                        //        if (typeof (fieldName) === "undefined") {
+                        //            var cellValue = data[i][gridColumns[j].field];
+                        //            rowCells.push({ value: cellValue });
+                        //        }
+                        //    }
+                        //    rows.push({ cells: rowCells, type: "data" });
+                        //}
+
+                        //sheet.rows = rows;
+
+                        //return false;
+                    },
+                    filterMenuInit: function (e) {
+                        var gd = $("#LVMarker").data("kendoGrid");
+                        filter_row(gd);
+                    },
+                    //dataBound: function (o) {
+                    //    var gd = $("#LVMarker").data("kendoGrid");
+                    //    for (var i = 0; i < gd.columns.length; i++) {
+                    //        gd.showColumn(i);
+                    //    }
+                    //    $("div.k-group-indicator").each(function (i, v) {
+                    //        gd.hideColumn($(v).data("field"));
+                    //    })
+                    //},
+                    //height: 400,
+                    //sortable: false,
+                    //selectable: true,
+                    //change: selectRow,
+                    //selectable: "singl",   //  Grid Row Selection
+
+                    //navigatable: true,
+                    //groupable: false,
+
+                    //filterable: {
+                    //    enabled: true,
+                    //    delay: 1500,
+                    //    mode: "menu, row",
+                    //    height: 200,
+                    //    click: function (e) {
+                    //        var gd = $("#LVMarker").data("kendoGrid");
+                    //        filter_row(gd);
+                    //    }
+                    //},
+                    //filterMenuInit: function (e) {
+                    //    var gd = $("#LVMarker").data("kendoGrid");
+                    //    filter_row(gd);
+                    //},
+                    change: selectRow,
+                    height: 450,
+                    sortable: true,
+                    selectable: true,
+                    selectable: "singl",   //  Grid Row Selection
+                    pageable: {
+                        refresh: false,
+                        pageSizes: true,
+                        buttonCount: 5
+                    },
+                    navigatable: true,
+                    groupable: false,
+
+
+
+                    columns: [
+                        {
+                            field: "OrgName",
+                            title: "Org Name",
+                            width:200
+                        },
+
+                        {
+                            field: "out_farmer_code",
+                            title: "Farmer Code",
+                            width: 100
+                        },
+
+
+                        {
+                            field: "out_farmer_name",
+                            title: "Farmer Name",
+
+                            width: 100,
+                        },
+                        {
+                            field: "out_sur_name",
+                            title: "Sur Name",
+
+                            width: 100,
+
+                        },
+                        {
+                            field: "out_fhw_name",
+                            title: "Father/Husband/Wife's Name",
+
+                            width: 100,
+
+                        },
+
+                        {
+                            field: "out_farmer_dob",
+                            title: "DOB",
+
+                            width: 50,
+                        },
+                        {
+                            field: "out_farmer_addr1",
+                            title: "Permanent Address 1",
+
+                            width: 200,
+                        },
+                        {
+                            field: "out_farmer_addr2",
+                            title: "Permanent Address 2",
+
+                            width: 200,
+                        },
+
+                        {
+                            field: "out_farmer_country",
+                            title: "Country",
+                            width: 100,
+                            
+                        },
+
+
+
+                        {
+                            field: "out_farmer_state",
+                            title: "State",
+                            width: 50,
+
+                        },
+
+                        {
+                            field: "out_farmer_dist",
+                            title: "District",
+                            width: 50,
+
+                        },
+
+                        {
+                            field: "out_farmer_taluk",
+                            title: "Taluk",
+                            width: 50,
+
+                        },
+
+                        {
+                            field: "out_farmer_panchayat",
+                            title: "Gram Panchayat",
+                            width: 50,
+
+                        },
+
+
+                        {
+                            field: "out_farmer_village",
+                            title: "Village",
+                            width: 50,
+
+                        },
+
+
+
+                        {
+                            field: "out_farmer_pincode",
+                            title: "Pincode",
+
+                            width: 50
+                        },
+
+                        {
+                            field: "out_marital_status",
+                            title: "Marital",
+                            width: 50,
+
+                        },
+
+
+
+                        {
+                            field: "out_gender_flag",
+                            title: "Gender",
+                            width: 50,
+
+                        },
+
+
+                        {
+                            field: "out_reg_mobile_no",
+                            title: "Regis. Number",
+
+                            width: 80
+                        },
+
+
+
+                    ]
+
+                });
+            $(".k-dropdown-operator").css('display', 'none');
+            $("#LVMarker .k-input").attr('disabled', 'false');
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function selectRow() {
+        try {
+            var grid = $("#LVMarker").data("kendoGrid");
+            var selectedItem = grid.dataItem(grid.select());
+            setlocalStorage("ls_pageList", selectedItem);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+
+<script>
+
+    $("#btn_Edit").bind("click", function () {
+        getSerializedSelectedRows('edit');
+    });
+
+    $("#btn_View").bind("click", function () {
+        getSerializedSelectedRows('view');
+    });
+
+    $("#btn_new").bind("click", function () {
+        btn_onClick('Create');
+        location.href = "../ListViewMaker/ListViewMakerForm";
+    });
+
+    function getSerializedSelectedRows(mode) {
+        try {
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var items = getlocalStorage("ls_pageList");
+                if (items.length == 0) {
+                    kendoAlert("Please select records");
+                }
+                else {
+                    if (mode == "edit") {
+                        btn_onClick('Edit');
+                        location.href = "../ListViewMaker/ListViewMakerForm";
+                    }
+                    else if (mode == "view") {
+                        btn_onClick('View');
+                        location.href = "../ListViewMaker/ListViewMakerForm";
+                    }
+                }
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>
+    function generate_attribute_group_list(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                $("#gd_LVMarker").empty();
+                $("#gd_LVMarker").append("<div id='LVMarker'></div>");
+                listgrid(data);
+            }
+            else {
+                listgrid([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function listRefresh() {
+        try {
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch(0, 20);
+            pager_click = true;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function list_pager_refresh() {
+        try {
+            listpageloadfetch(0, 20);
+            pager_click = true;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    var pager_click = true;
+    function fetchPageDetail(pager_id) {
+        try {
+            var st_index = getStartIndex(pager_id);
+            var end_index = getEndIndex(pager_id, st_index);
+            pager_click = false;
+            listpageloadfetch(st_index, end_index);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/API_Scripts/Farmer_Registration.js"></script>
+<script src="~/API_Scripts/Farmer_Registration_retrieveFarmerReg_APIClient.js"></script>
+<script src="~/API_Scripts/Farmer_Registration_retrieveFarmerRegList_APIClient.js"></script>
+<script src="~/API_Scripts/Farmer_Registration_saveFarmerReg_APIClient.js"></script>
+<script src="~/API_Scripts/retrieveFarmerReg_Model.js"></script>
+<script src="~/API_Scripts/retrieveFarmerRegList_Model.js"></script>
+<script src="~/API_Scripts/saveFarmerReg_Model.js"></script>

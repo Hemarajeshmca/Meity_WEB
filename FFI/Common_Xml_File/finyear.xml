@@ -1,0 +1,18 @@
+<root>
+  <row>
+    <finyear_code>2016-17</finyear_code>
+    <finyear_desc>Financial Year 2016-17</finyear_desc>
+    <finyear_start_date>2016-04-01</finyear_start_date>
+    <finyear_end_date>2017-03-30</finyear_end_date>
+    <finyear_narration></finyear_narration>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <finyear_code>2017-18</finyear_code>
+    <finyear_desc>Financial Year 2017-18</finyear_desc>
+    <finyear_start_date>2017-04-01</finyear_start_date>
+    <finyear_end_date>2018-03-30</finyear_end_date>
+    <finyear_narration></finyear_narration>
+    <status_code>Active</status_code>
+  </row>
+</root>

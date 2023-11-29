@@ -1,0 +1,511 @@
+﻿@{
+    ViewBag.List = "FPO Loan";
+    ViewBag.helpName = "FPOLoan.html";
+    Layout = "~/Views/Shared/ListViewLayout.cshtml";
+
+}
+<form id="frm_fpo_loan" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="gd_Fpoloan">
+                <div id="Fpoloan_grid"></div>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    click_act_name = "FPOLoanForm";
+    click_ctrl_name = "FPOLoan";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+<script src="~/API_Scripts/FPOLoan.js"></script>
+<script src="~/API_Scripts/FPOLoan_retrieveFPOLoan_APIClient.js"></script>
+<script src="~/API_Scripts/FPOLoan_retrieveFPOLoanList_APIClient.js"></script>
+<script src="~/API_Scripts/FPOLoan_saveFPOLoan_APIClient.js"></script>
+<script src="~/API_Scripts/retrieveFPOLoan_Model.js"></script>
+<script src="~/API_Scripts/retrieveFPOLoanList_Model.js"></script>
+<script src="~/API_Scripts/saveFPOLoan_Model.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script>
+    var menuId = "";
+    var permission = "";
+    var gridrecord;
+    $(document).ready(function () {
+        $(".adv_filter").hide();
+        $(".Export").attr("hdrtitle", "FPO Loan List");
+        $(".Export").attr("SubTreeId", "FPOLGMT");
+        list_grid_id = "Fpoloan_grid";
+        $("#RI").hide();
+        $("#FPO").hide();
+        listpageloadfetch();
+        Screen_Id = "FPOLGMT";
+        permission = sec_Permission(Screen_Id);
+        page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+        filterhover();
+    });
+   
+</script>
+
+<script>
+    function listpageloadfetch() {
+        try{       
+        var formval = form_Serialize("frm_fpo_loan");
+        var obj_val = JSON.parse(formval);
+        obj_val.FilterBy_Option = "ALL";
+        obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "")
+            {
+                obj_val.FilterBy_Fromvalue = getlocalStorage('flt_condition');
+            }
+            else
+            {
+                obj_val.FilterBy_Fromvalue = ".";        
+            }
+                obj_val.FilterBy_Tovalue = ".";
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Filter = obj_val;
+            var Context = data.context;
+            $.ajax({
+                type: "POST",
+                url: '/FPOLoan/LRSFPOLoanListfetch',
+                dataType: 'json',
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, FilterBy_Option: Context.Filter.FilterBy_Option, FilterBy_Code: Context.Filter.FilterBy_Code, FilterBy_FromValue: Context.Filter.FilterBy_FromValue, FilterBy_ToValue: Context.Filter.FilterBy_ToValue }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    if (response.context.List != null)
+                    {
+                        generate_FPOLoan_list(response.context.List);
+                    }
+                    else
+                    {
+                        invoicegrid([]);
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    var status_Priority = [];
+    function fpoloangrid(data) {
+        try{
+            $.each(data, function (index, value) {
+                var flag = false;
+                $.each(status_Priority, function (sindex, svalue) {
+                    if (svalue == value.status_desc) {
+                        flag = true;
+                    }
+                });
+                if (flag == false) {
+                    status_Priority.push(value.status_desc);
+                }
+            });
+            $("#Fpoloan_grid").kendoGrid({
+                    excel: {
+                        fileName: "Fpo Loan.xlsx",
+                        filterable: true,
+                        allPages: false
+                    },
+                        dataSource: {
+                            data: data,
+                            pageSize: 20,
+                           
+                        },
+                toolbar: "<button type= 'button' id = 'Exportclick' class = 'k-grid-excel' style = 'display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                excelExport: function (e) {
+                    gridrecord;
+                    var gd = $("#Fpoloan_grid").data("kendoGrid");
+                    var len = gd.dataSource._data.length;
+                    var chkall = $('#chkall').is(':checked');
+                    var chkfilter = $('#chkfilter').is(':checked');
+                    var chktemp = $('#chktemp').is(':checked');
+                    //var twokendobox = true;
+
+                    var twokendobox = false;
+                    gd.dataSource.pageSize(len);
+                    exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                    gd.dataSource.pageSize('10');
+                    return false;
+                },
+                
+                        change: selectRow,
+                        height: 450,
+                        sortable: true,
+                        selectable: true,
+                        selectable: "singl",   //  Grid Row Selection
+                        pageable: {
+                            refresh: false,
+                           // pageSizes: true,
+                            buttonCount: 5,
+                            pageSizes: ["All", 100, 200, 500, 2000]
+                        },
+                filterable: true,
+                navigatable: true,
+                groupable: false,
+                resizable: true,
+                        columns: [
+                             {
+                                field: "out_fpoloan_rowid",
+                                 title: "fpoloan_rowid",
+                                  hidden: true,
+                             },
+                             {
+                                 field: "out_fpoorgn_code",
+                                 title: "fpoorgn_code",
+                                 hidden: true,
+                             },
+                             {
+                                 field: "out_fpoloan_mat_date",
+                                 title: "fpoloan_mat_date",
+                                 hidden: true,
+                            },
+                             
+                             {
+                                 field: "out_institution_type",
+                                 title: "institution_type",
+                                 hidden: true,
+                             },
+                           {
+                               field: "out_fpoloan_no",
+                               title: "Loan No.",
+                               width: 200,
+                               filterable: {
+                                   cell: {
+                                       operator: "contains",
+                                       inputWidth: 1500
+                                   }
+                               }
+                            },
+                            {
+                                field: "out_lending_institution",
+                                title: "Institution",
+                                width: 200,
+                                filterable: {
+                                    cell: {
+                                        operator: "contains",
+                                        inputWidth: 1500
+                                    }
+                                }
+                            },
+                             {
+                                 field: "out_institution_type_desc",
+                                 title: "Type",
+                                 width: 200,
+                                 filterable: {
+                                     cell: {
+                                         operator: "contains",
+                                         inputWidth: 1500
+                                     }
+                                 }
+                             },
+
+                            {
+                                field: "out_sanctioned_date",
+                                title: "Disb. Date",
+                                width: 200,
+                                filterable: {
+                                    cell: {
+                                        operator: "contains",
+                                        inputWidth: 1500
+                                    }
+                                }
+                            },
+                             {
+                                 field: "out_sanctioned_amount",
+                                 title: "Loan Amount",
+                                 width: 200,
+                                 filterable: {
+                                     cell: {
+                                         operator: "contains",
+                                         inputWidth: 1500
+                                     }
+                                 }
+                             },
+                             {
+                                 field: "out_fpoloan_start_date",
+                                 title: "FPO Loan Start Date",
+                                 width: 200,
+                                 hidden:true,
+                                 filterable: {
+                                     cell: {
+                                         operator: "contains",
+                                         inputWidth: 1500
+                                     }
+                                 }
+                             },
+                              {
+                                  field: "out_refund_received",
+                                  title: "received_amount",
+                                  hidden: true,
+                              },
+                               {
+                                   field: "out_emi_amount",
+                                   title: "emi_amount",
+                                   hidden: true,
+                               },
+                             {
+                                 field: "out_interest_rate",
+                                 title: "Interest Rate",
+                                 hidden: true,
+                                 width: 200,
+                                 filterable: {
+                                     cell: {
+                                         operator: "contains",
+                                         inputWidth: 1500
+                                     }
+                                 }
+                             },
+                             {
+                                 field: "out_repayment_in_yrs",
+                                 title: "Repayment Tenure (Years)",
+                                 width: 200,
+                                 hidden: true,
+                                 filterable: {
+                                     cell: {
+                                         operator: "contains",
+                                         inputWidth: 1500
+                                     }
+                                 }
+                             },
+                              {
+                                  field: "out_repayment_freq",
+                                  title: "repayment_freq",
+                                  hidden: true,
+                              },
+                              {
+                                  field: "out_repayment_freq_desc",
+                                  title: "Repayment Frequency",
+                                  width: 200,
+                                  filterable: {
+                                      cell: {
+                                          operator: "contains",
+                                          inputWidth: 1500
+                                      }
+                                  }
+                              },
+
+                               {
+                                   field: "out_repayment_in_months",
+                                   title: "Instalment Nos",
+                                   hidden: true,
+                                   width: 200,
+                                   filterable: {
+                                       cell: {
+                                           operator: "contains",
+                                           inputWidth: 1500
+                                       }
+                                   }
+                               },
+                                {
+                                    field: "out_collateral_type",
+                                    title: "collateral_type",
+                                    hidden: true,
+                                },
+                            {
+                                field: "out_collateral_type_desc",
+                                title: "Collateral Type",
+                                hidden: true,
+                                width: 200,
+                                filterable: {
+                                    cell: {
+                                        operator: "contains",
+                                        inputWidth: 1500
+                                    }
+                                }
+                            },
+                            {
+                                field: "out_payable_amount",
+                                title: "payable_amount",
+                                hidden: true,
+                            },
+                             {
+                                 field: "out_payable_exception",
+                                 title: "payable_exception",
+                                 hidden: true,
+                             },
+                              {
+                                  field: "out_interest_amount",
+                                  title: "interest_amount",
+                                  hidden: true,
+                              },
+                            {
+                                field: "out_collateral_amount",
+                                title: "Collateral Amount",
+                                hidden: true,
+                                width: 200,
+                                filterable: {
+                                    cell: {
+                                        operator: "contains",
+                                        inputWidth: 1500
+                                    }
+                                }
+                            },
+                             {
+                                 field: "out_closed_date",
+                                 title: "closed_date",
+                                 hidden: true,
+                             },
+                            {
+                                field: "out_received_amount",
+                                title: "Total Amount Received",
+                                hidden: true,
+                                width: 200,
+                                filterable: {
+                                    cell: {
+                                        operator: "contains",
+                                        inputWidth: 1500
+                                    }
+                                }
+                            },
+                             {
+                                 field: "out_settlement_amount",
+                                 title: "settlement_amount",
+                                 hidden: true,
+                             },
+                            //{
+                            //    field: "out_principle_paid",
+                            //    title: "Princ. Amount Repaid",
+                            //    hidden: true,
+                            //    width: 200,
+                            //    filterable: {
+                            //        cell: {
+                            //            operator: "contains",
+                            //            inputWidth: 1500
+                            //        }
+                            //    }
+                            //},
+                            {
+                                field: "out_interest_paid",
+                                title: "Int. Amount Repaid",
+                                hidden: true,
+                                width: 200,
+                                filterable: {
+                                    cell: {
+                                        operator: "contains",
+                                        inputWidth: 1500
+                                    }
+                                }
+                            },
+                            {
+                                field: "out_waive_amount",
+                                title: "waive_amount",
+                                hidden: true,
+                            },
+                            {
+                                field: "out_status_code",
+                                title: "status_code",
+                                hidden: true,
+                            },
+                            {
+                                field: "out_status_desc",
+                                title: "Status",
+                                width: 200,
+                                filterable: {
+                                    cell: {
+                                        operator: "contains",
+                                        inputWidth: 1500
+                                    }
+                                }
+                            },
+
+
+                        ]
+
+                    });
+
+            $(".k-dropdown-operator").css('display', 'none');
+            $("#Fpoloan_grid .k-input").attr('disabled', 'false');
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function selectRow() {
+        var grid = $("#Fpoloan_grid").data("kendoGrid");
+        var selectedItem = grid.dataItem(grid.select());
+        setlocalStorage("ls_pageList", selectedItem);
+    }
+
+    function statusFilter(element) {    // Dropdown list functionality
+        element.kendoDropDownList({
+            dataSource: status_Priority,
+            optionLabel: "--Select Value--"
+        });
+    }
+
+</script>
+<script>
+    $("#btn_Edit").bind("click", function () {
+        getSerializedSelectedRows('edit');
+    });
+
+    $("#btn_View").bind("click", function () {
+        getSerializedSelectedRows('view');
+    });
+
+    $("#btn_new").bind("click", function () {
+        btn_onClick('Create');
+        location.href = "../FPOLoan/FPOLoanForm";
+    });
+
+    function getSerializedSelectedRows(mode) {
+        try {
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var items = getlocalStorage("ls_pageList");
+                if (items.length == 0) {
+                    kendoAlert("Please select records");
+                }
+                else {
+                    if (mode == "edit") {
+                        btn_onClick('Edit');
+                        location.href = "../FPOLoan/FPOLoanForm";
+                    }
+                    else if (mode == "view") {
+                        btn_onClick('View');
+                        location.href = "../FPOLoan/FPOLoanForm";
+                    }
+                }
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>
+    function generate_FPOLoan_list(res) {
+        try{
+        if (res != null) {
+            var data = changedataType(res);
+            $("#gd_Fpoloan").empty();
+            $("#gd_Fpoloan").append("<div id='Fpoloan_grid'></div>");
+            fpoloangrid(data);
+        }
+        else {
+            fpoloangrid([]);
+        }
+    }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function listRefresh() {
+        try{
+        setlocalStorage('flt_condition', "");
+        listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+

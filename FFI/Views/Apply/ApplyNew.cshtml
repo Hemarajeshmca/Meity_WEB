@@ -1,0 +1,863 @@
+﻿@{
+    ViewBag.Form = "Apply For Shares";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+<script src="~/CommonScripts/HelpFile.js"></script>
+<script src="~/CommonScripts/Common_func.js"></script>
+<form id="frm_shareapp" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="box-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="txtmember_id" class="col-sm-5 control-label required">Member ID</label>
+                        <div class="col-sm-5" style="width:200px;">
+                            <input type="text" id="txtmember_id" name="In_fpomember_code" class="form-control" maxlength="50" readonly onchange="fetch_name()">
+
+                        </div>
+                        <div id="pay_help">
+                            <a class="HelpWindow fa fa-search fa-lg" role="button" id="pay_help1" data-toggle="modal" href="/HelpFilter/HelpFilter" hdrtitle="FPO Member" searchid="S05" data-target="#HelpModal" onclick=transfer(this,"form","","form_control"); title="Search" style="font-size: 19px; margin-left: 0px; margin-top: 10px;"></a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-5">
+                        </div>
+                    </div>
+                    <div class=" form-group">
+                        <label for="txtfarmer_id" class=" col-sm-5 control-label">Farmer ID</label>
+                        <div class=" col-sm-5">
+                            <input type="text" id="txtfarmer_id" name="In_farmer_code" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-5">
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="txtfarmer_name" class="col-sm-5 control-label required">Farmer Given Name</label>
+                        <div class="col-sm-5">
+                            <input type="text" id="txtfarmer_name" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-5">
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtfarmer_sur_name" class="col-sm-5 control-label required">Farmer Surname</label>
+                        <div class="col-sm-5">
+                            <input type="text" id="txtfarmer_sur_name" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="txtMode" class="col-sm-5 control-label">Mode</label>
+                        <div class="col-sm-7">
+                            <input id="txtMode" name="In_mode_flag" type="text" class="form-control" data-toggle="tooltip" data-placement="bottom" value="I">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none">
+                        <label for="file" class="col-sm-4 control-label">Farmer Photo </label>
+                        <img id="farmer_img" src="~/images/NoImage.png" class="col-sm-3 img-responsive profileImg" alt="User Image" height="60" width="60" />
+
+                        <div class="form-group" style="display:none">
+                            <div>
+                                <input type="file" name="file" id="farmerphoto" src="~/images/noimage.png" style="display:none" class=" col-sm-4 control-label" accept="image/x-png, image/gif, image/jpeg" disabled />
+                                @*<button title="" data-placement="top" class="btn btn-info" type="submit" data-original-title="Capture Signature"> <span class="glyphicon glyphicon-camera"></span></button>*@
+                                <input type="hidden" id="txtImageHiddenphoto" name="photo_farmer" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="txtRoleDesc" class="col-sm-4 control-label ">Signature</label>
+                        <img id="former_sign" src="~/images/1.JPG" class="col-sm-4 img-bordered-sm profileImg" alt="User Image" height="40" width="100" />
+                        <div class="form-group">
+                            <div>
+                                <input type="file" name="In_signature_farmer" id="farmersig" src="~/images/noimage.png" style="width: 110px;" class=" col-sm-4 control-label" accept="image/x-png, image/gif, image/jpeg" />
+                                @*<button title="" data-placement="top" class="btn btn-info" type="submit" data-original-title="Capture Signature"> <span class="glyphicon glyphicon-camera"></span><sup><span class="glyphicon glyphicon-pencil"></span></sup></button>*@
+                                <input type="hidden" id="txtImageHiddensignature" name="signature_farmer" />
+                                <input id="txtaggrorgn_code" name="fpoorgn_code" type="hidden" />
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="panel panel-default">
+        <div class="box-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-top:10px; padding-bottom:15px">
+
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txt_appliedon" class=" col-sm-5 control-label">Applied On</label>
+                        <div class=" col-sm-7">
+                            <input class="cusDate" data-role='datepicker' id="txt_appliedon" data-checkdate-msg="Enter Valid Date" name="In_applied_on" style="width:100%" onkeypress="return date_validate(event)" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtapplied_shares" class="col-sm-5 control-label required">Applied Shares</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtapplied_shares" style="text-align:right;" name="In_applied_shares" class="form-control" maxlength="4" onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtamount_due" class="col-sm-5 control-label required">Amount Due</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtamount_due" name="In_amount_due" class="form-control" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="cmb_paymethod" class="col-sm-5 control-label">Payment Method</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_paymethod" name="In_payment_mode" data-role="filtercombo" style="width:100%" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txt_payref" class="col-sm-5 control-label">Payment Reference</label>
+                        <div class="col-sm-7">
+                            <input id="txt_payref" name="In_payment_ref_no" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="cmb_paystatus" class="col-sm-5 control-label ">Payment Status</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_paystatus" name="In_payment_status" data-role="filtercombo" style="width:100%" />
+                            <input type="hidden" name="In_status_code" id="status_code" value="">
+                            <input type="hidden" name="In_status_desc" id="status_desc" value="">
+                            <input type="hidden" name="In_row_timestamp" id="row_timestamp" value="">
+                            <input type="hidden" name="IOU_shareapp_rowid" id="shareapp_rowid">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+
+            </div>
+
+        </div>
+    </div>
+    <div class="row" id="SrComments">
+        <div class="col-sm-12">
+            <label> Comments</label>
+            <textarea id="txtComments" rows="4" cols="20" name="In_sr_comments" style="width:100%" class="form-control"></textarea>
+        </div>
+    </div>
+
+
+</form>
+<script>
+    click_act_name = "ApplyList";
+    click_ctrl_name = "Apply";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+<script src="~/Scripts/json2.js"></script>
+<script src="~/Scripts/jquery.collapse.js"></script>
+<script src="~/Scripts/jquery.collapse_storage.js"></script>
+<script src="~/Scripts/jquery.collapse_cookie_storage.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#divEdit #deactivate').hide(); 
+        $(document).on('click', '#btnApprove', function (e) {
+            $('#divEdit #btnApprove').prop('disabled', true);
+            $('#divEdit #btnReject').prop('disabled', true);
+        });
+        $(document).on('click', '#btnReject', function (e) {
+            var cmt = $('#txtComments').val();
+            if (cmt != "" && cmt != null) {
+
+                $('#divEdit #btnApprove').prop('disabled', true);
+                $('#divEdit #btnReject').prop('disabled', true);
+            }
+        });
+
+
+        $(document).on('click', '#review', function (e) {
+            debugger;
+            console.log(getlocalStorage('chklst'))
+            if (getlocalStorage('chklst') == "save") {
+                $('#divCreate #review').prop('disabled', true);
+                master_review();
+                setlocalStorage('chklst') = "";
+            }
+            else {
+                kendoAlert("Please ensure checklist is updated!!!!");
+                $('#divCreate #review').prop('disabled', false);
+                return;
+            }
+        });
+        $(document).on('click', '#reviewEd', function (e) {
+            debugger;
+            console.log(getlocalStorage('chklst'))
+            if (getlocalStorage('chklst') == "save") {
+                $('#divEdit #reviewEd').prop('disabled', true);
+                master_review();
+                setlocalStorage('chklst') = "";
+            }
+            else {
+                kendoAlert("Please ensure checklist is updated!!!!");
+                $('#divEdit #reviewEd').prop('disabled', false);
+                return;
+            }
+        });
+
+
+        $("#common_id").text("Share App No");
+        $(".file_attach").attr("hdrtitle", "Apply For Shares");
+        $(".notes").attr("hdrtitle", "Apply For Shares");
+        $("#lblForm_menuid").text("PSHAPP");
+        kendodate_format();
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#frm_shareapp");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        load_master_code();
+
+        Screen_Id = "PSHAPP";
+        permission = sec_Permission(Screen_Id);
+
+        if (permission.auth == false) {
+            $("#txtComments").attr("disabled", true);
+            //$("#chklst_form #btnSave").attr("disabled", false);
+            // $("#SrComments").hide();
+        }
+        else {
+            $("#txtComments").show();
+            $("#txtComments").attr("disabled", false);
+            //$("#chklst_form #btnSave").attr("disabled", true);
+        }
+        localStorage.docno = 0;
+        var paystatus = "";
+        $("#cmb_paystatus").empty();
+        paystatus = grid_comboScreen_mastercodes("QCD_PAY_RECD_STAT");
+        filter_combobox("cmb_paystatus", paystatus);
+
+        var paymethod = "";
+        $("#cmb_paymethod").empty();
+        paymethod = grid_comboScreen_mastercodes("QCD_PAYMENT_MODE");
+        filter_combobox("cmb_paymethod", paymethod);
+        var org = getlocalStorage('org_id');
+
+        $('#txtaggrorgn_code').val(org);
+        if (getlocalStorage('btn_clk_val') == "Create") {
+            $('#divCreate #review').hide();
+            $("#bottom_menus").hide();
+            $("#txtMode").val("I");
+            $("#DocStat").val("New");
+        }
+        else if (getlocalStorage('btn_clk_val') == "View") {
+            if (getlocalStorage("ls_pageList") != undefined) {
+                $('#divCreate #reviewEd').hide();
+                $("#bottom_menus").hide();
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("frm_shareapp");
+                var obj_val = JSON.parse(formval);
+                if (obj_val != undefined) {
+                    var org_id = getlocalStorage('org_id');
+                    obj_val.fpoorgn_code = org_id;
+                    $("#shareapp_rowid").val(data.Out_shareapp_rowid);
+                    obj_val.shareapp_rowid = data.Out_shareapp_rowid;
+                    setlocalStorage('doc_no', $("#txtcommon_id").val());
+                    setlocalStorage('doc_row_id', $("#shareapp_rowid").val());
+                    var data = {};
+                    data.context = WebAPIProxy.getContext();
+                    data.context.Header = obj_val;
+                    var Context = data.context;
+                    $.ajax({
+                        type: "POST",
+                        data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, shareapp_rowid: Context.Header.shareapp_rowid, fpoorgn_code: Context.Header.fpoorgn_code }),
+                        url: "/Apply/Applyfetch",
+                        dataType: "json",
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (response) {
+                            debugger;
+                            if (response.context != null) {
+                                generate_ProcessShareApp_header(response.context.Header);
+                            }
+                            else {
+
+                            }
+                        },
+                        error: function (er) {
+                            alert(er)
+                            console.log(er)
+                        }
+
+                    });
+                    $("#txtMode").val("U");
+                }
+            }
+        }
+        else if(getlocalStorage('btn_clk_val') == "Edit") {
+            if (getlocalStorage("ls_pageList") != undefined) {  
+                $('#divEdit #reviewEd').hide();
+                $("#bottom_menus").hide();
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("frm_shareapp");
+                var obj_val = JSON.parse(formval);
+                if (obj_val != undefined) {
+                    var org_id = getlocalStorage('org_id');
+                    obj_val.fpoorgn_code = org_id;
+                    $("#shareapp_rowid").val(data.Out_shareapp_rowid);
+                    obj_val.shareapp_rowid = data.Out_shareapp_rowid;
+                    setlocalStorage('doc_no', $("#txtcommon_id").val());
+                    setlocalStorage('doc_row_id', $("#shareapp_rowid").val());
+                    var data = {};
+                    data.context = WebAPIProxy.getContext();
+                    data.context.Header = obj_val;
+                    var Context = data.context;
+                    $.ajax({
+                        type: "POST",
+                        data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, shareapp_rowid: Context.Header.shareapp_rowid, fpoorgn_code: Context.Header.fpoorgn_code }),
+                        url: "/Apply/Applyfetch",
+                        dataType: "json",
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (response) {
+                            debugger;
+                            if (response.context != null) {
+                                generate_ProcessShareApp_header(response.context.Header);
+                            }
+                            else {
+                              
+                            }
+                        },
+                        error: function (er) {
+                            alert(er)
+                            console.log(er)
+                        }
+
+                    });
+                    $("#txtMode").val("U");
+                }
+            }
+        }
+
+        $('#HelpModal').on('hide.bs.modal', function (e) {
+            if ($("#txtmember_id").val() != undefined && $("#txtmember_id").val() != "") {
+                //fetch_name();
+            }
+        });
+
+        $("#txt_appliedon").kendoDatePicker({
+            max: new Date(),// sets max date to Jan 1st, 2013
+            format: "dd/MM/yyyy"
+        });
+      //  field_enable();
+
+    });
+
+    function fetch_name() {
+        try {
+            var formval = form_Serialize("frm_serviceaddress");
+            var obj_val = JSON.parse(formval);
+            if (obj_val != undefined) {
+                var org_id = getlocalStorage('org_id');
+                obj_val.fpoorgn_code = org_id;
+                obj_val.shareapp_rowid = "0";
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, shareapp_rowid: Context.Header.shareapp_rowid, fpoorgn_code: Context.Header.fpoorgn_code }),
+                    url: "/Apply/Applyfetch",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        debugger;
+                        if (response.context != null) {
+                            //generate_ProcessShareApp_header(response.context.Header);
+                        }
+                        else {
+
+                        }
+                    },
+                    error: function (er) {
+                        alert(er)
+                        console.log(er)
+                    }
+
+                });
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function load_master_code() {
+        try {
+            debugger;
+            var data = {};
+            var context = WebAPIProxy.getContext();
+            data.userId = context.userId
+            data.orgnId = context.orgnId
+            data.locnId = context.locnId
+            data.localeId = context.localeId
+            data.screen_Id = "PSHAPP";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    $("#farmersig").change(function () {
+        readURLSign(this);
+    });
+
+    function readURLSign(input) {
+        try {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#former_sign').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    //function save_Image() {
+    //    try {
+    //        var xhr = new XMLHttpRequest();
+    //        var fd = new FormData();
+    //        xhr.onreadystatechange = function () {
+    //            if (xhr.readyState == 4 && xhr.status == 200) {
+    //                var value = JSON.parse(xhr.responseText);
+    //                if (value.result != undefined) {
+    //                    $("#txtImageHiddenphoto").val(value.result);
+    //                }
+    //                save_shareapp();
+    //            }
+    //        };
+
+
+    //        fd.append("file", document.getElementById('farmerphoto').files[0]);
+    //        fd.append("userID", $('#txtUserId').val());
+    //        xhr.open("POST", "/UserDefinition/User/", true);
+    //        xhr.send(fd);
+    //        xhr.addEventListener("load", function (event) {
+    //        }, false);
+    //    }r
+    //    catch (err) {
+    //        javascript_log4j_root(arguments.callee.name, err);
+    //    }
+    //}
+    function save_sign() {
+        try {
+            var xhr = new XMLHttpRequest();
+            var fd = new FormData();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var value = JSON.parse(xhr.responseText);
+                    if (value.result != undefined) {
+                        $("#txtImageHiddensignature").val(value.result);
+                    }
+                    save_shareapp();
+                }
+            };
+            fd.append("file", document.getElementById('farmersig').files[0]);
+            fd.append("userID", $('#txtUserId').val());
+            xhr.open("POST", "/UserDefinition/User/", true);
+            xhr.send(fd);
+            xhr.addEventListener("load", function (event) {
+            }, false);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    //$(document).on('click', '#bottom_menus li:nth-child(1)', function (e) {
+    //    debugger;
+    //    MyChecklist();
+    //});
+    //function MyChecklist()
+    //{
+    //    alert("My Check");
+    //}
+</script>
+<script language="javascript" type="text/javascript">
+    function popitup(url) {
+        newwindow = window.open(url, 'name', 'height=650,width=850');
+        if (window.focus) { newwindow.focus() }
+        return false;
+
+    }
+
+    function trans_input_data() {
+        var trans_coll = [
+            { "trasfer": "NO", "dataCol": "", "controlId": "", "grid_id": "", "grid_row_col": "" },
+            { "trasfer": "Yes", "dataCol": "fpoorgn_code", "controlId": "txtaggrorgn_code", "grid_id": "", "grid_row_col": "" }
+        ];
+        return trans_coll;
+    }
+
+    function form_control() {
+        var control_Name = [
+            { "dataCol": "fpomember_code", "controlId": "txtmember_id", "type": "Text" },
+            { "dataCol": "farmer_code", "controlId": "txtfarmer_id", "type": "Text" },
+            { "dataCol": "member_name", "controlId": "txtfarmer_name", "type": "Text" },
+            { "dataCol": "member_sur_name", "controlId": "txtfarmer_sur_name", "type": "Text" },
+        ];
+        return control_Name;
+
+    }
+</script>
+<script>
+    function save() {
+        try {
+          
+            save_sign();
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function save_shareapp() {
+        debugger;
+        $('#txt_appliedon').data('kendoDatePicker').enable(true);
+        $("#txtapplied_shares").removeAttr("readonly");
+        $("#txtapplied_shares").prop("disabled", false);
+        $("#txtamount_due").removeAttr("readonly");
+        $("#txtamount_due").prop("disabled", false);
+        $('#cmb_paymethod').data("kendoComboBox").enable(true);
+        $('#cmb_paystatus').data("kendoComboBox").enable(true);
+        $("#txt_payref").removeAttr("readonly");
+        $("#txt_payref").prop("disabled", false);
+        try {
+            if ($("#txtMode").val() == "S") {
+                $("#txtMode").val('U');
+            }
+            var formval = form_Serialize("frm_shareapp");
+            var obj_val = JSON.parse(formval);
+
+            if ($("#shareapp_rowid").val() == undefined || $("#shareapp_rowid").val() == "") {
+                obj_val.IOU_shareapp_rowid = 0;
+            }
+            else {
+                obj_val.In_shareapp_rowid = $("#shareapp_rowid").val();
+            }
+            if ($("#txtcommon_id").val() == undefined || $("#txtcommon_id").val() == "") {
+                obj_val.IOU_shareapp_no = "";
+            }
+            else {
+                obj_val.IOU_shareapp_no = $("#txtcommon_id").val();
+            }
+            if ($("#txtamount_due").val() == undefined || $("#txtamount_due").val() == "") {
+                obj_val.In_amount_due = 0;
+            }
+            else {
+                obj_val.In_amount_due = $("#txtamount_due").val();
+            }
+            if (obj_val.In_status_code == undefined) {
+                obj_val.In_status_code = "A";
+            }
+            if (obj_val.In_row_timestamp == undefined) {
+                obj_val.In_row_timestamp = "0";
+            }
+            else {
+                obj_val.In_row_timestamp = $("#row_timestamp").val();
+            }
+            if (getlocalStorage('org_id') == undefined) {
+                obj_val.In_fpoorgn_code = "0";
+            }
+            else {
+                obj_val.In_fpoorgn_code = getlocalStorage('org_id');
+            }
+            if (obj_val.hasOwnProperty('In_applied_on')) {
+                if (obj_val.In_applied_on != '')
+                    obj_val.In_applied_on = getFormated_StringDate(obj_val.In_applied_on);
+            }
+            if ($("#txtImageHiddensignature").val() == undefined || $("#txtImageHiddensignature").val() == "") {
+                obj_val.In_signature_farmer = "0";
+            }
+            else {
+                obj_val.In_signature_farmer = $("#txtImageHiddensignature").val();
+            }
+            if ($("#txtImageHiddenphoto").val() == undefined || $("#txtImageHiddenphoto").val() == "") {
+                obj_val.In_photo_farmer = "0";
+            }
+            else {
+                obj_val.In_photo_farmer = $("#txtImageHiddenphoto").val();
+            }
+            if ($("#txtComments").val() == undefined || $("#txtComments").val() == "") {
+                obj_val.In_shareapp_remark = "";
+            }
+            else {
+                obj_val.In_shareapp_remark = $("#txtComments").val();
+            }
+            //obj_val.shareapp_remark = "";
+            var data_save = {};
+            data_save.context = WebAPIProxy.getContext();
+            data_save.context.Header = obj_val;
+            var Context = data_save.context;
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, Header: Context.Header }),
+                url: "/Apply/ApplySave",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    console.log(response)
+                    var Res = response;
+                    //.context.orgnId
+                    if (Res.context.orgnId != null) {
+                        var mode = $("#txtMode").val();
+                        if (mode == "I") {
+                            kendoAlert("Share Details saved successfully");
+                            get_ProcessShareApp_details(Res.context.Header);
+                        }
+                        else if (mode == "D") {
+                            kendoAlert("Share Details inactivate successfully");
+                            get_ProcessShareApp_details(Res.context.Header);
+                        }
+                        else if (mode == "R") {
+                            kendoAlert("Submitted for review");
+                            get_ProcessShareApp_details(Res.context.Header);
+                        }
+                        else if (mode == "I") {
+                            kendoAlert("Share Details saved successfully");
+                            get_ProcessShareApp_details(Res.context.Header);
+                        }
+                        else if (mode == "U") {
+                            kendoAlert("Share Details saved successfully");
+                            get_ProcessShareApp_details(Res.context.Header);
+                        }
+                        else if (mode == "J") {
+                            kendoAlert("Application Rejected");
+                            get_ProcessShareApp_details(Res.context.Header);
+                        }
+                        else if (mode == "A") {
+                            kendoAlert("Application approved");
+                            get_ProcessShareApp_details(Res.context.Header);
+                        }
+                        else {
+                            kendoAlert("Share Details saved successfully");
+                            get_ProcessShareApp_details(Res.context.Header);
+                        }
+                    }
+                    else {
+                        kendoAlert(Res.ApplicationException.errorDescription);
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+            $("#txtamount_due").attr("readonly");
+            $("#txtamount_due").prop("disabled", true);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function get_ProcessShareApp_details(res) {
+        try {
+         
+            $('#divCreate #btnSave').prop('disabled', true);
+            var formval = form_Serialize("frm_shareapp");
+            var obj_val = JSON.parse(formval);
+            if (obj_val != undefined) {
+                obj_val.fpomember_code = $("#txtmember_id").val();
+                var org_id = getlocalStorage('org_id');
+                obj_val.fpoorgn_code = org_id;
+                obj_val.shareapp_rowid = res.IOU_shareapp_rowid;
+                obj_val.shareapp_no = res.IOU_shareapp_no;
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+               
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, shareapp_rowid: Context.Header.shareapp_rowid, fpoorgn_code: Context.Header.fpoorgn_code }),
+                    url: "/Apply/Applyfetch",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        debugger;
+                        if (response.context != null) {
+                            generate_ProcessShareApp_header(response.context.Header);
+                        }
+                        else {
+
+                        }
+                    },
+                    error: function (er) {
+                        alert(er)
+                        console.log(er)
+                    }
+
+                });
+               
+            //   $('#divEdit #reviewEd').prop('disabled', false);
+                $('#divEdit #btnSaveEd').prop('disabled', true);
+            }
+        }
+        catch (err) {
+
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function generate_ProcessShareApp_header(res) {
+        try {
+            if (res != null) {
+                $("#txtcommon_id").val(res.In_shareapp_no);
+                $("#txtmember_id").val(res.In_fpomember_code);
+                $("#txtfarmer_id").val(res.In_farmer_code);
+                $("#txtfarmer_name").val(res.In_farmer_name);
+                $("#txtfarmer_sur_name").val(res.In_sur_name);
+                $("#txtgiven_name").val(res.In_farmer_name);
+                $("#txtsurname").val(res.In_sur_name);
+                $("#txt_appliedon").val(res.In_applied_on);
+                $("#txtapplied_shares").val(res.In_applied_shares);
+                $("#txtamount_due").val(res.In_amount_due);
+                $('#cmb_paymethod').data("kendoComboBox").value(res.In_payment_mode);
+                $("#txt_payref").val(res.In_payment_ref_no);
+                $('#cmb_paystatus').data("kendoComboBox").value(res.In_payment_status);               
+                $("#DocStat").val(res.In_status_desc);
+                $("#row_timestamp").val(res.In_row_timestamp);
+                $("#txtImageHiddenphoto").val(res.In_photo_farmer);
+                $("#txtImageHiddensignature").val(res.In_signature_farmer);
+                $("#txtComments").val(res.In_shareapp_remark);
+                localStorage.docno = res.IOU_shareapp_rowid;
+                $("#shareapp_rowid").val(res.IOU_shareapp_rowid);
+                var farmerphoto = res.In_photo_farmer
+                var farmersign = res.In_signature_farmer
+                if (farmerphoto != "")
+                    document.getElementById("farmer_img").src = "data:image/png;base64," + farmerphoto;
+                //else
+                //    document.getElementById("farmer_img").src = "~/images/NoImage.png";
+                if (farmersign != "")
+                    document.getElementById("former_sign").src = "data:image/png;base64," + farmersign;
+                //else
+                //    document.getElementById("former_sign").src = "~/images/noimage.png";
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function review() {
+        debugger;
+        try {
+            $("#txtMode").val('R');
+            save();
+            $('#divEdit #reviewEd').prop('disabled', true);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function field_enable() {
+        if (permission.auth == true || getlocalStorage('btn_clk_val') == "View") {
+
+            $("#pay_help1").hide();
+            $("#txtfarmer_name").removeAttr("readonly");
+            $("#txtfarmer_name").prop("disabled", true);
+            $("#txtfarmer_sur_name").removeAttr("readonly");
+            $("#txtfarmer_sur_name").prop("disabled", true);
+            $('#txt_appliedon').data('kendoDatePicker').enable(false);
+            $("#txtapplied_shares").removeAttr("readonly");
+            $("#txtapplied_shares").prop("disabled", true);
+            $("#txtamount_due").removeAttr("readonly");
+            $("#txtamount_due").prop("disabled", true);
+            $('#cmb_paymethod').data("kendoComboBox").enable(false);
+            $('#cmb_paystatus').data("kendoComboBox").enable(false);
+            $("#txt_payref").removeAttr("readonly");
+            $("#txt_payref").prop("disabled", true);
+            $("#farmersig").prop('disabled', true);
+
+
+        }
+    }
+
+    function approve() {
+        try {
+            $("#txtMode").val('A');
+            save();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function reject() {
+        try {
+            debugger;
+            console.log($("#txtComments").val());
+            if ($("#txtComments").val() == "") {
+                kendoAlert("Comments should be mandatory for rejects");
+            }
+            else {
+                $("#txtMode").val('J');
+                save();
+                $("#btnReject").prop('disabled', false);
+            }
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>

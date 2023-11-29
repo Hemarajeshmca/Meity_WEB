@@ -1,0 +1,32 @@
+﻿<root>
+  <row>
+    <farmerkyc_rowid>1</farmerkyc_rowid>
+    <farmer_code>MUTHU0001</farmer_code>
+    <version_no>1</version_no>
+    <proof_type>QCD-PRF-ID</proof_type>
+    <proof_doc>QCD-PRFI-AADHAR</proof_doc>
+    <proof_doc_no>67511223344</proof_doc_no>
+    <proof_valid_till>-</proof_valid_till>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <farmerkyc_rowid>2</farmerkyc_rowid>
+    <farmer_code>MUTHU0001</farmer_code>
+    <version_no>1</version_no>
+    <proof_type>QCD-PRF-AGE</proof_type>
+    <proof_doc>QCD-PRFG-BIRTH</proof_doc>
+    <proof_doc_no>7819090801</proof_doc_no>
+    <proof_valid_till>-</proof_valid_till>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <farmerkyc_rowid>3</farmerkyc_rowid>
+    <farmer_code>MUTHU0001</farmer_code>
+    <version_no>1</version_no>
+    <proof_type>QCD-PRF-ADDR</proof_type>
+    <proof_doc>QCD-PRFA-VOTER</proof_doc>
+    <proof_doc_no>G/TN/20/000067452311/2004</proof_doc_no>
+    <proof_valid_till>12-11-2020</proof_valid_till>
+    <status_code>Active</status_code>
+  </row>
+</root>

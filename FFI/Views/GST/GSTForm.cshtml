@@ -1,0 +1,721 @@
+﻿@{
+    ViewBag.Form = "GST";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+
+<form id="form_GST" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:10px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_slno" class=" col-sm-5 control-label required">GST SL.NO</label>
+                        <div class=" col-sm-6">
+                            <input id="txt_slno" type="text" class="form-control" name="In_reciver_location" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="cmb_state_from" class=" col-sm-5 control-label required">State</label>
+                        <div class=" col-sm-6">
+                            <input id="cmb_state_from" name="IOU_provider_location" data-role="filtercombo" style="width:100%" />
+                        </div>
+                        <input type="hidden" id="taxrate_rowid" name="IOU_taxrate_rowid" />
+                        <input type="hidden" id="status_code" name="In_status_code" />
+                        <input type="hidden" id="txtMode" name="In_mode_flag" value="I" />
+                        <input type="hidden" id="row_timestamp" name="In_row_timestamp" />
+                    </div>
+                </div>
+                @*<div class="col-xs-6">
+                        <div class=" form-group" style="display:none">
+                            <label for="cmb_state_to" class=" col-sm-5 control-label required">State To</label>
+                            <div class=" col-sm-6">
+                                <input id="cmb_state_to" name="reciver_location" data-role="filtercombo" style="width:100%" />
+
+                            </div>
+                        </div>
+                    </div>*@
+            </div>
+            <div class="col-xs-12">
+                <div id="grid_gst_list">
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    click_act_name = "GSTList";
+    click_ctrl_name = "GST";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+<script src="~/CommonScripts/common.js"></script>
+
+<script>
+    $(document).ready(function () {
+        //master_GST_PRODUCT();
+        $("#bottom_menus").hide();
+
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#form_GST");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        load_master_code();
+        //$("#common_id").text("Transfer Register ID");
+        var org_id = getlocalStorage('org_id');
+        var org_type = getlocalStorage('org_type');
+        $("#fpoorgn_code").val(org_id);
+        $('#divCreate #review').hide();
+        $("#hide_div").hide();
+
+
+        Screen_Id = "ICDGST";
+        permission = sec_Permission(Screen_Id);
+        setlocalStorage("status", "Active");
+        setlocalStorage('status_code', "A");
+
+        var combo_statefrom = "";
+        $("#cmb_state_from").empty();
+        combo_statefrom = grid_comboScreen_mastercodes("QCD_UN_STATE");
+        filter_combobox("cmb_state_from", combo_statefrom);
+
+        //var combo_stateto = "";
+        //$("#cmb_state_to").empty();
+        //combo_stateto = grid_comboScreen_mastercodes("QCD_UN_STATE");
+        //filter_combobox("cmb_state_to", combo_stateto);
+        gridgst([]);
+
+        if (getlocalStorage('btn_clk_val') == "Create") {
+            $("#txtMode").val("I");
+            $("#bottom_menus").hide();
+            $("#DocStat").val("New");
+        }
+        if (getlocalStorage('btn_clk_val') == "Edit") {
+            $("#btnFetch").hide();
+            $('#divEdit #reviewEd').hide();
+            $('#divEdit #deactivate').hide();
+            $("#cmb_state_from").data("kendoComboBox").enable(false);
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("form_GST");
+                var obj_val = JSON.parse(formval);
+                $("#taxrate_rowid").val(data.Out_taxrate_rowid);
+                obj_val.taxrate_rowid = data.Out_taxrate_rowid;
+                obj_val.provider_location = data.Out_provider_location;
+
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({
+                        userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId,
+                        taxrate_rowid: Context.Header.taxrate_rowid, provider_location: Context.Header.provider_location
+                    }),
+                    url: "/GST/GSTfetch",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        debugger;
+                        if (response.context != null) {
+                            generate_Gst_header(response.context.Header);
+                            generate_Gst_detail(response.context.Detail);
+                            //SetPager(response.context.Filter.out_record_count)
+                        }
+                        else {
+                            gridgst([]);
+                        }
+                    },
+                    error: function (er) {
+                        alert(er)
+                        console.log(er)
+                    }
+
+                });
+                $("#txtMode").val("U");
+                $("#DocStat").val("Active");
+
+                setlocalStorage('doc_no', $("#register_no").val());
+                setlocalStorage('doc_row_id', $("#register_rowid").val());
+
+            }
+        }
+        if (getlocalStorage('btn_clk_val') == "View") {
+            debugger;
+            $("#btnFetch").hide();
+            $('#divEdit #reviewEd').hide();
+            $('#divScreen').hide();
+            $("#cmb_state_from").data("kendoComboBox").enable(false);
+          //  $("#cmb_state_to").data("kendoComboBox").enable(false);
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("form_GST");
+                var obj_val = JSON.parse(formval);
+                $("#taxrate_rowid").val(data.Out_taxrate_rowid);
+                obj_val.taxrate_rowid = data.Out_taxrate_rowid;
+                obj_val.provider_location = data.Out_provider_location;
+                 //obj_val.fpoorgn_code = getlocalStorage('org_id');
+
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+               // obj_val.provider_location = data.Out_provider_location;
+
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, taxrate_rowid: Context.Header.taxrate_rowid, provider_location: Context.Header.provider_location }),
+                    url: "/GST/GSTfetch",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        debugger;
+                        if (response.context != null) {
+                            generate_Gst_header(response.context.Header);
+                            generate_Gst_detail(response.context.Detail);
+                            //SetPager(response.context.Filter.out_record_count)
+                        }
+                        else {
+                            gridgst([]);
+                        }
+                    },
+                    error: function (er) {
+                        alert(er)
+                        console.log(er)
+                    }
+
+                });
+                $("#txtMode").val("U");
+                $("#DocStat").val("Active");
+
+                setlocalStorage('doc_no', $("#register_no").val());
+                setlocalStorage('doc_row_id', $("#register_rowid").val());
+
+            }
+        }
+
+    });
+
+    function get_GST_details(res) {
+        try {
+
+            var formval = form_Serialize("form_GST");
+            var obj_val = JSON.parse(formval);
+            obj_val.taxrate_rowid = res;
+            var c = $('#cmb_state_from');
+            obj_val.provider_location = c.data('kendoComboBox').value();            
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_val;
+            var Context = data.context;
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, taxrate_rowid: Context.Header.taxrate_rowid, provider_location: Context.Header.provider_location }),
+                url: "/GST/GSTfetch",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    if (response.context != null) {
+                        generate_Gst_header(response.context.Header);
+                        generate_Gst_detail(response.context.Detail);
+                        //SetPager(response.context.Filter.out_record_count)
+                    }
+                    else {
+                        gridgst([]);
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+
+            $("#taxrate_rowid").val(res);
+            $("#mode_flag").val('U');
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function load_master_code() {
+        try {
+            debugger;
+            var data = {};
+            var context = WebAPIProxy.getContext();
+            data.userId = context.userId
+            data.orgnId = context.orgnId
+            data.locnId = context.locnId
+            data.localeId = context.localeId
+            data.screen_Id = "ICDGST";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    $('#cmb_state_from').change(function () {
+        var formval = form_Serialize("form_GST");
+        var obj_val = JSON.parse(formval);
+        obj_val.taxrate_rowid = '0';
+        var c = $('#cmb_state_from');
+        obj_val.provider_location = c.data('kendoComboBox').value();
+
+        var data = {};
+        data.context = WebAPIProxy.getContext();
+        data.context.Header = obj_val;
+        var Context = data.context;
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, taxrate_rowid: Context.Header.taxrate_rowid, provider_location: Context.Header.provider_location }),
+            url: "/GST/GSTfetch",
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                debugger;
+                if (response.context != null) {
+                    generate_Gst_header(response.context.Header);
+                    generate_Gst_detail(response.context.Detail);
+                    //SetPager(response.context.Filter.out_record_count)
+                }
+                else {
+                    gridgst([]);
+                }
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+
+        });
+    });
+
+    //function listLoad() {
+
+    //    try {
+    //        var formval = form_Serialize("form_GST");
+    //        var obj_val = JSON.parse(formval);
+    //        obj_val.taxrate_rowid = '0';
+    //        var c = $('#cmb_state_from');
+    //        obj_val.provider_location = c.data('kendoComboBox').value();
+
+    //        var data = {};
+    //        data.context = WebAPIProxy.getContext();
+    //        data.context.Header = obj_val;
+    //        retrieve_GST_details(data);
+    //        //var colCount = $("#grid_Drop_list").find('.k-grid-header colgroup > col').length;
+
+    //        ////If There are no results place an indicator row
+    //        //if ($("#grid_Drop_list").data("kendoGrid").dataSource._view.length == 0) {
+    //        //    $("#grid_Drop_list").find('.k-grid-content tbody')
+    //        //        .append('<tr class="kendo-data-row"><td colspan="' +
+    //        //            colCount +
+    //        //       '" style="text-align:center; padding-top:10px;background-color:#AFE4FA"><b> No pending records available for the selected status; please try later!!!</b></td></tr>');
+    //        //}
+
+    //        return false;
+    //    }
+    //    catch (err) {
+    //        javascript_log4j_root(arguments.callee.name, err);
+    //    }
+    //}
+
+</script>
+<script>
+    function gridgst(data) {
+        try {
+            $("#grid_gst_list").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                In_taxratedtl_rowid: { type: "string" },
+                                In_hsn_code: { type: "string" },
+                                In_hsn_description: { type: "string", editable: false },
+                                In_hsn_category: { type: "string", editable: false },
+                                In_hsn_category_code: { type: "string" },
+                                In_cgst_rate: { type: "string", defaultValue: "0" },
+                                In_sgst_rate: { type: "string", defaultValue: "0" },
+                                In_igst_rate: { type: "string", defaultValue: "0" },
+                                In_ugst_rate: { type: "string", defaultValue: "0" },
+                                In_status_code: { type: "string" },
+                                In_mode_flag: { type: "string", defaultValue: "I"},
+                            }
+                        }
+                    }
+                },
+                toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 400,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_gst_list').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                edit: function (e) {
+                    debugger;
+                    setDefaultValues(e);
+                    var rowindex = this.table.length;
+                    var columnIndex = this.cellIndex(e.container);
+                    var fieldName = this.thead.find("th").eq(columnIndex).data("field");
+                    if (fieldName == "In_hsn_code") {
+                        if (e.model.In_hsn_description != "" ) {
+                            this.closeCell(); // prevent editing 
+                            var theCell = $('#grid_gst_list tbody td:eq(2)');//sample selector for a cell 
+                           // $('#grid_gst_list').data('kendoGrid').editCell(theCell);//ask the Grid to put that cell in edit mode
+                        }
+                    }
+                },
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                    {
+                        command: [
+                    {
+                        name: "Delete",
+                        id: "Delete",
+                        imageClass: "fa fa-close",
+                        click: function (e) {
+                            var grid = $("#grid_gst_list").data("kendoGrid");
+                            var dataItem = $("#grid_gst_list").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                            DeleteWindowEvent(e, dataItem, grid);
+                            e.stopImmediatePropagation()
+                        }
+                    },
+                        ], title: "Action", width: "50px",
+                    },
+                    {
+                        field: "In_taxratedtl_rowid",
+                        title: "taxratedtl_rowid",
+                        hidden: true,
+                    },
+                   {
+                       field: "In_hsn_code",
+                       title: "HSN Code",
+                       editor: '<div class="input-group input-group-sm"><input type="text" readonly name="hsn_code" maxlength="10" style="width:100px;color:black"  onkeypress="return speical_char(event)" data-bind="value:hsn_code"/><span class="input-group-btn" style="padding-right: 150px;"><a class="HelpWindow fa fa-search fa-lg" data-toggle="modal" href="/HelpFilter/HelpFilter" hdrtitle="Details" searchid="S16" data-target="#HelpModal" onclick=transfer(this,"grid","grid_gst_list","gridgst") title="Search" style="font-size: 15px; padding-left: 10px;"></a> </span> </div>',
+                       width: 100,
+                   },
+                   {
+                       field: "In_hsn_category_code",
+                       title: "hsn_category_code",
+                       hidden: true,
+                   },
+                   {
+                       field: "In_hsn_category",
+                       title: "HSN Category",
+                       width: 100,
+                       hidden: true,
+                   },
+                 {
+                     field: "In_hsn_description",
+                     title: "HSN Description",
+                     width: 100,
+
+                 },
+
+                 {
+                     field: "In_cgst_rate",
+                     title: "CGST %",
+                     width: 100,
+                     editor: function (container, options) {
+                         item_rate(container, options.field, '4', '2');
+                     },
+                 },
+                 {
+                     field: "In_sgst_rate",
+                     title: "SGST % / UGST %",
+                     width: 100,
+                     editor: function (container, options) {
+                         item_rate(container, options.field, '4', '2');
+                     },
+                 },
+                 {
+                     field: "In_igst_rate",
+                     title: "IGST %",
+                     width: 100,
+                     editor: function (container, options) {
+                         item_rate(container, options.field, '4', '2');
+                     },
+                 },
+                 {
+                     field: "In_ugst_rate",
+                     title: "UGST %",
+                     width: 100,
+                     editor: function (container, options) {
+                         item_rate(container, options.field, '4', '2');
+                     },
+                     hidden: true,
+                 },
+                 {
+                     field: "In_status_code",
+                     title: "Status",
+                     hidden: true,
+                     width: 0
+
+                 },
+                     {
+                         field: "In_status_desc",
+                         title: "Status",
+                         editor: function (container, options) {
+                             combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "In_status_code", "grid_gst_list")
+                         },
+                         width: 100,
+                         hidden: true,
+                     },
+                {
+                    field: "In_mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+    load_master_code();
+    status_desc_list = grid_comboScreen_mastercodes("STATUS");
+
+</script>
+<script>
+    function grid_control() {
+        try {
+            var control_Name = [
+                { "dataCol": "HSN_code", "grid_row_col": "In_hsn_code" },
+                { "dataCol": "hsn_description", "grid_row_col": "In_hsn_description" },
+                { "dataCol": "HSN_category", "grid_row_col": "In_hsn_category" },
+                { "dataCol": "HSN_master", "grid_row_col": "In_hsn_category_code" },
+                { "dataCol": "", "grid_row_col": "In_cgst_rate" },
+                { "dataCol": "", "grid_row_col": "In_sgst_rate" },
+                { "dataCol": "", "grid_row_col": "In_igst_rate" },
+                { "dataCol": "", "grid_row_col": "In_ugst_rate" },
+                { "dataCol": "", "grid_row_col": "In_status_code" },
+                { "dataCol": "", "grid_row_col": "In_status_desc" },
+                { "dataCol": "", "grid_row_col": "In_mode_flag" },
+            { "dataCol": "", "grid_row_col": "uid" }
+            ];
+            return control_Name
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function setColorgrd(rows, resultData) {
+
+        for (var i = 0; i < rows.length; i++) {
+            var row = $(rows[i]);
+            row.css('backgroundColor', 'lightgreen');
+        }
+        //var child_del = $('.k-grid-Delete').children('span:first');
+        //$('.k-grid-Delete').html(child_del);
+
+        //var child_copy = $('.k-grid-Copy').children('span:first');
+        //$('.k-grid-Copy').html(child_copy);
+    }
+
+
+    function controlName() {
+        try {
+            var control_Name = [
+            ];
+            return control_Name
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+
+    function trans_input_data() {
+        try {
+            var trans_coll = [
+              { "trasfer": "NO", "dataCol": "", "controlId": "", "grid_id": "", "grid_row_col": "" },
+                { "trasfer": "Yes", "dataCol": "In_hsn_code", "controlId": "", "grid_id": "grid_gst_list", "grid_row_col": "" },
+            ];
+            return trans_coll;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+<script>
+    function gridvalidation() {
+        var grid = $("#grid_gst_list").data("kendoGrid");
+        var count = grid.dataSource.total();
+
+        if (count == 0) {
+            kendoAlert("can't save without gst detail");
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+</script>
+
+<script>
+
+    function save() {
+        debugger;
+        try {
+            if (gridvalidation()) {
+                $('#cmb_state_from').data("kendoComboBox").enable(true);
+
+                var mandatory_check = true;
+                if ($("#txtMode").val() == "S") {
+                    $("#txtMode").val('U');
+                }
+                var formval = form_Serialize("form_GST");
+                var obj_val = JSON.parse(formval);
+                if ($("#taxrate_rowid").val() == undefined || $("#taxrate_rowid").val() == '') {
+                    obj_val.IOU_taxrate_rowid = 0;
+                }
+                if ($("#txt_slno").val() == undefined || $("#txt_slno").val() == '') {
+                    obj_val.In_reciver_location = '0'
+                }
+                if ($("#txtMode").val() == '') {
+                    obj_val.In_mode_flag = 'I';
+                }
+                obj_val.In_provider_location = obj_val.IOU_provider_location
+                var grid_val = JSON.stringify($("#grid_gst_list").data().kendoGrid._data);
+                var Bind = {};
+                Bind = grid_val;
+                var result = JSON.parse(Bind);
+                var grid_validate_msg = "";
+
+               // if (mandatory_check == true) {
+                    $.each(result, function (index, value) {
+                        debugger;
+                        var row_id = value.In_taxratedtl_rowid;
+                        if (row_id == undefined || row_id == "") {
+                            result[index].In_taxratedtl_rowid = "0";
+                        }
+                        var mode = result[index].In_mode_flag;
+                        if (mode == "S") {
+                            result[index].In_mode_flag = "U";
+                        }
+                        var status = value.In_status_code;
+                        if (status == "") {
+                            result[index].In_status_code = "A";
+                        }
+                        //Code Introduced start by venkat 16-07-2020
+                        var hsncode = value.In_hsn_code;
+                        if (hsncode == undefined || hsncode == "") {
+                        grid_validate_msg += "hsn Code Cannot be Blank <br>";
+                        mandatory_check = false;
+                        }
+
+                        var hsndesc = value.In_hsn_description;
+                        if (hsndesc == undefined || hsndesc == "") {
+                            grid_validate_msg += "hsn Description Cannot be Blank <br>";
+                            mandatory_check = false;
+                        }
+                        //end
+                    });
+                    if (mandatory_check == false) {
+                    kendoAlert(grid_validate_msg);
+                    return false;
+                }
+                    var obj_grid_val = result;
+                    var data = {};
+                    data.context = WebAPIProxy.getContext();
+                    data.context.Header = obj_val;
+                    data.context.Detail = obj_grid_val;
+                    var Context = data.context;
+                    $.ajax({
+                        type: "POST",
+                        data: JSON.stringify({orgnId: Context.orgnId,locnId: Context.locnId,userId: Context.userId, localeId: Context.localeId,Header: Context.Header,Detail: Context.Detail }),
+                        url: "/GST/GSTSave",
+                        dataType: "json",
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (response) {
+                            console.log(response)
+                            var Res = JSON.parse(response);
+                            if (Res.context != null) {
+                                var mode = $("#txtMode").val();
+                                if (mode == "I") {
+                                    kendoAlert("GST Details saved successfully");
+                                    get_GST_details(Res.context.Header.IOU_taxrate_rowid);
+                                    //get_attribute_group_details(responseJSON.context.Header.entitygrp_rowid);
+                                }
+                                else if (mode == "D") {
+                                    kendoAlert("GST Details inactivate successfully");
+                                    get_GST_details(Res.context.Header.IOU_taxrate_rowid);
+                                }
+                                else {
+                                    kendoAlert("GST Details saved successfully");
+                                    get_GST_details(Res.context.Header.IOU_taxrate_rowid);
+                                }
+                            }
+                            else {
+                                kendoAlert(Res.ApplicationException.errorDescription);
+                            }
+                        },
+                        error: function (er) {
+                            alert(er)
+                            console.log(er)
+                        }
+
+                    });
+                    $('#cmb_state_from').data("kendoComboBox").enable(false);
+               // }
+            }
+        }
+
+        catch (err) {
+            $('#cmb_state_from').data("kendoComboBox").enable(false);
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function generate_Gst_header(res) {
+        if (res != null) {
+            $("#taxrate_rowid").val(res.IOU_taxrate_rowid);
+            $('#cmb_state_from').data("kendoComboBox").value(res.IOU_provider_location);
+            $('#txt_slno').val(res.In_reciver_location);
+            $("#status_code").val(res.In_status_code);
+            $("#DocStat").val(res.In_status_desc);
+            $("#txtMode").val(res.In_mode_flag);
+            $("#row_timestamp").val(res.In_row_timestamp);
+        }
+    }
+    function generate_Gst_detail(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                gridgst(data);
+            }
+            else {
+                gridgst([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+@*<script src="~/CommonScripts/HelpFile.js"></script>
+    <script src="~/CommonScripts/common.js"></script>*@

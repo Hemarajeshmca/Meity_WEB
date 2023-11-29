@@ -1,0 +1,32 @@
+﻿<root>
+  <row>
+    <bank_code>SBI</bank_code>
+    <bank_name>State Bank of India</bank_name>
+    <created_date>28/11/2016</created_date>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <bank_code>UBI</bank_code>
+    <bank_name>Union Bank of India</bank_name>
+    <created_date>28/11/2016</created_date>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <bank_code>IND</bank_code>
+    <bank_name>Indian Bank</bank_name>
+    <created_date>28/11/2016</created_date>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <bank_code>IOB</bank_code>
+    <bank_name>Indian Overseas Bank</bank_name>
+    <created_date>28/11/2016</created_date>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <bank_code>TMB</bank_code>
+    <bank_name>Tamil Nadu Mercantile Bank Ltd</bank_name>
+    <created_date>28/11/2016</created_date>
+    <status_code>Active</status_code>
+  </row>
+</root>

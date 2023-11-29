@@ -1,0 +1,601 @@
+﻿@{
+    ViewBag.Form = "Localization Definition";
+    ViewBag.helpName = "LocalizationDefinition.html";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+<form id="Local_form" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:4px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-12">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="cmb_Active" class="col-sm-6 control-label required">Activity/Screen Name:</label>
+                            <div class="col-sm-6">
+                                <input id="cmb_Active" name="Active_id" data-role="filtercombo" style="width:100%" onchange="Active_screen()" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="row">
+                <section class="col-md-12">
+                    <div id="tab_list" class="col-md-12">
+                        <ul class="nav nav-tabs">
+                            @*<li style="display:none"> <a href="#ScreenControls" role="tab" data-toggle="tab">Screen Controls</a></li>
+                            <li style="display:none"><a href="#Frontendvaliditions" id="" role="tab" data-toggle="tab">Front end validitions</a></li>*@
+                            <li class="active"><a href="#Backendvaliditions" id="" role="tab" data-toggle="tab">Back end validitions</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            @*<div class="tab-pane fade active in" id="ScreenControls" style="display:none">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div id="grid_screen"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="Frontendvaliditions" style="display:none">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div id="grid_front"></div>
+                                    </div>
+                                </div>
+                            </div>*@
+                            <div class="tab-pane fade active in"  id="Backendvaliditions">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div id="grid_back"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+
+
+            </div>
+        </div>
+    </div>
+</form>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/CommonScripts/common.js"></script>
+<script src="~/CommonScripts/tamil.js"></script>
+<script>
+    var permission = "";
+    $(document).ready(function () {
+        master_milkmap();
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#Local_form");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+
+        Screen_Id = "LOCAL_SCRN";
+        permission = sec_Permission(Screen_Id);
+
+        load_master_code();
+       
+        $('#frmlayerdiv').hide();      
+      //  gridscreen([]);
+       // gridfront([]);
+        gridback([]);
+        $('#grid_back .k-grid-content').css('height', "315px");
+      //  gridRefresh();
+        $(".file_attach").attr("hdrtitle", "Localization Definition");
+        $(".notes").attr("hdrtitle", "Localization Definition");
+        $("#lblForm_menuid").text("LOCAL_DEF");
+        //Form_validate_Name = $('form.form-horizontal').attr('id');
+
+     //   var combo_data = "";
+
+
+        var combo_data = [{ code: "FARMREG", desc: "Farmer Registration" }];
+        filter_combobox("cmb_Active", combo_data);
+
+        $("#cmb_Active").data("kendoComboBox").value("");
+
+
+
+
+        //$("#cmb_Active").empty();
+        //combo_data = grid_comboScreen_mastercodes("FARMREG");
+        //filter_combobox("cmb_Active", combo_data);
+
+    });
+    function load_master_code() {
+        debugger;
+        var data = {};
+        var context = WebAPIProxy.getContext();
+        data.userId = context.userId
+        data.orgnId = context.orgnId
+        data.locnId = context.locnId
+        data.localeId = context.localeId
+        data.screen_Id = "LOCAL";
+        var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+    }
+    function gridscreen(data1) {
+        try {
+            $("#grid_screen").kendoGrid({
+                dataSource: {
+                    data: data1,
+                    schema: {
+                        model: {
+                            fields: {
+                                In_localization_rowid: { type: "string" },
+                                In_control_type: { type: "string" },
+                                In_control_type_desc: { type: "string" },
+                                In_data_field: { type: "string" },
+                                In_control_code: { editable: false },
+                                In_locale_desc: { editable: false },
+                                In_locale_ll_desc: { editable: true },
+                                In_mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    },
+                },
+                height: 325,
+                dataBinding: setDefaultValues,
+
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                  {
+                        field: "In_localization_rowid",
+                      title: "Local RowID",
+                      hidden: true,
+                      width: 100
+
+                  },
+              {
+                  field: "In_control_type",
+                  title: "control Type",
+                  hidden: true,
+                  width: 100
+              },
+               {
+                   field: "In_control_type_desc",
+                   title: "control Type ",
+                   //hidden: true,
+                   width: 100
+               },
+                {
+                    field: "In_data_field",
+                    title: "Data Field",
+                    hidden: true,
+                    width: 100
+                },
+
+                {
+                    field: "In_control_code",
+                    title: "Control Id",
+                    width:100
+
+                },
+            {
+                field: "In_locale_desc",
+                title: "Descripition in English",
+                width: 100
+            },
+                {
+                    field: "In_locale_ll_desc",
+                    title: "Descripition in Local Language",
+                    width: 100
+                },
+
+                {
+                    field: "In_row_timestamp",
+                    title: "row_timestamp",
+                    hidden: true,
+                    width: 100
+                },
+                {
+                    field: "In_mode_flag",
+                    title: "Mode",
+                    hidden: true,
+                    width: 100
+                }
+              
+                ],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+    function gridfront(data2) {
+        $("#grid_front").kendoGrid({
+            dataSource: {
+                data: data2,
+                schema: {
+                    model: {
+                        fields: {
+                            In_localization_rowid: { type: "string" },
+                            In_control_type: { type: "string" },
+                            In_control_type_desc: { type: "string" },
+                            In_data_field: { type: "string" },
+                            In_control_code: { editable: false },
+                            In_locale_desc: { editable: false },
+                            In_locale_ll_desc: { editable: true },
+                            In_mode_flag: { type: "string", defaultValue: "I" }
+                        }
+                    }
+                },
+            },
+            height: 325,
+            sortable: true,
+            selectable: true,
+            navigatable: true,
+            columns: [
+                 {
+                    field: "In_localization_rowid",
+                     title: "Local RowID",
+                     hidden: true,
+                     width: 100
+
+                 },
+              {
+                  field: "In_control_type",
+                  title: "control Type",
+                  hidden: true,
+                  width: 100
+              },
+               {
+                   field: "In_control_type_desc",
+                   title: "control Type Desc",
+                   hidden: true,
+                   width: 100
+               },
+                {
+                    field: "In_data_field",
+                    title: "Data Field",
+                    hidden: true,
+                    width: 100
+                },
+
+                {
+                    field: "In_control_code",
+                    title: "Error Code",
+                    width: 100
+
+                },
+            {
+                field: "In_locale_desc",
+                title: "Descripition in English",
+                width: 100
+            },
+                {
+                    field: "In_locale_ll_desc",
+                    title: "Descripition in Local Language",
+                    width: 100
+                },
+
+                {
+                    field: "In_row_timestamp",
+                    title: "row_timestamp",
+                    hidden: true,
+                    width: 100
+                },
+                {
+                    field: "In_mode_flag",
+                    title: "Mode",
+                    hidden: true,
+                    width: 100
+                }
+               
+            ],
+            editable: true
+        });
+
+    }
+    function gridback(data) {
+        try {
+            $("#grid_back").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                In_localization_rowid: { type: "string" },
+                                In_control_type: { type: "string" },
+                                In_control_type_desc: { type: "string" },
+                                In_data_field: { type: "string" },
+                                In_control_code: { editable: false },
+                                In_locale_desc: { editable: true },
+                                In_locale_ll_desc: { editable: true },
+                                In_mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    },
+                },
+                edit: OnEdit,
+                height: 345,
+                groupable: false,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                     {
+                        field: "In_localization_rowid",
+                         title: "Local RowID",
+                         hidden: true,
+                         width: 100
+
+                     },
+              {
+                  field: "In_control_type",
+                  title: "control Type",
+                  hidden: true,
+                  width: 100
+              },
+               {
+                   field: "In_activity_code",
+                   title: "control Type",
+                   hidden: true,
+                   width: 100
+               },
+               {
+                   field: "In_control_type_desc",
+                   title: "control Type Desc",
+                   hidden: true,
+                   width: 100
+               },
+                {
+                    field: "In_data_field",
+                    title: "Data Field",
+                    hidden: true,
+                    width: 100
+                },
+
+                {
+                    field: "In_control_code",
+                    title: "Error Code",
+                    width:40
+
+                },
+            {
+                field: "In_locale_desc",
+                title: "Descripition in English",
+                width: 100
+            },
+                {
+                    field: "In_locale_ll_desc",
+                    title: "Descripition in Local Language",
+                    width: 100
+                },
+
+                {
+                    field: "In_row_timestamp",
+                    title: "row_timestamp",
+                    hidden: true,
+                    width: 100
+                },
+                {
+                    field: "In_mode_flag",
+                    title: "Mode",
+                    hidden: true,
+                    width: 100
+                }
+                ],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+    function OnEdit(e) {
+        //setDefaultValues(e);
+        //e.container.find("input[name='master_code']").attr('maxlength', '25');
+        //e.container.find("input[name='master_description']").attr('maxlength', '125');
+        ////e.container.find("input[name='dependent_code']").attr('maxlength', '10');
+        //var columnIndex = this.cellIndex(e.container);
+        //var fieldName = this.thead.find("th").eq(columnIndex).data("field");
+        //if (!isEditable(fieldName, e.model)) {
+        //    this.closeCell(); // prevent editing
+        //}
+        e.container.find("input[name='locale_ll_desc']").on("keypress", function (e) {
+
+            convertThis(e);
+        });
+    }
+</script>
+<script>
+    function save() {    
+        debugger;
+        var formval = form_Serialize("Local_form");
+        var obj_val = JSON.parse(formval);
+
+       // var arr_det = {};
+        //var grid_val = JSON.stringify($("#grid_screen").data().kendoGrid._data);
+        //var Bind = {};
+        //Bind = grid_val;
+        //var result_screen = JSON.parse(Bind);
+        //$.each(result_screen, function (index, value) {
+        //        var row_id = value.localization_rowid;
+              
+        //        if (row_id == undefined) {
+        //            result_screen[index].localization_rowid = "0";
+        //        }
+               
+        //        var mode = value.mode_flag;
+        //        if (mode == "S") {
+        //            result_screen[index].mode_flag = "U";
+        //        }
+
+        //    });
+        //    var obj_grid_val = result_screen;
+        //    //arr_det.push(obj_grid_val);
+
+        //    var grid_val1 = JSON.stringify($("#grid_front").data().kendoGrid._data);
+        //    var Bind = {};
+        //    Bind = grid_val1;
+        //    var result_front = JSON.parse(Bind);
+        //    $.each(result_front, function (index, value) {
+        //        var row_id = value.localization_rowid;
+
+        //        if (row_id == undefined) {
+        //            result_front[index].localization_rowid = "0";
+        //        }
+
+        //        var mode = value.mode_flag;
+        //        if (mode == "S") {
+        //            result_front[index].mode_flag = "U";
+        //        }
+
+        //    });
+        //    var obj_grid_val_front = result_front;
+        //   // arr_det.push(obj_grid_val_front);
+
+            var grid_val2 = JSON.stringify($("#grid_back").data().kendoGrid._data);
+            var Bind = {};
+            Bind = grid_val2;
+            var result_back = JSON.parse(Bind);
+            $.each(result_back, function (index, value) {
+                var row_id = value.In_localization_rowid;
+                var activity_code = value.In_activity_code;
+                if (row_id == undefined) {
+                    result_back[index].In_localization_rowid = "0";
+                }
+                if (activity_code == undefined) {
+                    result_back[index].In_activity_code = "ACT_FAR_REG";
+                }
+                var mode = value.In_mode_flag;
+                if (mode == "S") {
+                    result_back[index].In_mode_flag = "U";
+                }
+
+            });
+            var obj_grid_val_back = result_back;
+            //arr_det.push(obj_grid_val_back);
+            //arr_det.res1 = obj_grid_val;
+            //arr_det.res2 = obj_grid_val_front;
+            //arr_det.res3 = obj_grid_val_back;
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Detail = obj_grid_val_back;
+        var Detail = data.context.Detail;
+        var Context = data.context;
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId,  Detail: Context.Detail }),
+            url: "/LocalizationDefinition/LocalizationDefinitionSave",
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                var Res = JSON.parse(response);
+                if (Res.context != null) {
+                    console.log(Res);
+                    kendoAlert("Saved Succedfully");
+                    // get_master_details();
+                    Active_screen();
+                    //generate_Localization_BE(response.context.Detail);
+                }
+
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+
+        });
+
+          //  save_Localization_details(data);
+        }
+  
+  
+    function generate_Localization_Screen(res) {
+        if (res != null) {
+            //var data = changedataType(res);
+            //gridscreen(data);
+
+        }
+        else {
+            //gridscreen([]);
+        }
+    }
+    function generate_Localization_FE(res) {
+        if (res != null) {
+            //var data = changedataType(res);
+            //gridfront(data);
+
+        }
+        else {
+            //gridfront([]);
+        }
+    }
+    function generate_Localization_BE(res) {
+        if (res != null) {
+            var data = changedataType(res);
+            gridback(data);
+
+        }
+        else {
+            gridback([]);
+        }
+    }
+    function Active_screen() {
+        debugger;
+        var formval = form_Serialize("Local_form");
+        var obj_val = JSON.parse(formval);
+        obj_val.activity_code = "ACT_FAR_REG";//$('#cmb_Active').data('kendoComboBox').value();
+        var data = {};
+        data.context = WebAPIProxy.getContext();
+        data.context.Header = obj_val;
+        var Context = data.context;
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, activity_code: Context.Header.activity_code}),
+            url: "/LocalizationDefinition/LocalizationDefinition",
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                debugger;
+                if (response.context != null) {
+                    debugger;
+                    // generate_masteractivity_header(response.context.Header);
+                    generate_Localization_BE(response.context.BE);
+                }
+                else {
+                    grid_role([]);
+                }
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+
+        });            
+    }
+
+    //function clear_val() {
+        
+    //    $("#cmb_Active").data("kendoComboBox").value('');
+    //}
+</script>
+
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>
+
+<script>
+    //load_master_code();
+    //$("#cmb_Active").change(function () {
+    //    var c = $('#cmb_Active');
+    //    var formval = form_Serialize("Local_form");
+    //    var obj_val = JSON.parse(formval);
+    //    obj_val.activity_code = c.data('kendoComboBox').value();
+       
+    //});
+</script>

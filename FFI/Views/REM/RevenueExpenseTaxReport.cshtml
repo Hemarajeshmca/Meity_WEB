@@ -1,0 +1,315 @@
+﻿
+@{
+    ViewBag.Form = "Tax Report";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.min.js"></script>
+<form id="REMTax_report" class="form-horizontal">
+
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-12">
+                    <div class="col-sm-6">
+                        <label for="cmb_FPO" class="col-sm-2 control-label required">FPO:</label>
+                        <div class="col-sm-6" style="width: 83%;">
+                            <input id="cmb_orgfpo" name="orgpfpo_code" style="width: 100%">
+                            <input type="hidden" id="txt_orgcode" name="orgn_code" />
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="cmb_month" class="col-sm-2 control-label required">Month</label>
+                            <div class="col-sm-5">
+                                <input class="cusDate" data-role='datepicker' id="txt_fromdate" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="From_date" style="width:100%" />
+                              
+                                <span data-for='valid' class='k-invalid-msg'></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pull-right" style="margin-top: 18px;">
+                        <button title="" id="refresh" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button"
+                                data-original-title="Refresh" >
+                            <span class="glyphicon glyphicon-refresh"></span>
+                        </button>
+                        <button id="clear" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button"
+                                data-original-title="clear" onclick="listclear()">
+                            clear
+                        </button>
+                        <button type="button" id="btnExport" style="background-color: #00c0ef; border-color: #00acd6;" class="Export btn btn-sm btn-info"
+                                data-original-title="Export" onclick="Export()">
+                            <span class=" glyphicon glyphicon-export mr"></span>
+                        </button>
+                    </div>
+                    <div class="row">
+                        
+                        <div class="col-xs-12">
+                            <div id="grid_tax">
+                                <div id="remtax_grid"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="~/CommonScripts/Common_func.js"></script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+<style>
+    .drpdwn {
+        width: 137px;
+        height: 30px;
+        border-radius: 4px;
+        border: 1px solid #AAAAAA;
+    }
+</style>
+<script>
+    var menuId = "";
+    var permission = "";
+    var org_code = "";
+    $(document).ready(function () {
+      
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#REMTax_report");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        $("#Topsubheader").show();
+        $("#bottomFooter").show();
+        $("#bottom_menus").hide();
+        $("#btndiv").show();
+        $("#frmlayerdiv").hide();
+        $("#divCreate").hide();
+        $("#divEdit").hide();
+        $("#divView").show();
+        $("#DocStat").show();
+        $(".edtviw_item").show();
+        $(".create_item").hide();
+     
+        $("#txt_fromdate").kendoDatePicker({
+            start: "year",
+            depth: "year",
+            format: "MMMM yyyy",
+            dateInput: true
+        });
+        var combo_month = "";
+        $("#cmb_month").empty();
+        Screen_Id = "Tax";
+        permission = sec_Permission(Screen_Id);
+        var org_id = getlocalStorage('org_id');
+        $('#txt_orgcode').val(org_id);
+        load_master_code();
+        $("#cmb_orgfpo").empty();
+        org_code = grid_comboScreen_mastercodes("ORGFO");
+        filter_combobox("cmb_orgfpo", org_code);
+       
+        listgrid([]);
+
+      
+        $("#btnExport").kendoButton({
+            click: function () {
+              
+                var gd = $("#remtax_grid").data("kendoGrid");
+                var len = gd.dataSource._data.length;
+                if (len != 0)
+                {
+                    $("#remtax_grid").data("kendoGrid").saveAsExcel();
+                    kendoAlert("Exported Succesfully");
+                }
+                else if(len == 0)
+                {
+                    kendoAlert("Sorry, no data found in the grid to Export");
+                }
+                
+            }
+        });
+    });
+    $(function () {
+        $('#refresh').click(function () {
+          
+
+            if ($('#txt_fromdate').val() != "" && $('#cmb_orgfpo').val() != "") {
+
+              
+                var fpo_code = $("#cmb_orgfpo").val();
+                var from_Date1 = $("#txt_fromdate").val();
+                var parts = from_Date1.split('/');
+                var from_date = parts[0];
+                var org_id = getlocalStorage('org_id');
+                var data = {};
+                data.context = getContext();                
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, In_fpo_code: fpo_code, In_month: from_date  }),
+                    url: "/REM/RevExpfetch",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        listgrid(response.context.Output);
+                    },
+                    error: function (er) {
+                        alert(er)
+                        console.log(er)
+                    }
+
+                });
+            }
+            else {
+                if ($('#cmb_orgfpo').val() == "") {
+                    kendoAlert('Please Select FPO');
+                }
+                else if ($('#txt_fromdate').val() == "")
+                {
+                    kendoAlert('Please Select Month');
+                }
+                return false;
+            }
+        });
+    });
+
+ function listclear() {
+        try {
+         
+            $("#cmb_orgfpo").data("kendoComboBox").value("");
+            $("#txt_fromdate").data("kendoDatePicker").value("");
+            listgrid([]);
+           }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function load_master_code() {
+        try {
+             var data = {};
+            var context = getContext();
+            data.userId = context.userId
+            data.orgnId = context.orgnId
+            data.locnId = context.locnId
+            data.localeId = context.localeId
+            data.screen_Id = "Tax";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    </script>
+<script>
+    function listgrid(data) {
+        $("#remtax_grid").kendoGrid({
+            dataSource: {
+                data: data,
+                schema: {
+                    model: {
+                        fields: {
+                            In_orgn_name: { type: "string", required: true },
+                            In_business: { type: "string", required: true },
+                            In_product_name: { type: "string", required: true },
+                            In_hsncode: { type: "string" },
+                            In_hsn_desc: { type: "string", required: true },
+                            In_invoice_no: { type: "string", required: true },
+                            In_totalinvoice_amout: { type: "number", defaultValue: "0.00" },
+                            In_tax_amount: { type: "number", defaultValue: "0.00" },
+                            In_cgst_rate: { type: "number", defaultValue: "0.00" },
+                            In_sgst_rate: { type: "number", defaultValue: "0.00" },
+                            In_igst_rate: { type: "number", defaultValue: "0.00" },
+                            In_TotalTax: { type: "number", defaultValue: "0.00" }
+                        }
+                    }
+                },
+              },
+           height: 450,
+           selectable: "true",
+            groupable: false,
+            scrollable: true,
+            sortable: true,
+            pageable: {
+                refresh: false,
+                pageSizes: true,
+                previousNext: false,
+                buttonCount: 8
+            },
+            columns: [
+                 {
+                    field: "In_orgn_name",
+                 title: "FPO Name",
+                  width: 100,
+
+                 },
+           {
+               field: "In_business",
+               title: "Business",
+               width: 50,
+           },
+            {
+                field: "In_product_name",
+                title: "Product Name",
+                width: 60,
+            },
+            {
+                field: "In_hsncode",
+                title: "HSN Code",
+                width: 40,
+            },
+
+          {
+              field: "In_hsn_desc",
+              title: "HSN Description",
+              width: 70,
+
+          },
+            {
+                field: "In_invoice_no",
+                title: "Invoice #",
+                width: 40,
+            },
+          {
+              field: "In_totalinvoice_amout",
+              title: "Invoice Amount",
+              width: 60,
+              template: "<div style='text-align:right'>#= kendo.toString(In_totalinvoice_amout, '0.00') # </div>"
+            
+          },
+          {
+              field: "In_tax_amount",
+              title: "Taxable Amount",
+              width: 70,
+              template: "<div style='text-align:right'>#= kendo.toString(In_tax_amount, '0.00') # </div>"
+          },
+          {
+              field: "In_cgst_rate",
+              title: "CGST (Amt)",
+              width: 40,
+              template: "<div style='text-align:right'>#= kendo.toString(In_cgst_rate, '0.00') # </div>"
+          },
+          {
+              field: "In_sgst_rate",
+              title: "SGST (Amt)",
+              width: 40,
+              template: "<div style='text-align:right'>#= kendo.toString(In_sgst_rate, '0.00') # </div>"
+          },
+          {
+              field: "In_igst_rate",
+              title: "IGST (Amt)",
+              width: 40,
+              template: "<div style='text-align:right'>#= kendo.toString(In_igst_rate, '0.00') # </div>"
+          },
+          {
+              field: "In_TotalTax",
+              title: "Total Tax",
+              width: 40,
+              template: "<div style='text-align:right'>#= kendo.toString(In_TotalTax, '0.00') # </div>"
+          },
+
+            ],
+
+            editable: false,
+
+        });
+
+    }
+ 
+    </script>

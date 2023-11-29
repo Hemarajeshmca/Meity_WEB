@@ -1,0 +1,132 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ExportExcel</title>
+    @*<link href="~/CSS/popupGrid.css" rel="stylesheet" />*@
+    @*<style>
+        .btn-primary:hover,
+        .btn-primary:active,
+        .btn-primary.hover {
+            background-color: #F58322;
+            border-color: #F58322;
+        }
+
+        .btn-primary:focus,
+        .btn-primary.focus {
+            background-color: #F58322;
+        }
+
+        btn-primary:hover, btn-primary:focus {
+            color: #F58322;
+        }
+
+        .btn-primary[disabled] {
+            background-color: #F58322 !important;
+            border: 0px !important;
+        }
+    </style>*@
+    <script src="~/CommonScripts/ExportExcel.js"></script>
+</head>
+<body>
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 id="exporthdr" class="modal-title"></h4>
+    </div>
+    @*<div class="modal-header" style="height:49px">
+        <div class="col-sm-12" style="margin-top:-7px">
+            <div class="form-group" style="padding-bottom:10px">
+                <div class="col-sm-2">*@
+                    @*<button type="button" class="btn btn-sm btn-primary" id="btnExc" onclick="export_fuc()" style="width:85px" disabled >
+                            Export
+                        </button>*@
+                </div>
+                @*<div class="col-sm-2">
+                        <button type="button" class="btn btn-sm btn-primary" id="btnCancel" style="width:85px">
+                            Cancel
+                        </button>
+                    </div>*@
+                @*<div class="col-sm-8">
+                </div>
+            </div>
+        </div>
+    </div>*@
+    <div class="modal-body" style="height:190px">
+        <div class="panel panel-default">
+            <div class="panel-body" style="height: 170px;">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label for="chkall" class="col-sm-4 control-label" style="  font-weight: 400;">All Data:</label>
+                            <div class="col-sm-4">
+                                <input type="checkbox" id="chkall" />
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label for="chkfilter" id="lbl_code" class="col-sm-4 control-label" style="  font-weight: 400;">Filtered Data:</label>
+                            <div class="col-sm-4">
+                                <input type="checkbox" id="chkfilter" />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row" style="display:none;">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label for="cmbtemp" id="lbl_name" class="col-sm-4 control-label required" style="  font-weight: 400;">Template:</label>
+                            <div class="col-sm-2">
+                                <input type="checkbox" id="chktemp" />
+                            </div>
+                            <div class="col-sm-6">
+                                @*<select class="form-control" id="cmbtemp" name="Temp" style="width :100%; pointer-events :none">
+                                    </select>*@
+                                <input id="cmbtemp" name="Temp" data-role="filtercombo" style="width: 100%;" />@*"*@
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+
+        <div class="col-xs-4">
+
+        </div>
+        <div class="col-xs-4" style="padding-left :10px">
+            <button type="button" class="btn btn-sm btn-primary" id="btnExc" onclick="export_fuc()" style="width: 85px; height: 33px;" disabled>
+                Export
+            </button>
+            <a href="#" class="btn btn-sm btn-primary" id="btnExcDown" style="width: 85px; height: 33px;display:none">
+                Export
+            </a>
+            <button type="button" id="Close-refresh" class="btn btn-primary" style="width:85px" data-dismiss="modal"
+                    onclick="closeView()">
+                Close
+            </button>
+        </div>
+        <div class="col-xs-4"></div>
+
+    </div>
+    <div id="downloadExcelTemp"></div>
+</body>
+
+</html>
+<script>
+    function closeView() {
+        $("#exportexcelModal").modal("hide");
+    }
+</script>

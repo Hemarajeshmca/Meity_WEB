@@ -1,0 +1,264 @@
+﻿
+@{
+    ViewBag.Title = "NotificationList";
+    Layout = "~/Views/Shared/ActionLayout.cshtml";
+}
+
+<form id="notification_list" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="gd_notification">
+                <div id="notification_grid"></div>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+<script src="~/API_Scripts/track_equipment_retrievetrackmyequipmentList_APIClient.js"></script>
+<script src="~/API_Scripts/retrievetrackmyequipmentList_Model.js"></script>
+<script src="~/API_Scripts/FLNotification.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+<script src="~/CommonScripts/Common_func.js"></script>
+
+<script>
+
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+       
+        Screen_Id = "FALMYBKNG";
+        $("#btn_new").hide();
+        setlocalStorage("ls_pageList", "");
+        listpageloadfetch();
+
+        
+    });
+</script>
+
+<script>
+    function load_master_code() {
+        debugger;
+        var data = {};
+        var context = WebAPIProxy.getContext();
+        data.userId = context.userId
+        data.orgnId = context.orgnId
+        data.locnId = context.locnId
+        data.localeId = context.localeId
+        data.screen_Id = "FALMYBKNG";
+        var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+    }
+</script>
+
+
+<script>
+    function listpageloadfetch() {
+        try {
+            var formval = form_Serialize("notification_list");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "NotificationList";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_FromValue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_FromValue = ".";
+            }
+            obj_val.FilterBy_ToValue = ".";
+
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Filter = obj_val;
+            retrieve_FL_Notification_list(data);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    var status_Priority = [];
+    function listgrid(data) {
+        try {
+            $.each(data, function (index, value) {
+                var flag = false;
+                $.each(status_Priority, function (sindex, svalue) {
+                    if (svalue == value.status_desc) {
+                        flag = true;
+                    }
+                });
+                if (flag == false) {
+                    status_Priority.push(value.status_desc);
+                }
+            });
+            $("#notification_grid").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                booking_date: { type: "string", },
+                                customer_name: { type: "string" },
+                                equipment_name: { type: "string" },
+                                manufacturer_name: { type: "string" }
+                            }
+                        },
+
+                    }
+                },
+                height: 400,
+                groupable: true,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                     {
+                         field: "espequipment_rowid",
+                         title: "Date",
+                         width: 200,
+                         hidden: true,
+                       
+                     },
+                      {
+                          field: "booking_date",
+                          title: "Date",
+                          width: 200,
+
+                      },
+                       {
+                           field: "customer_name",
+                           title: "Customer Name",
+                           width: 200,                         
+                       },
+
+                        {
+                            field: "customer_code",
+                            title: "Subject",
+                            width: 200,
+                            hidden: true,
+                        },
+                     
+                        {
+                            field: "equipment_code",
+                            title: "equipment_code",
+                            width: 1,
+                            hidden: true,
+                        },
+                       {
+                           field: "equipment_name",
+                           title: "Equipment Name",
+                           width: 200,
+                         
+                          
+                       },
+                         {
+                             field: "booking_no",
+                             title: "Booking No",
+                             width: 200,
+
+                         },
+                   
+                           {
+                               field: "effective_from",
+                               title: "Period From",
+                               width: 200,
+                               hidden: true,
+                           },
+                           {
+                               field: "effective_to",
+                               title: "Period To",
+                               width: 200,
+                               hidden: true,
+                           },
+
+                              {
+                                  field: "manufacturer_name",
+                                  title: "Status",
+                                  width: 200,
+                                  
+                              },
+                           {
+                               field: "serial_no",
+                               title: "Period To",
+                               width: 200,
+                               hidden: true,
+                           },
+                           {
+                               field: "chasis_no",
+                               title: "status_code",
+                               width: 1,
+                               hidden: true,
+                           },
+
+
+                               {
+                                   field: "imei_no",
+                                   title: "Period From",
+                                   width: 200,
+                                   hidden: true,
+                               },
+                           {
+                               field: "sim_no",
+                               title: "Period To",
+                               width: 200,
+                               hidden: true,
+                           },
+                           {
+                               field: "gps_id",
+                               title: "status_code",
+                               width: 1,
+                               hidden: true,
+                           },
+                             {
+                                 field: "status_code",
+                                 title: "Booking Status",
+                                 width: 200,
+                                 hidden: true,
+                             },
+                    {
+                        field: "mode_flag",
+                        title: "Mode",
+                        hidden: true
+                    }],
+                editable: true
+            });
+                     }
+                     catch (err) {
+                         alert(err);
+                     }
+                 }
+
+</script>
+
+<script>
+    function generate_notification_list(res) {
+
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                $("#gd_notification").empty();
+                $("#gd_notification").append("<div id='notification_grid'></div>");
+                listgrid(data);
+
+
+            }
+            else {
+                listgrid([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function listRefresh() {
+        try {
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>

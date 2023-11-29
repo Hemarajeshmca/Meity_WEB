@@ -1,0 +1,797 @@
+﻿@{
+    ViewBag.Form = "Recovery of Instalments";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+<script src="~/CommonScripts/Common_func.js"></script>
+<form id="Recoveryinstallment_form" class="form-horizontal">
+    <div class="box-body" style="padding-top:6px;padding-bottom:2px">
+        <div class="row" style="padding-top:10px; padding-bottom:15px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-5">
+                    <div class="form-group">
+                        <label for="cmbfig_name" class="col-sm-4 control-label required">FIG Name</label>
+                        <div class="col-sm-7">
+                            <input id="cmbfig_name" data-role="filtercombo" name="fig_short_name" style="width:100%">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-5">
+                    <div class="form-group">
+                        <label for="cmbselec_rep" class="col-sm-4 control-label required">Select Report</label>
+                        <div class="col-sm-7">
+                            <input id="cmbselec_rep" data-role="filtercombo" name="loanrecovery_type" style="width:100%">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-5">
+                    <div class=" form-group">
+                        <label for="txtValidity" class=" col-sm-4 control-label required">Report Run Date</label>
+                        <div class=" col-sm-4">
+                            <input class="cusDate" data-role='datepicker' id="txtValidity" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="run_date" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-5">
+                    <div class=" form-group">
+                        <label for="txtValidity1" class=" col-sm-4 control-label required">Instalment Month</label>
+                        <div class=" col-sm-4">
+                            <input class="cusDate" data-role='datepicker' id="txtValidity1" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="instalment_month" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <a data-toggle="modal" id="btnReport" type="button" class="Export btn btn-sm btn-info" href="~/Reportlist/Report" data-target="#ReportModal"><span class="glyphicon glyphicon-export"></span></a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="panel panel-default" id="divInstall">
+        <fieldset>
+            @*<legend>Loan Installment dues-NACH/CHEQUE</legend>*@
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-12">
+                    <div id="grid_farmer_Instal"></div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div class="panel panel-default" id="divpdc">
+        <fieldset>
+            @*<legend>PDC Retrieval List</legend>*@
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-12">
+                    <div id="grid_farmer_pdc"></div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div class="panel panel-default" id="divnach">
+        <fieldset>
+            @*<legend>NACH Presentation File</legend>*@
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-12">
+                    <div id="grid_farmer_nach"></div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</form>
+<script>
+    click_act_name = "home";
+    click_ctrl_name = "home";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+<script src="~/API_Scripts/FLRecoveryOfInstalments_retrieveFLRecoveryBounce_APIClient.js"></script>
+<script src="~/API_Scripts/FLRecoveryOfInstalments_retrieveFLRecoveryPDC_APIClient.js"></script>
+<script src="~/API_Scripts/FLRecoveryOfInstalments_retrieveFLRecoveryNACH_APIClient.js"></script>
+<script src="~/API_Scripts/FLRecoveryOfInstalments_retrieveFLRecoveryInstalDue_APIClient.js"></script>
+<script src="~/API_Scripts/retrieveFLRecoveryBounce_Model.js"></script>
+<script src="~/API_Scripts/retrieveFLRecoveryInstalDue_Model.js"></script>
+<script src="~/API_Scripts/retrieveFLRecoveryNACH_Model.js"></script>
+<script src="~/API_Scripts/retrieveFLRecoveryPDC_Model.js"></script>
+<script src="~/API_Scripts/FlRecoveryInstalment.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/CommonScripts/report.js"></script>
+<script>
+    $(document).ready(function () {
+        kendodate_format();
+
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#Recoveryinstallment_form");
+        kendo.init(container);
+        container.kendoValidator({
+            rules: {
+                checkdate: function (input) {
+                    if (input.attr("data-role") == "datepicker") {
+                        var res = isDate(input.val());
+                        return res;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+            }
+        });
+        Screen_Id = "FLRECOV";
+        master_userRoleNew1();
+
+        load_master_code();
+
+        $(".file_attach").attr("hdrtitle", "FL-Instalment Dues Generation");
+        $(".notes").attr("hdrtitle", "FL-Instalment Dues Generation");
+        $(".Export").attr("hdrtitle", "FL-Instalment Dues Generation");
+        $(".Export").attr("SubTreeId", "FARMER_LOANINS");
+        $("#lblForm_menuid").text("FARMER_LOANINS");
+
+        var combo_report = "";
+        $("#cmbselec_rep").empty();
+        combo_report = grid_comboScreen_mastercodes("QCD_FL_RecIns");
+        filter_combobox("cmbselec_rep", combo_report);
+
+
+
+        var combo_figname = "";
+        $("#cmbfig_name").empty();
+        combo_figname = grid_comboScreen_mastercodes("QCD_FL_FIG");
+        filter_combobox("cmbfig_name", combo_figname);
+
+
+        gridFLnach();
+        gridFLLoan();
+        gridFLpdc();
+        $("#divInstall").hide();
+        $("#divpdc").hide();
+        $("#divnach").hide();
+        var container = $("#txtValidity");
+        kendo.init(container);
+        container.kendoValidator({
+            rules: {
+                checkdate: function (input) {
+                    if (input.attr("data-role") == "datepicker") {
+                        var res = isDate(input.val());
+                        return res;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+            }
+        });
+        var container = $("#txtValidity1");
+        kendo.init(container);
+        container.kendoValidator({
+            rules: {
+                checkdate: function (input) {
+                    if (input.attr("data-role") == "datepicker") {
+                        var res = isDate(input.val());
+                        return res;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+            }
+        });
+    });
+</script>
+<script>
+    function load_master_code() {
+
+        debugger;
+        var data = {};
+        var context = WebAPIProxy.getContext();
+        data.userId = context.userId
+        data.orgnId = context.orgnId
+        data.locnId = context.locnId
+        data.localeId = context.localeId
+        data.screen_Id = "FLRECOV";
+        var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+
+    }
+</script>
+<script>
+    //var data = [];
+    function gridFLLoan(data) {
+        try {
+            $("#grid_farmer_Instal").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                fig_short_name: { type: "string", editable: false },
+                                fpomember_code: { type: "string", editable: false },
+                                farmer_name: { type: "string", editable: false },
+                                loan_no: { type: "string", editable: false },
+                                instalment_no: { type: "string", editable: false },
+                                instalment_amount: { type: "string", editable: false },
+                                instalment_date: { type: "string", editable: false },
+                                payment_mode_desc: { type: "string", editable: false },
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+
+                height: 300,
+                groupable: false,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                    {
+                        field: "fig_short_name",
+                        title: "FIG Name",
+                        width: 100
+                    },
+                    {
+                        field: "fpomember_code",
+                        title: "Farmer Member Id",
+                        width: 100
+                    },
+                {
+                    field: "farmer_name",
+                    title: "Farmer Name",
+                    width: 100
+                },
+                {
+                    field: "sur_name",
+                    title: "Sur Name",
+                    width: 100,
+                    hidden: true,
+                },
+
+                  {
+                      field: "loan_no",
+                      title: "Loan Account No.",
+                      width: 100
+                  },
+                  {
+                      field: "instalment_no",
+                      title: "Instalment No",
+                      width: 100
+                  },
+                   {
+                       field: "instalment_amount",
+                       title: "Instalment Amount",
+                       width: 100
+                   },
+                    {
+                        field: "instalment_date",
+                        title: "Instalment Date",
+                        width: 100
+                    },
+
+                    {
+                        field: "payment_mode",
+                        title: "Paymode",
+                        width: 100, hidden: true
+                    },
+                     {
+                         field: "payment_mode_desc",
+                         title: "Paymode",
+                         width: 100
+                     },
+                {
+                    field: "mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+
+</script>
+<script>
+    //var data = [];
+    function gridFLpdc(data) {
+        try {
+            $("#grid_farmer_pdc").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                fig_short_name: { type: "string", editable: false },
+                                fpomember_code: { type: "string", editable: false },
+                                farmer_name: { type: "string", editable: false },
+                                loan_no: { type: "string", editable: false },
+                                instalment_no: { type: "string", editable: false },
+                                instalment_amount: { type: "string", editable: false },
+                                instalment_date: { type: "string", editable: false },
+                                chq_no: { type: "string", editable: false },
+                                box_no: { type: "string", editable: false },
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+                height: 300,
+                groupable: false,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+
+                    {
+                        field: "fig_short_name",
+                        title: "FIG Name",
+                        width: 100,
+                        hidden: true,
+                    },
+                    {
+                        field: "fpomember_code",
+                        title: "Farmer Member Id",
+                        width: 100
+                    },
+                {
+                    field: "farmer_name",
+                    title: "Farmer Name",
+                    width: 100
+                },
+                {
+                    field: "sur_name",
+                    title: "Sur Name",
+                    width: 100,
+                    hidden: true,
+                },
+                 {
+                     field: "loan_no",
+                     title: "Loan Account No.",
+                     width: 100
+                 },
+                  {
+                      field: "instalment_no",
+                      title: "Instalment No",
+                      width: 100
+                  },
+                   {
+                       field: "instalment_amount",
+                       title: "Instalment Amount",
+                       width: 100
+                   },
+                    {
+                        field: "instalment_date",
+                        title: "Instalment Date",
+                        width: 100
+                    },
+                    {
+                        field: "chq_no",
+                        title: "Cheque No",
+                        width: 100
+                    },
+                    {
+                        field: "box_no",
+                        title: "Box No",
+                        width: 100
+                    },
+                {
+                    field: "mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+</script>
+<script>
+    //var data = [];
+    function gridFLnach(data) {
+        try {
+            $("#grid_farmer_nach").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                instalment_date: { type: "string", editable: false },
+                                instalment_amount: { type: "string", editable: false },
+                                dr_bank_acc_no: { type: "string", editable: false },
+                                cr_bank_acc_no: { type: "string", editable: false },
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+
+                height: 300,
+                groupable: false,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                     {
+                         field: "fig_short_name",
+                         title: "FIG Name",
+                         width: 100,
+                         hidden: true,
+                     },
+                    {
+                        field: "fpomember_code",
+                        title: "Farmer Member Id",
+                        hidden: true,
+                        width: 100
+                    },
+                {
+                    field: "farmer_name",
+                    title: "Farmer Name",
+                    hidden: true,
+                    width: 100
+                },
+                {
+                    field: "sur_name",
+                    title: "Sur Name",
+                    width: 100,
+                    hidden: true,
+                },
+                 {
+                     field: "loan_no",
+                     title: "Loan Account No.",
+                     hidden: true,
+                     width: 100
+                 },
+                  {
+                      field: "instalment_no",
+                      title: "Instalment No",
+                      hidden: true,
+                      width: 100
+                  },
+
+                    {
+                        field: "dr_bank_acc_type",
+                        title: "dr_bank_acc_type",
+                        hidden: true,
+                    },
+                     {
+                         field: "dr_bank_acc_type_desc",
+                         title: "dr_bank_acc_type_desc",
+                         hidden: true,
+                     },
+                      {
+                          field: "dr_bank_code",
+                          title: "dr_bank_code",
+                          hidden: true,
+                      },
+                       {
+                           field: "dr_bank_ifsc_code",
+                           title: "dr_bank_ifsc_code",
+                           hidden: true,
+                       },
+                        {
+                            field: "cr_bank_acc_type",
+                            title: "cr_bank_acc_type",
+                            hidden: true,
+                        },
+                         {
+                             field: "cr_bank_acc_type_desc",
+                             title: "cr_bank_acc_type_desc",
+                             hidden: true,
+                         },
+                         {
+                             field: "cr_bank_code",
+                             title: "cr_bank_code",
+                             hidden: true,
+                         },
+                          {
+                              field: "cr_bank_ifsc_code",
+                              title: "cr_bank_ifsc_code",
+                              hidden: true,
+                          },
+                           {
+                               field: "bank_ref_no",
+                               title: "bank_ref_no",
+                               hidden: true,
+                           },
+                    {
+                        field: "instalment_date",
+                        title: "Date Of Presentation",
+                        width: 100
+                    },
+               {
+                   field: "instalment_amount",
+                   title: "Instalment Amount",
+                   width: 100
+               },
+                  {
+                      field: "dr_bank_acc_no",
+                      title: "Debit Account No",
+                      width: 100
+                  },
+
+                    {
+                        field: "cr_bank_acc_no",
+                        title: "Credit Account No",
+                        width: 100
+                    },
+                 {
+                     field: "mode_flag",
+                     title: "Mode",
+                     hidden: true
+                 }],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+</script>
+
+<script>
+
+    function generate_FlRecoveryInstalment_ChequeNAch(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                gridFLLoan(data);
+
+            }
+            else {
+
+                gridFLLoan([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_FlRecoveryInstalment_PDC(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                gridFLpdc(data);
+
+            }
+            else {
+
+                gridFLpdc([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_FlRecoveryInstalment_NACH(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                gridFLnach(data);
+
+            }
+            else {
+
+                gridFLnach([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_FlRecoveryInstalment_BOUNCE(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                gridFLnach(data);
+
+            }
+            else {
+
+                gridFLnach([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>
+
+    function save() {
+
+        var val = $('#cmbselec_rep').data("kendoComboBox").value();
+        console.log(val);
+        if (val == "QCD_FL_ChqNac") {
+
+            $("#divInstall").show();
+            $("#divpdc").hide();
+            $("#divnach").hide();
+            try {
+                //$('#aggrorgn_code').val(org_id);
+                var formval = form_Serialize("Recoveryinstallment_form");
+                var obj_val = JSON.parse(formval);
+                var obj_val2 = JSON.parse(formval);
+                var f = $('#cmbfig_name');
+                if (f.data('kendoComboBox').value() != "" && f.data('kendoComboBox').value() != undefined) {
+                    obj_val2.fig_short_name = f.data('kendoComboBox').value();
+                }
+                else {
+                    obj_val2.fig_short_name = "0";
+                }
+                var c = $('#cmbselec_rep');
+                if (c.data('kendoComboBox').value() != "" && c.data('kendoComboBox').value() != undefined) {
+                    obj_val2.loanrecovery_type = c.data('kendoComboBox').value();
+                }
+                else {
+                    obj_val2.loanrecovery_type = "0";
+                }
+                if (obj_val2.run_date != "" && obj_val2.run_date != undefined) {
+                    obj_val2.run_date = getFormated_StringDate($("#txtValidity").val());
+                }
+                else {
+                    obj_val2.run_date = "";
+                }
+                if (obj_val2.instalment_month != "" && obj_val2.instalment_month != undefined) {
+                    obj_val2.instalment_month = getFormated_StringDate($("#txtValidity1").val());
+                }
+                else {
+                    obj_val2.instalment_month = "";
+                }
+                obj_val.fpoorgn_code = getlocalStorage('org_id');
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val2
+                data.context.Filter = obj_val;
+                retrieve_FlRecoveryInstalmentDue_details(data);
+
+            }
+            catch (err) {
+                javascript_log4j_root(arguments.callee.name, err);
+            }
+        }
+        if (val == "QCD_FL_Pdc") {
+            $("#divInstall").hide();
+            $("#divpdc").show();
+            $("#divnach").hide();
+            try {
+                //$('#aggrorgn_code').val(org_id);
+                var formval = form_Serialize("Recoveryinstallment_form");
+                var obj_val = JSON.parse(formval);
+                var obj_val2 = JSON.parse(formval);
+                var f = $('#cmbfig_name');
+                if (f.data('kendoComboBox').value() != "" && f.data('kendoComboBox').value() != undefined) {
+                    obj_val2.fig_short_name = f.data('kendoComboBox').value();
+                }
+                else {
+                    obj_val2.fig_short_name = "0";
+                }
+                var c = $('#cmbselec_rep');
+                if (c.data('kendoComboBox').value() != "" && c.data('kendoComboBox').value() != undefined) {
+                    obj_val2.loanrecovery_type = c.data('kendoComboBox').value();
+                }
+                else {
+                    obj_val2.loanrecovery_type = "0";
+                }
+                if (obj_val2.run_date != "" && obj_val2.run_date != undefined) {
+                    obj_val2.run_date = getFormated_StringDate($("#txtValidity").val());
+                }
+                else {
+                    obj_val2.run_date = "";
+                }
+                if (obj_val2.instalment_month != "" && obj_val2.instalment_month != undefined) {
+                    obj_val2.instalment_month = getFormated_StringDate($("#txtValidity1").val());
+                }
+                else {
+                    obj_val2.instalment_month = "";
+                }
+                obj_val.fpoorgn_code = getlocalStorage('org_id');
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val2
+                data.context.Filter = obj_val;
+                retrieve_FlRecoveryInstalmentPDC_details(data);
+
+            }
+            catch (err) {
+                javascript_log4j_root(arguments.callee.name, err);
+            }
+        }
+        if (val == "QCD_FL_NachPrest") {
+            $("#divInstall").hide();
+            $("#divpdc").hide();
+            $("#divnach").show();
+            try {
+                //$('#aggrorgn_code').val(org_id);
+                var formval = form_Serialize("Recoveryinstallment_form");
+                var obj_val = JSON.parse(formval);
+                var obj_val2 = JSON.parse(formval);
+                var f = $('#cmbfig_name');
+                if (f.data('kendoComboBox').value() != "" && f.data('kendoComboBox').value() != undefined) {
+                    obj_val2.fig_short_name = f.data('kendoComboBox').value();
+                }
+                else {
+                    obj_val2.fig_short_name = "0";
+                }
+                var c = $('#cmbselec_rep');
+                if (c.data('kendoComboBox').value() != "" && c.data('kendoComboBox').value() != undefined) {
+                    obj_val2.loanrecovery_type = c.data('kendoComboBox').value();
+                }
+                else {
+                    obj_val2.loanrecovery_type = "0";
+                }
+                if (obj_val2.run_date != "" && obj_val2.run_date != undefined) {
+                    obj_val2.run_date = getFormated_StringDate($("#txtValidity").val());
+                }
+                else {
+                    obj_val2.run_date = "";
+                }
+                if (obj_val2.instalment_month != "" && obj_val2.instalment_month != undefined) {
+                    obj_val2.instalment_month = getFormated_StringDate($("#txtValidity1").val());
+                }
+                else {
+                    obj_val2.instalment_month = "";
+                }
+                obj_val.fpoorgn_code = getlocalStorage('org_id');
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val2
+                data.context.Filter = obj_val;
+                retrieve_FlRecoveryInstalmentNACH_details(data);
+
+            }
+            catch (err) {
+                javascript_log4j_root(arguments.callee.name, err);
+            }
+
+        }
+        if (val == "QCD_FL_Bounce") {
+            $("#divInstall").hide();
+            $("#divpdc").hide();
+            $("#divnach").show();
+            try {
+                //$('#aggrorgn_code').val(org_id);
+                var formval = form_Serialize("Recoveryinstallment_form");
+                var obj_val = JSON.parse(formval);
+                var obj_val2 = JSON.parse(formval);
+                var f = $('#cmbfig_name');
+                if (f.data('kendoComboBox').value() != "" && f.data('kendoComboBox').value() != undefined) {
+                    obj_val2.fig_short_name = f.data('kendoComboBox').value();
+                }
+                else {
+                    obj_val2.fig_short_name = "0";
+                }
+                var c = $('#cmbselec_rep');
+                if (c.data('kendoComboBox').value() != "" && c.data('kendoComboBox').value() != undefined) {
+                    obj_val2.loanrecovery_type = c.data('kendoComboBox').value();
+                }
+                else {
+                    obj_val2.loanrecovery_type = "0";
+                }
+                if (obj_val2.run_date != "" && obj_val2.run_date != undefined) {
+                    obj_val2.run_date = getFormated_StringDate($("#txtValidity").val());
+                }
+                else {
+                    obj_val2.run_date = "";
+                }
+                if (obj_val2.instalment_month != "" && obj_val2.instalment_month != undefined) {
+                    obj_val2.instalment_month = getFormated_StringDate($("#txtValidity1").val());
+                }
+                else {
+                    obj_val2.instalment_month = "";
+                }
+                obj_val.fpoorgn_code = getlocalStorage('org_id');
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val2
+                data.context.Filter = obj_val;
+                retrieve_FlRecoveryInstalmentBOUNCE_details(data);
+
+            }
+            catch (err) {
+                javascript_log4j_root(arguments.callee.name, err);
+            }
+        }
+    }
+</script>

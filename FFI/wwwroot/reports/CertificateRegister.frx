@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="05/30/2020 06:47:56" ReportInfo.Modified="05/30/2020 07:39:11" ReportInfo.CreatorVersion="2020.1.0.0">
+  <Styles Name="Standard">
+    <Style Name="Title" Font="Arial, 12pt, style=Bold"/>
+    <Style Name="Header" Font="Arial, 10pt, style=Bold"/>
+    <Style Name="Group" Font="Arial, 10pt, style=Bold"/>
+    <Style Name="Data" Font="Arial, 10pt"/>
+    <Style Name="Footer" Font="Arial, 10pt"/>
+    <Style Name="EvenRows" Fill.Color="WhiteSmoke" Font="Arial, 10pt"/>
+  </Styles>
+  <Dictionary>
+    <MySqlDataConnection Name="Connection" ConnectionString="rijcmlqJ9ltPwNsYyX+2oAnmCElmGIz/SJ0vefyWJNqFvJ9CpVcxZe7+FQFpmKpxbZDWz0V6JezihMLHf9zFqtmqW5z1hOtrfN77AyhZgNGRrfhUmc=" CommandTimeout="0">
+      <TableDataSource Name="Table" DataType="System.Int32" Enabled="true" SelectCommand="call FIS_report_CertificateRegister ('UTRFPCL','Gingee','utmfis','en_US');">
+        <Column Name="dupfpomember_code" DataType="System.String"/>
+        <Column Name="LieuCertificate" DataType="System.String"/>
+        <Column Name="Lieudist_from" DataType="System.Int32"/>
+        <Column Name="Lieudist_to" DataType="System.Int32"/>
+        <Column Name="fpomember_code" DataType="System.String"/>
+        <Column Name="member_name" DataType="System.String"/>
+        <Column Name="certificate_no" DataType="System.String"/>
+        <Column Name="dist_from" DataType="System.Int32"/>
+        <Column Name="dist_to" DataType="System.Int32"/>
+        <Column Name="orgn_name" DataType="System.String"/>
+        <CommandParameter Name="orgnId" DataType="253"/>
+        <CommandParameter Name="locnId" DataType="253"/>
+        <CommandParameter Name="userId" DataType="253"/>
+        <CommandParameter Name="localeId" DataType="253"/>
+      </TableDataSource>
+    </MySqlDataConnection>
+  </Dictionary>
+  <ReportPage Name="Page1" PaperWidth="300" Watermark.Font="Arial, 60pt">
+    <ReportTitleBand Name="ReportTitle1" Width="1058.4" Height="47.25">
+      <TextObject Name="Text1" Width="1058.4" Height="47.25" Dock="Fill" Text="CERTIFICATE REGISTER" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold" Style="Title"/>
+    </ReportTitleBand>
+    <PageHeaderBand Name="PageHeader1" Top="51.25" Width="1058.4" Height="47.25">
+      <TableObject Name="Table2" Left="9.45" Width="1033.02" Height="47.25" Border.Lines="All">
+        <TableColumn Name="Column6" Width="55.98"/>
+        <TableColumn Name="Column7" Width="178.83"/>
+        <TableColumn Name="Column8" Width="131.58"/>
+        <TableColumn Name="Column9" Width="131.58"/>
+        <TableColumn Name="Column10" Width="103.23"/>
+        <TableColumn Name="Column11" Width="103.23"/>
+        <TableColumn Name="Column12" Width="131.58"/>
+        <TableColumn Name="Column13" Width="103.23"/>
+        <TableColumn Name="Column14" Width="93.78"/>
+        <TableRow Name="Row3" Height="47.25">
+          <TableCell Name="Cell11" Border.Lines="All" Text="Sl.No." VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell12" Border.Lines="Right, Top, Bottom" Text="Folio/Member ID" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell13" Border.Lines="Right, Top, Bottom" Text="Shareholder Name(s)" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell14" Border.Lines="Right, Top, Bottom" Text="New Share Certificate No" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell15" Text="New Share Distinct From" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell16" Border.Lines="All" Text="New Share Distinct To" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell17" Text="In Lieu Certificate No" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell18" Border.Lines="All" Text="In Lieu Share Distinct From " HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell19" Text="In Lieu Share Distinct To" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+        </TableRow>
+      </TableObject>
+    </PageHeaderBand>
+    <DataBand Name="Data1" Top="102.5" Width="1058.4" Height="28.35" EvenStyle="EvenRows" DataSource="Table">
+      <TableObject Name="Table1" Left="9.45" Width="1033.02" Height="28.35" Border.Lines="All">
+        <TableColumn Name="Column15" Width="55.98"/>
+        <TableColumn Name="Column16" Width="178.83"/>
+        <TableColumn Name="Column17" Width="131.58"/>
+        <TableColumn Name="Column18" Width="131.58"/>
+        <TableColumn Name="Column19" Width="103.23"/>
+        <TableColumn Name="Column20" Width="103.23"/>
+        <TableColumn Name="Column21" Width="131.58"/>
+        <TableColumn Name="Column22" Width="103.23"/>
+        <TableColumn Name="Column23" Width="93.78"/>
+        <TableRow Name="Row4" Height="28.35">
+          <TableCell Name="Cell20" Border.Lines="All" Text="[Row#]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell21" Border.Lines="Right, Top, Bottom" Text="[Table.dupfpomember_code]" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell22" Border.Lines="Right, Top, Bottom" Text="[Table.member_name]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell23" Border.Lines="Right, Top, Bottom" Text="[Table.certificate_no]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell24" Text="[Table.dist_from]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell25" Border.Lines="All" Text="[Table.dist_to]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell26" Text="[Table.LieuCertificate]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell27" Border.Lines="All" Text="[Table.Lieudist_from]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell28" Text="[Table.Lieudist_to]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+      </TableObject>
+    </DataBand>
+    <PageFooterBand Name="PageFooter1" Top="134.85" Width="1058.4" Height="18.9">
+      <TextObject Name="Text22" Width="1058.4" Height="18.9" Dock="Fill" Text="[PageN]" HorzAlign="Right" Font="Arial, 10pt" Style="Footer"/>
+    </PageFooterBand>
+  </ReportPage>
+</Report>

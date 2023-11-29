@@ -1,0 +1,791 @@
+﻿@{
+    ViewBag.Form = "Update Share Allotments";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+<form id="UpdateFPO_form" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="cmb_update" class="col-sm-4 control-label required"> Allotment Status:</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_update" name="In_alloc_status_code" data-role="filtercombo" style="width:100%" />
+                        </div>
+                        @*<button title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button" data-original-title="Refresh" onclick="listLoad()"> <span class="glyphicon glyphicon-refresh"></span></button>*@
+                    </div>
+                </div>
+
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label for="txtValidity" class="col-sm-5 control-label ">Board Approval Date:</label>
+                        <div class=" col-sm-4">
+                            <input class="cusDate" data-role='datepicker' id="txtValidity" data-checkdate-msg="Enter Valid Date" name="In_board_approval_date" style="width:100%" onkeypress="return date_validate(event)" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                        <button title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button" data-original-title="Refresh" onclick="listLoad()"> <span class="glyphicon glyphicon-refresh"></span></button>
+                        <input type="hidden" id="fpoorgn_code" />
+                        <div class=" col-sm-4">
+                            <input type="checkbox" id="apply_all"> Apply to all
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-12">
+                <div id="grid_Drop_list">
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+<script src="~/API_Scripts/retrieveUpdateShareAllotment_Model.js"></script>
+<script src="~/API_Scripts/saveUpdateShareAllotment_Model.js"></script>
+<script src="~/API_Scripts/Share_App_retrieveUpdateShareAllotment_APIClient.js"></script>
+<script src="~/API_Scripts/Share_App_saveUpdateShareAllotment_APIClient.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/API_Scripts/UpdateFPOShareAllotment.js"></script>
+
+
+
+
+<script>
+    $(document).ready(function () {
+
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+
+        kendodate_format()
+        var container = $("#UpdateFPO_form");
+        kendo.init(container);
+        container.kendoValidator({
+            rules: {
+                checkdate: function (input) {
+                    if (input.attr("data-role") == "datepicker") {
+                        var res = isDate(input.val());
+                        return res;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+            }
+        });
+
+
+
+        Screen_Id = "UPSALL";
+        master_userRoleNew2();
+        load_master_code();
+
+        $("#RIform").hide();
+        $("#FPOform").hide();
+         
+        var dtmap_paymentstatus = "";
+        $("#cmb_update").empty();
+        dtmap_paymentstatus = grid_comboScreen_mastercodes("QCD_SHA_ALLOT_STAT");
+        filter_combobox("cmb_update", dtmap_paymentstatus);
+        $("#txtValidity").kendoDatePicker({
+            max: new Date(),// sets max date to Jan 1st, 2013
+            format: "dd/MM/yyyy"
+        });
+        var data = [];
+        gridFilter(data);
+
+
+    });
+</script>
+
+<script>
+    function load_master_code() {
+        try {
+            var data = {};
+            data.screen_Id = "UPSALL";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    $(function () {
+
+        $('#cmb_update').change(function () {
+            var opt = $(this).val();
+            if (opt == 'QCD_SHA_ALLOT_PEND') {
+
+                $('#apply_all').removeAttr("disabled");
+                //fetchSharecert();
+                $("#divUserRole3 #btnnew").removeAttr("disabled");
+                //listLoad();
+
+            } else {
+
+                $('#apply_all').attr("checked", false);
+                $('#apply_all').attr("disabled", true);
+                $("#divUserRole3 #btnnew").attr("disabled", true);
+                //listLoad();
+            }
+        });
+    });
+</script>
+
+<script>
+    //var data = [];
+    function gridFilter(data) {
+        try {
+            $("#grid_Drop_list").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                In_shareapp_date: { type: "string", editable: false },
+                                In_shareapp_no: { type: "string", editable: false },
+                                In_member_name: { type: "string", editable: false },
+                                In_applied_shares: { type: "string", editable: false },
+                                In_approved_shares: { type: "string" },
+                                In_rejected_shares: { type: "string" },
+                                In_rejected_comment: { type: "string" },
+                                In_approved_date: { type: "date" },
+                                In_mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+
+                height: 400,
+                groupable: false,
+
+
+                edit: OnEdit,
+                save: function (data) {
+
+                    if (data.values.In_approved_shares) {
+                        data.model.set("In_rejected_shares", (parseInt(data.model.In_applied_shares) - parseInt(data.values.In_approved_shares)));
+                    }
+                    if (data.values.rejected_shares) {
+                        data.model.set("In_approved_shares", (parseInt(data.model.In_applied_shares) - parseInt(data.values.In_rejected_shares)));
+                    }
+
+                },
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+
+                    {
+                        field: "In_shareapp_rowid",
+                        title: "shareapp_rowid",
+                        width: 100,
+                        hidden: true,
+                    },
+                  
+
+                    {
+
+                        field: "In_shareapp_no",
+                        title: "Application No",
+                        width: 100
+
+                    },
+                    {
+
+                        field: "In_shareapp_date",
+                        title: "Applied Date",
+                        width: 100
+
+                    },
+
+                    {
+                        field: "In_member_name",
+                        title: "Applicant Name",
+                        width: 100
+
+                    },
+                    {
+                        field: "In_applied_shares",
+                        title: "Shares Applied",
+                        width: 100
+
+                    },
+                    {
+                        field: "In_approved_shares",
+                        title: "Shares Approved",
+                        width: 100
+
+                    },
+                    {
+                        field: "In_rejected_shares",
+                        title: "Rejected",
+                        width: 100
+
+
+                    },
+                    {
+                        field: "In_rejected_comment",
+                        title: "Reject Comments",
+                        width: 100
+
+                    },
+                    {
+                        field: "In_approved_date",
+                        title: "Board Approval Date",
+                        width: 100,
+                        format: "{0:dd/MM/yyyy}",
+                        editor: date_editor
+
+                    },
+
+                    {
+                        field: "In_status_code",
+                        title: "Status",
+                        hidden: true,
+                        width: 100
+                    },
+                    {
+                        field: "In_status_desc",
+                        title: "Status",
+                        width: 100,
+                        hidden: true
+                    },
+
+                    {
+                        field: "In_row_timestamp",
+                        title: "Timestamp",
+                        hidden: true
+                    },
+
+
+                    {
+                        field: "In_mode_flag",
+                        title: "Mode",
+                        hidden: true
+                    }],
+                editable: true
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function OnEdit(e) {
+        setDefaultValues(e);
+        e.container.find("input[name='In_approved_shares']").attr('maxlength', '20');
+        e.container.find("input[name='In_approved_shares']").attr('onkeypress', 'return event.charCode >= 48 && event.charCode <= 57');
+        e.container.find("input[name='In_rejected_shares']").attr('maxlength', '20');
+        e.container.find("input[name='In_rejected_shares']").attr('onkeypress', 'return event.charCode >= 48 && event.charCode <= 57');
+        var grid_validate_msg = "";
+        grid_validate_msg = "Approved shares should not greater than Appllied Shares";
+
+        //e.container.find("input[name='approved_date']").kendoDatePicker({
+        //    max: new Date(), // sets max date to Jan 1st, 2013
+        //    format: "dd/MM/yyyy"
+        //});
+    }
+    function date_editor(container, options) {
+        var date = $("#txtValidity").data("kendoDatePicker");
+
+        var dt = new Date();
+        var mudt = dt.setDate(dt.getDate() + 30);
+        var today = new Date();
+        var maxDate = today.setDate(today.getDate() + 30);
+        //$('#datepicker').kendoDatePicker({
+        //    max: new Date(maxDate)
+        //});
+        $('<input  data-text-field="' + options.field + '" data-value-field="' + options.field + '" data-bind="value:' + options.field + '" data-format="' + options.format + '"/>')
+            .appendTo(container)
+            .kendoDatePicker({
+                //min: mudt,
+                min: new Date,
+                format: "dd/MM/yyyy"
+            });
+
+    }
+</script>
+<script>
+    function listLoad() {
+        debugger;
+        try {
+            var mandatory_check = true;
+            var grid_validate_msg = "";
+            if ($('#cmb_update').data("kendoComboBox").value() == "") {
+                grid_validate_msg += "Alotment Status cannot be blank <br>";
+                mandatory_check = false;
+            }
+            if ($('#txtValidity').val() == "") {
+                kendoAlert("Board Approval Date cannot be blank");
+                return false;
+            }
+            if (mandatory_check == false) {
+                kendoAlert(grid_validate_msg);
+                return false;
+            }
+            var formval = form_Serialize("UpdateFPO_form");
+            var obj_val = JSON.parse(formval);
+            var c = $('#cmb_update');
+            obj_val.In_alloc_status_code = c.data('kendoComboBox').value();
+            if (obj_val.In_alloc_status_code == '')
+                obj_val.In_alloc_status_code = "0";
+            //obj_val.register_rowid = "0";
+            obj_val.In_fpoorgn_code = getlocalStorage('org_id');
+            //obj_val.register_type = "Allotment Register";
+            //var c = $('#cmb_cc');
+            //obj_val.cc_aggrloc_code = c.data('kendoComboBox').value();
+            obj_val.In_board_approval_date = $("#txtValidity").val();
+
+            if (obj_val.hasOwnProperty('board_approval_date')) {
+
+                if (obj_val.In_board_approval_date != '') {
+                    obj_val.In_board_approval_date = getFormated_StringDate(obj_val.In_board_approval_date);
+                }
+                else {
+                    obj_val.In_board_approval_date = "0";
+                }
+            }
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Header = obj_val;
+            var Context = data.context;
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, fpoorgn_code: Context.Header.In_fpoorgn_code, alloc_status_code: Context.Header.In_alloc_status_code, board_approval_date: Context.Header.In_board_approval_date }),
+                url: "/UpdateFpo/UpdateFpofetch",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    if (response.context != null) {
+                        generate_FPOAllotmentRegister_detail(response.context.Detail);
+
+                    }
+                    else {
+
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+            var colCount = $("#grid_Drop_list").find('.k-grid-header colgroup > col').length;
+
+            //If There are no results place an indicator row
+            if ($("#grid_Drop_list").data("kendoGrid").dataSource._view.length == 0) {
+                $("#grid_Drop_list").find('.k-grid-content tbody')
+                    .append('<tr class="kendo-data-row"><td colspan="' +
+                        colCount +
+                        '" style="text-align:center; padding-top:10px;background-color:#AFE4FA"><b> No pending records available for the selected status; please try later!!!</b></td></tr>');
+            }
+
+            return false;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_FPOAllotmentRegister_detail(res) {
+        debugger;
+        try {
+
+            if ($("#txtValidity").val() != "") {
+                var date = $("#txtValidity").val();
+                var code = date.split("/");
+                var applydate = code[1] + '/' + code[0] + '/' + code[2];
+            }
+            if (res != null) {
+                if ($('#apply_all').is(':checked')) {
+                    if (applydate != "" && applydate != undefined) {
+
+                        //var grid_val = JSON.stringify($("#grid_Drop_list").data().kendoGrid._data);
+                        //var Bind = {};
+                        //Bind = grid_val;
+                        //var result = JSON.parse(Bind);
+                        var result = changedataType(res);
+                        $.each(result, function (index, value) {
+
+                            var date = kendo.parseDate(applydate);
+                            value = kendo.toString(date, "MM/dd/yyyy");
+                            result[index].approved_date = value;
+                        });
+                        if (result.length == 0) {
+                            var data = changedataType(res);
+                            gridFilter(data);
+                        }
+                        else {
+                            gridFilter(result);
+                        }
+                    }
+
+                    else {
+
+                        var data = changedataType(res);
+                        $.each(data, function (index, value) {
+
+                            var d1 = value.approved_date;
+                            //var fncode1 = d1.split("/");
+                            //var correctdate1 = fncode1[1] + '/' + fncode1[0] + '/' + fncode1[2];
+
+                            var date = kendo.parseDate(d1);
+                            value = kendo.toString(date, "MM/dd/yyyy");
+                            data[index].approved_date = value;
+                        });
+                        gridFilter(data);
+                    }
+
+                }
+                else {
+
+                    var data = changedataType(res);
+                    $.each(data, function (index, value) {
+
+                        var d = value.approved_date;
+                        //var fncode = d.split("/");
+                        //var correctdate = fncode[1] + '/' + fncode[0] + '/' + fncode[2];
+                        var date = kendo.parseDate(d);
+                        value = kendo.toString(date, "MM/dd/yyyy");
+                        data[index].approved_date = value;
+                    });
+                    gridFilter(data);
+                }
+            }
+            else {
+                gridFilter([]);
+            }
+
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function get_updateshareallotemnt_details(res) {
+        try {
+            listLoad();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<script>
+    var isvalid = true;
+    function GridValidation() {
+        try {
+            var datecount = 0;
+            var refcount = 0;
+            var GCount = 0;
+            var GCount1 = 0;
+            var NCount = 0;
+            var Nval = 0;
+            var Rcount = 0;
+            var grid_val = JSON.stringify($("#grid_Drop_list").data().kendoGrid._data);
+            var Bind = {};
+            Bind = grid_val;
+            var result = JSON.parse(Bind);
+
+            if (result.length == 0) {
+                kendoAlert("Atleast one record needs to be entered");
+                isvalid = false;
+                return;
+            }
+
+            $.each(result, function (index, value) {
+                if (parseInt(result[index].In_approved_shares) != 0) {
+                    GCount1++;
+                }
+                if (parseInt(result[index].In_applied_shares) == parseInt(result[index].In_approved_shares)) {
+                    if (result[index].In_approved_date == null)
+                        datecount++;
+                    else
+                        Nval++;
+                }
+                else if (parseInt(result[index].In_approved_shares) == 0 && (parseInt(result[index].In_rejected_shares) == 0)) {
+                    NCount++;
+
+                }
+
+                else if (parseInt(result[index].In_applied_shares) > parseInt(result[index].In_approved_shares)) {
+                    if (parseInt(result[index].In_approved_shares) != 0) {
+                        GCount++;
+                    }
+
+                    if ((result[index].In_approved_date == null) && (result[index].In_rejected_comment == "")) {
+
+                        datecount++;
+                        refcount++;
+                    }
+                    else if ((result[index].In_approved_date != null) && (result[index].In_rejected_comment == "")) {
+                        refcount++;
+
+                    }
+                    else if ((result[index].In_approved_date == null) && (result[index].In_rejected_comment != "")) {
+                        datecount++;
+
+                    }
+                    else {
+                        Nval++;
+                    }
+
+                }
+                //else if ( parseInt(result[index].applied_shares==parseInt(result[index].approved_shares) )) {
+
+                //    GCount++;
+                //    return false;
+                //}
+                else if (parseInt(result[index].In_approved_shares) > parseInt(result[index].In_applied_shares)) {
+                    GCount++;
+                }
+                else if (parseInt(result[index].In_applied_shares) > parseInt(result[index].In_rejected_shares)) {
+                    if (parseInt(result[index].In_rejected_shares != 0)) {
+                        Rcount++;
+                    }
+                }
+
+                if (GCount1 == 0) {
+                    kendoAlert("Approval Share Must be Greater then Zero");
+                    isvalid = false;
+                    return ;
+                }
+
+                if (NCount == result.length) {
+                    kendoAlert("Kindly Update the Shares for Given Applications.");
+                    isvalid = false;
+                    return;
+                }
+                if ((Nval > 0) && (datecount == 0) && (refcount == 0)) {
+                    isvalid = true;
+                    return ;
+                }
+                else if (GCount > 0) {
+                    kendoAlert("Approved/Rejected shares must be equal to applied shares.");
+                    isvalid = false;
+                    return;
+                }
+                else if (Rcount > 0) {
+                    kendoAlert("Rejected shares must be equal to applied shares.");
+                    isvalid = false;
+                    return ;
+                }
+                else if (refcount > 0) {
+                    kendoAlert("Rejected Comments Cannot be Empty");
+                    isvalid = false;
+                    return ;
+                }
+                else if (datecount > 0) {
+                    kendoAlert("Approve date Cannot be Empty");
+                    isvalid = false;
+                    return ;
+                }
+
+                else {
+                    return;
+                }
+
+                if (datecount + refcount > 0) {
+                    isvalid = false;
+                    return;
+                }
+               
+
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function save() {
+
+        try {
+            GridValidation();
+            if (isvalid == true) {
+
+                /* For Header */
+                var formval = form_Serialize("UpdateFPO_form");
+                var obj_val = JSON.parse(formval);
+                var c = $('#cmb_update');
+                obj_val.In_alloc_status_code = c.data('kendoComboBox').value();
+                if (obj_val.In_alloc_status_code == '')
+                    obj_val.In_alloc_status_code = "0";
+                obj_val.In_fpoorgn_code = getlocalStorage('org_id');
+                obj_val.In_board_approval_date = $("#txtValidity").val();
+                if (obj_val.hasOwnProperty('In_board_approval_date')) {
+                    if (obj_val.In_board_approval_date != '') {
+                        obj_val.In_board_approval_date = getFormated_StringDate(obj_val.In_board_approval_date);
+                    }
+                    else {
+                        obj_val.In_board_approval_date = "0";
+                    }
+                }
+                obj_val.fpoorgn_code = getlocalStorage('org_id');
+
+                /* For Details */
+                var grid_val = JSON.stringify($("#grid_Drop_list").data().kendoGrid._data);
+                var Bind = {};
+                Bind = grid_val;
+                var result = JSON.parse(Bind);
+                if (result.length == 0) {
+                    kendoAlert("Atleast one record needs to be entered");
+
+
+                }
+                var grid = $("#grid_Drop_list").data("kendoGrid");
+                var gridData = grid.dataSource.view();
+                for (var i = 0; i < gridData.length; i++) {
+                    if (gridData[i].In_rejected_shares != "0" && gridData[i].In_rejected_comment == "") {
+                        kendoAlert("Please fill the Reject Comments");
+                        return false;
+                    }
+                }
+
+
+
+
+                var res = changedataType(result);
+                $.each(res, function (index, value) {
+
+                    if ((res[index].In_approved_date == null) || (res[index].In_approved_date == "")) {
+                        var d1 = new Date();
+                        var date1 = kendo.parseDate(d1);
+                        value = kendo.toString(date1, "MM/dd/yyyy");
+                        res[index].In_approved_date = value
+                    }
+                    else {
+                        var d = value.In_approved_date;
+                        var date = kendo.parseDate(d);
+                        value = kendo.toString(date, "MM/dd/yyyy");
+                        res[index].In_approved_date = value;
+                    }
+
+                    var mmode = res[index].In_mode_flag;
+                    if (mmode == "S") {
+                        res[index].In_mode_flag = "U";
+                    }
+                });
+                var obj_grid_val = res;
+
+                //if (res[index].In_rejected_shares != "0" && res[index].In_rejected_comment == "") {
+                //    kendoAlert("Please fill the Reject Comments");
+                //    return;
+                //}
+
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                data.context.Detail = obj_grid_val;
+
+                var Context = data.context;
+
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, Header: Context.Header, Detail: Context.Detail }),
+                    url: "/UpdateFpo/UpdateFpoSave",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        console.log(response)
+                        var Res = JSON.parse(response);
+                        if (Res.context != null) {
+                            var mode = $("#txtMode").val();
+                            if (mode == "I") {
+                                kendoAlert("AllotmentRegister saved successfully");
+                                get_updateshareallotemnt_details(Res.context.Header);
+                                //get_attribute_group_details(responseJSON.context.Header.entitygrp_rowid);
+                            }
+                            else if (mode == "D") {
+                                kendoAlert("AllotmentRegister inactivate successfully");
+                                //get_AllotmentRegister_details(responseJSON.context.Header.bank_rowid);
+                            }
+                            else {
+                                kendoAlert("AllotmentRegister saved successfully");
+                                get_updateshareallotemnt_details(Res.context.Header);
+                            }
+                        }
+                        else {
+                            kendoAlert(Res.ApplicationException.errorDescription);
+                        }
+                    },
+                    error: function (er) {
+                        alert(er)
+                        console.log(er)
+                    }
+
+                });
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+
+<script>
+    $('#apply_all').click(function () {
+        if ($(this).is(':checked')) {
+            if ($("#txtValidity").val() != "") {
+                var date = $("#txtValidity").val();
+                var code = date.split("/");
+                var applydate = code[1] + '/' + code[0] + '/' + code[2];
+            }
+
+            if (applydate != "" && applydate != undefined) {
+
+                var grid_val = JSON.stringify($("#grid_Drop_list").data().kendoGrid._data);
+                var Bind = {};
+                Bind = grid_val;
+                var res = JSON.parse(Bind);
+                var result = changedataType(res);
+                $.each(result, function (index, value) {
+
+                    var date = kendo.parseDate(applydate);
+                    value = kendo.toString(date, "MM/dd/yyyy");
+                    result[index].approved_date = value;
+                });
+                if (result.length == 0) {
+                    var data = changedataType(res);
+                    gridFilter(data);
+                }
+                else {
+                    gridFilter(result);
+                }
+            }
+
+            else {
+
+                var data = changedataType(res);
+                $.each(data, function (index, value) {
+
+                    var d1 = value.approved_date;
+                    //var fncode1 = d1.split("/");
+                    //var correctdate1 = fncode1[1] + '/' + fncode1[0] + '/' + fncode1[2];
+
+                    var date = kendo.parseDate(d1);
+                    value = kendo.toString(date, "MM/dd/yyyy");
+                    data[index].approved_date = value;
+                });
+                gridFilter(data);
+            }
+
+        }
+    });
+</script>
+
+
+
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>
+

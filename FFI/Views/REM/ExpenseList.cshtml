@@ -1,0 +1,324 @@
+﻿@{
+    ViewBag.List = "Expense";
+    Layout = "~/Views/Shared/ListViewLayout.cshtml";
+}
+<form id="expense_list" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="row">
+        <div class="col-xs-12">
+            @*<div id="gd_expense">*@
+                <div id="Expenses_grid"></div>
+            @*</div>*@
+        </div>
+    </div>
+</form>
+<script>
+    $(document).ready(function () {
+        $('#btn_View').hide();
+        $(".adv_filter").attr("hdrtitle", "Expenses List");
+        $(".adv_filter").attr("fltid", "Expense");
+        $(".Export").attr("hdrtitle", "Expenses List");
+        $(".Export").attr("SubTreeId", "EXPENSE");
+        list_grid_id = "Expenses_grid";
+
+        ExpenseGrid();
+
+        listpageloadfetch();
+
+        //Screen_Id = "EXPENSE";
+        //permission = sec_Permission(Screen_Id);
+        //page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+        //filterhover();
+    });
+</script>
+
+<script>
+
+        function listpageloadfetch() {
+            try{
+                var formval = form_Serialize("expense_list");
+                var obj_val = JSON.parse(formval);
+                obj_val.FilterBy_Option = "ALL";
+                obj_val.FilterBy_Code = ".";
+                if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                    obj_val.FilterBy_FromValue = getlocalStorage('flt_condition');
+                }
+                else {
+                    obj_val.FilterBy_FromValue = ".";
+                }
+                obj_val.FilterBy_ToValue = ".";
+
+                var data = {};
+                data.context = getContext();
+                data.context.Filter = obj_val;
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    url: '/REM/ExpenceListfetch',
+                    dataType: 'json',
+                    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, FilterBy_Option: Context.Filter.FilterBy_Option, FilterBy_Code: Context.Filter.FilterBy_Code, FilterBy_FromValue: Context.Filter.FilterBy_FromValue, FilterBy_ToValue: Context.Filter.FilterBy_Tovalue }),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        //var list = JSON.parse(response);
+                        if (response.context != null) {
+                            generate_Expence_list(response.context.List);
+                        }
+                        else {
+                            ExpenseGrid([]);
+                        }
+                    },
+                    error: function (er) {
+                        alert(er)
+                        console.log(er)
+                    }
+
+                });            
+            }
+            catch (err) {
+                javascript_log4j_root(arguments.callee.name, err);
+            }
+        }
+
+        var status_Priority = [];
+        function ExpenseGrid(data) {
+            try {
+                $("#Expenses_grid").kendoGrid(
+                 {
+                     dataSource: {
+                         data: data,
+                         pageSize: 20,
+                         change: function (e) {
+                             setTimeout(function () {
+                                 var gd = $("#Expenses_grid").data("kendoGrid");
+                                 filter_row(gd);
+                                 $('.k-i-close').css('display', 'none');
+                                 $('button.k-button-icon').css('display', 'none');
+                                 $('#Expenses_grid .k-input').prop('disabled', false);
+                                 $('#Expenses_grid .k-input').prop('readonly', true);
+
+                             }, 1);
+                         },
+                     },
+                     toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                     excelExport: function (e) {
+                         var gd = $("#Expenses_grid").data("kendoGrid");
+                         var len = gd.dataSource._data.length;
+                         var chkall = $('#chkall').is(':checked');
+                         var chkfilter = $('#chkfilter').is(':checked');
+                         var chktemp = $('#chktemp').is(':checked');
+                         var twokendobox = true;
+                         gd.dataSource.pageSize(len);
+                         if (e.sender.dataSource._data.length == len) {
+                             twokendobox = false;
+                             exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                         }
+                         else {
+                             exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                         }
+                         gd.dataSource.pageSize('10');
+                         return false;
+                     },
+                     filterable: {
+                         enabled: true,
+                         delay: 1500,
+                         mode: "menu, row",
+                         height: 200,
+                         click: function (e) {
+                             var gd = $("#Expenses_grid").data("kendoGrid");
+                             filter_row(gd);
+                         }
+                     },
+                     filterMenuInit: function (e) {
+                         var gd = $("#Expenses_grid").data("kendoGrid");
+                         filter_row(gd);
+                     },
+
+                     height: 450,
+                     sortable: true,
+                     selectable: true,
+                     change: selectRow,
+                     selectable: "singl",   //  Grid Row Selection
+                     pageable: {
+                         refresh: false,
+                         pageSizes: true,
+                         buttonCount: 5
+                     },
+                     navigatable: true,
+                     groupable: false,
+                     columns: [
+                         {
+                             field: "Out_expense_rowid",
+                             title: "expense_rowid",
+                             width: 1,
+                             hidden: true,
+                         },
+
+                          {
+                              field: "Out_expense_id",
+                              title: "Expense ID",
+                              filterable: {
+                                  cell: {
+                                      operator: "contains",
+                                      inputWidth: 1500
+                                  }
+                              }
+                          },
+                           {
+                               field: "Out_business_desc",
+                               title: "Business",
+                               filterable: {
+                                   cell: {
+                                       operator: "contains",
+                                       inputWidth: 1500
+                                   }
+                               }
+                           },
+                          {
+                              field: "Out_financial_year",
+                              title: "finyear_code",
+                              width: 1,
+                              hidden: true,
+                          },
+                          {
+                              field: "Out_financial_year",
+                              title: "Financial Year",
+                              filterable: {
+                                  cell: {
+                                      operator: "contains",
+                                      inputWidth: 1500
+                                  }
+                              }
+                          },
+                          {
+                              field: "Out_total_expenses",
+                              title: "Total Expenses",
+                              hidden:true,
+                              filterable: {
+                                  cell: {
+                                      operator: "contains",
+                                      inputWidth: 1500
+                                  }
+                              }
+                          },
+                          {
+                              field: "Out_status_code",
+                              title: "status_code",
+                              width: 1,
+                              hidden: true,
+                          },
+                     {
+                         field: "Out_status_desc",
+                         title: "Status",
+                         filterable: {
+                             cell: {
+                                 operator: "contains",
+                                 inputWidth: 1500
+                             }
+                         }
+                     },
+                     ]
+                 });
+
+                $(".k-dropdown-operator").css('display', 'none');
+                $("#Expenses_grid .k-input").attr('disabled', 'false');
+            }
+       catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function statusFilter(element) {    // Dropdown list functionality
+        element.kendoDropDownList({
+            dataSource: status_Priority,
+            optionLabel: "--Select Value--"
+        });
+    }
+
+    function selectRow() {
+        try{
+            var grid = $("#Expenses_grid").data("kendoGrid");
+            var selectedItem = grid.dataItem(grid.select());
+            setlocalStorage("ls_pageList", selectedItem);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+
+
+<script>
+    $("#btn_Edit").bind("click", function () {
+        getSerializedSelectedRows('edit');
+    });
+
+    $("#btn_View").bind("click", function () {
+        getSerializedSelectedRows('view');
+    });
+
+    $("#btn_new").bind("click", function () {
+        btn_onClick('Create');
+        location.href = "../REM/ExpenseForm";
+    });
+
+    function getSerializedSelectedRows(mode) {
+        try {
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var items = getlocalStorage("ls_pageList");
+                if (items.length == 0) {
+                    kendoAlert("Please select records");
+                }
+
+                else {
+                    if (mode == "edit") {
+                        btn_onClick('Edit');
+                        location.href = "../REM/ExpenseForm";
+                    }
+                    else if (mode == "view") {
+                        btn_onClick('View');
+                        location.href = "../REM/ExpenseForm";
+                    }
+                }
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<script>
+    function generate_Expence_list(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                $("#gd_expense").empty();
+                $("#gd_expense").append("<div id='Expenses_grid'></div>");
+                ExpenseGrid(data);
+            }
+            else {
+                ExpenseGrid([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function listRefresh() {
+        try {
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+
+
+
+
+
+
+

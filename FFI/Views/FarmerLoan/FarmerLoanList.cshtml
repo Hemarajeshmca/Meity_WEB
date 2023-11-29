@@ -1,0 +1,540 @@
+﻿@{
+    ViewBag.List = "Farmer Loan Scheme";
+    Layout = "~/Views/Shared/ListViewLayout.cshtml";
+}
+<form id="Loan_schema" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="gd_loanschema">
+                <div id="Farmerloan_Schema_grid"></div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    click_act_name = "FarmerLoanForm";
+    click_ctrl_name = "FarmerLoan";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+
+</script>
+<script src="~/API_Scripts/Farmer_Loan_retrieveSetupFLSchemeList_APIClient.js"></script>
+<script src="~/API_Scripts/retrieveSetupFarmerLoanSchemeList_Model.js"></script>
+<script src="~/API_Scripts/FarmerLoan_Schema_Setup.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script>
+    function listpageloadfetch() {
+        var formval = form_Serialize("service_name");
+        var obj_val = JSON.parse(formval);
+        obj_val.FilterBy_Option = "ALL";
+        obj_val.FilterBy_Code = ".";
+        if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+            obj_val.FilterBy_Fromvalue = getlocalStorage('flt_condition');
+        }
+        else {
+            obj_val.FilterBy_Fromvalue = ".";
+        }
+        obj_val.FilterBy_Tovalue = ".";
+        var data = {};
+        data.context = WebAPIProxy.getContext();;
+        data.context.Filter = obj_val;
+        retrieve_farmer_loan_schema_list(data);       
+    }
+    var status_Priority = [];
+    function Farmer_Loan_Schema_List(data) {
+        $.each(data, function (index, value) {
+            var flag = false;
+            $.each(status_Priority, function (sindex, svalue) {
+                if (svalue == value.status_desc) {
+                    flag = true;
+                }
+            });
+            if (flag == false) {
+                status_Priority.push(value.status_desc);
+            }
+        });
+        $("#Farmerloan_Schema_grid").kendoGrid(
+                {
+                    dataSource: {
+                        data: data,
+                        pageSize: 20,
+                        change: function (e) {
+                            setTimeout(function () {
+                                var gd = $("#Farmerloan_Schema_grid").data("kendoGrid");
+                                filter_row(gd);
+                                $('.k-i-close').css('display', 'none');
+                                $('button.k-button-icon').css('display', 'none');
+                                $('#Farmerloan_Schema_grid .k-input').prop('disabled', false);
+                                $('#Farmerloan_Schema_grid .k-input').prop('readonly', true);
+
+                            }, 1);
+                        },
+                    },
+                    toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                    excelExport: function (e) {
+                        var gd = $("#Farmerloan_Schema_grid").data("kendoGrid");
+                        var len = gd.dataSource._data.length;
+                        var chkall = $('#chkall').is(':checked');
+                        var chkfilter = $('#chkfilter').is(':checked');
+                        var chktemp = $('#chktemp').is(':checked');
+                        var twokendobox = true;
+                        gd.dataSource.pageSize(len);
+                        if (e.sender.dataSource._data.length == len) {
+                            twokendobox = false;
+                            exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                        }
+                        else {
+                            exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                        }
+                        gd.dataSource.pageSize('10');
+                        return false;
+                    },
+                    filterable: {
+                        enabled: true,
+                        delay: 1500,
+                        mode: "menu, row",
+                        height: 200,
+                        click: function (e) {
+                            var gd = $("#Farmerloan_Schema_grid").data("kendoGrid");
+                            filter_row(gd);
+                        }
+                    },
+                    filterMenuInit: function (e) {
+                        var gd = $("#Farmerloan_Schema_grid").data("kendoGrid");
+                        filter_row(gd);
+                    },
+                    change: selectRow,
+                    height: 450,
+                    sortable: true,
+                    selectable: true,
+                    selectable: "singl",   //  Grid Row Selection
+                    pageable: {
+                        refresh: false,
+                        pageSizes: true,
+                        buttonCount: 5
+                    },
+                    navigatable: true,
+                    groupable: false,
+
+                    columns: [
+                           {
+                               field: "loanscheme_rowid",
+                               title: "loanscheme_rowid",
+                               hidden: true
+                           },
+                           {
+                               field: "fpoorgn_code",
+                               title: "fpoorgn_code",
+                               hidden: true
+                           },
+                           {
+                               field: "loanscheme_code",
+                               title: "loanscheme_code",
+                               hidden: true
+                           },
+                           {
+                               field: "loanscheme_name",
+                               title: "Farmer Loan Scheme",
+                               width: 200,
+                               filterable: {
+                                   cell: {
+                                       operator: "contains",
+                                       inputWidth: 1500
+                                   }
+                               }
+                           },
+                           {
+                               field: "loan_type",
+                               title: "loan_type",
+                               hidden: true
+                           },
+                           {
+                               field: "loan_type_desc",
+                               title: "Loan Type",
+                               width: 200,
+                               filterable: {
+                                   cell: {
+                                       operator: "contains",
+                                       inputWidth: 1500
+                                   }
+                               }
+                           },
+                            {
+                                field: "creation_date",
+                                title: "Creation Date",
+                                width: 200,
+                                filterable: {
+                                    cell: {
+                                        operator: "contains",
+                                        inputWidth: 1500
+                                    }
+                                }
+                            },
+                             {
+                                 field: "fpoloan_no",
+                                 title: "FPO Loan No",
+                                 width: 200,
+                                 filterable: {
+                                     cell: {
+                                         operator: "contains",
+                                         inputWidth: 1500
+                                     }
+                                 }
+                             },
+
+                        {
+                            field: "effective_from",
+                            title: "Effective From",
+                            width: 200,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                        {
+                            field: "effective_to",
+                            title: "Effective To",
+                            width: 200,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                        {
+                            field: "base_rate",
+                            title: "Base Rate",
+                            width: 200,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                        {
+                            field: "fpo_margin_rate",
+                            title: "FPO Margin Rate",
+                            width: 200,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                        {
+                            field: "fig_margin_rate",
+                            title: "FIG Rate",
+                            width: 200,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                        {
+                            field: "interest_rate",
+                            title: "Interest Rate",
+                            width: 200,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                        {
+                            field: "repayment_freq",
+                            title: "repayment_freq",
+                            hidden: true
+                        },
+                        {
+                            field: "repayment_freq_desc",
+                            title: "Repayment Frequency",
+                            width: 200,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                        {
+                            field: "repayment_in_yrs",
+                            title: "Repayment Tenure In Years",
+                            width: 200,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                        {
+                            field: "repayment_in_months",
+                            title: "Repayment Tenure In Months",
+                            width: 200,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                         {
+                             field: "principle_interest_holiday_period",
+                             title: "Int & Principal Holiday Period",
+                             width: 200,
+                             filterable: {
+                                 cell: {
+                                     operator: "contains",
+                                     inputWidth: 1500
+                                 }
+                             }
+                         },
+                        {
+                            field: "min_loan_amount",
+                            title: "Min Amount",
+                            width: 200,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                        {
+                            field: "max_loan_amount",
+                            title: "Max Amount",
+                            width: 200,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                        {
+                            field: "allotted_amount",
+                            title: "TPB Allowed",
+                            width: 200,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                        {
+                            field: "received_amount",
+                            title: "received_amount",
+                            width: 200,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                        {
+                            field: "lend_amount",
+                            title: "lend_amount",
+                            width: 200,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                        {
+                            field: "lend_balance_amount",
+                            title: "lend_balance_amount",
+                            width: 200,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                        {
+                            field: "interest_amount",
+                            title: "interest_amount",
+                            width: 200,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                        {
+                            field: "subvention_amount",
+                            title: "Subvention Amount",
+                            width: 200,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                        {
+                            field: "refund_amount",
+                            title: "Refund Amount",
+                            width: 200,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                        {
+                            field: "emi_start_month",
+                            title: "EMI Start Month",
+                            width: 200,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                        {
+                            field: "tp_beneficiary_flag",
+                            title: "Beneficiary Type",
+                            width: 200,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                        {
+                            field: "status_code",
+                            title: "status_code",
+                            hidden: true
+                        },
+                        {
+                            field: "status_desc",
+                            title: "Status",
+                            width: 200,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                        {
+                            field: "row_timestamp",
+                            title: "row_timestamp",
+                            hidden: true
+                        },
+                        {
+                            field: "mode_flag",
+                            title: "mode_flag",
+                            hidden: true
+                        }
+                    ]
+
+                });
+
+
+
+        $(".k-dropdown-operator").css('display', 'none');
+        $("#Farmerloan_Schema_grid .k-input").attr('disabled', 'false');
+    }
+    function statusFilter(element) {    // Dropdown list functionality
+        element.kendoDropDownList({
+            dataSource: status_Priority,
+            optionLabel: "--Select Value--"
+        });
+    }
+    function selectRow() {
+        var grid = $("#Farmerloan_Schema_grid").data("kendoGrid");
+        var selectedItem = grid.dataItem(grid.select());
+        setlocalStorage("ls_pageList", selectedItem);
+    }
+</script>
+<script>    
+    $("#btn_Edit").bind("click", function () {
+        getSerializedSelectedRows('edit');
+    });
+
+    $("#btn_View").bind("click", function () {
+        getSerializedSelectedRows('view');
+    });
+
+    $("#btn_new").bind("click", function () {
+        btn_onClick('Create');
+        location.href = "../FarmerLoan/FarmerLoanForm";
+    });
+    function getSerializedSelectedRows(mode) {
+        try {
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var items = getlocalStorage("ls_pageList");
+                if (items.length == 0) {
+                    kendoAlert("Please select records");
+                }
+
+                else {
+                    if (mode == "edit") {
+                        btn_onClick('Edit');
+                        location.href = "../FarmerLoan/FarmerLoanForm";
+                    }
+                    else if (mode == "view") {
+                        btn_onClick('View');
+                        location.href = "../FarmerLoan/FarmerLoanForm";
+                    }
+                }
+            }
+        }
+        catch (err) {
+
+        }
+
+    }
+</script>
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+        $(".adv_filter").attr("hdrtitle", "FPO Loan Scheme List");
+        $(".adv_filter").attr("fltid", "LRSSCHEME");
+        $(".Export").attr("hdrtitle", "FPO Loan Scheme List");
+        $(".Export").attr("SubTreeId", "FLSCH");
+        Screen_Id = "FLSCH";
+        permission = sec_Permission(Screen_Id);
+        page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+    });
+</script>
+<script>
+    function generate_farmer_loan_schema_list(res) {
+        if (res != null) {
+            var data = changedataType(res);
+            $("#gd_loanschema").empty();
+            $("#gd_loanschema").append("<div id='Farmerloan_Schema_grid'></div>");
+            Farmer_Loan_Schema_List(data);
+        }
+        else {
+            Farmer_Loan_Schema_List([]);
+        }
+    }
+
+    function listRefresh() {
+        setlocalStorage('flt_condition', "");
+        listpageloadfetch();
+    }
+</script>
+
+

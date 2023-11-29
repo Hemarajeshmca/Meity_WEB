@@ -1,0 +1,286 @@
+﻿@{
+    ViewBag.List = "CP CC User Map";
+    Layout = "~/Views/Shared/ListViewLayout.cshtml";
+}
+
+<form id="frm_cp_cc_map" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="gd_cpcc_list">
+                <div id="AggregatorUser_grid"></div>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="~/API_Scripts/CP_CC_retrieve_CP_CC_List_APIClient.js"></script>
+<script src="~/API_Scripts/CP_CC_retrieveCP_CC_APIClient.js"></script>
+<script src="~/API_Scripts/CP_CC_saveCP_CC_APIClient.js"></script>
+<script src="~/API_Scripts/retrieveCP_CC_List_Model.js"></script>
+<script src="~/API_Scripts/retrieveCP_CC_Model.js"></script>
+<script src="~/API_Scripts/saveCP_CC_Model.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/API_Scripts/CP_CC.js"></script>
+@*<script>
+        click_act_name = "AggregatorUseraccessForm";
+        click_ctrl_name = "AggregatorUsersaccess";
+        form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+    </script>*@
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+        master_MapUser();
+        $(".adv_filter").attr("hdrtitle", "CP CC Mapping List Record");
+        $(".adv_filter").attr("fltid", "CpccMap");
+        $(".Export").attr("hdrtitle", "CP CC User Map");
+        $(".Export").attr("SubTreeId", "ATTR_GRP_ACT");        
+        listpageloadfetch();
+        Screen_Id = "CPCCUSER";
+        permission = sec_Permission(Screen_Id);
+        page_load_list_permission(permission); 
+        setlocalStorage("ls_pageList", "");
+        //retrieve_Cpccactivity_list();
+
+    });
+</script>
+<script>
+    function listpageloadfetch() {
+        var formval = form_Serialize("frm_cp_cc_map");
+        var obj_val = JSON.parse(formval);
+        obj_val.FilterBy_Option = "ALL";
+        obj_val.FilterBy_Code = ".";
+        if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+            obj_val.FilterBy_FromValue = getlocalStorage('flt_condition');
+        }
+        else {
+            obj_val.FilterBy_FromValue = ".";
+        }
+        obj_val.FilterBy_ToValue = ".";
+        retrieve_Cpccactivity_list(obj_val);
+        //setlocalStorage('flt_condition', "");
+    }
+    function cpccmaplist(data) {
+        gridRowID = -1;
+        data = addRandomNum(data);
+        $("#AggregatorUser_grid").kendoGrid(
+         {
+             dataSource: {
+                 data: data,
+                 pageSize: 20,
+                 change: function (e) {
+                     setTimeout(function () {
+                         var gd = $("#AggregatorUser_grid").data("kendoGrid");
+                         filter_row(gd);
+                         $('.k-i-close').css('display', 'none');
+                         $('button.k-button-icon').css('display', 'none');
+                         $('#Attributelist_grid .k-input').prop('disabled', false);
+                         $('#Attributelist_grid .k-input').prop('readonly', true);
+                     }, 1);
+                 },
+             },
+             toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+             excelExport: function (e) {
+                 var gd = $("#AggregatorUser_grid").data("kendoGrid");
+                 var len = gd.dataSource._data.length;
+                 var chkall = $('#chkall').is(':checked');
+                 var chkfilter = $('#chkfilter').is(':checked');
+                 var chktemp = $('#chktemp').is(':checked');
+                 var twokendobox = true;
+                 gd.dataSource.pageSize(len);
+                 if (e.sender.dataSource._data.length == len) {
+                     twokendobox = false;
+                     exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                 }
+                 else {
+                     exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                 }
+                 gd.dataSource.pageSize('10');
+                 return false;
+             },
+             filterable: {
+                 enabled: true,
+                 delay: 1500,
+                 mode: "menu, row",
+                 height: 200,
+                 click: function (e) {
+                     var gd = $("#AggregatorUser_grid").data("kendoGrid");
+                     filter_row(gd);
+                 }
+             },
+             filterMenuInit: function (e) {
+                 var gd = $("#AggregatorUser_grid").data("kendoGrid");
+                 filter_row(gd);
+             },
+             change: selectRow,
+             height: 450,
+             sortable: true,
+             selectable: true,
+             selectable: "singl",   //  Grid Row Selection
+             pageable: {
+                 refresh: false,
+                 pageSizes: true,
+                 buttonCount: 5
+             },
+             navigatable: true,
+             groupable: false,
+
+             columns: [
+                     {
+                         field: "aggrloc_code",
+                         title: "Aggregator Loc.Code",
+                         hidden: true, width: 1
+                     },
+
+                      {
+                          field: "aggrloc_name",
+                          title: "Aggregator Loc.Name",
+                          hidden: true, width: 1
+                      },
+                      {
+                          field: "aggrloc_shortdesc",
+                          title: "Aggregator Loc.Desc",
+                          hidden: true, width: 1
+                      },
+                     {
+                         field: "aggrloc_type",
+                         title: "Aggregator Loc.Type",
+                         hidden: true, width: 1
+                     },
+                      {
+                          field: "aggrloc_type_desc",
+                          title: "Aggregator Type Desc",
+                          hidden: true, width: 1
+                      },
+                      {
+                          field: "aggrorgn_type",
+                          title: "Aggregator Org Type",
+                          filterable: {
+                              cell: {
+                                  operator: "contains",
+                                  inputWidth: 1500
+                              }
+                          }
+                      },
+                      {
+                          field: "aggrorgn_code",
+                          title: "Aggregator Org. Code",
+                          filterable: {
+                              cell: {
+                                  operator: "contains",
+                                  inputWidth: 1500
+                              }
+                          }
+                      },
+                      {
+                          field: "aggrorgn_type_desc",
+                          title: "Aggregator Org. Name",
+                          filterable: {
+                              cell: {
+                                  operator: "contains",
+                                  inputWidth: 1500
+                              }
+                          }
+                      },
+
+                     {
+                         field: "mode_flag",
+                         title: "Mode",
+                         hidden: true, width: 1,
+                     },
+                     {
+                         field: "row_timestamp",
+                         title: "TimeStamp",
+                         hidden: true, width: 1,
+                     },
+                      {
+                          field: "status_code",
+                          title: "Status code",
+                          hidden: true, width: 1,
+                      },
+
+                     {
+                         field: "status_desc",
+                         title: "Status",
+                         filterable: {
+                             cell: {
+                                 operator: "contains",
+                                 inputWidth: 1500
+                             }
+                         }
+                     },
+             ]
+         });
+        $(".k-dropdown-operator").css('display', 'none');
+        $("#AggregatorUser_grid .k-input").attr('disabled', 'false');
+    }
+
+    function selectRow() {
+        var grid = $("#AggregatorUser_grid").data("kendoGrid");
+        var selectedItem = grid.dataItem(grid.select());
+        setlocalStorage("ls_pageList", selectedItem);
+    }
+
+
+</script>
+
+
+<script>
+    $("#btn_Edit").bind("click", function () {
+        getSerializedSelectedRows('edit');
+    });
+
+    $("#btn_View").bind("click", function () {
+        getSerializedSelectedRows('view');
+
+    });
+
+    $("#btn_new").bind("click", function () {
+        btn_onClick('Create');
+        location.href = "../AggregatorUsersaccess/AggregatorUseraccessForm";
+    });
+   
+    function getSerializedSelectedRows(mode) {
+        try {
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var items = getlocalStorage("ls_pageList");
+                if (items.length == 0) {
+                    kendoAlert("Please select records");
+                }
+                else {
+                    if (mode == "edit") {
+                        btn_onClick('Edit');
+                        location.href = "../AggregatorUsersaccess/AggregatorUseraccessForm";
+                    }
+                    else if (mode == "view") {
+                        btn_onClick('View');
+                        location.href = "../AggregatorUsersaccess/AggregatorUseraccessForm";
+                    }
+                }
+            }
+        }
+        catch (err) {
+        }
+    }
+</script>
+<script>
+    function generate_Cpccactivity_list(res) {
+        if (res != null) {
+            var data = changedataType(res);
+            $("#gd_cpcc_list").empty();
+            $("#gd_cpcc_list").append("<div id='AggregatorUser_grid'></div>");
+            cpccmaplist(data);
+        }
+        else {
+            cpccmaplist([]);
+        }
+    }
+    function listRefresh() {
+        setlocalStorage('flt_condition', "");
+        listpageloadfetch();
+    }
+</script>
+
+
+
+
+

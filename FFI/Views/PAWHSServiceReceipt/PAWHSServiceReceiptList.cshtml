@@ -1,0 +1,417 @@
+﻿@{
+    ViewBag.List = "Service Receipting";
+    Layout = "~/Views/Shared/ListViewLayout.cshtml";
+}
+<div class="row">
+    <div class="col-xs-12">
+        <div id="gd_production">
+            <div id="service_recpt_list"></div>
+        </div>
+    </div>
+</div>
+
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/API_Scripts/PAWHS_getPaymentCollection_Model.js"></script>
+<script src="~/API_Scripts/PAWHS_savePaymentCollection_Model.js"></script>
+<script src="~/API_Scripts/PAWHSServiceReceipting.js"></script>
+<script src="~/API_Scripts/PAWHS_saveServiceReceipt_Model.js"></script>
+<script src="~/API_Scripts/PAWHS_getServiceReceipt_Model.js"></script>
+<script src="~/API_Scripts/PAWHS_getServiceReceiptList_Model.js"></script>
+<script src="~/API_Scripts/Service_Receipting_PAWHS_getServiceReceipt_APIClient.js"></script>
+<script src="~/API_Scripts/Service_Receipting_PAWHS_getServiceReceiptList_APIClient.js"></script>
+<script src="~/API_Scripts/Service_Receipting_PAWHS_saveServiceReceipt_APIClient.js"></script>
+<script src="~/API_Scripts/PAWHSWarehouseReceipting.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $(".adv_filter").attr("hdrtitle", "Service Receipt List");
+        $(".adv_filter").attr("fltid", "ServiceRecpt");
+        $(".Export").attr("hdrtitle", "Service Receipt List");
+        $(".Export").attr("SubTreeId", "Service Receipt");
+        list_grid_id = "SERVCRECEPT";
+        listpageloadfetch();
+        Screen_Id = "SERVCRECEPT";
+        permission = sec_Permission(Screen_Id);
+        page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+        filterhover();
+    });
+</script>
+
+<script>
+    function listpageloadfetch() {
+        try {
+            var formval = form_Serialize("ServiceMaster");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "All";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_FromValue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_FromValue = ".";
+            }
+            obj_val.FilterBy_ToValue = ".";
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Filter = obj_val;
+            var Context = data.context;
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, Filter: Context.Filter }),
+                url: "/PAWHSServiceReceipt/ServiceList",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    if (response.context != null) {
+                        generate_ServiceRecpt_list(response.context.List)
+                        //listgrid(response.context.List);
+                        //SetPager(response.context.Filter.out_record_count)
+                    }
+                    else {
+                        CustomerList([]);
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+            //retrieve_Service_list(data);
+            filterhover();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    var status_Priority = [];
+    function ServiceReceipt(data) {
+        try {
+            $("#service_recpt_list").kendoGrid({
+                excel: {
+                    fileName: "Service Receipt.xlsx",
+                    filterable: true,
+                    allPages: false
+                },
+                dataSource: {
+                    data: data,
+                    pageSize: 20,
+                    change: function (e) {
+                        setTimeout(function () {
+                            var gd = $("#service_recpt_list").data("kendoGrid");
+                            filter_row(gd);
+                            $('.k-i-close').css('display', 'none');
+                            $('button.k-button-icon').css('display', 'none');
+                            $('#service_recpt_list .k-input').prop('disabled', false);
+                            $('#service_recpt_list .k-input').prop('readonly', true);
+
+                        }, 1);
+                    },
+                },
+                toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                //excelExport: function (e) {
+                //    var gd = $("#service_recpt_list").data("kendoGrid");
+                //    var len = gd.dataSource._data.length;
+                //    var chkall = $('#chkall').is(':checked');
+                //    var chkfilter = $('#chkfilter').is(':checked');
+                //    var chktemp = $('#chktemp').is(':checked');
+                //    var twokendobox = true;
+                //    gd.dataSource.pageSize(len);
+                //    if (e.sender.dataSource._data.length == len) {
+                //        twokendobox = false;
+                //        exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                //    }
+                //    else {
+                //        exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                //    }
+                //    gd.dataSource.pageSize('10');
+                //    return false;
+                //},
+                excelExport: function (e) {
+                    debugger;
+                    var gd = $("#service_recpt_list").data("kendoGrid");
+                    var gd_fi = $("#service_recpt_list").data("kendoGrid").dataSource;
+
+                    var filters = gd_fi.filter();
+                    var allData = gd_fi.data();
+                    var query = new kendo.data.Query(allData);
+                    var data = query.filter(filters).data;
+                    var data_tt = gd.dataSource.data();
+                    //var data = gd.dataSource.data();
+                    //if (data.length > 0) {
+
+                    var sheet = e.workbook.sheets[0];
+                    var gridColumns = gd.columns;
+
+                    var columns = gridColumns.map(function (col) {
+                        var hidden_vl = col.hidden;
+                        if (typeof (hidden_vl) == "undefined") {
+                            return {
+                                value: col.title ? col.title : col.field,
+                                autoWidth: true,
+                                background: "#7a7a7a",
+                                color: "#fff"
+                            }
+                        };
+
+                    });
+                    var rows = [{ cells: columns, type: "header" }];
+                    for (var i = 0; i < data.length; i++) {
+                        var rowCells = [];
+                        for (var j = 0; j < gridColumns.length; j++) {
+
+                            var fieldName = gd.columns[j].hidden;
+                            if (typeof (fieldName) === "undefined") {
+                                var cellValue = data[i][gridColumns[j].field];
+                                rowCells.push({ value: cellValue });
+                            }
+                        }
+                        rows.push({ cells: rowCells, type: "data" });
+                    }
+                    sheet.rows = rows;
+                    return false;
+                },
+                filterable: {
+                    enabled: true,
+                    delay: 1500,
+                    mode: "menu, row",
+                    height: 200,
+                    click: function (e) {
+                        var gd = $("#service_recpt_list").data("kendoGrid");
+                        filter_row(gd);
+                    }
+                },
+                filterMenuInit: function (e) {
+                    var gd = $("#service_recpt_list").data("kendoGrid");
+                    filter_row(gd);
+                },
+                change: selectRow,
+                height: 450,
+                sortable: true,
+                selectable: true,
+                selectable: "singl",   //  Grid Row Selection
+                pageable: {
+                    refresh: false,
+                    pageSizes: true,
+                    buttonCount: 5
+                },
+                navigatable: true,
+                groupable: false,
+
+                columns: [
+
+                        {
+                        field: "Out_grn",
+                            title: "Service Receipt No",
+                            width: 100,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            },
+                        },
+                        {
+                            field: "Out_farmer_code",
+                            title: "Farmer Code",
+                            width: 100,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            },
+                        },
+                        {
+                            field: "Out_farmer_name",
+                            title: "Farmer Name",
+                            width: 100,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            },
+                        },
+                        {
+                            field: "Out_pickup_request_id",
+                            title: "Request ID",
+                            width: 140,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            },
+                        },
+                        {
+                            field: "Out_pickup_date",
+                            title: "Service Receipt Date",
+                            width: 100,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            },
+                        },
+
+                        {
+                            field: "Out_procurement",
+                            title: "Procurement/Service",
+                            width: 160,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            },
+                        },
+
+                        {
+                            field: "Out_receipt_rowid",
+                            title: "Service Receipt Rowid",
+                            width: 100,
+                            hidden: true,
+                        },
+                        {
+                            field: "Out_status_desc",
+                            title: "Status",
+                            width: 100,
+                            //hidden: true,
+                        },
+                        {
+                            field: "Out_row_timestamp",
+                            title: "Row Timestamp",
+                            width: 100,
+                            hidden: true,
+                        },
+                         {
+                             field: "Out_pickup_slot",
+                             title: "Pick-up Slot",
+                             hidden: true,
+                             width: 100,
+                             filterable: {
+                                 cell: {
+                                     operator: "contains",
+                                     inputWidth: 1500
+                                 }
+                             },
+                         },
+                        {
+                            field: "Out_status_code",
+                            title: "Status Code",
+                            hidden: true,
+                            width: 100,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            },
+                        },
+                ],
+            });
+            $(".k-dropdown-operator").css('display', 'none');
+            $("#service_recpt_list .k-input").attr('disabled', 'false');
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function statusFilter(element) {    // Dropdown list functionality
+        element.kendoDropDownList({
+            dataSource: status_Priority,
+            optionLabel: "--Select Value--"
+        });
+    }
+
+    function selectRow() {
+        try {
+            var grid = $("#service_recpt_list").data("kendoGrid");
+            var selectedItem = grid.dataItem(grid.select());
+            setlocalStorage("ls_pageList", selectedItem);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<script>
+    $("#btn_Edit").bind("click", function () {
+        btn_onClick('Edit');
+        getSerializedSelectedRows('edit');
+    });
+
+    $("#btn_View").bind("click", function () {
+        btn_onClick('View');
+        getSerializedSelectedRows('View');
+
+    });
+
+    $("#btn_new").bind("click", function () {
+        btn_onClick('Create');
+        location.href = "../PAWHSServiceReceipt/ServiceReceiptForm";
+    });
+
+    function getSerializedSelectedRows(mode) {
+        try {
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var items = getlocalStorage("ls_pageList");
+                if (items.length == 0) {
+                    kendoAlert("Please select records");
+                }
+
+                else {
+                    if (mode == "edit") {
+                        btn_onClick('Edit');
+                        location.href = "../PAWHSServiceReceipt/ServiceReceiptForm";
+                    }
+                    else if (mode == "View") {
+                        btn_onClick('View');
+                        location.href = "../PAWHSServiceReceipt/ServiceReceiptForm";
+                    }
+                }
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<script>
+    function generate_ServiceRecpt_list(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                $("#service_recpt_list").empty();
+                $("#service_recpt_list").append("<div id='service_recpt_list'></div>");
+                ServiceReceipt(data);
+            }
+            else {
+                ServiceReceipt([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function listRefresh() {
+        try {
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>

@@ -1,0 +1,1002 @@
+﻿
+@{
+    ViewBag.Form = "Batch Creation";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+
+<form id="NewBatchCreation_form" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:20px;padding-bottom:20px">
+            <div class="row" style="padding-bottom:1px">
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label for="txt_batchno" class=" col-sm-5 control-label">Batch No.</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_BatchNo" name="in_batch_no" class="form-control" maxlength="50" disabled>
+                        </div>
+                    </div>
+                </div>
+
+                @*<div class=" col-sm-2">
+                        <input type="checkbox" id="selectall">  Select all
+                    </div>*@
+                <div class="col-sm-2">
+                    <div class="form-group" style="display:none;">
+                        <label for="txtMode" class="col-sm-5 control-label">Mode</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtMode" name="in_mode_flag" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="row">
+                <section class="col-md-12">
+                    <div id="tab_list" class="col-md-12">
+                        <ul class="nav nav-tabs">
+                            <li>
+                                <a href="#Transport" role="tab" onclick="Transporttab()" data-toggle="tab">
+                                    Transport
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#Batch" id="data1" role="tab" onclick="Batchtab()" data-toggle="tab">
+                                    Batch
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#OtherDtls" id="data1" role="tab" onclick="Othertab()" data-toggle="tab">
+                                    Other Details
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane fade active in" id="Transport">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div id="grid_Transport">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade active in" id="Batch">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div id="grid_Batch">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade active in" id="OtherDtls">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div id="grid_Other">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="txtagg_code" name="Out_agg_code">
+</form>
+<script>
+    click_act_name = "BatchCreationList";
+    click_ctrl_name = "PAWHSNewBatchCreation";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/CommonScripts/common.js"></script>
+<script src="~/CommonScripts/tamil.js"></script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+<script>
+    var ViewBatchTab = false;
+    $(document).ready(function () {
+        kendodate_format();
+        $("#bottom_menus").hide();
+        $("#hide_div").hide();
+        $("#divCreate #review").hide();
+
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#NewBatchCreation_form");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        Screen_Id = "PWNEWBATCHCRT";
+        permission = sec_Permission(Screen_Id);
+
+        New_grid_Batch_details([]);
+        New_grid_Transport_details([]);
+        New_grid_Other_details([]);
+
+        if (getlocalStorage('btn_clk_val') == "Create") {
+            debugger;
+            $("#DocStat").val("New");
+            load_master_code();
+            Transporttab();
+        }
+        var org_id = getlocalStorage('org_id');
+        var org_type = getlocalStorage('org_type');
+        var orgtname = getlocalStorage('orgtname');
+        var org = getlocalStorage('org');
+
+        if (getlocalStorage('btn_clk_val') == "View") {
+            debugger;
+            $("#bottom_menus").hide();
+            $("#hide_div").hide();
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("NewBatchCreation_form");
+                var obj_val = JSON.parse(formval);
+                obj_val.In_batch_no = data.Out_batch_no;
+
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({
+                        userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId,
+                        In_batch_no: Context.Header.In_batch_no
+                    }),
+                    url: "/PAWHSNewBatchCreation/BatchCreationfetch",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        debugger;
+                        if (response.context != null) {
+                            generate_batchcreation_header(response.context);
+                            generate_batchcreation_Transport(response.context.Header);
+                            generate_BatchCreation_BatchList(response.context.BatchList);
+                            generate_batchcreation_OtherList(response.context.OtherList);
+                            Transporttab();
+                            ViewBatchTab = true;
+
+                        }
+                        else {
+                            console.log(response);
+                        }
+                    },
+                    error: function (er) {
+                        alert(er);
+                        console.log(er);
+                    }
+
+                });
+            }
+            viewdisable();
+        }
+
+    });
+
+    function Batchtab() {
+        debugger;
+        try {
+            $("div#Transport").hide();
+            $("div#OtherDtls").hide();
+            $("div#Batch").toggleClass('tab-pane fade active in');
+            $("div#Batch").show();
+            if (ViewBatchTab == false) {
+                var in_selected_vehicle_no = "";
+                var grid_val = JSON.stringify($("#grid_Transport").data().kendoGrid._data);
+                var Bind = {};
+                Bind = grid_val;
+                var result = JSON.parse(Bind);
+
+                for (var i = 0; i < result.length; i++) {
+                    var itemcompare = result[i];
+                    var actvehicleno = itemcompare.In_vehicle_no;
+
+
+                    if (in_selected_vehicle_no == '') {
+                        in_selected_vehicle_no = "'" + actvehicleno + "'";
+                    }
+                    else {
+                        in_selected_vehicle_no += ',' + "'" + actvehicleno + "'";
+                    }
+                }
+
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("NewBatchCreation_form");
+                var obj_val = JSON.parse(formval);
+
+                obj_val.In_vehicle_no = in_selected_vehicle_no;
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                var Context = data.context;
+                $.ajax({
+                    type: "Post",
+                    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, In_vehicle_no: Context.Header.In_vehicle_no }),
+                    url: "/PAWHSNewBatchCreation/BatchCreationLotNo_List",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+
+                        if (response.Context.List != null) {
+                            generate_BatchCreation_BatchList(response.Context.List);
+                            $('#selectall').prop('checked', true, onchange);
+                            $('.checkbox').prop('checked', true);
+                        }
+                        else {
+                            generate_BatchCreation_BatchList([]);
+                        }
+
+                    },
+                    error: function (er) {
+                        console.log(er);
+                    }
+
+                });
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function Transporttab() {
+        try {
+            $("div#Transport").toggleClass('tab-pane fade active in');
+            $("div#Transport").show();
+            $("div#Batch").hide();
+            $("div#OtherDtls").hide();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function Othertab() {
+        try {
+            $("div#OtherDtls").toggleClass('tab-pane fade active in');
+            $("div#OtherDtls").show();
+            $("div#Batch").hide();
+            $("div#Transport").hide();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function load_master_code() {
+        try {
+            debugger;
+            var data = {};
+            var context = WebAPIProxy.getContext();
+            data.userId = context.userId
+            data.orgnId = context.orgnId
+            data.locnId = context.locnId
+            data.localeId = context.localeId
+            data.screen_Id = "PWNEWBATCHCRT";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<script>
+
+    function New_grid_Transport_details(data) {
+        try {
+            $("#grid_Transport").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                In_batch_rowid: { type: "int", defaultValue: 0 },
+                                In_vehicle_no: { type: "string" },
+                                In_Total_No_of_lots: { type: "int", defaultValue: 0, editable: false },
+                                In_No_of_batch_creation: { type: "int", defaultValue: 0, editable: false },
+                                In_No_of_Pending: { type: "int", defaultValue: 0, editable: false },
+                                in_mode_flag: { type: "string", defaultValue: "I" }
+
+                            }
+                        }
+                    }
+                },
+                toolbar: "<a  class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 280,
+                groupable: false,
+
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [{
+
+                    command: [
+                        {
+                            name: "Delete",
+                            id: "Delete",
+                            imageClass: "fa fa-close",
+                            click: function (e) {
+                                var grid = $("#grid_Transport").data("kendoGrid");
+                                var dataItem = $("#grid_Transport").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                                DeleteWindowEvent(e, dataItem, grid);
+                                e.stopImmediatePropagation()
+                            }
+                        },
+                    ],
+                    title: "Action",
+                    width: "25px",
+
+                },
+                {
+                    field: "In_batch_rowid",
+                    title: "Batch Gid",
+                    hidden: true
+                },
+                {
+                    field: "In_vehicle_no",
+                    title: "Vehicle No",
+                    editor: Getproduct,
+                    //editor: function (container, options) {
+                    //    combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "In_maize_code", "Itm_mst")
+                    //},
+                    editable: true,
+                    width: 60,
+
+                },
+                {
+                    field: "In_Total_No_of_lots",
+                    title: "Total No of Lots",
+                    width: 50,
+                    attributes: { style: "text-align:right;", "class": "customClass" },
+                    editor: function (container, options) {
+                        item_rate(container, options.field, '9', '2');
+                    },
+
+                },
+                {
+                    field: "In_No_of_batch_creation",
+                    title: "No of Batch Creation",
+                    width: 50,
+                    attributes: { style: "text-align:right;", "class": "customClass" },
+                    editor: function (container, options) {
+                        item_rate(container, options.field, '9', '2');
+                    },
+
+                },
+
+                {
+                    field: "In_No_of_Pending",
+                    title: "No of Pending Lots",
+                    width: 50,
+                    attributes: { style: "text-align:right;", "class": "customClass" },
+                    editor: function (container, options) {
+                        item_rate(container, options.field, '9', '2');
+                    },
+
+                },
+                {
+                    field: "in_mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }
+
+
+                ],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+    function New_grid_Batch_details(data) {
+        try {
+            $("#grid_Batch").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                In_act_row_id: { type: "int" },
+                                In_orgn_code: { type: "string", editable: false },
+                                In_agg_code: { type: "string", editable: false },
+                                In_lotno: { type: "string", editable: false },
+                                In_vehicle_no: { type: "string", editable: false },
+                                In_farmer_code: { type: "string", editable: false },
+                                In_farmer_name: { type: "string", editable: false },
+                                In_member_type: { type: "string", editable: false },
+                                In_item_code: { type: "string", editable: false },
+                                In_item_name: { type: "string", editable: false },
+                                In_actual_qty: { type: "double", editable: false },
+                                In_actual_price: { type: "double", editable: false },
+                                In_actual_value: { type: "double", editable: false },
+                                In_advance_amt: { type: "double", editable: false },
+                                In_no_of_bags: { type: "int", editable: false },
+
+                            }
+                        }
+                    }
+                },
+                height: 250,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_Batch').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                change: function (e) {
+                    $('tr').find('[type=checkbox]').prop('checked', false);
+                    $('tr.k-state-selected').find('[type=checkbox]').prop('checked', true);
+                },
+                columns: [
+                    {
+                        title: "Select All", width: 70,
+                        headerTemplate: "<input type='checkbox'  id='selectall' class='k-checkbox header-checkbox' ><label class='k-checkbox-label' for='selectall'> Select All</label>",
+                        template: "<input type='checkbox' name='Id' class='checkbox' />",
+
+                    },
+                    {
+                        field: "In_act_row_id",
+                        title: "Act Rowid",
+                        hidden: true
+                    },
+                    {
+                        field: "In_orgn_code",
+                        title: "Orgn Code",
+                        hidden: true
+                    },
+                    {
+                        field: "In_agg_code",
+                        title: "Agg Code",
+                        hidden: true
+                    },
+                    {
+                        field: "In_lotno",
+                        title: "Lot No",
+                        width: 90
+                    },
+                    {
+                        field: "In_vehicle_no",
+                        title: "Vehicle No",
+                        width: 60
+                    },
+                    {
+                        field: "In_farmer_code",
+                        title: "Farmer Code",
+                         width: 120
+                    },
+
+                    {
+                        field: "In_farmer_name",
+                        title: "Farmer Name",
+                        width: 80
+
+                    },
+                    {
+                        field: "In_member_type",
+                        title: "Member Type",
+                         width: 100
+
+                    },
+                    {
+                        field: "In_item_code",
+                        title: "Item Code",
+                        width: 80
+                    },
+                    {
+                        field: "In_item_name",
+                        title: "Item Name",
+                        width: 100
+                    },
+
+                    {
+                        field: "In_actual_qty",
+                        title: "Actual Qty",
+                        width: 60
+                    },
+                    {
+                        field: "In_actual_price",
+                        title: "Actual Price",
+                        width: 70
+                    },
+                    {
+                        field: "In_actual_value",
+                        title: "Actual Value",
+                        width: 70
+                    },
+                    {
+                        field: "In_advance_amt",
+                        title: "Advance Amount",
+                        hidden: true
+                    },
+                    {
+                        field: "In_no_of_bags",
+                        title: "No Of Bags",
+                        width: 75
+                    }
+                ],
+               
+            });
+
+          
+            $("#selectall").click(function (ev) {
+                debugger;
+                var checked = ev.target.checked;
+                //alert(checked);
+                if (checked) {
+                    $('.checkbox').prop('checked', true);
+                } else {
+                    $('.checkbox').prop('checked', false);
+                }
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function New_grid_Other_details(data) {
+        try {
+            $("#grid_Other").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+
+                                in_cost_type: { type: "string", required: true },
+                                In_cost_name: {
+                                    validation: {
+                                        dropdownlistValidation: function (input) {
+                                            if (input.is("[name='In_cost_name']")) {
+                                                var isValid = true;
+                                                input.attr("data-dropdownlistValidation-msg", "Cost Type cannot be blank"); if (input.val().length <= 0) {
+                                                    isValid = false;
+                                                }
+                                                return isValid;
+                                            }
+                                            return true;
+                                        }
+                                    }
+                                },
+
+                                In_cost_value: { type: "int", defaultValue: 0 },
+                                in_mode_flag: { type: "string", defaultValue: "I" }
+
+
+                            }
+                        }
+                    }
+                },
+                toolbar: "<a  class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 280,
+                groupable: false,
+
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [{
+
+                    command: [
+                        {
+                            name: "Delete",
+                            id: "Delete",
+                            imageClass: "fa fa-close",
+                            click: function (e) {
+                                var grid = $("#grid_Other").data("kendoGrid");
+                                var dataItem = $("#grid_Other").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                                DeleteWindowEvent(e, dataItem, grid);
+                                e.stopImmediatePropagation()
+                            }
+                        },
+                    ],
+                    title: "Action",
+                    width: "25px",
+
+                },
+                {
+                    field: "in_cost_type",
+                    title: "cost_type",
+                    hidden: true,
+
+                },
+                {
+                    field: "In_cost_name",
+                    title: "Cost Name",
+                    editor: function (container, options) {
+                        combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "in_cost_type", "grid_Other")
+                    },
+                    width: 100,
+
+                },
+                {
+                    field: "In_cost_value",
+                    title: "Value",
+                    width: 50,
+                    attributes: { style: "text-align:right;", "class": "customClass" },
+                    editor: function (container, options) {
+                        item_rate(container, options.field, '9', '2');
+                    },
+
+                },
+                {
+                    field: "in_mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }
+                ],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+
+    load_master_code();
+    In_cost_name_list = grid_comboScreen_mastercodes("QCD_OTHERCOST_TYPE");
+
+
+    function Getproduct(container, options) {
+        debugger;
+        var gridDataArray = $('#grid_Transport').data('kendoGrid')._data;
+        $('<div class="input-group input-group-sm"><input type="text" readonly name="" maxlength="10" style="width:100px;color:black"  onkeypress="return speical_char(event)" data-bind="value:vehicle_no"/><span class="input-group-btn" style="padding-right: 90px;"><a class="HelpWindow fa fa-search fa-lg" data-toggle="modal" href="/HelpFilter/HelpFilter" hdrtitle="Vehicle List" searchid="B01" data-target="#HelpModal" onclick=transfer(this,"grid","grid_Transport","New_grid_Transport_details") title="Search" style="font-size: 15px; padding-left: 10px;"></a> </span> </div>').appendTo(container);
+    }
+
+
+    function grid_control() {
+        debugger;
+        try {
+            var control_Name = [
+
+                { "dataCol": "vehicle_no", "grid_row_col": "In_vehicle_no" },
+                { "dataCol": "Total_No_of_lots", "grid_row_col": "In_Total_No_of_lots" },
+                { "dataCol": "No_of_batch_creation", "grid_row_col": "In_No_of_batch_creation" },
+                { "dataCol": "No_of_Pending", "grid_row_col": "In_No_of_Pending" },
+                { "dataCol": "", "grid_row_col": "in_cost_type" },
+                { "dataCol": "", "grid_row_col": "In_cost_name" },
+                { "dataCol": "", "grid_row_col": "In_cost_value" },
+                { "dataCol": "", "grid_row_col": "uid" }
+
+            ];
+            return control_Name
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function trans_input_data() {
+        var trans_coll = [
+            { "trasfer": "NO", "dataCol": "", "controlId": "", "grid_id": "", "grid_row_col": "" },
+            { "trasfer": "Yes", "dataCol": "in_bank_code", "controlId": "", "grid_id": "grid_Bank", "grid_row_col": "" },
+            { "trasfer": "Yes", "dataCol": "orgn_state_desc", "controlId": "", "grid_id": "grid_Address", "grid_row_col": "" }
+        ];
+        return trans_coll;
+    }
+
+    function save() {
+        debugger;
+
+        try {
+            if ($("#txtMode").val() == "") {
+                $("#txtMode").val('I');
+            }
+
+            var formval = form_Serialize("NewBatchCreation_form");
+            var obj_val = JSON.parse(formval);
+
+            obj_val.in_mode_flag = "I";
+
+            //var costingvalidation = false;
+            //if ($("#txt_Packing_cost").val() > 0 || $("#txt_Tran_cost").val() > 0 || $("#txt_UnPack_cost").val() > 0 || $("#txt_Locpac_cost").val() > 0 || $("#txt_Loctran_cost").val() > 0) {
+            //    costingvalidation = true;
+            //}
+
+            //if (costingvalidation == false) {
+            //    kendoAlert("Atleast one cost value need to be entred.");
+            //    return false;
+            //}
+
+            var grid = $("#grid_Batch").data("kendoGrid");
+            var selected = [];
+            grid.tbody.find("input:checked").closest("tr").each(function (index) {
+                selected.push(grid.dataItem(this));
+            });
+
+            var result_batch = selected;
+            if (result_batch.length == 0) {
+                kendoAlert("Atleast one record need to be selected.");
+                return false;
+            }
+
+            var grid_val_tran = JSON.stringify($("#grid_Transport").data().kendoGrid._data);
+            var Bind_tran = {};
+            Bind_tran = grid_val_tran;
+            var result = JSON.parse(Bind_tran);
+            $.each(result, function (index, value) {
+                result[index].in_mode_flag = "I";
+            });
+            var obj_grid_tran = result;
+            if (obj_grid_tran.length > 0) {
+                for (i = 0; i < obj_grid_tran.length; i++) {
+                    if (obj_grid_tran[i].In_vehicle_no == "") {
+                        kendoAlert("Kindly fill the Vehicle No field.!!");
+                        return false;
+                    }
+                }
+            }
+
+            for (var i = 0; i < obj_grid_tran.length; i++) {
+                var currentDataItem = obj_grid_tran[i];
+                var qty1 = currentDataItem.In_vehicle_no.trim().toUpperCase();
+
+                for (var j = i + 1; j < obj_grid_tran.length; j++) {
+                    var nextDataItem = obj_grid_tran[j];
+                    var qty2 = nextDataItem.In_vehicle_no.trim().toUpperCase();
+
+                    if (qty1 == qty2) {
+                        kendoAlert("This " + qty1 + "Vehicle no is already exists.");
+                        return false;
+
+                    }
+                }
+            }
+
+            var total_actualvalue = 0.00;
+            var in_selected_lot_id = "";
+            var grid_val = JSON.stringify($("#grid_Other").data().kendoGrid._data);
+            var Bind = {};
+            Bind = grid_val;
+            var result = JSON.parse(Bind);
+            var obj_grid_val = result;
+            if (obj_grid_val.length > 0) {
+                for (i = 0; i < obj_grid_val.length; i++) {
+                    if (obj_grid_val[i].In_cost_name == "") {
+                        kendoAlert("Kindly fill the Cost Type field.!!");
+                        return false;
+                    }
+                }
+            }
+            for (var i = 0; i < obj_grid_val.length; i++) {
+                var currentDataItem = obj_grid_val[i];
+                var qty1 = currentDataItem.In_cost_name.trim().toUpperCase();
+
+                for (var j = i + 1; j < obj_grid_val.length; j++) {
+                    var nextDataItem = obj_grid_val[j];
+                    var qty2 = nextDataItem.In_cost_name.trim().toUpperCase();
+
+                    if (qty1 == qty2) {
+                        kendoAlert("This " + qty1 + "Cost type is already exists.");
+                        return false;
+
+                    }
+                }
+            }
+            var result = JSON.parse(Bind);
+
+            var loctran_cost = 0.00;
+            var locpack_cost = 0.00;
+            var Unpack_cost = 0.00;
+            var tran_cost = 0.00;
+            var packing_cost = 0.00;
+
+            for (var i = 0; i < result.length; i++) {
+                var itemcompare = result[i];
+                var CostType = itemcompare.in_cost_type;
+                if (CostType == "QCD_LOCALTRANSPORTCOST") {
+
+                    loctran_cost = parseFloat(itemcompare.In_cost_value).toFixed(2);
+                }
+                else if (CostType == "QCD_LOCALPACKINGCOST") {
+                    locpack_cost = parseFloat(itemcompare.In_cost_value).toFixed(2);
+                }
+                else if (CostType == "QCD_UNPACKINGCOST") {
+                    Unpack_cost = parseFloat(itemcompare.In_cost_value).toFixed(2);
+                }
+                else if (CostType == "QCD_TRANSPORTCOST") {
+                    tran_cost = parseFloat(itemcompare.In_cost_value).toFixed(2);
+                }
+                else if (CostType == "QCD_PACKINGCOST") {
+                    packing_cost = parseFloat(itemcompare.In_cost_value).toFixed(2);
+                }
+
+
+            }
+
+
+            var toal_costingvalue = (parseFloat(packing_cost) + parseFloat(tran_cost) + parseFloat(Unpack_cost) + parseFloat(locpack_cost) + parseFloat(loctran_cost));
+
+            for (var i = 0; i < result_batch.length; i++) {
+                var itemcompare = result_batch[i];
+                var actGid = itemcompare.In_act_row_id;
+                var actual_value = parseFloat(itemcompare.In_actual_value).toFixed(2);
+                total_actualvalue = (parseFloat(total_actualvalue) + parseFloat(actual_value));
+                if (in_selected_lot_id == '') {
+                    in_selected_lot_id = actGid;
+                }
+                else {
+                    in_selected_lot_id += ',' + actGid;
+                }
+            }
+            if (toal_costingvalue > total_actualvalue) {
+                kendoAlert("Costing Value greater than selected Lot's.");
+                return false;
+            }
+            obj_val.in_selected_lot_id = in_selected_lot_id;
+
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_grid_tran;
+            data.context.OtherDtl = obj_grid_val;
+            data.context.in_selected_lot_id = obj_val.in_selected_lot_id;
+            var context = data.context;
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ userId: context.userId, orgnId: context.orgnId, locnId: context.locnId, localeId: context.localeId, in_selected_lot_id: context.in_selected_lot_id, Header: context.Header, OtherDtl: context.OtherDtl }),
+                url: "/PAWHSNewBatchCreation/BatchCreationSave",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+
+                    var Res = response;
+                    if (Res.ApplicationException.errorDescription != null || Res.ApplicationException.errorDescription != '') {
+                        var mode = $("#txtMode").val();
+                        if (mode == "I") {
+                            kendoAlert("Batch Creation Save Successfully");
+                            get_batch_details(Res.context);
+                            ViewBatchTab = true;
+                        }
+                        else if (mode == "D") {
+                            kendoAlert("Batch Creation inactivate successfully");
+                            get_batch_details(Res.context);
+
+                        }
+                        else {
+                            kendoAlert("Batch Creation Updated successfully");
+
+                            get_batch_details(Res.context);
+                        }
+                    }
+                    else {
+                        kendoAlert(Res.ApplicationException.errorDescription);
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function get_batch_details(res) {
+        debugger;
+        try {
+            $("#bottom_menus").hide();
+            $("#hide_div").hide();
+            $("#btnSave").hide();
+            var formval = form_Serialize("NewBatchCreation_form");
+            var obj_val = JSON.parse(formval);
+            obj_val.In_batch_no = res.Out_batch_no;
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.header = obj_val;
+            var Context = data.context;
+
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, In_batch_no: Context.header.In_batch_no }),
+                url: "/PAWHSNewBatchCreation/BatchCreationfetch",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    if (response.context != null) {
+                        generate_batchcreation_header(response.context);
+                        generate_batchcreation_Transport(response.context.Header);
+                        generate_BatchCreation_BatchList(response.context.BatchList);
+                        generate_batchcreation_OtherList(response.context.OtherList);
+                        Transporttab();
+                    }
+                    else {
+                        console.log("Issue where Dropped");
+                    }
+                },
+                error: function (er) {
+                    console.log(er);
+                }
+
+            });
+            $("#txtMode").val("U");
+            viewdisable();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function generate_batchcreation_header(res) {
+        debugger;
+        try {
+            if (res != null) {
+                $("#txtMode").val("U");
+                $("#DocStat").val("Active");
+                $("#txt_BatchNo").val(res.IOU_batch_no);
+
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function viewdisable() {
+        $("#txt_BatchNo").attr("disabled", true);
+        $("#txt_Packing_cost").attr("disabled", true);
+        $("#txt_Tran_cost").attr("disabled", true);
+        $("#txt_UnPack_cost").attr("disabled", true);
+        $("#txt_Locpac_cost").attr("disabled", true);
+        $("#txt_Loctran_cost").attr("disabled", true);
+        $("#txtMode").attr("disabled", true);
+
+    }
+
+    function generate_BatchCreation_BatchList(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                New_grid_Batch_details(data);
+            }
+            else {
+
+                New_grid_Batch_details([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_batchcreation_Transport(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                New_grid_Transport_details(data);
+            }
+            else {
+                New_grid_Transport_details([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_batchcreation_OtherList(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                New_grid_Other_details(data);
+            }
+            else {
+                New_grid_Other_details([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+

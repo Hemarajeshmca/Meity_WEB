@@ -1,0 +1,476 @@
+﻿@{
+    ViewBag.Form = "FL-Repayment & Maintenance";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+<form id="Repayment_form" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-top:10px; padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtlan_no" class="col-sm-5 control-label ">Loan Account No.</label>
+                        <div class="col-sm-5" style="width:200px;">
+                            <input type="text" id="txtlan_no" name="loan_no" class="form-control" maxlength="50" readonly>
+                            <input id="txtaggrorgn_code" name="fpoorgn_code" type="hidden" />
+                        </div>
+                        <div id="pay_help">
+                            <a class="HelpWindow fa fa-search fa-lg" role="button" id="pay_help1" data-toggle="modal" href="/HelpFilter/HelpFilter" hdrtitle="Loan Account" searchid="S12" data-target="#HelpModal" onclick=transfer(this,"form","","form_control"); title="Search" style="font-size: 19px; margin-left: 0px; margin-top: 10px;"></a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtmember_id" class="col-sm-5 control-label ">Member ID</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txtmember_id" name="fpomember_code" class="form-control" maxlength="100" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtfarmer_id" class=" col-sm-5 control-label">Farmer ID</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txtfarmer_id" name="farmer_code" class="form-control" maxlength="50" disabled>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtfarmer_name" class="col-sm-5 control-label ">Farmer Name</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txtfarmer_name" name="farmer_name" class="form-control" maxlength="50" disabled>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtfarmer_surname" class="col-sm-5 control-label ">Farmer Surname</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txtfarmer_surname" name="sur_name" class="form-control" maxlength="50" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="cmbfl_scheme" class="col-sm-5 control-label ">FL Scheme</label>
+                        <div class="col-sm-6">
+                            <input id="cmbfl_scheme" data-role="filtercombo" name="loanscheme_code" style="width:100%" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtinterest_rate" class=" col-sm-5 control-label">Interest Rate</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txtinterest_rate" name="interest_rate" class="form-control" maxlength="50" disabled>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txttenor" class=" col-sm-5 control-label">Tenure</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txttenor" name="Tenure" class="form-control" maxlength="50" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="loanamt_applied" class="col-sm-5 control-label ">Loan Amount</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="loanamt_applied" name="loan_amount" class="form-control" maxlength="50" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtprinc_repaid" class=" col-sm-5 control-label">Princ. Paid</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txtprinc_repaid" class="form-control" name="principle_paid" maxlength="50" disabled>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" style="padding-bottom:15px">
+
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtprinc_out" class=" col-sm-5 control-label">Princ. Outstanding</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txtprinc_out" name="principle_due" class="form-control" maxlength="50" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txttota_int" class="col-sm-5 control-label ">Interest Paid</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txttota_int" name="interest_paid" class="form-control" maxlength="50" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtno_instal" class=" col-sm-5 control-label">Instalment Paid</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txtno_instal" name="instalment_paid" class="form-control" maxlength="50" disabled>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="cmbstatus_lan" class="col-sm-5 control-label ">LAN Status</label>
+                        <div class="col-sm-6">
+                            <input id="cmbstatus_lan" data-role="filtercombo" name="loan_status" style="width:100%" disabled>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="txtMode" class="col-sm-5 control-label">Mode</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtMode" name="mode_flag" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="row_timestamp" class="col-sm-5 control-label">Timestamp:</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txt_row_timestamp" name="row_timestamp" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="loanrepayment_rowid" class="col-sm-5 control-label">loanrepayment_rowid:</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="loanrepayment_rowid" name="loanrepayment_rowid" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+
+                </div>
+                <div class="col-sm-3">
+                    @*<a data-toggle="modal" href="~/RepaymentSchedule/RepaymentSchedule" data-target="#repaymentModal">RepaymentSchedule</a>*@
+                    <a data-toggle="modal" role="button" href="~/RepaymentSchedule/RepaymentSchedule" data-target="#repaymentModal">RepaymentSchedule</a>
+                </div>
+                <div class="col-sm-3">
+                    <a data-toggle="modal" href="~/RepaymentModeMaintenance/RepaymentModeMaintenance" data-target="#repaymentMainModal"> Maintenance Paymode</a>
+                </div>
+            </div>
+            <div class="row">
+                <section class="col-md-12">
+                    <div id="tab_list" class="col-md-12">
+                        <ul class="nav nav-tabs">
+                            <li class="active">
+                                <a href="#RepaymentDetails" role="tab" data-toggle="tab">
+                                    Repayment Details
+                                </a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div class="tab-pane fade active in" id="RepaymentDetails">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div id="grid_repay_maintain"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script language="javascript" type="text/javascript">
+    function popitup(url) {
+        newwindow = window.open(url, 'name', 'height=650,width=850');
+        if (window.focus) { newwindow.focus() }
+        return false;
+
+    }
+</script>
+<script src="~/API_Scripts/FLRepaymentMaintenance_retrieveFLRepayment_Maintenance_APIClient.js"></script>
+<script src="~/API_Scripts/FLRepaymentMaintenance_retrieveFLRepayment_Mode_APIClient.js"></script>
+<script src="~/API_Scripts/FLRepaymentMaintenance_retrieveFLRepayment_Schedule_APIClient.js"></script>
+<script src="~/API_Scripts/FLRepaymentMaintenance_saveFLRepayment_Maintenance_APIClient.js"></script>
+<script src="~/API_Scripts/FLRepaymentMaintenance_saveFLRepayment_Mode_APIClient.js"></script>
+<script src="~/API_Scripts/retrieveFLRepayment_Maintenance_Model.js"></script>
+<script src="~/API_Scripts/retrieveFLRepayment_Mode_Model.js"></script>
+<script src="~/API_Scripts/retrieveFLRepayment_Schedule_Model.js"></script>
+<script src="~/API_Scripts/saveFLRepayment_Maintenance_Model.js"></script>
+<script src="~/API_Scripts/saveFLRepayment_Mode_Model.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/API_Scripts/FlRepaymentmaintance.js"></script>
+<script>
+    $(document).ready(function () {
+
+        kendodate_format();
+        master_Flrepay();
+        grid_repay_maintain([]);
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#Repayment_form");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+
+        Screen_Id = "FLREPAY";
+        permission = sec_Permission(Screen_Id);
+
+        var org = getlocalStorage('org_id');
+        $('#txtaggrorgn_code').val(org);
+
+        //fl schema
+        var FLScheme = "";
+        $("#cmbfl_scheme").empty();
+        FLScheme = grid_comboScreen_mastercodes("SCHECODE");
+        filter_combobox("cmbfl_scheme", FLScheme);
+       
+        // status credit
+        var combo_statuscredit = "";
+        $("#cmbstatus_lan").empty();
+        combo_statuscredit = grid_comboScreen_mastercodes("QCD_LOANSTATUS");
+        filter_combobox("cmbstatus_lan", combo_statuscredit);
+
+        $("#divUserRole8 #btnSave").hide();
+        $("#divUserRole8 #review").hide();
+        //$('#bottom_menus').hide();
+        $("#bottomFooter").show();
+       
+        $("#bottom_menus li:nth-child(1)").hide();
+        $("#bottom_menus li:nth-child(2)").hide();
+
+        $(".file_attach").attr("hdrtitle", "FL-Repayment & Maintenance");
+        $(".notes").attr("hdrtitle", "FL-Repayment & Maintenance");
+        $("#lblForm_menuid").text("FARMER_REPAYMAIN");
+
+       
+
+        //grid();
+        load_master_code();
+        setlocalStorage("loan_no", "");
+        $('#HelpModal').on('hide.bs.modal', function (e) {
+            if ($("#txtlan_no").val() != undefined && $("#txtlan_no").val() != "") {              
+                setlocalStorage("loan_no", $("#txtlan_no").val());
+                fetch_loan();
+            }
+        });
+    });
+</script>
+<script>
+    function load_master_code() {
+        debugger;
+        var data = {};
+        var context = WebAPIProxy.getContext();
+        data.userId = context.userId
+        data.orgnId = context.orgnId
+        data.locnId = context.locnId
+        data.localeId = context.localeId
+            data.screen_Id = "FLREPAY";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+</script>
+<script>
+    function grid_repay_maintain(data) {
+        try {
+            $("#grid_repay_maintain").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                instal_no: { editable: false },
+                                instal_date: { editable: false },
+                                instal_amt: { editable: false },
+                                pay_method: { editable: false },
+                                bank_ref: { editable: false },
+                                payment_status: { editable: false },
+                            }
+                        }
+                    },
+                },
+                height: 325,
+                sortable: true,
+                columns: [
+                     {
+                         field: "loaninstalment_rowid",
+                         title: "loaninstalment_rowid",
+                         hidden: true,
+                     },
+                     {
+                        field: "instalment_no",
+                        title: "Instalment No"
+                     },
+                     {
+                        field: "instalment_date",
+                        title: "Instalment Date"
+                     },
+                     {
+                        field: "instalment_amount",
+                        title: "Instalment Amount"
+                     },
+                     {
+                         field: "principle_amount",
+                         title: "Princ. Amount"
+                     },
+                     {
+                         field: "interest_amount",
+                         title: "Int. Amount"
+                     },
+                     {
+                        field: "payment_mode",
+                        title: "Payment Method",
+                        hidden: true,
+                     },
+                     {
+                        field: "bank_ref_no",
+                        title: "Bank Ref No"
+                     },
+                     {
+                        field: "payment_mode_desc",
+                        title: "Payment Method"
+                     },
+                     {
+                        field: "mode_flag",
+                        title: "mode_flag",
+                        hidden: true,
+                     }],
+                editable: false
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>
+    function save() {
+        try {
+            var formval = form_Serialize("Repayment_form");
+            var obj_val = JSON.parse(formval);
+            var grid_val = JSON.stringify($("#grid_repay_maintain").data().kendoGrid._data);
+            var Bind = {};
+            Bind = grid_val;
+            var result = JSON.parse(Bind);
+            $.each(result, function (index, value) {
+                var row_id = value.loaninstalment_rowid;
+                if (row_id == undefined || row_id == "") {
+                    result[index].loaninstalment_rowid = "0";
+                }
+                //var mode = result[index].mode_flag;
+                //if (mode == "S") {
+                //    result[index].mode_flag = "U";
+                //}
+            });
+            var obj_grid_val = result;
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_val;
+            data.context.Detail = obj_grid_val;
+            save_FLRepayment_Maintenance_details(data);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>
+    function grid_control() {
+        var control_Name = [
+
+        ];
+        return control_Name;
+    }
+
+
+    function form_control() {
+        var control_Name = [
+            { "dataCol": "loan_no", "controlId": "txtlan_no", "type": "Text" }
+        ];
+        return control_Name;
+
+    }
+
+    function trans_input_data() {
+        var trans_coll = [
+             { "trasfer": "Yes", "dataCol": "loan_no", "controlId": "", "grid_id": "", "grid_row_col": "" },
+             { "trasfer": "Yes", "dataCol": "fpoorgn_code", "controlId": "txtaggrorgn_code", "grid_id": "", "grid_row_col": "" }
+        ];
+        return trans_coll;
+    }
+</script>
+<script>
+    function fetch_loan() {
+     
+        var formval = form_Serialize("Repayment_form");
+        var obj_val = JSON.parse(formval);
+        if (obj_val != undefined) {
+            obj_val.loan_no = $("#txtlan_no").val();
+            obj_val.loanrepayment_rowid = "0";
+            var data_fetch = {};
+            data_fetch.context = WebAPIProxy.getContext();
+            data_fetch.context.Header = obj_val;
+            retrieve_FlRepaymentmaintance_list(data_fetch);
+            $("#bottom_menus li:nth-child(2)").show();
+            $("#loanrepayment_rowid").val(obj_val.loanrepayment_rowid);
+            setlocalStorage('doc_no', $("#txtlan_no").val());
+            setlocalStorage('doc_row_id', $("#loanrepayment_rowid").val());
+        }
+    }
+    function generate_FlRepaymentmaintance_Header(res) {
+        if (res != null) {
+            $('#txtmember_id').val(res.fpomember_code);
+            $('#txtfarmer_id').val(res.farmer_code);
+            $('#txtfarmer_name').val(res.farmer_name);
+            $('#txtfarmer_surname').val(res.sur_name);
+            $('#cmbfl_scheme').data("kendoComboBox").value(res.loanscheme_code);
+            $('#txtinterest_rate').val(res.interest_rate);
+            $('#txttenor').val(res.Tenure);
+            $('#loanamt_applied').val(res.loan_amount);
+            $('#txtprinc_repaid').val(res.principle_paid);
+            $('#txtprinc_out').val(res.principle_due);
+            $('#txttota_int').val(res.interest_paid);
+            $('#txtno_instal').val(res.instalment_paid);
+            $('#cmbstatus_lan').data("kendoComboBox").value(res.loan_status_desc);
+        }
+    }
+    function generate_FlRepaymentmaintance_RepaymentDtl(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                grid_repay_maintain(data);
+            }
+            else {
+                grid_repay_maintain([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<script src="~/CommonScripts/HelpFile.js"></script>

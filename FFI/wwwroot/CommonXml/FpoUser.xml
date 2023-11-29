@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <row>
+    <location_code>CC01</location_code>
+    <location_name>Chilling Plant 01</location_name>
+    <id>US1</id>
+    <user_name>Ram</user_name>
+    <email>abc@gmail.com</email>
+    <mobile_no>9907654434</mobile_no>
+    <valid_till>4/12/2017</valid_till>
+    <status>Active</status>
+  </row>
+</root>

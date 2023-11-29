@@ -1,0 +1,594 @@
+﻿@{
+    ViewBag.Form = "Input Centre Demand Generation";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+
+<form id="icdgen_form" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtICDDEMid" class="col-sm-4 control-label required">ICD Demand ID:</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txtICDDEMid" name="icdemand_code" class="form-control" maxlength="10" disabled value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtValidity" class="col-sm-5 control-label required">Date:</label>
+                        <div class=" col-sm-6">
+                            <input class="cusDate" type="date" data-role='datepicker' onkeypress="return date_validate(event)" id="txtValidity" data-checkdate-msg="Enter Valid Date" name="icdemand_date" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-5" style="display:none">
+                    <div class="form-group">
+                        <label for="txt_status_desc" class="col-sm-5 control-label">Status description:</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txt_status_desc" name="status_desc" class="form-control" maxlength="125">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-5" style="display:none">
+                    <div class="form-group">
+                        <label for="txt_row_timestamp" class="col-sm-5 control-label">Timestamp:</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txt_row_timestamp" name="row_timestamp" class="form-control" maxlength="125">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-5" style="display:none">
+                    <div class="form-group">
+                        <label for="txt_status_code" class="col-sm-5 control-label">Status Code:</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txt_status_code" name="status_code" class="form-control" maxlength="125">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3" style=" display:none">
+                    <div class="form-group" style=" display:none">
+                        <label for="txtMode" class="col-sm-5 control-label">Mode Flag</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtMode" name="mode_flag" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="txt_icd_rowid" class="col-sm-5 control-label ">icd row id:</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txt_icd_rowid" name="icdemand_rowid" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12" style="float:right">
+                <a data-toggle="modal" id="btnReport" type="button" style="margin-left: 1074px;" class="Export btn btn-sm btn-info"><span class="glyphicon glyphicon-export"></span></a>
+
+
+                <button id="btnclear" title="" data-placement="top" data-toggle="tooltip" style="float:right ;margin-bottom:5px;margin-right: 27px;" class="btn btn-info" type="submit" data-original-title="">
+                    <span class="glyphicon glyphicon-refresh"></span>
+                </button>
+
+            </div>
+            <div class="col-xs-12">
+                <div id="grid_icdgen">
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    click_act_name = "ICDGenerationList";
+    click_ctrl_name = "ICDGeneration";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+
+<script src="~/API_Scripts/icdgen.js"></script>
+<script src="~/API_Scripts/ICDGen_retrieveICDGEN_APIClient.js"></script>
+<script src="~/API_Scripts/ICDGen_retrieveICDGENList_APIClient.js"></script>
+<script src="~/API_Scripts/Invoice_master_getProductSearch_APIClient.js"></script>
+<script src="~/API_Scripts/product_search_Model.js"></script>
+<script src="~/API_Scripts/ICDGen_saveICDGen_APIClient.js"></script>
+<script src="~/API_Scripts/retrieveICDGEN_Model.js"></script>
+<script src="~/API_Scripts/retrieveICDGENList_Model.js"></script>
+<script src="~/API_Scripts/saveICDGen_Model.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+
+<script>
+    $(document).ready(function () {
+     
+        kendodate_format();
+
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#icdgen_form");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+
+        $("#hide_div").hide();
+        $("#divEdit").hide();
+        $("#divCreate").hide();
+        $("#bottom_menus").hide();
+        $("#divUserRole8").show();
+
+        $(".file_attach").attr("hdrtitle", "ICDGEN");
+        $(".notes").attr("hdrtitle", "ICDGEN");
+        $("#lblForm_menuid").text("ICDGEN");
+
+        Screen_Id = "ICDGEN";
+        permission = sec_Permission(Screen_Id);
+
+        load_master_code();
+        ICDGenerationgrid([]);
+               
+        if (getlocalStorage('btn_clk_val') == "Create") {
+            $('#divCreate #review').hide();
+            $("#txtMode").val("I");
+            $("#bottom_menus").hide();
+            $("#DocStat").val("New");
+
+        }
+        else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
+            $('#divEdit #reviewEd').hide();
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("icdgen_form");
+                var obj_val = JSON.parse(formval);
+                obj_val.icdemand_rowid = data.icdemand_rowid;
+                var data = {};
+                data.context = WebAPIProxy.getContext();;
+                data.context.Header = obj_val;
+                retrieve_icdgen_details(data);
+            }
+        }
+        
+          });
+</script>
+<script>
+    function load_master_code() {
+        try {
+            debugger;
+            var data = {};
+            var context = WebAPIProxy.getContext();
+            data.userId = context.userId
+            data.orgnId = context.orgnId
+            data.locnId = context.locnId
+            data.localeId = context.localeId
+            data.screen_Id = "ICDGEN";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+
+    function get_icdgen_details(id) {
+        try {
+            var formval = form_Serialize("icdgen_form");
+            var obj_val = JSON.parse(formval);
+            obj_val.icdemand_rowid = id;
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Header = obj_val;
+            retrieve_icdgen_details(data);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+
+</script>
+<script>
+   
+    function ICDGenerationgrid(data) {
+        try {
+            $("#grid_icdgen").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                farmer_code: { type: "string" },
+                                farmer_desc: { type: "string" },
+                                product: { type: "string" },
+                                Received_Qty: { type: "string" },
+                                rate: { type: "string" },
+                                product_category: { type: "string", editable: false },
+                                product_sub_category: { type: "string", editable: false },
+                                product_code: { type: "string"},
+                                product_name: { type: "string", },
+                                req_mon_year: { type: "string", }
+                            }
+                        }
+                    }
+                },
+                toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 400,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_icdgen').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                edit: OnEdit,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [{
+                    command: [
+            {
+                name: "Delete",
+                id: "Delete",
+                imageClass: "fa fa-close",
+                click: function (e) {
+                    // e.preventDefault();
+                    var grid = $("#grid_icdgen").data("kendoGrid");
+                    var dataItem = $("#grid_icdgen").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                    DeleteWindowEvent(e, dataItem, grid);
+                    e.stopImmediatePropagation()
+                }
+            },
+                    ], title: "Action", width: "50px",
+                },
+                {
+                    field: "icdemanddtl_rowid",
+                    title: "icdemanddtl_rowid",
+                    hidden: true
+                },
+                 {
+                     field: "icdemand_code",
+                     title: "icdemand_code",
+                     hidden: true
+                 },
+                  {
+                      field: "icdemand_desc",
+                      title: "icdemand_desc",
+                      hidden: true
+                  },
+                 {
+                     field: "farmer_code",
+                     title: "Farmer Code",
+                     editor: '<div class="input-group input-group-sm"><input type="text" readonly name="farmer_code" maxlength="10" style="width:100px;color:black"  onkeypress="return speical_char(event)" data-bind="value:farmer_code"/><span class="input-group-btn" style="padding-right: 150px;"><a class="HelpWindow fa fa-search fa-lg" data-toggle="modal" href="/HelpFilter/HelpFilter" hdrtitle="Details" searchid="S33" data-target="#HelpModal" onclick=transfer(this,"grid","grid_icdgen","ICDGenerationgrid") title="Search" style="font-size: 15px; padding-left: 10px;"></a> </span> </div>',
+                     width: 150,
+                 },
+                      {
+                          field: "farmer_desc",
+                          title: "Farmer Name",
+                          width: 100,
+                      },
+                      {
+                          field: "product_desc",
+                          title: "Product Name",
+                          editor: function (container, options) {
+                              combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "product_code", "grid_icdgen")
+                          },
+                          width: 150,
+                      },
+                      {
+                          field: "product_code",
+                          title: "Product Code",
+
+                          width: 100,
+
+                      },
+                      {
+                          field: "product_catg_code",
+                          title: "product_catg_code",
+                          hidden: true
+                      },
+                   {
+                       field: "product_catg_desc",
+                       title: "Product Category",
+                       width: 120,
+
+                   },
+                   {
+                       field: "product_subcatg_code",
+                       title: "product_subcatg_code",
+                       hidden: true
+                   },
+                      {
+                          field: "product_subcatg_desc",
+                          title: "Product Sub-Category",
+                          width: 130,
+
+                      },
+                      {
+                          field: "hsn_code",
+                          title: "hsn_code",
+                          hidden: true
+                      },
+
+
+                      {
+                          field: "qty",
+                          title: "Req. Qty",
+                          width: 100,
+                          editor: function (container, options) {
+                              item_rate(container, options.field, '9', '2');
+                          },
+                      },
+                      {
+                          field: "month",
+                          title: "Req. Month",
+                          width: 100,
+                          editor: function (container, options) {
+                              combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "month", "grid_icdgen")
+                          },
+                      },
+                       {
+                           field: "year",
+                           title: "Req. Year",
+                           width: 100,
+                           //editor: function (container, options) {
+                           //    combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "year", "grid_icdgen")
+                           //},
+                       },
+
+                 {
+                     field: "remarks",
+                     title: "Remarks",
+                     width: 100,
+                 },
+                 {
+                     field: "status_code",
+                     title: "status_code",
+                     hidden: true
+                 },
+                 {
+                     field: "status_desc",
+                     title: "status_desc",
+                     hidden: true
+                 },
+                  {
+                      field: "row_timestamp",
+                      title: "row_timestamp",
+                      hidden: true
+                  },
+                {
+                    field: "mode_flag",
+                    title: "mode_flag",
+                    hidden: true
+                }],
+                editable: true
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    load_master_code();
+    product_desc_list = grid_comboScreen_mastercodes("PRODCTNAME");
+    year_list = grid_comboScreen_mastercodes("year");    
+    month_list = grid_comboScreen_mastercodes("Months");
+    function OnEdit(e) {
+        setDefaultValues(e);
+        e.container.find("input[name='product_desc']").change(function () {
+            var valueprd = $(this).val();
+            var formval = form_Serialize("icdgen_form");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "productsearch";
+            obj_val.FilterBy_Code = valueprd;
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_Fromvalue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_Fromvalue = ".";
+            }
+            obj_val.FilterBy_Tovalue = ".";
+
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_val;
+            retrieve_Invoiceproduct_list(data);
+
+        })
+    }
+</script>
+<script>
+    function save() {
+        try {
+            if ($("#txtICDDEMid").val() == "") {
+                $("#txtICDDEMid").val('0');
+            }
+            if ($("#txtMode").val() == "") {
+                $("#txtMode").val('I');
+            }
+            if ($("#txt_icd_rowid").val() == "") {
+                $("#txt_icd_rowid").val('0');
+            }
+            
+            if ($("#DocStat").val() == "Active") {
+                $("#txtMode").val('U');
+            }
+           
+            $("#txtICDDEMid").removeAttr("disabled");
+            var formval = form_Serialize("icdgen_form");
+            var obj_val = JSON.parse(formval);
+            $("#txtICDDEMid").attr("disabled", "disabled");
+            var grid_val = JSON.stringify($("#grid_icdgen").data().kendoGrid._data);
+            var Bind = {};
+            Bind = grid_val;
+            var result = JSON.parse(Bind);
+            $.each(result, function (index, value) {
+                var row_id = value.icdemanddtl_rowid;
+                if (row_id == undefined) {
+                    result[index].icdemanddtl_rowid = "0";
+                }
+                else {
+                    result[index].mode_flag = "S";
+                }
+                var row_id1 = value.icdemand_code;
+                if (row_id1 == undefined || row_id1 == "") {
+                    result[index].icdemand_code = "0";
+                }
+                var row_id2 = value.hsn_code;
+                if (row_id2 == undefined || row_id2 == "") {
+                    result[index].hsn_code = "0";
+                }
+                var row_id3 = value.status_code;
+                if (row_id3 == undefined || row_id3 == "") {
+                    result[index].status_code = "A";
+                }
+                var row_id1 = value.row_timestamp;
+                if (row_id1 == undefined || row_id1 == "") {
+                    result[index].row_timestamp = "0";
+                }
+                var mode = value.mode_flag;
+                if (mode == "S") {
+                    result[index].mode_flag = "U";
+                }
+
+            });
+            var obj_grid_val = result;
+
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_val;
+            data.context.ICDGenDtl = obj_grid_val;
+            save_icdgen_details(data);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function generate_icdgen_header(res) {
+        try {
+            $("#txtICDDEMid").val(res.icdemand_code);
+
+            $("#txtValidity").val(res.icdemand_date);
+
+           
+            $("#txt_status_code").val(res.status_code);
+            $("#DocStat").val(res.status_desc);
+
+            $("#txtMode").val(res.mode_flag);
+
+            $("#txt_row_timestamp").val(res.row_timestamp);
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function generate_icdgen_detail(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+
+                ICDGenerationgrid(data);
+            }
+            else {
+                ICDGenerationgrid([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script> 
+<script>
+    function grid_control() {
+        try {
+            var control_Name = [
+                { "dataCol": "farmer_code", "grid_row_col": "farmer_code" },
+                { "dataCol": "farmer_name", "grid_row_col": "farmer_desc" },
+                { "dataCol": "", "grid_row_col": "icdemanddtl_rowid" },
+                { "dataCol": "", "grid_row_col": "icdemand_code" },
+                { "dataCol": "", "grid_row_col": "icdemand_desc" },
+                { "dataCol": "", "grid_row_col": "product_code" },
+                { "dataCol": "", "grid_row_col": "product_desc" },
+                { "dataCol": "", "grid_row_col": "product_catg_code" },
+                { "dataCol": "", "grid_row_col": "product_catg_desc" },
+                { "dataCol": "", "grid_row_col": "product_subcatg_code" },
+                { "dataCol": "", "grid_row_col": "product_subcatg_desc" },
+                { "dataCol": "", "grid_row_col": "hsn_code" },
+                { "dataCol": "", "grid_row_col": "qty" },
+                { "dataCol": "", "grid_row_col": "month" },
+                { "dataCol": "", "grid_row_col": "year" },
+                { "dataCol": "", "grid_row_col": "month" },
+                { "dataCol": "", "grid_row_col": "remarks" },
+                { "dataCol": "", "grid_row_col": "status_desc" },
+                { "dataCol": "", "grid_row_col": "mode_flag" },
+                { "dataCol": "", "grid_row_col": "row_timestamp" },
+                  { "dataCol": "", "grid_row_col": "uid" }
+
+        ];
+        return control_Name
+    }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function controlName() {
+        try {
+            var control_Name = [
+            ];
+            return control_Name
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function trans_input_data() {
+        try {
+        var trans_coll = [
+              { "trasfer": "NO", "dataCol": "", "controlId": "", "grid_id": "", "grid_row_col": "" },
+             { "trasfer": "Yes", "dataCol": "farmer_code", "controlId": "", "grid_id": "grid_icdgen", "grid_row_col": "" },
+        ];
+        return trans_coll;
+    }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+<script>
+    function generate_Invoiceproduct_list(res) {
+        var dataItem = $("#grid_icdgen").data("kendoGrid").dataSource.data()[0];
+
+        dataItem.set("product_catg_code", res[0].productcategory);
+        dataItem.set("product_catg_desc", res[0].productcategory_desc);
+        dataItem.set("product_subcatg_code", res[0].productsubcategory);
+        dataItem.set("product_subcatg_desc", res[0].productsubcategory_desc);
+        dataItem.set("product_code", res[0].product_code);
+       
+    }
+    function generate_TaxInvoiceproduct_list(res) {
+    }
+</script>
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>
+
+
+

@@ -1,0 +1,29 @@
+<root>
+  <row>
+    <docnum_rowid>1</docnum_rowid>
+    <row_slno>1</row_slno>
+    <format_type>DOCNUM-TRANDATA</format_type>
+    <format_desc>Farmer Name</format_desc>
+    <format_length>3</format_length>
+    <format_value>farmer_name</format_value>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <docnum_rowid>1</docnum_rowid>
+    <row_slno>2</row_slno>
+    <format_type>DOCNUM-TEXT</format_type>
+    <format_desc>Seperator</format_desc>
+    <format_length>1</format_length>
+    <format_value>/</format_value>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <docnum_rowid>1</docnum_rowid>
+    <row_slno>3</row_slno>
+    <format_type>DOCNUM-SEQNO</format_type>
+    <format_desc>Sequence Number</format_desc>
+    <format_length>10</format_length>
+    <format_value>1</format_value>
+    <status_code>Active</status_code>
+  </row>
+</root>

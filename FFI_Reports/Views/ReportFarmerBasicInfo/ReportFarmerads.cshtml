@@ -1,0 +1,1628 @@
+﻿@{
+    ViewBag.Form = "All Farmer Information Report";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+@*<style>
+        .k-grid .k-grid-header .k-header {
+            white-space: normal;
+        }
+    </style>*@
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.min.js"></script>
+<script src="~/CommonScripts/Common_func.js"></script>
+
+<form id="frm_adsreport" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px;padding-top:12px;">
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="cmb_farmerfponame" class="control-label" style="margin-right:65px;margin-left:20px;">FPO Name</label>
+                                <input id="cmb_fpocode" name="cmb_fpocode" style="width:50%;" data-role="filtercombo">
+
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="cmb_farmerdist" class="control-label" style="margin-right:20px;margin-left:20px;">Farmer District</label>
+                                <input id="cmb_dist" name="cmb_dist" style="width: 50%" data-role="filtercombo">
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="cmb_farmertaluk" class="control-label" style="margin-right:20px;margin-left:20px;">Farmer Taluk</label>
+                                <input id="cmb_taluk" name="cmb_taluk" style="width: 50%" data-role="filtercombo">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="cmb_farmervillage" class="control-label" style="margin-right:20px;margin-left:20px;">Farmer Panchayat</label>
+                                <input id="cmb_gram" name="cmb_gram" style="width: 50%" data-role="filtercombo">
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <button id="refresh" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button"
+                                        data-original-title="Refresh" onclick="listRefresh()">
+                                    @*<span class="glyphicon glyphicon-refresh"></span>*@
+                                    Refresh
+                                </button>
+                                <label id="lblprog" style="color:red;display:none"> In Progress..Please Wait </label>
+                            </div>
+                        </div>
+                        <button id="clear" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button"
+                                data-original-title="clear" onclick="listclear()">
+                            clear
+                        </button>
+                        <button id="btnExport" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button" data-original-title="Export" style="background-color: #00c0ef ; border-color: #00acd6; width:3%" ;><span class="fa fa-file-excel-o"></span></button>
+                        <a id="downloadpath" download href=""></a>
+                    </div>
+                </div>
+                @*<div class="pull-right">
+                        <button id="clear" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button"
+                                data-original-title="clear" onclick="listclear()">
+                            clear
+                        </button>
+                        <button id="btnExport" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button" data-original-title="Export" style="background-color: #00c0ef ; border-color: #00acd6" ;><span class="fa fa-file-excel-o"></span></button>
+                    </div>*@
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div id="ads_details">
+                        <div id="adsdetails_grid"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script src="~/CommonScripts/Common_func.js"></script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+<script src="~/CommonScripts/ExportExcel.js"></script>
+
+<script>
+    click_act_name = "home ";
+    click_ctrl_name = "home";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+
+</script>
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+        debugger;
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#frm_adsreport");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        $("#Topsubheader").show();
+        $("#bottomFooter").show();
+        $("#bottom_menus").hide();
+        $("#btndiv").show();
+        $("#frmlayerdiv").hide();
+        $("#divCreate").hide();
+        $("#divEdit").hide();
+        $("#divView").show();
+        $("#DocStat").show();
+        $(".edtviw_item").show();
+        $(".create_item").hide();
+
+        $(".Export").attr("hdrtitle", "ADS Report");
+        $(".Export").attr("SubTreeId", "FARMADS");
+
+        Screen_Id = "FARMADS";
+        permission = sec_Permission(Screen_Id);
+        page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+
+        listgrid([]);
+
+        $("#btnExport").kendoButton({
+            click: function () {
+                debugger;
+                ExportButtonClick();
+            }
+        })
+        var list_in = "";
+        // $("#cmb_filter").empty();
+        var list_in = [
+            { "code": "Fpo Name", "desc": "Fpo Name" },
+            { "code": "Dist", "desc": "Dist" }
+        ];
+        Alldropdownload();
+    });
+    function Alldropdownload() {
+        load_master_code();
+        // DIST Dropdown Load
+        //var Distlist = "";
+        //$("#cmb_dist").empty();
+        //Distlist = grid_comboScreen_mastercodes("QCD_UN_DIST");
+        //filter_combobox("cmb_dist", Distlist);
+        // FPONAME Dropdown Load
+        var fpolist = "";
+        $("#cmb_fpocode").empty();
+        fpolist = grid_comboScreen_mastercodes("ORGFPO");
+        filter_combobox("cmb_fpocode", fpolist);
+        // TALUK Dropdown Load
+        //var Taluklist = "";
+        //$("#cmb_taluk").empty();
+        //Taluklist = grid_comboScreen_mastercodes("QCD_UN_TALUK");
+        //filter_combobox("cmb_taluk", Taluklist);
+        // VILLAGE Dropdown Load
+        //var Villagelist = "";
+        //$("#cmb_gram").empty();
+        //Villagelist = grid_comboScreen_mastercodes("QCD_UN_VILLAGE");
+        //filter_combobox("cmb_gram", Villagelist);
+    }
+
+   //Venkat Introduced Purpose FPO Name based  district Loaded 02-01-2020
+
+    $("#cmb_fpocode").change(function () {
+        debugger;
+        listgrid([]);
+        var selected_value = $(this).val();
+        var data = { fpo_code: selected_value };
+         $.ajax({
+            url: '@Url.Action("Getreportbankandkyclist", "ReportFarmerBasicInfo")',
+            type: "post",
+            contentType: 'application/x-www-form-urlencoded',
+            data: data,
+            success: function (response1) {
+            debugger;
+                if (response1 != null) {
+                    $("#cmb_dist").val('');
+                    $("#cmb_taluk").val('');
+                    $("#cmb_gram").val('');
+                debugger;
+                var url_path = JSON.parse(response1);
+                var itemArr = [];
+                var itemArr1 = [];
+                var itemArr2 = [];
+                for (var i = 0; i < url_path.Table.length; i++) {
+                    var list = {};
+                    list.id = url_path.Table[i].serial_number;
+                    list.code = url_path.Table[i].dist_code;
+                    list.desc = url_path.Table[i].Member_district_name;
+                    itemArr.push(list);
+                }
+                filter_combobox("cmb_dist", itemArr);
+
+                    $("#cmb_taluk").val('');
+                    $("#cmb_gram").val('');
+                //for (var j = 0; j < url_path.Table1.length; j++) {
+                //    var listtaluk = {};
+                //    listtaluk.id = url_path.Table1[j].serial_number
+                //    listtaluk.code = url_path.Table1[j].taluk_code;
+                //    listtaluk.desc = url_path.Table1[j].Member_taluk_name;
+                //    itemArr1.push(listtaluk);
+                //}
+                //filter_combobox("cmb_taluk", itemArr1);
+
+                //for (var k = 0; k < url_path.Table2.length; k++) {
+                //    var listvillage = {};
+                //    listvillage.id = url_path.Table2[k].serial_number
+                //    listvillage.code = url_path.Table2[k].village_code;
+                //    listvillage.desc = url_path.Table2[k].Member_village_name;
+                //    itemArr2.push(listvillage);
+                //}
+                //filter_combobox("cmb_gram", itemArr2);
+            }
+
+          },
+         error: function (er) {
+         alert(er)
+        console.log(er)
+        }
+         });
+        })
+    //End
+    $("#cmb_dist").change(function () {
+        debugger;
+        listgrid([]);
+        var fpo_code = $("#cmb_fpocode").val()
+        var selected_value = $(this).val();
+        var data = { fpo_code: fpo_code, dist_code: selected_value };
+         $.ajax({
+            url: '@Url.Action("GetTaluk", "ReportFarmerBasicInfo")',
+            type: "post",
+            contentType: 'application/x-www-form-urlencoded',
+            data: data,
+            success: function (response1) {
+            debugger;
+                if (response1 != null) {
+                    $("#cmb_taluk").val('');
+                    $("#cmb_gram").val('');
+                var url_path = JSON.parse(response1);
+                var itemArr = [];
+                var itemArr1 = [];
+                for (var j = 0; j < url_path.Table.length; j++) {
+                    var listtaluk = {};
+                    listtaluk.id = url_path.Table[j].serial_number
+                    listtaluk.code = url_path.Table[j].taluk_code;
+                    listtaluk.desc = url_path.Table[j].Member_taluk_name
+                    itemArr.push(listtaluk);
+                    }
+                    for (var i = itemArr.length; i--;) {
+                        if (itemArr[i].code == "QCD_CROPTYPE_ALL")
+                        {
+                            itemArr.splice(i, 1);
+                        }
+                    } 
+                    //itemArr.splice([2,3,4]);
+                    //itemArr = itemArr.filter(item => item !== "All")
+                    //itemArr = itemArr.filter(item => item !== "QCD_CROPTYPE_All")
+
+                    //var index = itemArr.indexOf(0);
+                    //itemArr.splice(index, 1);
+                    filter_combobox("cmb_taluk", itemArr);
+                    $("#cmb_gram").val('');
+                //for (var k = 0; k < url_path.Table1.length; k++) {
+                //    var listvillage = {};
+                //    listvillage.id = url_path.Table1[k].serial_number
+                //    listvillage.code = url_path.Table1[k].village_code;
+                //    listvillage.desc = url_path.Table1[k].Member_village_name;
+                //    itemArr1.push(listvillage);
+                //}
+                //    filter_combobox("cmb_gram", itemArr1);
+            }
+          },
+         error: function (er) {
+         alert(er)
+        console.log(er)
+        }
+         });
+    });
+    $("#cmb_taluk").change(function () {
+        debugger;
+        listgrid([]);
+        var fpo_code = $("#cmb_fpocode").val();
+        var dist_code = $("#cmb_dist").val();
+        var selected_value = $(this).val();
+        var data = { fpo_code: fpo_code, dist_code: dist_code, taluk_code: selected_value };
+         $.ajax({
+            url: '@Url.Action("Getgram", "ReportFarmerBasicInfo")',
+            type: "post",
+            contentType: 'application/x-www-form-urlencoded',
+            data: data,
+            success: function (response1) {
+                if (response1 != null) {
+                    $("#cmb_gram").val('');
+                var url_path = JSON.parse(response1);
+                    var itemArr = [];
+                    for (var k = 0; k < url_path.length; k++) {
+                    var listvillage = {};
+                    listvillage.id = url_path[k].serial_number
+                    listvillage.code = url_path[k].Gram_code;
+                    listvillage.desc = url_path[k].Member_gram_name;
+                    itemArr.push(listvillage);
+                }
+                filter_combobox("cmb_gram", itemArr);
+            }
+          },
+         error: function (er) {
+               console.log(er)
+        }
+         });
+    });
+    $("#cmb_gram").change(function () {
+        debugger;
+        listgrid([]);
+    });
+    var isvalid = true;
+    var field = null;
+    function Validation() {
+        if ($("#cmb_fpocode").val() != "") {
+            isvalid = true;
+        }
+        else {
+            isvalid = false;
+            kendoAlert("Please Select the FPO Name");
+            return;
+        }
+        if ($("#cmb_dist").val() != "") {
+            isvalid = true;
+        }
+        else {
+            isvalid = false;
+            kendoAlert("Please Select the Farmer District");
+            return;
+        }
+        if ($("#cmb_taluk").val() != "") {
+            isvalid = true;
+        }
+        else {
+            isvalid = false;
+            kendoAlert("Please Select the Farmer Taluk");
+            return;
+        }
+        if ($("#cmb_gram").val() != "") {
+            isvalid = true;
+        }
+        else {
+            isvalid = false;
+            kendoAlert("Please Select the Farmer Panchayat");
+            return;
+        }
+    }
+
+    $(function () {
+        $('#refresh').click(function () {
+            Validation();
+            //if ($("#cmb_fpocode").val() != "" || $("#cmb_dist").val() != "" || $("#cmb_taluk").val() != "" || $("#cmb_gram").val() != "") {
+            if (isvalid == true) {
+                debugger;
+                $('#refresh').hide();
+                $('#lblprog').show();
+                var cmb_fpocode = $("#cmb_fpocode").val();
+                var cmb_dist = $("#cmb_dist").val();
+                var cmb_taluk = $("#cmb_taluk").val();
+                var cmb_gram = $("#cmb_gram").val();
+                var from_index = 0;
+                var to_index = 20;
+                //Sp Name For this Report : report_FarmerAdsReportRD
+                console.log("Report SP : report_FarmerAdsReportRD");
+                $.ajax({
+                    type: "POST",
+                    data: '{fpocode: "' + cmb_fpocode + '",district:"' + cmb_dist + '",taluk:"' + cmb_taluk + '",village:"' + cmb_gram + '", from_index:"' + parseInt(from_index) + '", to_index:"' + parseInt(to_index )+ '"}',
+                    url: "/ReportFarmerBasicInfo/GetAdsdetails",
+                    timeout: 10000000,
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        $('#lblprog').hide();
+                        $('#refresh').show();
+                        if (response != null) {
+                            console.log(response);
+                            $("#ads_details").empty();
+                            $("#ads_details").append("<div id='adsdetails_grid'></div>");
+                            //GenerateAdsDetails(response);
+                            for (var i = 0; i < response.ADSDetails.length; i++) {
+                                if (response.ADSDetails[i].BANK_AC == "QCD_YES" ) {
+                                    response.ADSDetails[i].BANK_AC = "Yes";
+                                } else {
+                                    response.ADSDetails[i].BANK_AC = "No";
+                                }
+                                if (response.ADSDetails[i].OISLabour == "QCD_YES") {
+                                    response.ADSDetails[i].OISLabour = "Yes";
+                                } else {
+                                    response.ADSDetails[i].OISLabour = "No";
+                                }
+                                if (response.ADSDetails[i].OISJob == "QCD_YES") {
+                                    response.ADSDetails[i].OISJob = "Yes";
+                                } else {
+                                    response.ADSDetails[i].OISJob = "No";
+                                }
+                                if (response.ADSDetails[i].OISBusiness == "QCD_YES") {
+                                    response.ADSDetails[i].OISBusiness = "Yes";
+                                } else {
+                                    response.ADSDetails[i].OISBusiness = "No";
+                                }
+                                if (response.ADSDetails[i].House == "QCD_YES") {
+                                    response.ADSDetails[i].House = "Yes";
+                                } else {
+                                    response.ADSDetails[i].House = "No";
+                                }
+                                if (response.ADSDetails[i].Tractor == "QCD_YES") {
+                                    response.ADSDetails[i].Tractor = "Yes";
+                                } else {
+                                    response.ADSDetails[i].Tractor = "No";
+                                }
+                                if (response.ADSDetails[i].ISTubewell == "QCD_YES") {
+                                    response.ADSDetails[i].ISTubewell = "Yes";
+                                } else {
+                                    response.ADSDetails[i].ISTubewell = "No";
+                                } if (response.ADSDetails[i].ISCanal == "QCD_YES") {
+                                    response.ADSDetails[i].ISCanal = "Yes";
+                                } else {
+                                    response.ADSDetails[i].ISCanal = "No";
+                                } if (response.ADSDetails[i].F_Pond == "QCD_YES") {
+                                    response.ADSDetails[i].F_Pond = "Yes";
+                                } else {
+                                    response.ADSDetails[i].F_Pond = "No";
+                                } if (response.ADSDetails[i].PISLTrader == "QCD_YES") {
+                                    response.ADSDetails[i].PISLTrader = "Yes";
+                                } else {
+                                    response.ADSDetails[i].PISLTrader = "No";
+                                } if (response.ADSDetails[i].PISGOVT == "QCD_YES") {
+                                    response.ADSDetails[i].PISGOVT = "Yes";
+                                } else {
+                                    response.ADSDetails[i].PISGOVT = "No";
+                                } if (response.ADSDetails[i].PISFpo == "QCD_YES") {
+                                    response.ADSDetails[i].PISFpo = "Yes";
+                                } else {
+                                    response.ADSDetails[i].PISFpo = "No";
+                                } if (response.ADSDetails[i].SHCard == "QCD_YES") {
+                                    response.ADSDetails[i].SHCard = "Yes";
+                                } else {
+                                    response.ADSDetails[i].SHCard = "No";
+                                } if (response.ADSDetails[i].INS_Life == "QCD_YES") {
+                                    response.ADSDetails[i].INS_Life = "Yes";
+                                } else {
+                                    response.ADSDetails[i].INS_Life = "No";
+                                } if (response.ADSDetails[i].INS_Health == "QCD_YES") {
+                                    response.ADSDetails[i].INS_Health = "Yes";
+                                } else {
+                                    response.ADSDetails[i].INS_Health = "No";
+                                } if (response.ADSDetails[i].INS_Crop == "QCD_YES") {
+                                    response.ADSDetails[i].INS_Crop = "Yes";
+                                } else {
+                                    response.ADSDetails[i].INS_Crop = "No";
+                                } if (response.ADSDetails[i].Loan_Vill == "QCD_YES") {
+                                    response.ADSDetails[i].Loan_Vill = "Yes";
+                                } else {
+                                    response.ADSDetails[i].Loan_Vill = "No";
+                                } if (response.ADSDetails[i].Loan_MFI == "QCD_YES") {
+                                    response.ADSDetails[i].Loan_MFI = "Yes";
+                                } else {
+                                    response.ADSDetails[i].Loan_MFI = "No";
+                                } if (response.ADSDetails[i].Loan_Bank == "QCD_YES") {
+                                    response.ADSDetails[i].Loan_Bank = "Yes";
+                                } else {
+                                    response.ADSDetails[i].Loan_Bank = "No";
+                                } if (response.ADSDetails[i].Kalia == "QCD_YES") {
+                                    response.ADSDetails[i].Kalia = "Yes";
+                                } else {
+                                    response.ADSDetails[i].Kalia = "No";
+                                } if (response.ADSDetails[i].PM_Kisan_Nidhi == "QCD_YES") {
+                                    response.ADSDetails[i].PM_Kisan_Nidhi = "Yes";
+                                } else {
+                                    response.ADSDetails[i].PM_Kisan_Nidhi = "No";
+                                } if (response.ADSDetails[i].eNAM_Reg == "QCD_YES") {
+                                    response.ADSDetails[i].eNAM_Reg = "Yes";
+                                } else {
+                                    response.ADSDetails[i].eNAM_Reg = "No";
+                                } if (response.ADSDetails[i].RMC_Reg == "QCD_YES") {
+                                    response.ADSDetails[i].RMC_Reg = "Yes";
+                                } else {
+                                    response.ADSDetails[i].RMC_Reg = "No";
+                                } if (response.ADSDetails[i].INPLTrader == "QCD_YES") {
+                                    response.ADSDetails[i].INPLTrader = "Yes";
+                                } else {
+                                    response.ADSDetails[i].INPLTrader = "No";
+                                } if (response.ADSDetails[i].INPSociety == "QCD_YES") {
+                                    response.ADSDetails[i].INPSociety = "Yes";
+                                } else {
+                                    response.ADSDetails[i].INPSociety = "No";
+                                } if (response.ADSDetails[i].INPFPO == "QCD_YES") {
+                                    response.ADSDetails[i].INPFPO = "Yes";
+                                } else {
+                                    response.ADSDetails[i].INPFPO = "No";
+                                } if (response.ADSDetails[i].MSTLTrader == "QCD_YES") {
+                                    response.ADSDetails[i].MSTLTrader = "Yes";
+                                } else {
+                                    response.ADSDetails[i].MSTLTrader = "No";
+                                }if (response.ADSDetails[i].MSTRMC == "QCD_YES") {
+                                    response.ADSDetails[i].MSTRMC = "Yes";
+                                } else {
+                                    response.ADSDetails[i].MSTRMC = "No";
+                                } if (response.ADSDetails[i].MSTFPO == "QCD_YES") {
+                                    response.ADSDetails[i].MSTFPO = "Yes";
+                                } else {
+                                    response.ADSDetails[i].MSTFPO = "No";
+                                } if (response.ADSDetails[i].SMPLTrader == "QCD_YES") {
+                                    response.ADSDetails[i].SMPLTrader = "Yes";
+                                } else {
+                                    response.ADSDetails[i].SMPLTrader = "No";
+                                } if (response.ADSDetails[i].SMPRMC == "QCD_YES") {
+                                    response.ADSDetails[i].SMPRMC = "Yes";
+                                } else {
+                                    response.ADSDetails[i].SMPRMC = "No";
+                                } if (response.ADSDetails[i].SMPFPO == "QCD_YES") {
+                                    response.ADSDetails[i].SMPFPO = "Yes";
+                                } else {
+                                    response.ADSDetails[i].SMPFPO = "No";
+                                } if (response.ADSDetails[i].Own_Maize_storage_Kuccha == "QCD_YES") {
+                                    response.ADSDetails[i].Own_Maize_storage_Kuccha = "Yes";
+                                } else {
+                                    response.ADSDetails[i].Own_Maize_storage_Kuccha = "No";
+                                } if (response.ADSDetails[i].Own_Maize_storage_Pucca == "QCD_YES") {
+                                    response.ADSDetails[i].Own_Maize_storage_Pucca = "Yes";
+                                } else {
+                                    response.ADSDetails[i].Own_Maize_storage_Pucca = "No";
+                                } if (response.ADSDetails[i].Drying_practices_Road == "QCD_YES") {
+                                    response.ADSDetails[i].Drying_practices_Road = "Yes";
+                                } else {
+                                    response.ADSDetails[i].Drying_practices_Road = "No";
+                                } if (response.ADSDetails[i].Drying_practices_Kuccha == "QCD_YES") {
+                                    response.ADSDetails[i].Drying_practices_Kuccha = "Yes";
+                                } else {
+                                    response.ADSDetails[i].Drying_practices_Kuccha = "No";
+                                } if (response.ADSDetails[i].Drying_practices_Pucca == "QCD_YES") {
+                                    response.ADSDetails[i].Drying_practices_Pucca = "Yes";
+                                } else {
+                                    response.ADSDetails[i].Drying_practices_Pucca = "No";
+                                } if (response.ADSDetails[i].Drying_practices_Platform == "QCD_YES") {
+                                    response.ADSDetails[i].Drying_practices_Platform = "Yes";
+                                } else {
+                                    response.ADSDetails[i].Drying_practices_Platform = "No";
+                                } if (response.ADSDetails[i].Reason_for_crop_loss_Weather == "QCD_YES") {
+                                    response.ADSDetails[i].Reason_for_crop_loss_Weather = "Yes";
+                                } else {
+                                    response.ADSDetails[i].Reason_for_crop_loss_Weather = "No";
+                                } if (response.ADSDetails[i].Reason_for_crop_loss_Pest == "QCD_YES") {
+                                    response.ADSDetails[i].Reason_for_crop_loss_Pest = "Yes";
+                                } else {
+                                    response.ADSDetails[i].Reason_for_crop_loss_Pest = "No";
+                                } if (response.ADSDetails[i].Reason_for_crop_loss_PHM == "QCD_YES") {
+                                    response.ADSDetails[i].Reason_for_crop_loss_PHM = "Yes";
+                                } else {
+                                    response.ADSDetails[i].Reason_for_crop_loss_PHM = "No";
+                                } if (response.ADSDetails[i].Interested_to_sell_to_FPC == "QCD_YES") {
+                                    response.ADSDetails[i].Interested_to_sell_to_FPC = "Yes";
+                                } else {
+                                    response.ADSDetails[i].Interested_to_sell_to_FPC = "No";
+                                } if (response.ADSDetails[i].Whether_Aggregator == "QCD_YES") {
+                                    response.ADSDetails[i].Whether_Aggregator = "Yes";
+                                } else {
+                                    response.ADSDetails[i].Whether_Aggregator = "No";
+                                } if (response.ADSDetails[i].Form_of_storage_Cob == "QCD_YES") {
+                                    response.ADSDetails[i].Form_of_storage_Cob = "Yes";
+                                } else {
+                                    response.ADSDetails[i].Form_of_storage_Cob = "No";
+                                } if (response.ADSDetails[i].Form_of_storage_Loose == "QCD_YES") {
+                                    response.ADSDetails[i].Form_of_storage_Loose = "Yes";
+                                } else {
+                                    response.ADSDetails[i].Form_of_storage_Loose = "No";
+                                } if (response.ADSDetails[i].Form_of_storage_Bags == "QCD_YES") {
+                                    response.ADSDetails[i].Form_of_storage_Bags = "Yes";
+                                } else {
+                                    response.ADSDetails[i].Form_of_storage_Bags = "No";
+                                } if (response.ADSDetails[i].Idea_of_maize_QC_M == "QCD_YES") {
+                                    response.ADSDetails[i].Idea_of_maize_QC_M = "Yes";
+                                } else {
+                                    response.ADSDetails[i].Idea_of_maize_QC_M = "No";
+                                } if (response.ADSDetails[i].Idea_of_maize_QC_F == "QCD_YES") {
+                                    response.ADSDetails[i].Idea_of_maize_QC_F = "Yes";
+                                } else {
+                                    response.ADSDetails[i].Idea_of_maize_QC_F = "No";
+                                } if (response.ADSDetails[i].Idea_of_maize_QC_DD == "QCD_YES") {
+                                    response.ADSDetails[i].Idea_of_maize_QC_DD = "Yes";
+                                } else {
+                                    response.ADSDetails[i].Idea_of_maize_QC_DD = "No";
+                                } if (response.ADSDetails[i].Interest_to_WH_Subsidy == "QCD_YES") {
+                                    response.ADSDetails[i].Interest_to_WH_Subsidy = "Yes";
+                                } else {
+                                    response.ADSDetails[i].Interest_to_WH_Subsidy = "No";
+                                } if (response.ADSDetails[i].Interest_to_WR_Finance == "QCD_YES") {
+                                    response.ADSDetails[i].Interest_to_WR_Finance = "Yes";
+                                } else {
+                                    response.ADSDetails[i].Interest_to_WR_Finance = "No";
+                                }
+                                if (response.ADSDetails[i].Share_Certificate == "QCD_YES") {
+                                    response.ADSDetails[i].Share_Certificate = "Yes";
+                                } else {
+                                    response.ADSDetails[i].Share_Certificate = "No";
+                                }
+                            }
+                            listgrid(response.ADSDetails);
+                        }
+                        var farmergrid = $("#adsdetails_grid").data("kendoGrid");
+                        farmergrid.dataSource.read();
+                        var count = farmergrid.dataSource.total();
+                        console.log(count);
+                        if (count == 0) {
+                            kendoAlert('No Records found');
+                        }
+                    },
+                    error: function (er) {
+                        listgrid([]);
+                        $('#lblprog').hide();
+                        $('#refresh').show();
+                        alert(er)
+                        console.log(er)
+                    }
+                });
+            }
+            else {
+                //kendoAlert('Please Select Any One Field');
+            }
+            return false;
+        });
+    });
+</script>
+<script>
+    var pager_click = true;
+    function GenerateAdsDetails(res) {
+        var data = changedataType(res.ADSDetails);
+        var row_count = res.out_record_count;
+        if (pager_click == true) {
+            $("#ads_details").empty();
+            $("#ads_details").append("<div id='adsdetails_grid'></div>");
+            $("#ads_details").append("<div id='pager'></div>");
+            SetPager(row_count);
+        }
+        else {
+        }
+        listgrid(data);
+    }
+    var pager_ds = [];
+    function SetPager(no_of_rec) {
+        try {
+            var arr = [];
+            var obj = {};
+            var pages = no_of_rec / 20;
+            for (var i = 0; i < pages; i++) {
+                obj[i] = "page_" + i;
+                arr.push(obj);
+            }
+            pager_ds = new kendo.data.DataSource({
+                data: arr,
+                pageSize: 1
+            });
+
+            SetPagerDS(pager_ds, no_of_rec);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function SetPagerDS(page_source, noofrecords) {
+        try {
+            $("#pager").kendoPager({
+                dataSource: page_source,
+                change: function (o) {
+                    fetchPageDetail('pager');
+                    return;
+                },
+                refresh: false,
+                pageSize: 1,
+                input: true,
+                numeric: true,
+                info: true,
+                messages: {
+                    of: "of {0}",
+                    display: '<span style="color:blue; font-weight : bold ">Total No of Records : </span>' + '<span style="color:red" >' + noofrecords + '</span>' //"<B>Total No of Records :</B> " +   noofrecords + " data items"
+                }
+            });
+            page_source.read();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function fetchPageDetail(pager_id) {
+        try {
+            var st_index = getStartIndex(pager_id);
+            var end_index = getEndIndex(pager_id, st_index);
+            pager_click = true;
+            listpageloadfetchads(st_index, end_index);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function listpageloadfetchads(st_index, end_index) {
+        try {
+            $('#refresh').hide();
+            $('#lblprog').show();
+            var cmb_fpocode = $("#cmb_fpocode").val();
+            var cmb_dist = $("#cmb_dist").val();
+            var cmb_taluk = $("#cmb_taluk").val();
+            var cmb_gram = $("#cmb_gram").val();
+            var from_index = st_index;
+            var to_index = end_index;
+            $.ajax({
+                type: "POST",
+                data: '{fpocode: "' + cmb_fpocode + '",district:"' + cmb_dist + '",taluk:"' + cmb_taluk + '",village:"' + cmb_gram + '", from_index:"' + parseInt(from_index) + '", to_index:"' + parseInt(to_index) + '"}',
+                url: "/ReportFarmerBasicInfo/GetAdsdetails",
+                timeout: 10000000,
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    $('#lblprog').hide();
+                    $('#refresh').show();
+                    if (response != null) {
+                        console.log(response);
+                        $("#ads_details").empty();
+                        $("#ads_details").append("<div id='adsdetails_grid'></div>");
+                        GenerateAdsDetails(response);
+                    }
+                },
+                error: function (er) {
+                    listgrid([]);
+                    $('#lblprog').hide();
+                    $('#refresh').show();
+                    alert(er)
+                    console.log(er)
+                }
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err.message);
+        }
+    }
+
+    function load_master_code() {
+        try {
+            var data = {};
+            data.screen_Id = "FARMADS";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function ExportButtonClick_Download() {
+        debugger
+        $('#refresh').hide();
+        $('#lblprog').show();
+        var cmb_fpocode = $("#cmb_fpocode").val();
+        var cmb_dist = $("#cmb_dist").val();
+        var cmb_taluk = $("#cmb_taluk").val();
+        var cmb_gram = $("#cmb_gram").val();
+        var from_index = 0;
+        var to_index = 20000;
+        $.ajax({
+            type: "POST",
+            data: '{fpocode: "' + cmb_fpocode + '",district:"' + cmb_dist + '",taluk:"' + cmb_taluk + '",village:"' + cmb_gram + '", from_index:"' + parseInt(from_index) + '", to_index:"' + parseInt(to_index) + '"}',
+            url: "/ReportFarmerBasicInfo/DownloadADSDetails",
+            timeout: 10000000,
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                debugger;
+                $('#refresh').show();
+                $('#lblprog').hide();
+                var url_path = response;
+                $("#downloadpath").attr("href", url_path.path);
+                document.getElementById("downloadpath").click();
+                kendoAlert("Exported Successfully");
+            },
+            error: function (er) {
+                kendoAlert(er);
+                $('#refresh').show();
+                $('#lblprog').hide();
+            }
+        });
+    }
+    function ExportButtonClick() {
+        debugger
+        var grid = $("#adsdetails_grid").data("kendoGrid");
+        if (grid.dataSource.total() == 0) {
+            kendoAlert('No records available in the Grid to Export!!!');
+        }
+        else {
+            grid.bind("excelExport", function (e) {
+                debugger;
+                e.workbook.fileName = "ADS Details.xlsx";
+                var rows1 = e.workbook.sheets[0];
+
+                var sheet = e.workbook.sheets[0];
+                var gd = $("#adsdetails_grid").data("kendoGrid");
+                var gd_fi = $("#adsdetails_grid").data("kendoGrid").dataSource;
+                var filters = gd_fi.filter();
+                var allData = gd_fi.data();
+                var query = new kendo.data.Query(allData);
+                var data = query.filter(filters).data;
+                var data_tt = gd.dataSource.data();
+                var sheet = e.workbook.sheets[0];
+                var gridColumns = gd.columns;
+
+                var columnCells = [];
+                for (var c = 0; c < gridColumns.length; c++) {
+                    var fieldName = gd.columns[c].hidden;
+                    if (typeof (fieldName) === "undefined") {
+                        var cellValue = gridColumns[c].title ? gridColumns[c].title : gridColumns[c].field;
+                        columnCells.push({ value: cellValue, autoWidth: true, background: "#7a7a7a", color: "#fff" });
+                    }
+                }
+                var rows = [{ cells: columnCells, type: "header" }];
+                for (var i = 0; i < data.length; i++) {
+                    var rowCells = [];
+                    for (var j = 0; j < gridColumns.length; j++) {
+                        var fieldName = gd.columns[j].hidden;
+                        if (typeof (fieldName) === "undefined") {
+                            var cellValue = data[i][gridColumns[j].field];
+                            rowCells.push({ value: cellValue });
+                        }
+                    }
+                    rows.push({ cells: rowCells, type: "data" });
+                }
+                sheet.rows = rows;
+            });
+            grid.saveAsExcel();
+            kendoAlert('Exported Sucessfully');
+        }
+    }
+</script>
+<script>
+    function listpageloadfetch() {
+        try {
+            var formval = form_Serialize("frm_adsreport");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_Fromvalue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_Fromvalue = ".";
+            }
+            obj_val.FilterBy_Tovalue = ".";
+            if (obj_val.status_option == "" || obj_val.status_option == undefined) {
+                obj_val.status_option = "V";
+            }
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Filter = obj_val;
+            var colCount = $("#adsdetails_grid").find('.k-grid-header colgroup > col').length;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    var status_Priority = [];
+    function listgrid(data) {
+        try {
+            $.each(data, function (index, value) {
+                var flag = false;
+                $.each(status_Priority, function (sindex, svalue) {
+                    if (svalue == value.status_desc) {
+                        flag = true;
+                    }
+                });
+                if (flag == false) {
+                    status_Priority.push(value.status_desc);
+                }
+            });
+            $("#adsdetails_grid").kendoGrid({
+                dataSource: {
+                    data: data,
+                    pageSize: 20,
+                },
+                height: 300,
+                sortable: true,
+                selectable: true,
+                pageable: {
+                    refresh: false,
+                    pageSizes: true,
+                    buttonCount: 5
+                },
+                navigatable: true,
+                groupable: false,
+                filterable: true,
+                resizable: true, 
+                save: function (data) {
+                    if (data.model.BANK_AC && data.model.quantity) {
+                        data.model.set("grossSellAmount", data.model.grossSellUnitPrice * data.model.quantity);
+                    }
+                },
+                /* pageable: {
+                     refresh: false,
+                     pageSizes: true,
+                     previousNext: true,
+                     buttonCount: 8,
+                     pageSize: 20,
+                     refresh: true,
+                     pageSizes: true
+                 },*/
+                columns: [
+                    {
+                        field: "FPOName",
+                        title: "FPOName", 
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        }, 
+                        width: 200
+
+                    },
+
+                    {
+                        field: "farmer_code",
+                        title: "Farmer code",
+                        width: 160,
+                        filterable: false
+                    },
+
+                    {
+                        field: "farmer_name",
+                        title: "Farmer Name",
+                        width: 100,
+                        filterable: false
+                    },
+                    {
+                        field: "sur_name",
+                        title: "Sur Name",
+                        width: 100,
+                        filterable: false
+                    },
+                    {
+                        field: "fhw_name",
+                        title: "FHW Name",
+                        width: 100,
+                        filterable: false,
+                    },
+                    {
+                        field: "dob",
+                        title: "DOB",
+                        width: 100,
+                        filterable: false,
+                    },
+                    {
+                        field: "farmer_dist",
+                        title: "Dist",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        }, 
+                        width: 100,
+                    },
+                    {
+                        field: "farmer_taluk",
+                        title: "Taluk",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        }, 
+                        width: 100,
+                    },
+                    {
+                        field: "farmer_panchayat",
+                        title: "GP",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        }, 
+                        width: 100,
+                    },
+                    {
+                        field: "farmer_village",
+                        title: "Village",
+                        width: 100,
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        }, 
+                    },
+                    {
+                        field: "farmer_addr2",
+                        title: "Hamlet",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        }, 
+                        width: 100,
+                    },
+                    {
+                        field: "farmer_pincode",
+                        title: "Pincode",
+                        width: 100,
+                        filterable: false,
+                    },
+                    {
+                        field: "gender_flag",
+                        title: "Gender",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        }, 
+                        width: 100,
+                    },
+                    {
+                        field: "reg_mobile_no",
+                        title: "Mobile no",
+                        width: 100,
+                        filterable: false,
+                    },
+                    {
+                        field: "GroupName",
+                        title: "Group Name",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        }, 
+                        width: 200,
+                    },
+                    {
+                        field: "LTHName",
+                        title: "Local Traders in Hamlet Name",
+                        width: 200,
+                    },
+                    {
+                        field: "LTHMobileNo",
+                        title: "Local Traders in Hamlet Mobile No",
+                        width: 200,
+                    },
+                    {
+                        field: "No_of_Milling_machine_in_villages",
+                        title: "No of Milling machine in Villages",
+                        width: 200,
+                    },
+                    {
+                        field: "No_of_Tractors_in_Village",
+                        title: "No of Tractors in Village",
+                        width: 200,
+                    },
+                    {
+                        field: "Distance_of_Warehouse",
+                        title: "Distance of Warehouse",
+                        width: 200,
+                    },
+                    {
+                        field: "WareHouse_Type",
+                        title: "WareHouse Type",
+                        width: 200,
+                    },
+                    {
+                        field: "BANK_AC",
+                        title: "Bank Account",
+                        width: 200,
+                    },
+                    {
+                        field: "Bank_Account_No",
+                        title: "Bank Account No",
+                        width: 200,
+                    },
+                    {
+                        field: "Bank_Name",
+                        title: "Bank Name",
+                        width: 200,
+                    },
+                    {
+                        field: "Branch_Name",
+                        title: "Branch Name",
+                        width: 200,
+                    },
+                    {
+                        field: "IFSC_Code",
+                        title: "IFSC Code",
+                        width: 200,
+                    },
+                    {
+                        field: "CASTE",
+                        title: "Caste",
+                        width: 200,
+                    },
+                    {
+                        field: "Education",
+                        title: "Education",
+                        width: 200,
+                    },
+                    {
+                        field: "LF",
+                        title: "Lead Farmer",
+                        width: 200,
+                    },
+                    {
+                        field: "Aadhar_No",
+                        title: "Aadhar No",
+                        width: 200,
+                    },
+                    {
+                        field: "Family_No",
+                        title: "Family No",
+                        width: 200,
+                    },
+                    {
+                        field: "Working_No",
+                        title: "Working No",
+                        width: 200,
+                    },
+                    {
+                        field: "family_member_migrated",
+                        title: "Family Member Migrated",
+                        width: 200,
+                    },
+                    {
+                        field: "OISLabour",
+                        title: "Other Income Source - Labour",
+                        width: 200,
+                    },
+                    {
+                        field: "OISJob",
+                        title: "Other Income Source - Job",
+                        width: 200,
+                    },
+                    {
+                        field: "OISBusiness",
+                        title: "Other Income Source - Business",
+                        width: 200,
+                    },
+                    {
+                        field: "House",
+                        title: "House",
+                        width: 200,
+                    },
+                    {
+                        field: "Tractor",
+                        title: "Tractor",
+                        width: 200,
+                    },
+                    {
+                        field: "ISTubewell",
+                        title: "Irrigation Source Tubewell",
+                        width: 200,
+                    },
+                    {
+                        field: "ISCanal",
+                        title: "Irrigation Source Canal",
+                        width: 200,
+                    },
+                    {
+                        field: "F_Pond",
+                        title: "F_Pond",
+                        width: 200,
+                    },
+                    {
+                        field: "PISLTrader",
+                        title: "POP Information Source Locality Trader",
+                        width: 250,
+                    },
+                    {
+                        field: "PISGOVT",
+                        title: "POP Information Source GOVT",
+                        width: 200,
+                    },
+                    {
+                        field: "PISFpo",
+                        title: "POP Information Source Fpo",
+                        width: 200,
+                    },
+                    {
+                        field: "SHCard",
+                        title: "S H Card",
+                        width: 200,
+                    },
+                    {
+                        field: "Large_Ruminants",
+                        title: "Large Ruminants",
+                        width: 200,
+                    },
+                    {
+                        field: "Poultry",
+                        title: "Poultry",
+                        width: 200,
+                    },
+                    {
+                        field: "Small_Ruminants",
+                        title: "Small Ruminants",
+                        width: 200,
+                    },
+                    {
+                        field: "Own_land_Acr",
+                        title: "Own land in Acr",
+                        width: 200,
+                    },
+                    {
+                        field: "Lease_land_Acr",
+                        title: "Lease land in Acr",
+                        width: 200,
+                    },
+                    {
+                        field: "FY_2019_20_kharif_area_Maize",
+                        title: "FY 2019-20 Kharif area - Maize",
+                        width: 200,
+                    },
+                    {
+                        field: "FY_2019_20_kharif_area_Paddy",
+                        title: "FY 2019-20 Kharif area - Paddy",
+                        width: 200,
+                    },
+                    {
+                        field: "FY_2019_20_kharif_area_Veg",
+                        title: "FY 2019-20 Kharif area - Veg",
+                        width: 200,
+                    },
+                    {
+                        field: "FY_2020_21_kharif_area_Maize",
+                        title: "FY 2020-21 Kharif area - Maize",
+                        width: 200,
+                    },
+                    {
+                        field: "FY_2020_21_kharif_area_Paddy",
+                        title: "FY 2020-21 Kharif area - Paddy",
+                        width: 200,
+                    },
+                    {
+                        field: "FY_2020_21_kharif_area_Veg",
+                        title: "FY 2020-21 Kharif area - Veg",
+                        width: 200,
+                    },
+                    {
+                        field: "FY_2019_20_rabi_area_Maize",
+                        title: "FY 2019-20 Rabi area - Maize",
+                        width: 200,
+                    },
+                    {
+                        field: "FY_2019_20_rabi_area_Paddy",
+                        title: "FY 2019-20 Rabi area - Paddy",
+                        width: 200,
+                    },
+                    {
+                        field: "FY_2019_20_rabi_area_Veg",
+                        title: "FY 2019-20 Rabi area - Veg",
+                        width: 200,
+                    },
+                    {
+                        field: "FY_2020_21_rabi_area_Maize",
+                        title: "FY 2020-21 Rabi area - Maize",
+                        width: 200,
+                    },
+                    {
+                        field: "FY_2020_21_rabi_area_Paddy",
+                        title: "FY 2020-21 Rabi area- Paddy",
+                        width: 200,
+                    },
+                    {
+                        field: "FY_2020_21_rabi_area_Veg",
+                        title: "FY 2020-21 Rabi area - Veg",
+                        width: 200,
+                    },
+                    {
+                        field: "Maize_yield_qtl_acre",
+                        title: "Maize yield qtl/acre Kharif",
+                        width: 200,
+                    },
+                    {
+                        field: "Maize_yield_Kh_Ra",
+                        title: "Maize yield qtl/acre Rabi",
+                        width: 200,
+                    },
+                    {
+                        field: "Ragi_2020_Acre",
+                        title: "Ragi 2020 in Acre",
+                        width: 200,
+                    },
+                    {
+                        field: "Ragi_2021_Acre",
+                        title: "Ragi 2021 in Acre",
+                        width: 200,
+                    },
+                    {
+                        field: "INS_Life",
+                        title: "Life Insurance",
+                        width: 200,
+                    },
+                    {
+                        field: "INS_Health",
+                        title: "Health Insurance",
+                        width: 200,
+                    },
+                    {
+                        field: "INS_Crop",
+                        title: "Crop Insurance",
+                        width: 200,
+                    },
+                    {
+                        field: "Loan_Vill",
+                        title: "Loan Village",
+                        width: 200,
+                    },
+                    {
+                        field: "Loan_MFI",
+                        title: "Loan MFI",
+                        width: 200,
+                    },
+                    {
+                        field: "Loan_Bank",
+                        title: "Loan Bank",
+                        width: 200,
+                    },
+                    {
+                        field: "Kalia",
+                        title: "Kalia",
+                        width: 100,
+                    },
+                    {
+                        field: "PM_Kisan_Nidhi",
+                        title: "PM Kisan Nidhi",
+                        width: 200,
+                    },
+                    {
+                        field: "eNAM_Reg",
+                        title: "eNAM Registration",
+                        width: 200,
+                    },
+                    {
+                        field: "RMC_Reg",
+                        title: "RMC Registration",
+                        width: 200,
+                    },
+                    {
+                        field: "INPLTrader",
+                        title: "Input Purchase from Locality Trader",
+                        width: 220,
+                    },
+                    {
+                        field: "INPSociety",
+                        title: "Input Purchase  from Society",
+                        width: 200,
+                    },
+                    {
+                        field: "INPFPO",
+                        title: "Input Purchase from FPO",
+                        width: 200,
+                    },
+                    {
+                        field: "MSTLTrader",
+                        title: "Maize Sold to Locality Trader",
+                        width: 200,
+                    },
+                    {
+                        field: "MSTRMC",
+                        title: "Maize Sold to RMC",
+                        width: 200,
+                    },
+                    {
+                        field: "MSTFPO",
+                        title: "Maize Sold to FPO",
+                        width: 200,
+                    },
+                    {
+                        field: "SMPLTrader",
+                        title: "Source of Market Price Locality Trader",
+                        width: 250,
+                    },
+                    {
+                        field: "SMPRMC",
+                        title: "Source of Market Price RMC",
+                        width: 200,
+                    },
+                    {
+                        field: "SMPFPO",
+                        title: "Source of Market Price FPO",
+                        width: 200,
+                    },
+                    {
+                        field: "FPC_share_paid_Rs",
+                        title: "FPC share paid Rs",
+                        width: 200,
+                    },
+                    {
+                        field: "Share_Certificate",
+                        title: "Share Certificate",
+                        width: 100,
+                    },
+                    {
+                        field: "Share_Certificate_No",
+                        title: "Share Certificate No",
+                        width: 200,
+                    },
+                    {
+                        field: "Own_Maize_storage_Kuccha",
+                        title: "Own Maize storage-Kuccha",
+                        width: 200,
+                    },
+                    {
+                        field: "Own_Maize_storage_Pucca",
+                        title: "Own Maize storage-Pucca",
+                        width: 200,
+                    },
+                    {
+                        field: "Drying_practices_Road",
+                        title: "Drying practices-Road",
+                        width: 200,
+                    },
+                    {
+                        field: "Drying_practices_Kuccha",
+                        title: "Drying practices-Kuccha",
+                        width: 200,
+                    },
+                    {
+                        field: "Drying_practices_Pucca",
+                        title: "Drying practices-Pucca",
+                        width: 200,
+                    },
+                    {
+                        field: "Drying_practices_Platform",
+                        title: "Drying practices-Platform",
+                        width: 200,
+                    },
+                    {
+                        field: "Reason_for_crop_loss_Weather",
+                        title: "Reason for crop loss-Weather",
+                        width: 200,
+                    },
+                    {
+                        field: "Reason_for_crop_loss_Pest",
+                        title: "Reason for crop loss-Pest",
+                        width: 200,
+                    },
+                    {
+                        field: "Reason_for_crop_loss_PHM",
+                        title: "Reason for crop loss-PHM",
+                        width: 200,
+                    },
+                    {
+                        field: "share_of_RCLWeather",
+                        title: "% share of Reason of crop loss Weather",
+                        width: 250,
+                    },
+                    {
+                        field: "share_of_RCLPest",
+                        title: "% share of Reason of crop loss Pest",
+                        width: 250,
+                    },
+                    {
+                        field: "share_of_RCLPHM",
+                        title: "% share of Reason of crop loss PHM",
+                        width: 250,
+                    },
+                    {
+                        field: "Interested_to_sell_to_FPC",
+                        title: "Interested to sell to FPC",
+                        width: 200,
+                    },
+                    {
+                        field: "Whether_Aggregator",
+                        title: "Whether Aggregator",
+                        width: 200,
+                    },
+                    {
+                        field: "of_maize_sold_in_Month_0_1",
+                        title: "% of maize sold in 0 to 1 Month",
+                        width: 200,
+                    },
+                    {
+                        field: "of_maize_sold_in_Month_2_3",
+                        title: "% of maize sold in 2 to 3 Month",
+                        width: 250,
+                    },
+                    {
+                        field: "of_maize_sold_in_Month_3",
+                        title: "% of maize sold in Above 3 Month",
+                        width: 250,
+                    },
+                    {
+                        field: "Form_of_storage_Cob",
+                        title: "Form of storage-Cob",
+                        width: 200,
+                    },
+                    {
+                        field: "Form_of_storage_Loose",
+                        title: "Form of storage-Loose",
+                        width: 200,
+                    },
+                    {
+                        field: "Form_of_storage_Bags",
+                        title: "Form of storage-Bags",
+                        width: 200,
+                    },
+                    {
+                        field: "sale_of_maize_to_Hat",
+                        title: "% sale of maize to-Hat",
+                        width: 200,
+                    },
+                    {
+                        field: "sale_of_maize_to_LTrader",
+                        title: "% sale of maize to Locality Trader",
+                        width: 250,
+                    },
+                    {
+                        field: "sale_of_maize_to_RMC",
+                        title: "% sale of maize to-RMC",
+                        width: 200,
+                    },
+                    {
+                        field: "Payment_received_in_days_Hat",
+                        title: "Payment received in days-Hat",
+                        width: 250,
+                    },
+                    {
+                        field: "Payment_received_in_days_LTrader",
+                        title: "Payment received in days-L.Trader",
+                        width: 250,
+                    },
+                    {
+                        field: "Payment_received_in_days_RMC",
+                        title: "Payment received in days-RMC",
+                        width: 200,
+                    },
+                    {
+                        field: "Idea_of_maize_QC_M",
+                        title: "Idea of Maize QC - Moisture",
+                        width: 200,
+                    },
+                    {
+                        field: "Idea_of_maize_QC_F",
+                        title: "Idea of Maize QC - Fungus",
+                        width: 200,
+                    },
+                    {
+                        field: "Idea_of_maize_QC_DD",
+                        title: "Idea of Maize QC - Damage and Discolour",
+                        width: 250,
+                    },
+                    {
+                        field: "Interest_to_WH_Subsidy",
+                        title: "Interest to WH Subsidy",
+                        width: 200,
+                    },
+                    {
+                        field: "Interest_to_WR_Finance",
+                        title: "Interest to WR Finance",
+                        width: 200,
+                    },
+                    {
+                        field: "Concern_LRP_ME",
+                        title: "Concern LRP/ME",
+                        width: 200,
+                    },
+                ],
+                editable: false,
+
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+
+</script>
+
+<script>
+
+    function listRefresh() {
+        debugger;
+        try {
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function listclear() {
+        try {
+            listgrid([]);
+            $("#cmb_dist").empty;
+            $("#cmb_fpocode").empty;
+            $("#cmb_taluk").empty;
+            $("#cmb_gram").empty;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+
+<style>
+    .k-footerTemplate {
+        text-align: right;
+    }
+</style>

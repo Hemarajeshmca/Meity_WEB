@@ -1,0 +1,326 @@
+﻿
+@{
+    ViewBag.Form = "Repayment Schedule";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+<form class="form-horizontal" id="frm_repayment_manual" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default" style="padding-bottom:15px" >
+        <div class="panel-body" style="padding-top:6px;padding-bottom:15px">
+            <div class="row" style="padding-bottom:15px">
+                @*<div class="col-sm-4">
+                        <div class=" form-group">
+                            <label for="textloanacc_no" class=" col-sm-5 control-label">Loan Account No</label>
+                            <div class=" col-sm-6">
+                                <input type="text" id="textloanacc_no" name="loan_no" class="form-control" maxlength="50" disabled>
+                            </div>
+                        </div>
+                    </div>*@
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="cmbfl_scheme" class="col-sm-5 control-label ">FL Scheme</label>
+                        <div class="col-sm-6">
+                            <input id="cmbfl_scheme" data-role="filtercombo" name="loanscheme_code" style="width:100%">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtrepay_tenure" class="col-sm-5 control-label">Repayment Tenure(Years)</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txtrepay_tenure" name="repayment_in_yrs" class="form-control" maxlength="50" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txt_schedule_pay" class="col-sm-5 control-label ">Total Payments</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txt_schedule_pay" name="total_payments" class="form-control" maxlength="50" disabled>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtloan_amount" class=" col-sm-5 control-label">Loan Amount</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txttranche_amount" name="tranche_amount" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txt_repay_freq" class=" col-sm-5 control-label">Repayment Frequency</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_repay_freq" name="repayment_freq" class="form-control" maxlength="50" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txt_instalment_amount" class="col-sm-5 control-label ">Instalment Amount</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txt_instalment_amount" name="instalment_amount" class="form-control" maxlength="50" disabled>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txt_loan_start_date" class="col-sm-5 control-label ">Loan Start Date</label>
+                        <div class=" col-sm-5">
+                            <input class="cusDate" data-role='datepicker' id="txt_loan_start_date" data-checkdate-msg="Enter Valid Date" name="loan_start_date" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txt_nopay_year" class=" col-sm-5 control-label">Payments Per year</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txt_nopay_year" name="payments_per_yr" class="form-control" maxlength="50" disabled>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txttotal_interest" class=" col-sm-5 control-label">Total Interest</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txttotal_interest" name="total_interest" class="form-control" maxlength="50" disabled>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                @*<div class="col-sm-4">
+                        <div class=" form-group">
+                            <label for="txt_loanscheme_name" class=" col-sm-5 control-label">Loan Scheme Name</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="txt_loanscheme_name" name="loanscheme_name" class="form-control" maxlength="50" disabled>
+                                <input type="hidden" id="hdn_loanscheme_code" name="loanscheme_code">
+                            </div>
+                        </div>
+                    </div>*@
+
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txt_interest_type" class=" col-sm-5 control-label">Interest Type</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_interest_type" name="total_interest" class="form-control" maxlength="50" disabled>
+                            <input type="hidden" id="hdn_interest_type_code" name="interest_type_code">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class=" col-sm-5">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6" style="padding-bottom:10px">
+                <button type="button" id="btnExport" style="float:right" class="btn btn-info">Export To Excel</button>
+            </div>
+            <div class="row" style="padding-top:15px; padding-bottom:15px">
+                <div class="col-xs-12">
+                    <div id="grid_repay_schedule">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    $(document).ready(function () {
+        //debugger;
+        kendodate_format();
+        master_FLClosure();
+        $(".Export").attr("hdrtitle", "Repayment Schedule List");
+        $(".Export").attr("SubTreeId", "FLREPAY");
+        $("#btnExport").kendoButton({
+            click: function () {
+                $("#grid_repay_schedule").data("kendoGrid").saveAsExcel();
+            }
+        })
+        load_master_code();
+        Screen_Id = "RESECH";
+        permission = sec_Permission(Screen_Id);
+        var FLScheme = "";
+        $("#cmbfl_scheme").empty();
+        FLScheme = grid_comboScreen_mastercodes("SCHECODE");
+        filter_combobox("cmbfl_scheme", FLScheme);
+       
+    });
+    function load_master_code() {
+        try {
+            debugger;
+            var data = {};
+            var context = WebAPIProxy.getContext();
+            data.userId = context.userId
+            data.orgnId = context.orgnId
+            data.locnId = context.locnId
+            data.localeId = context.localeId
+            data.screen_Id = "RESECH";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+  
+</script>
+@*<script src="~/API_Scripts/FLRepaymentMaintenance_retrieveFLRepayment_Maintenance_APIClient.js"></script>
+    <script src="~/API_Scripts/FLRepaymentMaintenance_retrieveFLRepayment_Mode_APIClient.js"></script>*@
+<script src="~/API_Scripts/FLRepaymentMaintenance_retrieveFLRepayment_Schedule_APIClient.js"></script>
+@*<script src="~/API_Scripts/FLRepaymentMaintenance_saveFLRepayment_Maintenance_APIClient.js"></script>
+    <script src="~/API_Scripts/FLRepaymentMaintenance_saveFLRepayment_Mode_APIClient.js"></script>
+    <script src="~/API_Scripts/retrieveFLRepayment_Maintenance_Model.js"></script>
+    <script src="~/API_Scripts/retrieveFLRepayment_Mode_Model.js"></script>*@
+<script src="~/API_Scripts/retrieveFLRepayment_Schedule_Model.js"></script>
+@*<script src="~/API_Scripts/saveFLRepayment_Maintenance_Model.js"></script>
+    <script src="~/API_Scripts/saveFLRepayment_Mode_Model.js"></script>*@
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/API_Scripts/FlRepaymentmaintance.js"></script>
+<script>
+    //var data = [];
+    function grid_repay_schedule(data) {
+        try {
+            $("#grid_repay_schedule").kendoGrid({
+                excel: {
+                    fileName: "Repayment Schedule.xlsx",
+                    filterable: true,
+                    allPages: false
+                },
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+
+                                instal_no: { type: "string" },
+                                repay_date: { type: "string" },
+                                op_bal: { type: "string" },
+                                principal: { type: "string" },
+                                interest: { type: "string" },
+                                cl_bal: { type: "string" },
+                                cum_int: { type: "string" },
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+
+                height: 270,
+                groupable: false,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                    {
+                        field: "instalment_no",
+                        title: "Instalment No",
+                        width: 80
+                    },
+                    {
+                        field: "instalment_date",
+                        title: "Repayment Date",
+                        width: 100,
+                        format: "{0:dd/MM/yyyy}"
+                    },
+                    {
+                        field: "opening_balance",
+                        title: "Op. Bal.",
+                        width: 100
+                    },
+                    {
+                        field: "principle_adj",
+                        title: "Principal",
+                        width: 80
+                    },
+                    {
+                        field: "interest_adj",
+                        title: "Interest",
+                        width: 80
+                    },
+                    {
+                        field: "closing_balance",
+                        title: "Cl. Bal.",
+                        width: 100
+                    },
+                    {
+                        field: "cum_interest",
+                        title: "Cum. Int.",
+                        width: 100
+                    },
+                    {
+                        field: "mode_flag",
+                        title: "Mode",
+                        hidden: true
+                    }],
+                editable: false
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+</script>
+<script>
+    function fetch_repay_schedule() {
+        var formval = form_Serialize("frm_repayment_manual");
+        var obj_val = JSON.parse(formval);
+        if (obj_val != undefined) {
+            obj_val.loan_no = "Manual";
+            obj_val.loan_start_date = getFormated_StringDate($("#txt_loan_start_date").val());
+            var data_fetch = {};
+            data_fetch.context = WebAPIProxy.getContext();
+            data_fetch.context.Header = obj_val;
+            retrieve_FLRepayment_Schedule_details(data_fetch);
+        }
+    }
+    function generate_FLRepayment_Schedule_header(res) {
+        try {
+            if (res != null) {
+                //$("#textloanacc_no").val(res.loan_no);
+                $("#txtrepay_tenure").val(res.repayment_in_yrs);
+                $("#txt_schedule_pay").val(res.total_payments);
+                $("#txttranche_amount").val(res.tranche_amount);
+                $("#txt_repay_freq").val(res.repayment_freq_desc);
+                $("#txt_instalment_amount").val(res.instalment_amount);
+                $("#txt_nopay_year").val(res.payments_per_yr);
+                $("#txttotal_interest").val(res.total_interest);
+                var start_date = res.loan_start_date.split('-').reverse().join('/');
+                $("#txt_loan_start_date").val(start_date);
+                //$("#hdn_loanscheme_code").val(res.loanscheme_code);
+                //$("#txt_loanscheme_name").val(res.loanscheme_name);
+                $("#hdn_interest_type_code").val(res.interest_type_code);
+                $("#txt_interest_type").val(res.interest_type);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_FLRepayment_Schedule_Details(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                grid_repay_schedule(data);
+            }
+            else {
+                grid_repay_schedule([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+

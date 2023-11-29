@@ -1,0 +1,523 @@
+﻿@{
+    ViewBag.Form = "Customer Registration";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+
+<form id="customer_form" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="cmb_cus_type" class=" col-sm-5 control-label">Customer</label>
+                        <div class=" col-sm-6">
+                            <input type="text" name="user_type_code" id="cmb_cus_type" data-role="filtercombo" style="width:100%">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtfarmercode" class="col-sm-5 control-label  ">Farmer Code</label>
+                        <div class=" col-sm-5">
+                            <input type="text" class="form-control" name="farmer_code" id="txtfarmercode" maxlength="10">
+                        </div>
+                        <div id="pay_help">
+                            <a class="HelpWindow fa fa-search fa-lg" role="button" id="pay_help1" data-toggle="modal" href="/HelpFilter/HelpFilter" hdrtitle="Member" searchid="S31" data-target="#HelpModal" onclick=transfer(this,"form","","form_control"); title="Search" style="font-size: 19px; "></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtusername" class="col-sm-5 control-label required">Name</label>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control" name="user_name" id="txtusername" maxlength="125">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                @*<div class="col-sm-4" style="display:none">
+                        <div class="form-group">
+                            <label for="txtUserId1" class="col-sm-5 control-label required">Customer ID</label>
+                            <div class=" col-sm-7">
+                                <input type="text" class="form-control" name="user_id" id="txtUserId1" maxlength="10">
+                            </div>
+
+                        </div>
+                    </div>*@
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtValidity" class=" col-sm-5 control-label">Valid Till</label>
+                        <div class=" col-sm-7">
+
+                            <input class="cusDate" data-role='datepicker' id="txtValidity" data-checkdate-msg="Enter Valid Date" name="valid_till" style="width:100%" onkeypress="return date_validate(event)" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="cmb_role" class=" col-sm-5 control-label required">Role</label>
+                        <div class=" col-sm-7">
+                            <input id="cmb_role" name="role_code" data-role="filtercombo" style="width:100%" />
+                            @*<input id="cmb_role" name="role_id" data-role="filtercombo" style="width:100%" onchange="Role_selectChange()" />*@
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="cmb_Belong" class=" col-sm-5 control-label required">Facilitator</label>
+                        <div class=" col-sm-7">
+
+                            <input id="cmb_Belong" name="facilitator_orgn_code" data-role="filtercombo" style="width:100%" />
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtEmailId" class=" col-sm-5 control-label">Email Id</label>
+                        <div class=" col-sm-7">
+                            <input type="email" class="form-control" id="txtEmailId" maxlength="125" name="email_id">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtPassword" class=" col-sm-5 control-label required">Password</label>
+                        <div class="col-sm-7">
+                            <input type="password" class="form-control" name="user_pwd" id="txtPassword" maxlength="20">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txt_mobile" class=" col-sm-5 control-label required">Mobile No</label>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control number" name="contact_no" id="txt_mobile" maxlength="10" onkeypress="return isNumberKey(event)">
+                        </div>  @*onchange="mobile_change()"*@
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none">
+                        <label for="user_code" class="col-sm-5 control-label">orgn_code</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="user_code" name="user_code" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none">
+                        <label for="txt_STATUS_code" class="col-sm-5 control-label">STATUS_code</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txt_STATUS_code" name="status_code" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label for="Profile_img" class=" col-sm-5 control-label">User Photo </label>
+                        <img id="Profile_img" src="~/images/NoImage.png" class="col-sm-5 img-circle profileImg" alt="User Image" height="60" width="60" />
+
+                        <div class=" col-sm-2">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <input type="file" name="file" id="farmerfile" src="~/images/noimage.png" style="width: 120px;" class=" col-sm-4 control-label" accept="image/x-png, image/gif, image/jpeg" />
+                        @*<button title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="submit" data-original-title="photo"> <span class="glyphicon glyphicon-camera"></span></button>*@
+                        <input type="hidden" id="txtImageHidden" name="profile_photo" />
+                        <input type="hidden" id="txtMode" name="mode_flag" />
+                        <div class=" col-sm-2">
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</form>
+
+<script src="~/API_Scripts/CustomerDet_retrieveCustomer_APIClient.js"></script>
+<script src="~/API_Scripts/CustomerDet_retrieveCustomerList_APIClient.js"></script>
+<script src="~/API_Scripts/CustomerDet_saveCustomer_APIClient.js"></script>
+<script src="~/API_Scripts/retrieveCustomer_Model.js"></script>
+<script src="~/API_Scripts/retrieveCustomerList_Model.js"></script>
+<script src="~/API_Scripts/saveCustomer_Model.js"></script>
+<script src="~/API_Scripts/CustomerDetails.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/CommonScripts/Common_func.js"></script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+<!-- Main content -->
+<script>
+    $(document).ready(function () {
+        kendodate_format();
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#customer_form");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+
+        $("#divUserRole27").show();
+
+        $("#divCreate").hide();
+        $("#divEdit").hide();
+        $("#divView").hide();
+        $("#common_id").text("Customer ID:")
+
+        Screen_Id = "ESPUSRMGMT";
+        permission = sec_Permission(Screen_Id);
+
+        $(".file_attach").attr("hdrtitle", "Customer Registration");
+        $(".notes").attr("hdrtitle", "Customer Registration");
+        $("#lblForm_menuid").text("ESPUSRMGMT");
+
+        load_master_code();
+        var CUS_TYPE = "";
+        $("#cmb_cus_type").empty();
+        CUS_TYPE = grid_combo_mastercodes("QCD_CUS_TYPE");
+        filter_combobox("cmb_cus_type", CUS_TYPE);
+
+        //role dropDown
+        var list_in = "";
+        $("#cmb_role").empty();
+        list_in = grid_combo_mastercodes("QCD_FL_ROLE");
+        filter_combobox("cmb_role", list_in);
+        //Belongs to dropDown
+        var ORGFO = "";
+        $("#cmb_Belong").empty();
+        ORGFO = grid_comboScreen_mastercodes("ORGFPO");
+        filter_combobox("cmb_Belong", ORGFO);
+
+        //$("#pay_help1").hide();
+
+
+        $("#cmb_cus_type").change(function () {
+            var myComboBox = $('#cmb_cus_type').data('kendoComboBox');
+            if (myComboBox.text() == "Member") {
+                $("#pay_help1").show();
+                $("#txtfarmercode").attr("disabled", "disabled");
+                $("#txtUserName1").attr("disabled", "disabled");
+                $("#txt_mobile").attr("disabled", "disabled");
+            }
+            else {
+                $("#pay_help1").hide();
+                $("#txtfarmercode").attr("disabled", "disabled");
+                $("#txtUserName1").removeAttr("disabled");
+                $("#txt_mobile").removeAttr("disabled");
+
+            }
+
+        });
+        $("#txtValidity").kendoDatePicker({
+            min:new Date,
+            format: "dd/MM/yyyy"
+        });
+
+      
+
+        if (getlocalStorage('btn_clk_val') == "Create") {
+            //$('#divCreate #review').hide();
+            //$("#bottom_menus").hide();
+            //$("#DocStat").val("New");
+            $("#txtMode").val("I");
+        }
+        else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
+            $('#divEdit #reviewEd').hide();
+            $('#deactivate').hide();
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var fdata = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("customer_form");
+                var obj_val = JSON.parse(formval);
+                obj_val.user_code = fdata.user_code;
+                obj_val.farmer_code = fdata.farmer_code
+                //$("#txtcommon_id").val(fdata.user_code);
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                retrieve_customerdtl_details(data);
+                $("#txt_STATUS_code").val(fdata.status_code)
+                $("#DocStat").val(fdata.status_code);
+                $("#txtcommon_id").val(fdata.user_code);
+                //$("#user_code").val(fdata.user_code);
+                if ($("#DocStat").val() == 'Approved') {
+                    $('#divUserRole27 #btnRSave').hide();
+                }
+                else {
+                    $('#divUserRole27 #btnupdate').hide()
+                }
+            }
+            $("#txtMode").val("U");
+            field_enable();
+
+        }
+
+        function field_enable() {
+            if (getlocalStorage('btn_clk_val') == "View") {
+                //$("#Service_nominee :input").attr("readonly", "");
+                $("#divUserRole27 .breadcrumb").hide();
+                $("#pay_help1").hide();
+
+                $('#cmb_cus_type').prop("disabled", true);
+                $('#txtfarmercode').prop("disabled", true);
+                $('#txtusername').prop("disabled", true);
+                $('#txtValidity').prop("disabled", true);
+                $('#cmb_role').prop("disabled", true);
+
+                $('#cmb_Belong').prop("disabled", true);
+                $('#txtEmailId').prop("disabled", true);
+                $('#txtPassword').prop("disabled", true);
+                $('#txt_mobile').prop("disabled", true);
+                //$("#txtComments").removeAttr("readonly");
+                //$("#farmerfile").removeAttr("readonly");
+                //$("#farmerfile").prop("disabled", true);
+            }
+        } });
+
+
+
+    var container = $("#txtValidity");
+    container.kendoValidator({
+        rules: {
+            checkdate: function (input) {
+                if (input.attr("data-role") == "datepicker") {
+                    var res = isDate(input.val());
+                    return res;
+                }
+                else {
+                    return true;
+                }
+            }
+        }
+    });
+
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        if (charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+
+    function load_master_code() {
+        debugger;
+        var data = {};
+        var context = WebAPIProxy.getContext();
+        data.userId = context.userId
+        data.orgnId = context.orgnId
+        data.locnId = context.locnId
+        data.localeId = context.localeId
+        data.screen_Id = "ESPUSRMGMT";
+        var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+    }
+</script>
+
+
+<script>
+    click_act_name = "ESPUserDefinitionList";
+    click_ctrl_name = "ESPUserDefinition";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+
+</script>
+<script>
+    $("#farmerfile").change(function () {
+        readURL(this);
+    });
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#Profile_img').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+
+        }
+    }
+    function save_Image() {
+        try {
+            var xhr = new XMLHttpRequest();
+            var fd = new FormData();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var value = JSON.parse(xhr.responseText);
+                    if (value.result != undefined) {
+                        $("#txtImageHidden").val(value.result);
+                    }
+                    save_user();
+                }
+            };
+
+
+            fd.append("file", document.getElementById('farmerfile').files[0]);
+            fd.append("userID", $('#txtUserId').val());
+            xhr.open("POST", "/UserDefinition/User/", true);
+            xhr.send(fd);
+            xhr.addEventListener("load", function (event) {
+            }, false);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>
+    function save() {
+        try {
+            save_Image();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function save_user() {
+        if ($('#cmb_cus_type').val() == '' || $('#cmb_cus_type').val() == undefined) {
+            kendoAlert('Please Select Customer Type');
+        }
+
+        else if ($('#txtusername').val() == '' || $('#txtusername').val() == undefined) {
+            kendoAlert('Please Enter Name');
+        }
+        else if ($('#cmb_role').val() == '' || $('#cmb_role').val() == undefined) {
+            kendoAlert('Please Select Role');
+        }
+        else if ($('#cmb_Belong').val() == '' || $('#cmb_Belong').val() == undefined) {
+            kendoAlert('Please Select Facilitator');
+        }
+        else if ($('#txtPassword').val() == '' || $('#txtPassword').val() == undefined) {
+            kendoAlert('Please Enter Password');
+        }
+        else if ($('#txt_mobile').val() == '' || $('#txt_mobile').val() == undefined) {
+            kendoAlert('Please Enter MobileNo');
+        }
+        else {
+
+            if ($("#txtMode").val() == "S") {
+                $("#txtMode").val('U');
+            }
+            if ($("#txtfarmercode").val() == "") {
+                $("#txtfarmercode").val('0');
+            }
+
+            if ($("#user_code").val() == undefined || $("#user_code").val() == "") {
+                $("#user_code").val('0');
+            }
+
+            $('#txtfarmercode').prop("disabled", false);
+            $('#txt_mobile').prop("disabled", false);
+            var formval = form_Serialize("customer_form");
+            var obj_val = JSON.parse(formval);
+            obj_val.user_code = $("#txtcommon_id").val();
+            $('#txt_mobile').prop("disabled", true);
+            $('#txtfarmercode').prop("disabled", true);
+            if (obj_val.hasOwnProperty('valid_till')) {
+                if (obj_val.valid_till != '')
+                    obj_val.valid_till = getFormated_StringDate(obj_val.valid_till);
+            }
+
+            if (obj_val.status_code == undefined) {
+                obj_val.status_code = "A";
+            }
+            if (obj_val.row_timestamp == undefined) {
+                obj_val.row_timestamp = "0";
+            }
+            var data_save = {};
+            data_save.context = WebAPIProxy.getContext();
+            data_save.context.Header = obj_val;
+            save_customerdtl_details(data_save);
+        }
+    }
+
+    function grid_control() {
+        var control_Name = [
+
+        ];
+        return control_Name;
+    }
+
+    function form_control() {
+        var control_Name = [
+            { "dataCol": "farmer_code", "controlId": "txtfarmercode", "type": "Text" },
+             { "dataCol": "farmer_name", "controlId": "txtusername", "type": "Text" },
+               { "dataCol": "reg_mobile_no", "controlId": "txt_mobile", "type": "Text" },
+
+        ];
+        return control_Name;
+
+    }
+    function trans_input_data() {
+        var trans_coll = [
+            { "trasfer": "Yes", "dataCol": "farmer_code", "controlId": "", "grid_id": "", "grid_row_col": "" }
+        ];
+        return trans_coll;
+    }
+
+
+
+    function generate_customerdtl_header(res) {
+        try {
+            $("#user_code").val(res.user_code);
+            $("#txtcommon_id").val(res.user_code);
+            $('#cmb_cus_type').data("kendoComboBox").value(res.user_type_code);
+            $("#txtfarmercode").val(res.farmer_code);
+            $("#txtusername").val(res.user_name);
+            $("#txtValidity").val(res.valid_till);
+            $('#cmb_role').data("kendoComboBox").value(res.role_code);
+            $('#cmb_Belong').data("kendoComboBox").value(res.facilitator_orgn_code);
+            $("#txtEmailId").val(res.email_id);
+            $("#txtPassword").val(res.user_pwd);
+            $("#txt_mobile").val(res.contact_no);
+            $("#txtImageHidden").val(res.profile_photo);
+            $("#DocStat").val(res.status_code);
+            var profiledata = res.profile_photo
+            if (profiledata != "")
+                document.getElementById("Profile_img").src = "data:image/png;base64," + profiledata;
+            else
+                document.getElementById("Profile_img").src = "/images/noimage.png";
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<script>
+
+    function get_customer_details(res) {
+        $("#txtcommon_id").val(res.user_code);
+        var formval = form_Serialize("customer_form");
+        var obj_val = JSON.parse(formval);
+        obj_val.user_code = res.user_code;
+        obj_val.farmer_code = res.farmer_code
+        obj_val.user_type_code = res.user_type_code
+        $("#txtcommon_id").val(res.user_code);
+        $('#cmb_cus_type').data("kendoComboBox").value(res.user_type_code);
+        var data = {};
+        data.context = WebAPIProxy.getContext();
+        data.context.Header = obj_val;
+        retrieve_customerdtl_details(data);
+    }
+</script>
+
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>

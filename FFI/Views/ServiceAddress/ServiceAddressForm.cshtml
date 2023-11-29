@@ -1,0 +1,1149 @@
+﻿@{
+    ViewBag.Form = "Address Change";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+<link href="~/CSS/AccordianPan.css" rel="stylesheet" />
+<script src="~/CommonScripts/HelpFile.js"></script>
+<script src="~/CommonScripts/Common_func.js"></script>
+<script src="~/CommonScripts/ValidationScript.js"></script>
+<form id="frm_serviceaddress" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="box-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-top:10px; padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtmember_id" class="col-sm-5 control-label ">Member ID</label>
+                        <div class="col-sm-5" style="width:200px;">
+                            <input type="text" id="txtmember_id" name="In_fpomember_code" class="form-control" maxlength="50" readonly onchange="fetch_name()">
+                            <input id="txtaggrorgn_code" name="fpoorgn_code" type="hidden" />
+                        </div>
+                        <div id="pay_help">
+                            <a class="HelpWindow fa fa-search fa-lg" role="button" id="pay_help1" data-toggle="modal" href="/HelpFilter/HelpFilter" hdrtitle="FPO Member" searchid="L001" data-target="#HelpModal" onclick=transfer(this,"form","","form_control"); title="Search" style="font-size: 19px; margin-left: 0px; margin-top: 10px;"></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" id="sign">
+                    <label for="txtRoleDesc" class="col-sm-4 control-label ">Signature</label>
+
+                    <img id="former_sign" src="~/images/1.JPG" style="margin-left: -233px;" class="col-sm-4 img-bordered-sm profileImg" alt="User Image" height="40" width="100" />
+                    <div class="form-group">
+                        <div>
+                            <input type="hidden" id="farmer_img" name="signature_farmer" />
+                            <input id="txtaggrorgn_code" name="fpoorgn_code" type="hidden" />
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtfarmer_id" class=" col-sm-5 control-label">Farmer ID</label>
+                        <div class=" col-sm-7">
+                            <input type="text" id="txtfarmer_id" name="In_farmer_code" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="txtMode" class="col-sm-5 control-label">Mode</label>
+                        <div class="col-sm-7">
+                            <input id="txtMode" name="In_mode_flag" type="text" class="form-control" data-toggle="tooltip" data-placement="bottom" value="I">
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtfarmer_name" class="col-sm-5 control-label">Farmer Given Name</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtfarmer_name" name="member_name" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtfarmer_sur_name" class="col-sm-5 control-label ">Farmer Surname</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtfarmer_sur_name" name="member_sur_name" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="panel panel-default">
+        <div class="box-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-top:10px; padding-bottom:15px">
+                <div class="col-sm-6">
+
+
+
+
+                    <div class="form-group">
+                        <label for="txtgiven_name" class="col-sm-5 control-label">Current Details</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtAdress_01" class="col-sm-3 control-label">Address Line 01</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtAdress_01" name="In_current_member_addr1" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="txtAdress_02" class="col-sm-3 control-label ">Address Line 02</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtAdress_02" name="In_current_member_addr2" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="cmb_state" class="col-sm-3 control-label">State</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_state" data-role="filtercombo" name="In_current_member_state" style="width:100%" readonly>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="cmb_village" class="col-sm-3 control-label ">Village</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_village" name="In_current_member_village" readonly data-role="filtercombo" style="width:100%">
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label for="cmb_grampan" class="col-sm-3 control-label">Gram Panchayat</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_grampan" name="In_current_member_panchayat" readonly data-role="filtercombo" style="width:100%">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="cmb_taluk" class="col-sm-3 control-label ">Taluk</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_taluk" name="In_current_member_taluk" readonly data-role="filtercombo" style="width:100%">
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label for="cmb_district" class="col-sm-3 control-label">District</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_district" name="In_current_member_dist" readonly data-role="filtercombo" style="width:100%">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="txtpin_code" class="col-sm-3 control-label">Pincode</label>
+                        <div class="col-sm-7">
+                            <input type="number" id="txtpin_code" name="In_current_member_pincode" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+                <div class="col-sm-6">
+
+
+                    <div class="form-group">
+                        <label for="txtgiven_name" class="col-sm-5 control-label">Change To</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtAdress01" class="col-sm-5 control-label required">Address Line 01</label>
+                        <div class="col-sm-7">
+                            <input type="text" name="In_change_member_addr1" id="txtAdress01" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="txtAdress02" class="col-sm-5 control-label required">Address Line 02</label>
+                        <div class="col-sm-7">
+                            <input type="text" name="In_change_member_addr2" id="txtAdress02" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="cmb_state1" class="col-sm-5 control-label required">State</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_state1" name="In_change_member_state" data-role="filtercombo" style="width:100%" placeholder="--Select--">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="cmb_village1" class="col-sm-5 control-label required">Village</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_village1" name="In_change_member_village" data-role="filtercombo" style="width:100%">
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label for="cmb_grampan1" class="col-sm-5 control-label required">Gram Panchayat</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_grampan1" name="In_change_member_panchayat" data-role="filtercombo" style="width:100%" placeholder="--Select--">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="cmb_taluk1" class="col-sm-5 control-label required">Taluk</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_taluk1" name="In_change_member_taluk" data-role="filtercombo" style="width:100%" placeholder="--Select--">
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label for="cmb_district1" class="col-sm-5 control-label required">District</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_district1" name="In_change_member_dist" data-role="filtercombo" style="width:100%" placeholder="--Select--">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="txtpincode" class="col-sm-5 control-label required">Pincode</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtpincode" name="In_change_member_pincode" class="form-control" maxlength="6" onkeypress="return isValidOnlyNumbers(event,this);">
+                            <input type="hidden" id="servicereq_rowid" name="IOU_servicereq_rowid" />
+                            <input type="hidden" name="status_code" id="In_status_code" value="">
+                            <input type="hidden" name="status_desc" id="status_desc" value="">
+                            <input type="hidden" name="row_timestamp" id="In_row_timestamp" value="">
+                            <input type="hidden" name="chklist_status_flag" id="In_chklist_status_flag" value="0">
+                            <input type="hidden" name="sr_comments" id="In_sr_comments" value="">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            <div class="col-sm-12" id="default-example">
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="headingone">
+                        <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseone" aria-expanded="true" aria-controls="collapseone">
+                                <i class="more-less glyphicon glyphicon-plus"></i>
+                                Share Certificates Held
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseone" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingone">
+                        <div class="panel-body">
+                            <div class="col-sm-12">
+                                <div id="grid_share_cert"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12" id="default-example">
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="headingTwo">
+                        <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" class="collapsed">
+                                <i class="more-less glyphicon glyphicon-plus"></i>
+                                Service Request History
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                        <div class="panel-body">
+                            <div class="col-sm-12">
+                                <div id="grid_req_history"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <label> Comments</label>
+            <textarea id="txtComments" rows="4" cols="20" name="In_sr_comments" style="width:100%" class="form-control" ></textarea>
+        </div>
+    </div>
+
+</form>
+<script>
+    click_act_name = "ServiceAddresslist";
+    click_ctrl_name = "ServiceAddress";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+<script src="~/API_Scripts/Service_Request_retrieveServiceRequestList_APIClient.js"></script>
+<script src="~/API_Scripts/Service_Request_retrieveServiceRequestAddress_APIClient.js"></script>
+<script src="~/API_Scripts/Service_Request_saveServiceRequestAddress_APIClient.js"></script>
+<script src="~/API_Scripts/saveServiceRequestAddress_Model.js"></script>
+<script src="~/API_Scripts/retrieveServiceRequestAddress_Model.js"></script>
+<script src="~/API_Scripts/retrieveSRMemberDetail_Model.js"></script>
+<script src="~/API_Scripts/ServiceReqAddress.js"></script>
+<script src="~/API_Scripts/Service_Request_retrieveSRMemberDetail_APIClient.js"></script>
+
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/Scripts/AccordianPan.js"></script>
+<script src="~/Scripts/json2.js"></script>
+<script src="~/Scripts/jquery.collapse.js"></script>
+<script src="~/Scripts/jquery.collapse_storage.js"></script>
+<script src="~/Scripts/jquery.collapse_cookie_storage.js"></script>
+
+<script>
+    var permission = "";
+    $(document).ready(function () {
+        $("#lblForm_menuid").text("SRVADDR");
+        kendodate_format();
+
+        $(document).on('click', '#btnSave', function (e) {
+            debugger;
+            var Address_01 = $('#txtAdress01').val();
+            var Address_02 = $('#txtAdress02').val();
+            var state = $('#cmb_state1').val();
+            var village = $('#cmb_village1').val();
+            var panchayat = $('#cmb_grampan1').val();
+            var Taluk = $('#cmb_taluk1').val();
+            var District = $('#cmb_district1').val();
+            var Pincode = $('#txtpincode').val();
+            if (Address_01 != "" && Address_01 != null && Address_02 != "" &&
+                Address_02 != null && state != "" && state != null && village != "" && village != null && panchayat != "" && panchayat != null &&
+                Taluk != "" && Taluk != null && District != "" && District != null && Pincode != "" && Pincode != null) {
+                $('#divCreate #btnSave').prop('disabled', true);
+                $('#divCreate #review').prop('disabled', false);
+            }
+            else {
+                $('#divCreate #btnSave').prop('disabled', false);
+                $('#divCreate #review').prop('disabled', true);
+            }
+        });
+        $(document).on('click', '#btnSaveEd', function (e) {
+
+            var Address_01 = $('#txtAdress01').val();
+            var Address_02 = $('#txtAdress02').val();
+            var state = $('#cmb_state1').val();
+            var village = $('#cmb_village1').val();
+            var panchayat = $('#cmb_grampan1').val();
+            var Taluk = $('#cmb_taluk1').val();
+            var District = $('#cmb_district1').val();
+            var Pincode = $('#txtpincode').val();
+            if (Address_01 != "" && Address_01 != null && Address_02 != "" &&
+                Address_02 != null && state != "" && state != null && village != "" && village != null && panchayat != "" && panchayat != null &&
+                Taluk != "" && Taluk != null && District != "" && District != null && Pincode != "" && Pincode != null) {
+                $('#divEdit #btnSaveEd').prop('disabled', true);
+                $('#divEdit #reviewEd').prop('disabled', false);
+            }
+            else {
+                $('#divEdit #btnSaveEd').prop('disabled', false);
+                $('#divEdit #reviewEd').prop('disabled', false);
+            }
+        });
+        $(document).on('click', '#btnApprove', function (e) {
+            $('#divEdit #btnApprove').prop('disabled', true);
+            $('#divEdit #btnReject').prop('disabled', true);
+        });
+        $(document).on('click', '#btnReject', function (e) {
+            var cmt = $('#txtComments').val();
+            if (cmt != "" && cmt != null) {
+
+                $('#divEdit #btnApprove').prop('disabled', true);
+                $('#divEdit #btnReject').prop('disabled', true);
+            }
+        });
+        $(document).on('click', '#reviewEd', function (e) {
+            master_review();
+            $('#divEdit #reviewEd').prop('disabled', true);
+        });
+        $(document).on('click', '#review', function (e) {
+            master_review();
+            $('#divCreate #review').prop('disabled', true);
+        });
+
+
+        load_master_code();
+        $("#common_id").text("Service Request No");
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#frm_serviceaddress");
+        kendo.init(container);
+        Screen_Id = "SRVADDR";
+        permission = sec_Permission(Screen_Id);
+        var data = [];
+        grid_share_cert();
+        grid_req_history();
+        //----StateMap
+        var org = getlocalStorage('org_id');
+        $('#txtaggrorgn_code').val(org);
+        var smap_in = "";
+        $("#cmb_state1").empty();
+        smap_in = grid_comboScreen_mastercodes("QCD_UN_STATE");
+        filter_combobox("cmb_state1", smap_in);
+        //----DistrictMap
+        var dtmap_in = "";
+        $("#cmb_district1").empty();
+        dtmap_in = grid_comboScreen_mastercodes("QCD_UN_DIST");
+        filter_combobox("cmb_district1", dtmap_in);
+        //--Panchayatmap
+        var gtmap_in = "";
+        $("#cmb_grampan1").empty();
+        gtmap_in = grid_comboScreen_mastercodes("QCD_UN_GRAMPAN");
+        filter_combobox("cmb_grampan1", gtmap_in);
+        //--TalukMap
+        var ttmap_in = "";
+        $("#cmb_taluk1").empty();
+        ttmap_in = grid_comboScreen_mastercodes("QCD_UN_TALUK");
+        filter_combobox("cmb_taluk1", ttmap_in);
+        //--VillageMap
+        var vtmap_in = "";
+        $("#cmb_village1").empty();
+        vtmap_in = grid_comboScreen_mastercodes("QCD_UN_VILLAGE");
+        filter_combobox("cmb_village1", vtmap_in);
+
+        //----StateMap
+        var smap_in = "";
+        $("#cmb_state").empty();
+        smap_in = grid_comboScreen_mastercodes("QCD_UN_STATE");
+        filter_combobox("cmb_state", smap_in);
+        //----DistrictMap
+        var dtmap_in = "";
+        $("#cmb_district").empty();
+        dtmap_in = grid_comboScreen_mastercodes("QCD_UN_DIST");
+        filter_combobox("cmb_district", dtmap_in);
+        //--Panchayatmap
+        var gtmap_in = "";
+        $("#cmb_grampan").empty();
+        gtmap_in = grid_comboScreen_mastercodes("QCD_UN_GRAMPAN");
+        filter_combobox("cmb_grampan", gtmap_in);
+        //--TalukMap
+        var ttmap_in = "";
+        $("#cmb_taluk").empty();
+        ttmap_in = grid_comboScreen_mastercodes("QCD_UN_TALUK");
+        filter_combobox("cmb_taluk", ttmap_in);
+        //--VillageMap
+        var vtmap_in = "";
+        $("#cmb_village").empty();
+        vtmap_in = grid_comboScreen_mastercodes("QCD_UN_VILLAGE");
+        filter_combobox("cmb_village", vtmap_in);
+
+        $(".file_attach").attr("hdrtitle", "Service Request-Address Change");
+        $(".notes").attr("hdrtitle", "Service Request-Address Change");
+
+
+
+
+        if (getlocalStorage('btn_clk_val') == "Create") {
+            //$('#divCreate #review').hide();
+            //$('#divEdit #reviewEd').hide();
+            //$('#divCreate #review').show();
+            //$('#divCreate #review').prop('disabled', true);
+            ////$("#bottom_menus").hide();
+            //$("#status_code").val("A");
+            //$("#DocStat").val("New");
+            //$("#txtMode").val("I");
+            //$("#bottom_menus").hide();
+            //$("#DocStat").val("New");
+
+            $('#divCreate #review').show();
+            $('#divCreate #review').prop('disabled', true);
+            $("#txtmode").val("I");
+            $("#bottom_menus").hide();
+            $("#DocStat").val("New");
+        }
+        else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
+            field_enable();
+            $('#sign').hide();
+            $("#bottom_menus").show();
+            var elements = document.getElementsByClassName('file_attach');
+            while (elements.length > 1) {
+                elements[0].parentNode.removeChild(elements[0]);
+                elements[1].parentNode.removeChild(elements[1]);
+            }
+            $("#divEdit #reviewEd").prop("disabled", true);
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("frm_serviceaddress");
+                var obj_val = JSON.parse(formval);
+                if (obj_val != undefined) {
+                    obj_val.IOU_fpomember_code = data.Out_fpomember_code;
+                    obj_val.IOU_request_type = data.Out_request_type;
+                    obj_val.IOU_servicereq_rowid = data.Out_servicereq_rowid;
+                    obj_val.IOU_servicereq_no = data.Out_servicereq_no;
+                    var data = {};
+                    data.context = WebAPIProxy.getContext();
+                    data.context.Header = obj_val;
+                    var Context = data.context;
+                    Singleretrieve_SerReqAdd_details(Context);
+                    SingleHistory_SerReqAddsdetail_details(Context);
+                    $("#txtMode").val("U");
+                    setlocalStorage('doc_no', $("#txtcommon_id").val());
+                    setlocalStorage('doc_row_id', $("#servicereq_rowid").val())
+                }
+            }
+        }
+
+        function field_enable() {
+            if (permission.auth == true || getlocalStorage('btn_clk_val') == "View") {
+                $("#frm_serviceaddress :input").attr("readonly", "");
+                $("#pay_help1").hide();
+                $("#txtComments").removeAttr("readonly");
+                $("#farmerfile").removeAttr("readonly");
+                $("#farmerfile").prop("disabled", true);
+
+            }
+        }
+        $('#HelpModal').on('hide.bs.modal', function (e) {
+            if ($("#txtmember_id").val() != undefined && $("#txtmember_id").val() != "") {
+                fetch_name();
+            }
+        });
+    });
+</script>
+<script>
+    function Singleretrieve_SerReqAdd_details(Context) {
+
+        debugger;
+        try {
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ orgnId: Context.orgnId, locnId: Context.locnId, userId: Context.userId, localeId: Context.localeId, Header: Context.Header }),
+                url: "/ServiceAddress/SingleServiceList",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                  
+                    if (response.context != null) {
+                        generate_SerReqAddress_header(response.context.Header)
+
+                    }
+                    if (response.ApplicationException != null) {
+                        kendoAlert(response.ApplicationException.errorDescription);
+                    }
+                  
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+
+    }
+    function SingleHistory_SerReqAddsdetail_details(Context) {
+        debugger;
+        try {
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ orgnId: Context.orgnId, locnId: Context.locnId, userId: Context.userId, localeId: Context.localeId, Header: Context.Header }),
+                url: "/ServiceAddress/SingleServiceAddressDetails",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    if (response.context != null) {
+                    if (response.context.Header != null) {
+                        generate_SerReqAddress_Header(response.context.Header)
+
+                    }
+                    if (response.context.Share_certificate != null) {
+                        generate_SerReqAddress_share_certificate(response.context.Share_certificate)
+                    }
+                    if (response.context.Request_history != null) {
+                        generate_SerReqName_request_history(response.context.Request_history)
+                    }
+                    if (response.ApplicationException != null) {
+                        kendoAlert(response.ApplicationException.errorDescription);
+                        }
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+
+    }
+    function fetch_name() {
+        try {
+            var formval = form_Serialize("frm_serviceaddress");
+            var obj_val = JSON.parse(formval);
+            if (obj_val != undefined) {
+                obj_val.IOU_fpomember_code = $("#txtmember_id").val();
+                obj_val.IOU_request_type = "QCD_FPOSERVICE_ADDRCHNG";
+                obj_val.IOU_servicereq_rowid = "0";
+                obj_val.IOU_servicereq_no = "0";
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                var Context = data.context;
+                //retrieve_SerReqAdd_details(data);
+                Singleretrieve_SerReqAdd_details(Context);
+                //retrieve_SerReqAddsdetail_details(data);
+                SingleHistory_SerReqAddsdetail_details(Context);
+                var profiledata = $("#farmer_img").val()
+                console.log($("#farmer_img").val());
+                if (profiledata != "")
+                    document.getElementById("former_sign").src = "data:image/png;base64," + profiledata;
+                else
+                    document.getElementById("former_sign").src = "/images/noimage.png";
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function get_SerReqaddress_details(res) {
+        try {
+            var formval = form_Serialize("frm_serviceaddress");
+            var obj_val = JSON.parse(formval);
+            if (obj_val != undefined) {
+                obj_val.IOU_fpomember_code = $("#txtmember_id").val();
+                obj_val.IOU_request_type = "QCD_FPOSERVICE_ADDRCHNG";
+                obj_val.IOU_servicereq_rowid = res.IOU_servicereq_rowid;
+                obj_val.IOU_servicereq_no = res.IOU_servicereq_no;
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                var Context = data.context;
+                //retrieve_SerReqAdd_details(data);
+                Singleretrieve_SerReqAdd_details(Context);
+                //retrieve_SerReqAddsdetail_details(data);
+                SingleHistory_SerReqAddsdetail_details(Context);
+
+                //var mode = obj_val.mode_flag;
+                //if (mode == "I") {
+                //    kendoAlert("Service Request Address changes  saved successfully");
+                //}
+                //else if (mode == "D") {
+                //    kendoAlert("Service Request Address inactivate successfully");
+                //}
+                //else if(mode =="A")
+                //{
+                //    kendoAlert("Application Approved");
+                //}
+                //else {
+                //    kendoAlert("Service Request Address changes  saved successfully");
+                //}
+
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_SerReqAddress_share_certificate(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                grid_share_cert(data);
+            }
+            else {
+                grid_share_cert([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_SerReqName_request_history(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                generate_SerReqAddress_request_history(data);
+            }
+            else {
+                grid_req_history([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function load_master_code() {
+        try {
+            var data = {};
+            data.screen_Id = "SRVADDR";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<script>
+    function grid_share_cert(data) {
+        try {
+            $("#grid_share_cert").kendoGrid(
+                    {
+                        dataSource: {
+                            data: data,
+                        },
+
+                        height: 200,
+                        sortable: true,
+                        selectable: true,
+                        selectable: "singl",   //  Grid Row Selection
+                        navigatable: true,
+                        groupable: false,
+
+                        columns: [
+                               {
+                                field: "In_certificatedist_rowid",
+                                   title: "certificatedist_rowid",
+                                   hidden: true
+                               },
+                               {
+                                   field: "In_certificate_no",
+                                   title: "Share Certificate No",
+                                   width: 200,
+                                   filterable: {
+                                       cell: {
+                                           operator: "contains",
+                                           inputWidth: 1500
+                                       }
+                                   }
+                               },
+                             {
+                                 field: "In_dist_from",
+                                 title: "Distinct From",
+                                 width: 200,
+                                 filterable: {
+                                     cell: {
+                                         operator: "contains",
+                                         inputWidth: 1500
+                                     }
+                                 }
+                             },
+                              {
+                                  field: "In_dist_to",
+                                  title: "Distinct to",
+                                  width: 200,
+                                  filterable: {
+                                      cell: {
+                                          operator: "contains",
+                                          inputWidth: 1500
+                                      }
+                                  }
+                              },
+                              {
+                                  field: "In_issued_date",
+                                  title: "Issued Date",
+                                  width: 200,
+                                  filterable: {
+                                      cell: {
+                                          operator: "contains",
+                                          inputWidth: 1500
+                                      }
+                                  }
+                              },
+                              {
+                                  field: "In_status_code",
+                                  title: "status_code",
+                                  hidden: true
+                              },
+                            {
+                                field: "In_status_desc",
+                                title: "Status",
+                                width: 200,
+                                filterable: {
+                                    cell: {
+                                        operator: "contains",
+                                        inputWidth: 1500
+                                    }
+                                }
+                            },
+
+
+                        ]
+
+                    });
+            var gridRowID = -1;
+            function sel_checkbox() {
+                gridRowID++;
+                return '<input id="chk_sel_' + gridRowID + '" class="checkbox" type="checkbox" />';
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+
+    }
+</script>
+
+<script>
+    function grid_req_history(data) {
+        $("#grid_req_history").kendoGrid({
+            dataSource: {
+                data: data,
+                schema: {
+                    model: {
+                        fields: {
+                            print_ref: { editable: false },
+                            certificate: { editable: false },
+                            print_date: { editable: false },
+                            certificates_print: { editable: false },
+
+                        }
+                    }
+                },
+            },
+            height: 200,
+            sortable: true,
+            columns: [
+                 {
+                    field: "In_servicereq_rowid",
+                     title: "servicereq_rowid",
+                     hidden: true
+                 },
+                {
+                    field: "In_certificate_no",
+                    title: "Certificate No",
+                    width: 200
+                },
+                {
+                    field: "In_issued_date",
+                    title: "Issued Date",
+                    width: 200
+                },
+            {
+                field: "In_servicereq_no",
+                title: "Service Request No",
+                width: 200
+            },
+            {
+                field: "In_request_date",
+                title: "Request Date",
+                width: 200
+            },
+             {
+                 field: "In_request_type",
+                 title: "Request Type",
+                 hidden: true
+             },
+             {
+                 field: "In_request_type_desc",
+                 title: "Request Type",
+                 width: 200
+             },
+             {
+                 field: "In_requestsub_type",
+                 title: "Request Subtype",
+                 hidden: true
+             },
+             {
+                 field: "In_requestsub_type_desc",
+                 title: "Request Subtype",
+                 width: 200
+             },
+             {
+                 field: "In_status_code",
+                 title: "status_code",
+                 hidden: true
+             },
+             {
+                 field: "In_status_desc",
+                 title: "Status",
+                 width: 200,
+                 filterable: {
+                     cell: {
+                         operator: "contains",
+                         inputWidth: 1500
+                     }
+                 }
+             },
+
+            ]
+        });
+
+    }
+</script>
+
+<script language="javascript" type="text/javascript">
+    function popitup(url) {
+        newwindow = window.open(url, 'name', 'height=650,width=850');
+        if (window.focus) { newwindow.focus() }
+        return false;
+
+    }
+</script>
+
+<script>
+    function save() {
+        debugger;
+
+        if ($("#txtmember_id").val() == undefined || $("#txtmember_id").val() == "") {
+            kendoAlert("FPO member Details needs to be Selected");
+            return false;
+        }
+        try {
+
+            if ($("#txtMode").val() == "S") {
+                $("#txtMode").val('U');
+            }
+            var formval = form_Serialize("frm_serviceaddress");
+            var obj_val = JSON.parse(formval);
+            if ($("#servicereq_rowid").val() == undefined || $("#servicereq_rowid").val() == "") {
+                obj_val.IOU_servicereq_rowid = 0;
+            }
+            else {
+                obj_val.IOU_servicereq_rowid = $("#servicereq_rowid").val();
+            }
+            if ($("#txtcommon_id").val() == undefined || $("#txtcommon_id").val() == "") {
+                obj_val.IOU_servicereq_no = "0";
+            }
+            else {
+                obj_val.IOU_servicereq_no = $("#txtcommon_id").val();
+            }
+            if (obj_val.In_status_code == undefined) {
+                obj_val.In_status_code = "A";
+            }
+            if (obj_val.In_row_timestamp == undefined) {
+                obj_val.In_row_timestamp = "0";
+            }
+            if ($("#chklst_status_flag").val() == undefined) {
+                obj_val.In_chklist_status_flag = "0";
+            }
+            else {
+                obj_val.In_chklist_status_flag = $("#chklst_status_flag").val();
+            }
+            if (obj_val.In_row_timestamp == undefined) {
+                obj_val.In_row_timestamp = "0";
+            }
+            if ($("#txtComments").val() == undefined || $("#txtComments").val() == "") {
+                obj_val.In_sr_comments = "";
+            }
+            else {
+                obj_val.In_sr_comments = $("#txtComments").val();
+            }
+
+            var data_save = {};
+            data_save.context = WebAPIProxy.getContext();
+            data_save.context.Header = obj_val;
+            var Context = data_save.context;
+
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ orgnId: Context.orgnId, locnId: Context.locnId, userId: Context.userId, localeId: Context.localeId, Header: Context.Header }),
+                url: "/ServiceAddress/SaveReqAddress",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    var Res = response;
+                    if (Res != null) {
+                        var mode = $("#txtMode").val();
+                        if (mode == "I") {
+                            kendoAlert("Service Request Address Details saved successfully");
+                            get_SerReqaddress_details(Res.context.Header);
+                        }
+                        else if (mode == "D") {
+                            kendoAlert("Service Request Address inactivate successfully");
+                            get_SerReqaddress_details(Res.context.Header);
+                        }
+                        else if (mode == "R") {
+                            kendoAlert("Service Request Address Send For Review");
+                            get_SerReqaddress_details(Res.context.Header);
+                        }
+                        else if (mode == "A") {
+                            kendoAlert("Service Request Address Approved successfully");
+                            get_SerReqaddress_details(Res.context.Header);
+                        }
+                        else if (mode == "J") {
+                            kendoAlert("Service Request Address Rejected successfully");
+                            get_SerReqaddress_details(Res.context.Header);
+                        }
+                        else {
+                            kendoAlert("Service Request Address saved successfully");
+                            get_SerReqaddress_details(Res.context.Header);
+                        }
+                    }
+                        else {
+                            kendoAlert(Res.ApplicationException.errorDescription);
+                        }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+            //save_SerReqAdd_details(data_save);
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+
+    function generate_SerReqAddress_share_certificate(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                grid_share_cert(data);
+            }
+            else {
+                grid_share_cert([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_SerReqAddress_request_history(res) {
+        if (res != null) {
+            var data = changedataType(res);
+            grid_req_history(data);
+        }
+        else {
+            grid_req_history([]);
+        }
+    }
+    function generate_SerReqAddress_Header(res) {
+        try {
+            if (res != null && getlocalStorage('btn_clk_val') != "Create") {
+                $("#txtfarmer_id").val(res.In_farmer_code);
+                $("#txtfarmer_name").val(res.In_farmer_name);
+                $("#txtfarmer_sur_name").val(res.In_sur_name);
+                $("#txtgiven_name").val(res.In_farmer_name);
+                $("#txtsurname").val(res.In_sur_name);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_SerReqAddress_header(res) {
+        try {
+            if (res != null) {
+                $("#mode_flag").val(res.In_mode_flag);
+                $("#DocStat").val(res.In_status_desc);
+                $("#servicereq_rowid").val(res.IOU_servicereq_rowid)
+                $("#txtmember_id").val(res.IOU_fpomember_code);
+                $("#txtAdress_01").val(res.In_current_member_addr1);
+                $("#txtAdress_02").val(res.In_current_member_addr2);
+                $("#txtpin_code").val(res.In_current_member_pincode);
+                $("#txtAdress01").val(res.In_change_member_addr1);
+                $("#txtAdress02").val(res.In_change_member_addr2);
+                $("#txtpincode").val(res.In_change_member_pincode);
+
+                $('#cmb_state').data("kendoComboBox").value(res.In_current_member_state);
+                $('#cmb_village').data("kendoComboBox").value(res.In_current_member_village);
+                $('#cmb_grampan').data("kendoComboBox").value(res.In_current_member_panchayat);
+                $('#cmb_taluk').data("kendoComboBox").value(res.In_current_member_taluk);
+                $('#cmb_district').data("kendoComboBox").value(res.In_current_member_dist);
+                $('#cmb_state1').data("kendoComboBox").value(res.In_change_member_state);
+                $('#cmb_village1').data("kendoComboBox").value(res.In_change_member_village);
+                $('#cmb_grampan1').data("kendoComboBox").value(res.In_change_member_panchayat);
+                $('#cmb_taluk1').data("kendoComboBox").value(res.In_change_member_taluk);
+                $('#cmb_district1').data("kendoComboBox").value(res.In_change_member_dist);
+                $("#txtfarmer_id").val(res.In_farmer_code);
+                $("#txtcommon_id").val(res.IOU_servicereq_no);
+                localStorage.docno = res.IOU_servicereq_rowid;
+                $("#txtComments").val(res.In_sr_comments);
+                if ($("#txtMode").val() != 'U') {
+                    $("#txtcommon_id").val(res.IOU_servicereq_no);
+                }
+            }
+        } catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>
+
+<script>
+    function grid_control() {
+        var control_Name = [
+
+        ];
+        return control_Name;
+    }
+
+    function form_control() {
+        var control_Name = [
+            { "dataCol": "fpomember_code", "controlId": "txtmember_id", "type": "Text" },
+            { "dataCol": "farmer_code", "controlId": "txtfarmer_id", "type": "Text" },
+            { "dataCol": "member_name", "controlId": "txtfarmer_name", "type": "Text" },
+             { "dataCol": "member_sur_name", "controlId": "txtfarmer_sur_name", "type": "Text" },
+              { "dataCol": "farmer_signature", "controlId": "farmer_img", "type": "Text" }
+        ];
+        return control_Name;
+
+    }
+    function trans_input_data() {
+        var trans_coll = [
+            { "trasfer": "Yes", "dataCol": "fpofarmer_code", "controlId": "", "grid_id": "", "grid_row_col": "" },
+             { "trasfer": "Yes", "dataCol": "fpoorgn_code", "controlId": "txtaggrorgn_code", "grid_id": "", "grid_row_col": "" },
+             { "trasfer": "Yes", "dataCol": "farmer_signature", "controlId": "farmer_img", "grid_id": "", "grid_row_col": "" }
+        ];
+        return trans_coll;
+    }
+    function review() {
+        $("#txtMode").val('R');
+        save();
+    }
+
+    function approve() {
+        $("#txtMode").val('A');
+        save();
+    }
+
+    function reject() {
+        try {
+            console.log($("#txtComments").val());
+            if ($("#txtComments").val() == "") {
+                kendoAlert("Please provide rejection reason for rejecting a request");
+            }
+            else {
+                $("#txtMode").val('J');
+                save();
+                $("#btnReject").prop('disabled', false);
+            }
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>

@@ -1,0 +1,148 @@
+﻿@*@using ReportViewerForMvc;*@
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Report</title>
+    <link href="~/CSS/popupGrid.css" rel="stylesheet" />
+</head>
+<body>
+
+    <form class="form-horizontal" id="frm_report"   data-role="validator" novalidate="novalidate">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 id="fahdr" class="modal-title">Report</h4>
+
+        </div>
+        <div id="rpt">
+            <div id="report" />
+        </div>
+        <div class="modal-body" style="height:550px;width:600px">
+            <div id="rpt_maindiv" class="col-md-12" style="padding-bottom: 10px ; margin-left: -34px; margin-top: -12px; width: 100%; height: 100%">
+                <div id="rpt_div">
+                    @*@Html.ReportViewer(
+    ViewBag.ReportViewer as Microsoft.Reporting.WebForms.ReportViewer,
+             new { scrolling = "no", width = "750px", height = "500px" })*@
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+</html>
+<style>
+    .breadcrumb > li + li:before {
+        color: #cccccc;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        debugger;
+        $("#ReportViewer1").removeAttr('width');
+        $("#ReportModal").on('hidden.bs.modal', function () {
+            $(this).data('bs.modal', null);
+            $(this).removeData('bs.modal');
+            console.log(localStorage.Printstatus);
+            localStorage.Printstatus = "";
+            console.log(localStorage.Printstatus);
+
+        });
+        console.log(Screen_Id);
+        if (Screen_Id == "MBADVGEN") {
+            btn_MLK_Advice();
+
+        }
+        else if (Screen_Id == "SHRPRN") {
+            btn_Sharecert_Print();
+        }
+        else if (Screen_Id == "SANLET") {
+
+            btn_SanctionLet_Print();
+        }
+        else if (Screen_Id == "FLCLOLET") {
+
+            ClosureLetterNDC()
+        }
+        else if (Screen_Id == "FLCOLUPD") {
+
+            DepoistSlipsGen();
+        }
+        else if (Screen_Id == "FLFCLOSE") {
+
+            Foreclosure();
+        }
+        else if (Screen_Id == "FLDISBAG") {
+
+            Disbursement();
+        }
+        else if (Screen_Id == "FLRECOV") {
+
+            RecoveryofInstalments();
+        }
+        else if (Screen_Id == "ICDINVOICE") {         
+            if ($("#txtic_invoiceno").val() != "") {
+                btn_invoice_Print();
+            }
+            else {               
+                $("#ReportModal").modal("hide");
+                kendoAlert("Invoice No cannot be blank");
+            }
+        }
+        else if (Screen_Id == "PAWHSPAY") {
+            if ($("#txt_pay").val() != "") {
+                PAWHS_Paymentadvice();
+            }
+        }
+        else if (Screen_Id == "ICDSL") {
+        }
+        else if (Screen_Id == "ICDCI") {
+            if ($("#txtic_name").val() != "") {
+                btn_creditissue_Print();
+            }
+            else {
+                $("#ReportModal").modal("hide");
+                kendoAlert("Credit Issue No cannot be blank");
+            }
+        }
+        else {
+            var data = $("#grid_Drop_list").data("kendoGrid").dataSource.data();
+            btn_RPTVIEW();
+            $("a[title='Word']").parent().hide();
+            $("a[title='PowerPoint']").parent().hide();
+            $("a[title='Data Feed']").parent().hide();
+        }
+
+    });
+
+
+</script>
+
+<style>
+    .breadcrumb > li + li:before {
+        color: #E6E6E6;
+    }
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,495 @@
+﻿@{
+    ViewBag.Form = "Credit Tracker Report";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+<form id="frm_creditissue" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-xs-4" style="display:none">
+                    <div class=" form-group">
+                        <label for="ic_code" class=" col-sm-5 control-label">Input Centre Name</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="ic_code" name="ic_code" class="form-control" maxlength="50" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="cmb_fromdate" class="col-sm-3 control-label required">From Date</label>
+                            <div class="col-sm-7">
+                                <input class="cusDate" data-role='datepicker' id="txt_fromdate" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="To_date" style="width:100%" />
+                                <span data-for='valid' class='k-invalid-msg'></span>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="cmb_Todate" class="col-sm-3 control-label required">To Date</label>
+                            <div class="col-sm-7">
+                                <input class="cusDate" data-role='datepicker' id="txt_todate" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="To_date" style="width:100%" />
+                                <span data-for='valid' class='k-invalid-msg'></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="cmb_frmname" class="col-sm-4 control-label required">Farmer Name</label>
+                            <div class="col-sm-6">
+                                <input id="cmb_frmname" name="status_option" data-role="filtercombo" style="width:121%" />
+                               
+                            </div>
+                            <div class="col-sm-2">
+                                <a class="HelpWindow fa fa-search fa-lg" role="button" id="pay_help1" data-toggle="modal" href="/HelpFilter/HelpFilter" hdrtitle="Farmer " searchid="D101" data-target="#HelpModal" onclick=transfer(this,"form","","form_control"); title="Search" style="font-size: 19px; "></a>
+
+                            </div>
+                           
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="cmb_frmcode" class="col-sm-4 control-label required">Farmer Code</label>
+                            <div class="col-sm-6">
+                                <input id="cmb_frmcode" name="status_option" data-role="filtercombo" style="width:100%" disabled />
+                            </div>
+                            <button title="" id='refresh' data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button"
+                                    data-original-title="Refresh" onclick="listRefresh()">
+                                <span class="glyphicon glyphicon-refresh"></span>
+                            </button>
+                        </div>
+                    </div>
+                    
+             
+                    <div class="pull-right" style="margin-top: 18px;">
+                        <button id="clear" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button"
+                                data-original-title="clear" onclick="listclear()">
+                            clear
+                        </button>
+                        <a data-toggle="modal" class="Export btn btn-sm btn-info" href="~/ExportExcel/ExportExcel" hdrtitle="" data-target="#exportexcelModal"><span class=" glyphicon glyphicon-export mr"></span></a>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div id="gd_CreditIssuereport">
+                                <div id="CreditIssueReport_grid"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+@*<script src="~/API_Scripts/Loan_Disbursement_retrieveFLDisbursementAdviceGen_APIClient.js"></script>*@
+    <script src="~/API_Scripts/Loan_Disbursement_saveFLDisbursementAdviceGen_APIClient.js"></script>
+    <script src="~/API_Scripts/retrieveFLDisbursementAdviceGen_Model.js"></script>
+    <script src="~/API_Scripts/saveFLDisbursementAdviceGen_Model.js"></script>
+    <script src="~/API_Scripts/FLDisbursementAdvice.js"></script>
+<script src="~/CommonScripts/Common_func.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+    <script src="~/CommonScripts/report.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.min.js"></script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+<script>
+    click_act_name = "home ";
+    click_ctrl_name = "home";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+
+</script>
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#frm_salesreport");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+
+        $("#Topsubheader").show();
+        $("#bottomFooter").show();
+        $("#bottom_menus").hide();
+        $("#btndiv").show();
+        $("#frmlayerdiv").hide();
+        $("#divCreate").hide();
+        $("#divEdit").hide();
+        $("#divView").show();
+        $("#DocStat").show();
+        $(".edtviw_item").show();
+        $(".create_item").hide();
+        $('#btnExport').hide();
+        $(".Export").attr("hdrtitle", "CreditIssue List");
+        $(".Export").attr("SubTreeId", "ICDCIRPT");
+        var org_id = getlocalStorage('org_id');
+        $('#ic_code').val(org_id);
+
+
+        Screen_Id = "ICDCIRPT";
+        load_master_code();
+    
+        permission = sec_Permission(Screen_Id);
+        page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+        $("#txt_fromdate").kendoDatePicker({
+            max: new Date(),// sets max date
+            format: "dd/MM/yyyy"
+        });
+
+        $("#txt_todate").kendoDatePicker({
+            max: new Date(),// sets max date
+            format: "dd/MM/yyyy"
+        });
+        /*  Prema added for fpo based abd ri user base loading*/
+        var role = getlocalStorage("orgn_level");
+        if (role == "ORG_FO") {
+            debugger;
+            $("#RIform").show();
+            $("#FPOform").show();
+            filter_combobox("cmb_RIBelongform", getlocalStorage("rilist"));
+            filter_combobox("cmb_FPOBelongform", getlocalStorage("fpolist"));
+            var cmb_riform3 = $("#cmb_RIBelongform").data("kendoComboBox");
+            cmb_riform3.value(getlocalStorage("org_id"));
+            $("#cmb_RIBelongform").data("kendoComboBox").enable(false);
+            $("#cmb_FPOBelongform").data("kendoComboBox").value("All");
+            $("#cmb_FPOBelongform").data("kendoComboBox").enable(true);
+            //var cmap_inselform = $("#cmb_FPOBelongform").data("kendoComboBox");
+            //cmap_inselform.value(getlocalStorage("org"));
+        }
+        if (role == "ORG_PF") {
+            debugger;
+            $("#RIform").show();
+            $("#FPOform").show();
+            filter_combobox("cmb_RIBelongform", getlocalStorage("rilist"));
+            filter_combobox("cmb_FPOBelongform", getlocalStorage("fpolist"));
+            $("#cmb_RIBelongform").data("kendoComboBox").value("All");
+            $("#cmb_FPOBelongform").data("kendoComboBox").value("All");
+            $("#cmb_RIBelongform").data("kendoComboBox").enable(true);
+            $("#cmb_FPOBelongform").data("kendoComboBox").enable(true);
+
+        }
+        if (role == "ORG_FPO") {
+            debugger;
+            $("#RIform").show();
+            $("#FPOform").show();
+            filter_combobox("cmb_RIBelongform", getlocalStorage("rilist"));
+            filter_combobox("cmb_FPOBelongform", getlocalStorage("fpolist"));
+            var cmb_riform3 = $("#cmb_RIBelongform").data("kendoComboBox");
+            cmb_riform3.value(getlocalStorage("parent_code"));
+            $("#cmb_RIBelongform").data("kendoComboBox").enable(false);
+            $("#cmb_FPOBelongform").data("kendoComboBox").enable(false);
+            var cmap_inselform = $("#cmb_FPOBelongform").data("kendoComboBox");
+            cmap_inselform.value(getlocalStorage("org_code"));
+        }
+        /*  prema ended*/
+        var combo_data1 = "";
+        var combo_data2 = "";
+        $("#cmb_frmcode").empty();
+       // combo_data1 = grid_comboScreen_mastercodes("FARMERCODE");
+       // filter_combobox("cmb_frmcode", combo_data1);
+        $("#cmb_frmname").empty();
+        //combo_data2 = grid_comboScreen_mastercodes("FARMERNAME");
+        //filter_combobox("cmb_frmname", combo_data2);
+        listgrid([]);
+    });
+
+    $(function () {
+        $(function () {
+            $('#refresh').click(function () {
+                if ($("#cmb_frmcode").val() != "" || $("#cmb_frmname").val() != "" || $("#txt_fromdate").val() != "" || $("#txt_todate").val() != "") {
+                    var data = {};
+                    data.context = WebAPIProxy.getContext();
+                    var from_date1 = $("#txt_fromdate").val();
+                    //from_date.format("YYYY-MM-DD");
+                    var to_date1 = $("#txt_todate").val();
+                    //to_date.format("YYYY-MM-DD");
+                    // var newDate = from_date.toString("YYYY-MM-DD");
+
+                    var parts = from_date1.split('/');
+                    var from_date = parts[2] + '-' + parts[1] + '-' + parts[0];
+
+                    var parts1 = to_date1.split('/');
+                    var to_date = parts1[2] + '-' + parts1[1] + '-' + parts1[0];
+
+                    var cmb_code = $("#cmb_frmcode").val();
+
+                    var cmb_name = $('#cmb_frmname').val()
+                    
+                    $.ajax({
+                        type: "POST",
+                        data: '{frm_code: "' + cmb_code + '",frm_name:"' + cmb_name + '",fromdate:"' + from_date + '",todate:"' + to_date + '",orgcode:"' + data.context.orgnId + '"}',
+                        url: "/ICDReports/CreditIssue_report",
+                        dataType: "json",
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (response) {
+
+                            console.log(response)
+                            listgrid(response);
+
+                        },
+                        error: function (er) {
+                            alert(er)
+                            console.log(er)
+                        }
+
+                    });
+                }
+                else {
+
+                    kendoAlert("Please Select Any One Field");
+                }
+                
+
+
+                return false;
+            });
+        });
+    });
+
+
+</script>
+<script>
+    function load_master_code() {
+        debugger;
+        var data = {};
+        var context = WebAPIProxy.getContext();
+        data.userId = context.userId
+        data.orgnId = context.orgnId
+        data.locnId = context.locnId
+        data.localeId = context.localeId
+        data.screen_Id = "ICDCIRPT";
+        var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+    }
+</script>
+
+<script>
+    function listpageloadfetch() {
+        try {
+
+            var formval = form_Serialize("frm_salesreport");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_Fromvalue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_Fromvalue = ".";
+            }
+            obj_val.FilterBy_Tovalue = ".";
+            if (obj_val.status_option == "" || obj_val.status_option == undefined) {
+                obj_val.status_option = "V";
+            }
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Filter = obj_val;
+           // retrieve_FarmerLoanDisbursement_details(data);
+            var colCount = $("#salesreport_grid").find('.k-grid-header colgroup > col').length;
+
+            //If There are no results place an indicator row
+            //if ($("#salesreport_grid").data("kendoGrid").dataSource._view.length == 0) {
+            //    $("#salesreport_grid").find('.k-grid-content tbody')
+            //        .append('<tr class="kendo-data-row"><td colspan="' +
+            //            colCount +
+            //       '" style="text-align:center; padding-top:10px;background-color:#AFE4FA"><b> No pending records available for the selected status; please try later!!!</b></td></tr>');
+            //}
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    var status_Priority = [];
+    
+    function listgrid(data) {
+        $("#CreditIssueReport_grid").kendoGrid({
+            excel: {
+                fileName: "CreditIssueReport.xlsx",
+                filterable: true,
+                allPages: false
+            },
+            dataSource: {
+                data: data,
+                schema: {
+                    model: {
+                        fields: {
+                            creditissue_date: { type: "string", required: true },
+                            creditissue_no: { type: "string", required: true },
+                            farmer_code: { type: "string", required: true },
+                            farmer_name: { type: "string", required: true },
+                            qty: { type: "string" },
+                            product_Amount: { type: "string", required: true },
+                            balance_amount: { type: "string", required: true },
+                        }
+                    }
+                },
+ batch: true,
+                pageSize: 15,
+            },       
+        toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+            excelExport: function (e) {
+                var gd = $("#CreditIssueReport_grid").data("kendoGrid");
+                var len = gd.dataSource._data.length;
+                var chkall = $('#chkall').is(':checked');
+                var chkfilter = $('#chkfilter').is(':checked');
+                var chktemp = $('#chktemp').is(':checked');
+                var twokendobox = true;
+                gd.dataSource.pageSize(len);
+                if (e.sender.dataSource._data.length == len) {
+                    twokendobox = false;
+                    exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                }
+                else {
+                    exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                }
+                gd.dataSource.pageSize('10');
+                return false;
+            },
+            height: 450,
+            sortable: true,
+            selectable: true,
+            resizable: true,   
+            selectable: "singl",   //  Grid Row Selection
+            navigatable: true,
+            groupable: false,
+ pageable: {
+                refresh: false,
+                pageSizes: true,
+                previousNext: false,
+                buttonCount: 8
+            },
+            columns: [
+
+             
+                 {
+                     field: "creditissue_date",
+                     title: " Credit Tracker Date",
+                     width: 80,
+                     template: '#= kendo.toString(kendo.parseDate(creditissue_date), "dd/MM/yyyy")#'
+
+                 },
+
+                 {
+                     field: "creditissue_no",
+                     title: "Credit Tracker No.",
+                     width: 80,
+
+                 },
+
+              
+                 {
+                     field: "farmer_code",
+                     title: "Farmer Code",
+                     width: 80,
+
+                 },
+
+                 {
+                     field: "farmer_name",
+                     title: "Farmer Name",
+                     width: 80,
+
+                 },
+
+                 {
+                     field: "qty",
+                     title: "Quantity",
+                     width: 80,
+                     attributes: { style: "text-align:right;" }
+
+                 },
+
+                 {
+                     field: "product_amount",
+                     title: "Credit Tracker Value",
+                     width: 80,
+                     attributes: { style: "text-align:right;" }
+
+                 },
+
+                 //{
+                 //    field: "payment_received",
+                 //    title: "Payment Received",
+                 //    width: 80,
+
+                 //},
+
+                 {
+                     field: "balance_amount",
+                     title: "Balance Amount",
+                     width: 80,
+                     attributes: { style: "text-align:right;" }
+
+                 },
+
+
+            ],
+            editable: true
+        });
+
+    }
+
+</script>
+
+<script>
+  
+    
+    function listRefresh() {
+        try {
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function listclear() {
+        try {
+            listgrid([]);
+            $('#frm_creditissue').find('input:text').val('');
+            // location.reload();
+            var org_id = getlocalStorage('org_id');
+            $('#ic_code').val(org_id);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function grid_control() {
+        var control_Name = [
+
+        ];
+        return control_Name;
+    }
+
+
+    function form_control() {
+        var control_Name = [
+
+            { "dataCol": "farmer_code", "controlId": "cmb_frmcode", "type": "Text" },
+            { "dataCol": "farmer_name", "controlId": "cmb_frmname", "type": "Text" }
+           
+
+        ];
+        return control_Name;
+    }
+    function trans_input_data() {
+        var trans_coll = [
+             { "trasfer": "Yes", "dataCol": "ic_code", "controlId": "ic_code", "grid_id": "", "grid_row_col": "" },
+            { "trasfer": "Yes", "dataCol": "farmer_code", "controlId": "cmb_frmcode", "grid_id": "", "grid_row_col": "farmer_code" },
+            { "trasfer": "Yes", "dataCol": "farmer_name", "controlId": "cmb_frmname", "grid_id": "", "grid_row_col": "farmer_name" }
+        ];
+        return trans_coll;
+    }
+    function generate_Invoiceproduct_list(res) {
+        var dataItem = $("#CreditIssueReport_grid").data("kendoGrid").dataSource.data()[0];
+       
+        dataItem.set("farmer_code", res[0].farmer_code);
+        dataItem.set("farmer_name", res[0].farmer_name);    
+
+    }
+</script>

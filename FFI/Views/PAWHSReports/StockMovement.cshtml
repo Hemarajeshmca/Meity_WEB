@@ -1,0 +1,522 @@
+﻿@{
+    ViewBag.Form = "Stock Movement Report";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+@*<form id="frm_stockmovement" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px;padding-top:12px;">
+                <div class="col-sm-4" style="display:none">
+                    <div class=" form-group">
+                        <label for="tran_type" class="col-sm-4 control-label">Transaction Type</label>
+                        <div class=" col-sm-4">
+                            <input type="radio" id="rdo_procurement" name="tran_type" checked="checked" onclick="changing()" />Procurement
+                        </div>
+                        <div class=" col-sm-3">
+                            <input type="radio" id="rdo_service" name="tran_type" onclick="changing()" />Service
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <label for="txt_fromdate" class="col-sm-4 control-label required">Date From</label>
+                    <div class="col-sm-7">
+                        <input class="cusDate" data-role='datepicker' id="txt_fromdate" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="From_date" style="width:100%" />
+                        <span data-for='valid' class='k-invalid-msg'></span>
+
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <label for="txt_todate" class="col-sm-4 control-label required">Date To</label>
+                    <div class="col-sm-7">
+                        <input class="cusDate" data-role='datepicker' id="txt_todate" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="To_date" style="width:100%" />
+                        <span data-for='valid' class='k-invalid-msg'></span>
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <label for="cmb_prdtname" class="col-sm-4 control-label required">Product Name</label>
+                    <div class="col-sm-6">
+                        <input id="cmb_prdtname" type="text" name="status_option" data-role="filtercombo" data-bind="source:votingStatusList" readonly />
+                    </div>
+                    <div class="col-sm-2">
+                        <a class="HelpWindow fa fa-search fa-lg" role="button" id="pay_help1" data-toggle="modal" href="/HelpFilter/HelpFilter" hdrtitle="Farmer " searchid="S102" data-target="#HelpModal" onclick=transfer(this,"form","","form_control"); title="Search" style="font-size: 19px; "></a>
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <label for="cmb_prdtcode" class="col-sm-4 control-label required">Product Code</label>
+                    <div class="col-sm-5">
+                        <input id="cmb_prdtcode" type="text" name="status_option" data-role="filtercombo" readonly />
+                        @*<input id="cmb_prdtcode" type="text" name="status_option" data-role="filtercombo" style="width:111%" disabled />*@
+@*</div>
+        <div class="col-sm-3">
+            <button id="refresh" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button"
+                    data-original-title="Refresh" onclick="listRefresh()">
+                <span class="glyphicon glyphicon-refresh"></span>
+            </button>
+        </div>
+    </div>*@
+
+@*<div class="col-sm-4">
+            <div class="pull-right" style="margin-top:18px">
+                <div class="col-sm-5">
+                    <button id="clear" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button"
+                            data-original-title="clear" onclick="listclear()">
+                        clear
+                    </button>
+                </div>
+                <div class="col-sm-5">
+                    <a data-toggle="modal" class="Export btn btn-sm btn-info" href="~/ExportExcel/ExportExcel" hdrtitle="" data-target="#exportexcelModal"><span class=" glyphicon glyphicon-export mr"></span></a>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+@*<div class="row" id="service_List" style="display:none;padding-bottom:15px;padding-top:12px;">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="farmer_code" class="col-sm-5 control-label required">Farmer Code</label>
+                            <div class=" col-sm-6">
+                                <input type="text" id="farmer_code" name="farmer_code" class="form-control" maxlength="50" readonly>
+                            </div>
+                            <a class="HelpWindow fa fa-search fa-lg" role="button" id="pay_help2" data-toggle="modal" href="/HelpFilter/HelpFilter" hdrtitle="Member" searchid="S32" data-target="#HelpModal" onclick=transfer(this,"form","","form_control"); title="Search" style="font-size: 19px; "></a>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="farmer_name" class="col-sm-5 control-label required">Farmer Name</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="farmer_name" name="farmer_name" class="form-control" maxlength="50" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="gd_stockmoveregister">
+                            <div id="stockmovement_grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>*@
+
+<form id="frm_stockmovement" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px;padding-top:12px;">
+                <div class="col-sm-12">
+                    <div class="col-sm-3">
+
+                        <label for="txt_fromdate" class="col-sm-4 control-label required">Date From</label>
+                        <div class="col-sm-7">
+                            <input class="cusDate" data-role='datepicker' id="txt_fromdate" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="From_date" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+
+                        <label for="txt_todate" class="col-sm-3 control-label required">Date To</label>
+                        <div class="col-sm-7">
+                            <input class="cusDate" data-role='datepicker' id="txt_todate" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="To_date" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-3">
+
+                        <label for="cmb_prdtname" class="col-sm-3 control-label required">Product Name</label>
+                        <div class="col-sm-6">
+                            <input id="cmb_prdtname" name="item_name" data-role="filtercombo" data-bind="source:votingStatusList" style=" width:111%" />
+                        </div>
+                        <a class="HelpWindow fa fa-search fa-lg" role="button" id="pay_help1" data-toggle="modal" href="/HelpFilter/HelpFilter" hdrtitle="Farmer " searchid="S102" data-target="#HelpModal" onclick=transfer(this,"form","","form_control"); title="Search" style="font-size: 19px; "></a>
+                    </div>
+
+                    <div class="col-sm-3">
+                        <label for="cmb_prdtcode" class="col-sm-3 control-label required">Product Code</label>
+                        <div class="col-sm-6">
+                            <input id="cmb_prdtcode" name="item_code" data-role="filtercombo" style="width:111%" disabled />
+                        </div>
+                        <button id="refresh" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button"
+                                data-original-title="Refresh" onclick="listRefresh()">
+                            <span class="glyphicon glyphicon-refresh"></span>
+                        </button>
+
+                        <div class="pull-right" style="margin-top:18px">
+                            <button id="clear" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button"
+                                    data-original-title="clear" onclick="listclear()">
+                                clear
+                            </button>
+                            <a data-toggle="modal" class="Export btn btn-sm btn-info" href="~/ExportExcel/ExportExcel" hdrtitle="" data-target="#exportexcelModal"><span class=" glyphicon glyphicon-export mr"></span></a>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="gd_stockmoveregister">
+                            <div id="stockmovement_grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script src="~/CommonScripts/Common_func.js"></script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+
+<script>
+    click_act_name = "home ";
+    click_ctrl_name = "home";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+
+</script>
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#frm_stockmovement");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        $("#Topsubheader").show();
+        $("#bottomFooter").show();
+        $("#bottom_menus").hide();
+        $("#btndiv").show();
+        $("#frmlayerdiv").hide();
+        $("#divCreate").hide();
+        $("#divEdit").hide();
+        $("#divView").show();
+        $("#DocStat").show();
+        $(".edtviw_item").show();
+        $(".create_item").hide();
+        $('#btnExport').hide();
+        $(".Export").attr("hdrtitle", "StockMovement List");
+        $(".Export").attr("SubTreeId", "PAWHSSTOCKMOVEMENTRPT");
+
+        Screen_Id = "PAWHSSTOCKMOVEMENTRPT";
+        //filterhover();
+        //load_master_code();
+        var org_id = getlocalStorage('org_id');
+        //$('#agg').val(org_id);
+
+        permission = sec_Permission(Screen_Id);
+        page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+        $("#txt_fromdate").kendoDatePicker({
+            max: new Date(),// sets max date
+            format: "dd/MM/yyyy"
+        });
+
+        $("#txt_todate").kendoDatePicker({
+            max: new Date(),// sets max date
+            format: "dd/MM/yyyy"
+        });
+
+        var combo_data1 = "";
+        var combo_data2 = "";
+        $("#cmb_prdtcode").empty();
+        $("#cmb_prdtname").empty();
+
+      
+        listgrid([]);
+    });
+
+    $(function () {
+        $('#refresh').click(function () {
+            if ($("#cmb_prdtcode").val() != "" || $("#cmb_prdtname").val() != "" || $("#txt_fromdate").val() != "" || $("#txt_todate").val() != "") {
+                var from_date1 = $("#txt_fromdate").val();
+                //from_date.format("YYYY-MM-DD");
+                var to_date1 = $("#txt_todate").val();
+                //to_date.format("YYYY-MM-DD");
+                // var newDate = from_date.toString("YYYY-MM-DD");
+
+                var parts = from_date1.split('/');
+                var from_date = parts[2] + '-' + parts[1] + '-' + parts[0];
+
+                var parts1 = to_date1.split('/');
+                var to_date = parts1[2] + '-' + parts1[1] + '-' + parts1[0];
+
+                var org_id = getlocalStorage('org_id');
+
+                var cmb_code = $("#cmb_prdtcode").val();
+                var cmb_name = $('#cmb_prdtname').val();
+                var datas = { "pro_code": cmb_code, "pro_name": cmb_name, "fromdate": from_date, "todate": to_date, "orgid": org_id };
+                $.ajax({
+                    type: "POST",                   
+                    data: JSON.stringify(datas),
+                    url: "/PAWHSReports/Stock_Movement",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        //console.log(response)
+                        listgrid(response);
+                        //var pass = response.data;
+                        //$("#salesreport_grid").data("kendoGrid").dataSource.data(pass)
+                    },
+                    error: function (er) {
+                        alert(er)
+                        console.log(er)
+                    }
+
+                });
+            }
+            else {
+
+                kendoAlert("Please Select Any One Field");
+            }
+            return false;
+        });
+    });
+
+</script>
+<script>
+    //function load_master_code() {
+    //    var data = {};
+    //    data.screen_Id = "PAWHSSTOCKMOVEMENTRPT";
+    //    var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+    //}
+    function listpageloadfetch() {
+        try {
+            debugger;
+            var formval = form_Serialize("frm_stockmovement");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_Fromvalue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_Fromvalue = ".";
+            }
+            obj_val.FilterBy_Tovalue = ".";
+            if (obj_val.status_option == "" || obj_val.status_option == undefined) {
+                obj_val.status_option = "V";
+            }
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Filter = obj_val;
+            var colCount = $("#stockmovement_grid").find('.k-grid-header colgroup > col').length;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    var status_Priority = [];
+    function listgrid(data) {
+        $("#stockmovement_grid").kendoGrid({
+            excel: {
+                fileName: "Stock Movement.xlsx",
+                filterable: true,
+                allPages: false
+            },
+            dataSource: {
+                data: data,
+                schema: {
+                    model: {
+                        fields: {
+                            item_code: { type: "string" },
+                            item_name: { type: "string", required: true },
+                            rec_invoice_no: { type: "string", required: true },
+                            in_qty: { type: "string", required: true },
+                            out_qty: { type: "string" },
+                        }
+                    }
+                },
+                pageSize: 10
+            },
+            toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+            excelExport: function (e) {
+                debugger;
+                var gd = $("#stockmovement_grid").data("kendoGrid");
+                    var len = gd.dataSource._data.length;
+                    var chkall = $('#chkall').is(':checked');
+                    var chkfilter = $('#chkfilter').is(':checked');
+                    var chktemp = $('#chktemp').is(':checked');
+                    var twokendobox = true;
+                    gd.dataSource.pageSize(len);
+                    if (e.sender.dataSource._data.length == len) {
+                        twokendobox = false;
+                        exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                    }
+                    else {
+                        exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                    }
+                    gd.dataSource.pageSize('10');
+                    return false;
+                },
+                //var gd = $("#stockmovement_grid").data("kendoGrid");
+                //var gd_fi = $("#stockmovement_grid").data("kendoGrid").dataSource;
+
+                //var filters = gd_fi.filter();
+                //var allData = gd_fi.data();
+                //var query = new kendo.data.Query(allData);
+                //var data = query.filter(filters).data;
+                //var data_tt = gd.dataSource.data();
+
+
+                //var sheet = e.workbook.sheets[0];
+                //var gridColumns = gd.columns;
+
+                //var columns = gridColumns.map(function (col) {
+                //    var hidden_vl = col.hidden;
+                //    if (typeof (hidden_vl) == "undefined") {
+                //        return {
+                //            value: col.title ? col.title : col.field,
+                //            autoWidth: true,
+                //            background: "#7a7a7a",
+                //            color: "#fff"
+                //        }
+                //    };
+
+                //});
+                //var rows = [{ cells: columns, type: "header" }];
+
+
+                //for (var i = 0; i < data.length; i++) {
+                //    var rowCells = [];
+                //    for (var j = 0; j < gridColumns.length; j++) {
+
+                //        var fieldName = gd.columns[j].hidden;
+                //        if (typeof (fieldName) === "undefined") {
+                //            var cellValue = data[i][gridColumns[j].field];
+                //            rowCells.push({ value: cellValue });
+                //        }
+                //    }
+                //    rows.push({ cells: rowCells, type: "data" });
+                //}
+
+
+                //sheet.rows = rows;
+
+                //return false;
+            //},
+            height: 450,
+            scrollable: true,
+            sortable: true,
+            pageable: {
+                refresh: false,
+                pageSizes: true,
+                previousNext: false,
+                buttonCount: 8
+            },
+            columns: [
+                {
+                    field: "item_code",
+                    title: "Product Code",
+                    width: 100
+                },
+
+                 {
+                     field: "item_name",
+                     title: "Product Name",
+                     width: 100,
+
+                 },
+                 {
+                     field: "rec_invoice_no",
+                     title: "Reference No.",
+                     width: 100,
+                 },
+                 {
+                     field: "cdate",
+                     title: "Created Date",
+                     width: 100,
+                     filterable: {
+                         cell: {
+                             operator: "contains",
+                             inputWidth: 1500
+                         }
+                     }
+                 },
+                 {
+                     field: "in_qty",
+                     title: "In Quantity",
+                     width: 100,
+                     attributes: { style: "text-align:right;" }
+                 },
+                  {
+                      field: "out_qty",
+                      title: "Out Quantity",
+                      width: 100,
+                      attributes: { style: "text-align:right;" }
+                  }
+            ],
+            editable: true,
+        });
+    }
+</script>
+
+<script>
+
+    function listRefresh() {
+        try {
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function listclear() {
+        try {
+
+            listgrid([]);
+
+            $('#frm_stockmovement').find('input:text').val('');
+            location.reload();
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function grid_control() {
+        var control_Name = [
+
+        ];
+        return control_Name;
+    }
+
+    function form_control() {
+        var control_Name = [
+
+            { "dataCol": "item_name", "controlId": "cmb_prdtname", "type": "Text" },
+            { "dataCol": "item_code", "controlId": "cmb_prdtcode", "type": "Text" },
+            { "dataCol": "farmer_code", "controlId": "farmer_code", "type": "Text" },
+            { "dataCol": "farmer_name", "controlId": "farmer_name", "type": "Text" },
+        ];
+        return control_Name;
+    }
+
+    function trans_input_data() {
+        var trans_coll = [
+            { "trasfer": "Yes", "dataCol": "item_name", "controlId": "cmb_prdtname", "grid_id": "", "grid_row_col": "farmer_code" },
+            { "trasfer": "Yes", "dataCol": "item_code", "controlId": "cmb_prdtcode", "grid_id": "", "grid_row_col": "farmer_name" }
+        ];
+        return trans_coll;
+    }
+
+    function generate_Invoiceproduct_list(res) {
+        var dataItem = $("#stockmovement_grid").data("kendoGrid").dataSource.data()[0];
+
+        dataItem.set("ProductName", res[0].product_name);
+        dataItem.set("ProductCode", res[0].product_code);
+
+    }
+</script>

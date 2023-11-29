@@ -1,0 +1,1064 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="EC_AD_COUNT" xml:space="preserve">
+    <value>No. of Assets</value>
+    <comment>EC_ASSET-FARMREG</comment>
+  </data>
+  <data name="EC_AD_PURPOSE" xml:space="preserve">
+    <value>Purpose</value>
+    <comment>EC_ASSET-FARMREG</comment>
+  </data>
+  <data name="EC_AD_PURYEAR" xml:space="preserve">
+    <value>Purchase Date</value>
+    <comment>EC_ASSET-FARMREG</comment>
+  </data>
+  <data name="EC_AD_SERIALNO" xml:space="preserve">
+    <value>Asset Sl No.</value>
+    <comment>EC_ASSET-FARMREG</comment>
+  </data>
+  <data name="EC_AD_SUBTYPE" xml:space="preserve">
+    <value>Asset Sub Type</value>
+    <comment>EC_ASSET-FARMREG</comment>
+  </data>
+  <data name="EC_AD_TYPE" xml:space="preserve">
+    <value>Asset Type</value>
+    <comment>EC_ASSET-FARMREG</comment>
+  </data>
+  <data name="EC_AGENCY_NAME" xml:space="preserve">
+    <value>Agency Name</value>
+    <comment>EC_INSURANCE-FARMREG</comment>
+  </data>
+  <data name="EC_BusinessSegment" xml:space="preserve">
+    <value>Business Segment</value>
+    <comment>EC_BUSINESS-FARMREG</comment>
+  </data>
+  <data name="EC_CROPSOWING_LANDTYPE" xml:space="preserve">
+    <value>Land Type</value>
+    <comment>EC_CROP_SOWING-FARMREG</comment>
+  </data>
+  <data name="EC_CROP_Acres" xml:space="preserve">
+    <value>Land Size (Acres)</value>
+    <comment>EC_CROP-FARMREG</comment>
+  </data>
+  <data name="EC_CROP_CropType" xml:space="preserve">
+    <value>Crop Type</value>
+    <comment>EC_CROP-FARMREG</comment>
+  </data>
+  <data name="EC_CROP_LANDTYPE" xml:space="preserve">
+    <value>Land Type</value>
+    <comment>EC_CROP-FARMREG</comment>
+  </data>
+  <data name="EC_CROP_Season" xml:space="preserve">
+    <value>Season</value>
+    <comment>EC_CROP-FARMREG</comment>
+  </data>
+  <data name="EC_CROP_SOWING_AREA" xml:space="preserve">
+    <value>Sowing Area (Acres)</value>
+    <comment>EC_CROP_SOWING-FARMREG</comment>
+  </data>
+  <data name="EC_CROP_SOWING_CROPCLASS" xml:space="preserve">
+    <value>Crop Classification</value>
+    <comment>EC_CROP_SOWING-FARMREG</comment>
+  </data>
+  <data name="EC_CROP_SOWING_Croptype" xml:space="preserve">
+    <value>Crop Type</value>
+    <comment>EC_CROP_SOWING-FARMREG</comment>
+  </data>
+  <data name="EC_CROP_SOWING_DWEEDDATE" xml:space="preserve">
+    <value>Deweeding Date</value>
+    <comment>EC_CROP_SOWING-FARMREG</comment>
+  </data>
+  <data name="EC_CROP_SOWING_EXPECPRICE" xml:space="preserve">
+    <value>Expected Price</value>
+    <comment>EC_CROP_SOWING-FARMREG</comment>
+  </data>
+  <data name="EC_CROP_SOWING_EXPECYIELD" xml:space="preserve">
+    <value>Expected Yield</value>
+    <comment>EC_CROP_SOWING-FARMREG</comment>
+  </data>
+  <data name="EC_CROP_SOWING_EXPECYIELDTOBESOLD" xml:space="preserve">
+    <value>Expected Yield To Be Sold</value>
+    <comment>EC_CROP_SOWING-FARMREG</comment>
+  </data>
+  <data name="EC_CROP_SOWING_HARDATE" xml:space="preserve">
+    <value>Harvest Date</value>
+    <comment>EC_CROP_SOWING-FARMREG</comment>
+  </data>
+  <data name="EC_CROP_SOWING_Month" xml:space="preserve">
+    <value>Months</value>
+    <comment>EC_CROP_SOWING-FARMREG</comment>
+  </data>
+  <data name="EC_CROP_SOWING_QTY" xml:space="preserve">
+    <value>Seed Qty (Kgs)</value>
+    <comment>EC_CROP_SOWING-FARMREG</comment>
+  </data>
+  <data name="EC_CROP_SOWING_Season" xml:space="preserve">
+    <value>Season</value>
+    <comment>EC_CROP_SOWING-FARMREG</comment>
+  </data>
+  <data name="EC_CROP_SOWING_SEED_NAME" xml:space="preserve">
+    <value>Seed Name</value>
+    <comment>EC_CROP_SOWING-FARMREG</comment>
+  </data>
+  <data name="EC_CROP_SOWING_SOWDATE" xml:space="preserve">
+    <value>Sowing Date</value>
+    <comment>EC_CROP_SOWING-FARMREG</comment>
+  </data>
+  <data name="EC_CROP_SOWING_SURPLUS" xml:space="preserve">
+    <value>Surplus</value>
+    <comment>EC_CROP_SOWING-FARMREG</comment>
+  </data>
+  <data name="EC_CROP_SOWING_TRANSDATE" xml:space="preserve">
+    <value>Transaction Date</value>
+    <comment>EC_CROP_SOWING-FARMREG</comment>
+  </data>
+  <data name="EC_CROP_SOWING_Vareity" xml:space="preserve">
+    <value>Variety</value>
+    <comment>EC_CROP_SOWING-FARMREG</comment>
+  </data>
+  <data name="EC_CROP_SOWING_Year" xml:space="preserve">
+    <value>Year</value>
+    <comment>EC_CROP_SOWING-FARMREG</comment>
+  </data>
+  <data name="EC_CROP_Vareity" xml:space="preserve">
+    <value>Variety</value>
+    <comment>EC_CROP-FARMREG</comment>
+  </data>
+  <data name="EC_CROP_Year" xml:space="preserve">
+    <value>Year</value>
+    <comment>EC_CROP-FARMREG</comment>
+  </data>
+  <data name="EC_Description" xml:space="preserve">
+    <value>Description</value>
+    <comment>EC_BUSINESS-FARMREG</comment>
+  </data>
+  <data name="EC_FD_GENDER" xml:space="preserve">
+    <value>Gender</value>
+    <comment>EC_FAMILYDET-FARMREG</comment>
+  </data>
+  <data name="EC_FD_MEMDOB" xml:space="preserve">
+    <value>DOB</value>
+    <comment>EC_FAMILYDET-FARMREG</comment>
+  </data>
+  <data name="EC_FD_MEMNAME" xml:space="preserve">
+    <value>Family Member</value>
+    <comment>EC_FAMILYDET-FARMREG</comment>
+  </data>
+  <data name="EC_FD_OCCU" xml:space="preserve">
+    <value>Occupation</value>
+    <comment>EC_FAMILYDET-FARMREG</comment>
+  </data>
+  <data name="EC_FD_QUAL" xml:space="preserve">
+    <value>Qualification</value>
+    <comment>EC_FAMILYDET-FARMREG</comment>
+  </data>
+  <data name="EC_FD_RELATION" xml:space="preserve">
+    <value>Relationship</value>
+    <comment>EC_FAMILYDET-FARMREG</comment>
+  </data>
+  <data name="EC_FD_TYPE" xml:space="preserve">
+    <value>Family Type</value>
+    <comment>EC_FAMILYDET-FARMREG</comment>
+  </data>
+  <data name="EC_FIGName" xml:space="preserve">
+    <value>FIG Name</value>
+    <comment>EC_SHARE-FARMREG</comment>
+  </data>
+  <data name="EC_FPOName" xml:space="preserve">
+    <value>FPO Name</value>
+    <comment>EC_SHARE-FARMREG</comment>
+  </data>
+  <data name="EC_Input_Amount" xml:space="preserve">
+    <value>Amount</value>
+    <comment>EC_INPUTS-FARMREG</comment>
+  </data>
+  <data name="EC_Input_CropType" xml:space="preserve">
+    <value>Crop Type</value>
+    <comment>EC_INPUTS-FARMREG</comment>
+  </data>
+  <data name="EC_Input_ICName" xml:space="preserve">
+    <value>IC Name</value>
+    <comment>EC_INPUTS-FARMREG</comment>
+  </data>
+  <data name="EC_Input_Name" xml:space="preserve">
+    <value>Input Name</value>
+    <comment>EC_INPUTS-FARMREG</comment>
+  </data>
+  <data name="EC_Input_Qty" xml:space="preserve">
+    <value>Qty</value>
+    <comment>EC_INPUTS-FARMREG</comment>
+  </data>
+  <data name="EC_Input_Rate" xml:space="preserve">
+    <value>Rate</value>
+    <comment>EC_INPUTS-FARMREG</comment>
+  </data>
+  <data name="EC_Input_Remarks" xml:space="preserve">
+    <value>Remarks</value>
+    <comment>EC_INPUTS-FARMREG</comment>
+  </data>
+  <data name="EC_Input_Season" xml:space="preserve">
+    <value>Season</value>
+    <comment>EC_INPUTS-FARMREG</comment>
+  </data>
+  <data name="EC_Input_Type" xml:space="preserve">
+    <value>Input Type</value>
+    <comment>EC_INPUTS-FARMREG</comment>
+  </data>
+  <data name="EC_Input_UsedDate" xml:space="preserve">
+    <value>Used Date</value>
+    <comment>EC_INPUTS-FARMREG</comment>
+  </data>
+  <data name="EC_Input_Variety" xml:space="preserve">
+    <value>Variety</value>
+    <comment>EC_INPUTS-FARMREG</comment>
+  </data>
+  <data name="EC_Input_Year" xml:space="preserve">
+    <value>Year</value>
+    <comment>EC_INPUTS-FARMREG</comment>
+  </data>
+  <data name="EC_INP_LANDTYPE" xml:space="preserve">
+    <value>Land Type</value>
+    <comment>EC_INPUTS-FARMREG</comment>
+  </data>
+  <data name="EC_INSURANCE_TYPE" xml:space="preserve">
+    <value>Insurer Type</value>
+    <comment>EC_INSURANCE-FARMREG</comment>
+  </data>
+  <data name="EC_INSURED_ON" xml:space="preserve">
+    <value>Insured On</value>
+    <comment>EC_INSURANCE-FARMREG</comment>
+  </data>
+  <data name="EC_INSURER_NAME" xml:space="preserve">
+    <value>Insurer Name</value>
+    <comment>EC_INSURANCE-FARMREG</comment>
+  </data>
+  <data name="EC_LD_ACCNO" xml:space="preserve">
+    <value>Loan A/c No.</value>
+    <comment>EC_LOANDET-FARMREG</comment>
+  </data>
+  <data name="EC_LD_AMOUNT" xml:space="preserve">
+    <value>Loan Amount</value>
+    <comment>EC_LOANDET-FARMREG</comment>
+  </data>
+  <data name="EC_LD_EMI" xml:space="preserve">
+    <value>EMI</value>
+    <comment>EC_LOANDET-FARMREG</comment>
+  </data>
+  <data name="EC_LD_ENDDATE" xml:space="preserve">
+    <value>End Date</value>
+    <comment>EC_LOANDET-FARMREG</comment>
+  </data>
+  <data name="EC_LD_INSBRANCH" xml:space="preserve">
+    <value>Branch</value>
+    <comment>EC_LOANDET-FARMREG</comment>
+  </data>
+  <data name="EC_LD_INSNAME" xml:space="preserve">
+    <value>Institution Name</value>
+    <comment>EC_LOANDET-FARMREG</comment>
+  </data>
+  <data name="EC_LD_INSTYPE" xml:space="preserve">
+    <value>Loan From</value>
+    <comment>EC_LOANDET-FARMREG</comment>
+  </data>
+  <data name="EC_LD_INTEREST" xml:space="preserve">
+    <value>Interest Rate</value>
+    <comment>EC_LOANDET-FARMREG</comment>
+  </data>
+  <data name="EC_LD_LOANTYPE" xml:space="preserve">
+    <value>Loan Type</value>
+    <comment>EC_LOANDET-FARMREG</comment>
+  </data>
+  <data name="EC_LD_STARTDATE" xml:space="preserve">
+    <value>Start Date</value>
+    <comment>EC_LOANDET-FARMREG</comment>
+  </data>
+  <data name="EC_LD_TENOR" xml:space="preserve">
+    <value>Tenor</value>
+    <comment>EC_LOANDET-FARMREG</comment>
+  </data>
+  <data name="EC_LOAN_ACCNO" xml:space="preserve">
+    <value>Loan A/C No.</value>
+    <comment>EC_LOAN_REPAY-FARMREG</comment>
+  </data>
+  <data name="EC_LOAN_REPAYAMT" xml:space="preserve">
+    <value>Repayment Amt</value>
+    <comment>EC_LOAN_REPAY-FARMREG</comment>
+  </data>
+  <data name="EC_LOAN_REPAYDATE" xml:space="preserve">
+    <value>Repayment Date</value>
+    <comment>EC_LOAN_REPAY-FARMREG</comment>
+  </data>
+  <data name="EC_LOAN_REPAYMODE" xml:space="preserve">
+    <value>Repayment Mode</value>
+    <comment>EC_LOAN_REPAY-FARMREG</comment>
+  </data>
+  <data name="EC_LSD_COUNT" xml:space="preserve">
+    <value>Number Possessed</value>
+    <comment>EC_LIVESTOCKDET-FARMREG</comment>
+  </data>
+  <data name="EC_LSD_OWNSHIP" xml:space="preserve">
+    <value>Ownership</value>
+    <comment>EC_LIVESTOCKDET-FARMREG</comment>
+  </data>
+  <data name="EC_LSD_PUR" xml:space="preserve">
+    <value>Purpose</value>
+    <comment>EC_LIVESTOCKDET-FARMREG</comment>
+  </data>
+  <data name="EC_LSD_SUBTYPE" xml:space="preserve">
+    <value>Live Stock Sub Type</value>
+    <comment>EC_LIVESTOCKDET-FARMREG</comment>
+  </data>
+  <data name="EC_LSD_TYPE" xml:space="preserve">
+    <value>Livestock Type</value>
+    <comment>EC_LIVESTOCKDET-FARMREG</comment>
+  </data>
+  <data name="EC_MATURITY_DATE" xml:space="preserve">
+    <value>Maturity Date</value>
+    <comment>EC_INSURANCE-FARMREG</comment>
+  </data>
+  <data name="EC_NOMINEE" xml:space="preserve">
+    <value>Nominee</value>
+    <comment>EC_INSURANCE-FARMREG</comment>
+  </data>
+  <data name="EC_OWNED_Irrigation" xml:space="preserve">
+    <value>Irrigation Sources</value>
+    <comment>EC_OWNEDLAND-FARMREG</comment>
+  </data>
+  <data name="EC_OWNED_LandType" xml:space="preserve">
+    <value>Land Type</value>
+    <comment>EC_OWNEDLAND-FARMREG</comment>
+  </data>
+  <data name="EC_OWNED_Latitude" xml:space="preserve">
+    <value>Latitude</value>
+    <comment>EC_OWNEDLAND-FARMREG</comment>
+  </data>
+  <data name="EC_OWNED_Longitude" xml:space="preserve">
+    <value>Longitude</value>
+    <comment>EC_OWNEDLAND-FARMREG</comment>
+  </data>
+  <data name="EC_OWNED_Noof_Acres" xml:space="preserve">
+    <value>No. of Acres</value>
+    <comment>EC_OWNEDLAND-FARMREG</comment>
+  </data>
+  <data name="EC_OWNED_Ownership" xml:space="preserve">
+    <value>Ownership</value>
+    <comment>EC_OWNEDLAND-FARMREG</comment>
+  </data>
+  <data name="EC_OWNED_picture" xml:space="preserve">
+    <value>Land Picture</value>
+    <comment>EC_OWNEDLAND-FARMREG</comment>
+  </data>
+  <data name="EC_OWNED_polyhouse" xml:space="preserve">
+    <value>Uesd As Polyhouse</value>
+    <comment>EC_OWNEDLAND-FARMREG</comment>
+  </data>
+  <data name="EC_OWNED_SoilType" xml:space="preserve">
+    <value>Soil Type</value>
+    <comment>EC_OWNEDLAND-FARMREG</comment>
+  </data>
+  <data name="EC_OWNED_Village" xml:space="preserve">
+    <value>Land Village</value>
+    <comment>EC_OWNEDLAND-FARMREG</comment>
+  </data>
+  <data name="EC_PAYMENT_MODE" xml:space="preserve">
+    <value>Pay Mode</value>
+    <comment>EC_INSURANCE-FARMREG</comment>
+  </data>
+  <data name="EC_PDF_CASTE" xml:space="preserve">
+    <value>Caste</value>
+    <comment>EC_PER_FARMER-FARMREG</comment>
+  </data>
+  <data name="EC_PDF_MAIL" xml:space="preserve">
+    <value>e-Mail Id</value>
+    <comment>EC_PER_FARMER-FARMREG</comment>
+  </data>
+  <data name="EC_PDF_MINORITY" xml:space="preserve">
+    <value>Minority</value>
+    <comment>EC_PER_FARMER-FARMREG</comment>
+  </data>
+  <data name="EC_PDF_MOBILE" xml:space="preserve">
+    <value>Mobile</value>
+    <comment>EC_PER_FARMER-FARMREG</comment>
+  </data>
+  <data name="EC_PDF_MS" xml:space="preserve">
+    <value>Marital Status</value>
+    <comment>EC_PER_FARMER-FARMREG</comment>
+  </data>
+  <data name="EC_PDF_PHONE" xml:space="preserve">
+    <value>Landline</value>
+    <comment>EC_PER_FARMER-FARMREG</comment>
+  </data>
+  <data name="EC_PDF_QUAL" xml:space="preserve">
+    <value>Qualification</value>
+    <comment>EC_PER_FARMER-FARMREG</comment>
+  </data>
+  <data name="EC_PDF_RLGN" xml:space="preserve">
+    <value>Religion</value>
+    <comment>EC_PER_FARMER-FARMREG</comment>
+  </data>
+  <data name="EC_Period" xml:space="preserve">
+    <value>Period</value>
+    <comment>EC_BUSINESS-FARMREG</comment>
+  </data>
+  <data name="EC_POLICY_DATE" xml:space="preserve">
+    <value>Policy Date</value>
+    <comment>EC_INSURANCE-FARMREG</comment>
+  </data>
+  <data name="EC_POLICY_NO" xml:space="preserve">
+    <value>Policy No</value>
+    <comment>EC_INSURANCE-FARMREG</comment>
+  </data>
+  <data name="EC_PREMIUM" xml:space="preserve">
+    <value>Premium</value>
+    <comment>EC_INSURANCE-FARMREG</comment>
+  </data>
+  <data name="EC_PRODUCTION_LANDTYPE" xml:space="preserve">
+    <value>Land Type</value>
+    <comment>EC_PRODUCTION-FARMREG</comment>
+  </data>
+  <data name="EC_PROD_ActualProduction" xml:space="preserve">
+    <value>Actual Production ( in Quintal )</value>
+    <comment>EC_PRODUCTION-FARMREG</comment>
+  </data>
+  <data name="EC_PROD_AVAILABLE_FOR_SALE" xml:space="preserve">
+    <value>Available For Sale ( in Quintal )</value>
+    <comment>EC_PRODUCTION-FARMREG</comment>
+  </data>
+  <data name="EC_PROD_CROPCLASS" xml:space="preserve">
+    <value>CropClassification</value>
+    <comment>EC_PRODUCTION-FARMREG</comment>
+  </data>
+  <data name="EC_PROD_Croptype" xml:space="preserve">
+    <value>Crop Type</value>
+    <comment>EC_PRODUCTION-FARMREG</comment>
+  </data>
+  <data name="EC_PROD_Season" xml:space="preserve">
+    <value>Season</value>
+    <comment>EC_PRODUCTION-FARMREG</comment>
+  </data>
+  <data name="EC_PROD_SEED_NAME" xml:space="preserve">
+    <value>Seed Name</value>
+    <comment>EC_PRODUCTION-FARMREG</comment>
+  </data>
+  <data name="EC_PROD_Variety" xml:space="preserve">
+    <value>Variety</value>
+    <comment>EC_PRODUCTION-FARMREG</comment>
+  </data>
+  <data name="EC_PROD_Year" xml:space="preserve">
+    <value>Year</value>
+    <comment>EC_PRODUCTION-FARMREG</comment>
+  </data>
+  <data name="EC_SALE_Buyer" xml:space="preserve">
+    <value>Buyer</value>
+    <comment>EC_SALE-FARMREG</comment>
+  </data>
+  <data name="EC_SALE_Croptype" xml:space="preserve">
+    <value>Crop Type</value>
+    <comment>EC_SALE-FARMREG</comment>
+  </data>
+  <data name="EC_SALE_LANDTYPE" xml:space="preserve">
+    <value>Land Type</value>
+    <comment>EC_SALE-FARMREG</comment>
+  </data>
+  <data name="EC_SALE_Price" xml:space="preserve">
+    <value>Sale Price</value>
+    <comment>EC_SALE-FARMREG</comment>
+  </data>
+  <data name="EC_SALE_Qty" xml:space="preserve">
+    <value>Quantity</value>
+    <comment>EC_SALE-FARMREG</comment>
+  </data>
+  <data name="EC_SALE_Remark" xml:space="preserve">
+    <value>Remarks</value>
+    <comment>EC_SALE-FARMREG</comment>
+  </data>
+  <data name="EC_SALE_Season" xml:space="preserve">
+    <value>Season</value>
+    <comment>EC_SALE-FARMREG</comment>
+  </data>
+  <data name="EC_SALE_Terms" xml:space="preserve">
+    <value>Terms Of Payment</value>
+    <comment>EC_SALE-FARMREG</comment>
+  </data>
+  <data name="EC_SALE_Value" xml:space="preserve">
+    <value>Sale Value</value>
+    <comment>EC_SALE-FARMREG</comment>
+  </data>
+  <data name="EC_SALE_Vareity" xml:space="preserve">
+    <value>Variety</value>
+    <comment>EC_SALE-FARMREG</comment>
+  </data>
+  <data name="EC_SALE_Year" xml:space="preserve">
+    <value>Year</value>
+    <comment>EC_STOCK-FARMREG</comment>
+  </data>
+  <data name="EC_ShareAmount" xml:space="preserve">
+    <value>Amount</value>
+    <comment>EC_SHARE-FARMREG</comment>
+  </data>
+  <data name="EC_Shares" xml:space="preserve">
+    <value># Shares</value>
+    <comment>EC_SHARE-FARMREG</comment>
+  </data>
+  <data name="EC_STOCK_LANDTYPE" xml:space="preserve">
+    <value>Land Type</value>
+    <comment>EC_STOCK-FARMREG</comment>
+  </data>
+  <data name="EC_Stock_Season" xml:space="preserve">
+    <value>Season</value>
+    <comment>EC_STOCK-FARMREG</comment>
+  </data>
+  <data name="EC_Stock_Type" xml:space="preserve">
+    <value>Crop Type</value>
+    <comment>EC_STOCK-FARMREG</comment>
+  </data>
+  <data name="EC_Stock_Unsold" xml:space="preserve">
+    <value>Stock Unsold</value>
+    <comment>EC_STOCK-FARMREG</comment>
+  </data>
+  <data name="EC_Stock_Variety" xml:space="preserve">
+    <value>Variety</value>
+    <comment>EC_STOCK-FARMREG</comment>
+  </data>
+  <data name="EC_Stock_year" xml:space="preserve">
+    <value>Year</value>
+    <comment>EC_STOCK-FARMREG</comment>
+  </data>
+  <data name="EC_TRAIN_Agenda" xml:space="preserve">
+    <value>Agenda</value>
+    <comment>EC_TRAINING-FARMREG</comment>
+  </data>
+  <data name="EC_TRAIN_Date" xml:space="preserve">
+    <value>Training Date</value>
+    <comment>EC_TRAINING-FARMREG</comment>
+  </data>
+  <data name="EC_TRAIN_Duration" xml:space="preserve">
+    <value>Duration</value>
+    <comment>EC_TRAINING-FARMREG</comment>
+  </data>
+  <data name="EC_TRAIN_ExperDet" xml:space="preserve">
+    <value>Expert Details</value>
+    <comment>EC_TRAINING-FARMREG</comment>
+  </data>
+  <data name="EC_TRAIN_Place" xml:space="preserve">
+    <value>Place</value>
+    <comment>EC_TRAINING-FARMREG</comment>
+  </data>
+  <data name="EC_TRAIN_Season" xml:space="preserve">
+    <value>Season</value>
+    <comment>EC_TRAINING-FARMREG</comment>
+  </data>
+  <data name="EC_TRAIN_YEAR" xml:space="preserve">
+    <value>Year</value>
+    <comment>EC_TRAINING-FARMREG</comment>
+  </data>
+  <data name="in_bank_acc_no" xml:space="preserve">
+    <value>Account No</value>
+    <comment>gridBank-FARMREG</comment>
+  </data>
+  <data name="in_bank_acc_type_desc" xml:space="preserve">
+    <value>Account Type</value>
+    <comment>gridBank-FARMREG</comment>
+  </data>
+  <data name="in_bank_desc" xml:space="preserve">
+    <value>Bank</value>
+    <comment>gridBank-FARMREG</comment>
+  </data>
+  <data name="in_branch_code" xml:space="preserve">
+    <value>Branch</value>
+    <comment>gridBank-FARMREG</comment>
+  </data>
+  <data name="in_dflt_cr_acc_desc" xml:space="preserve">
+    <value>Default Credit A/C</value>
+    <comment>gridBank-FARMREG</comment>
+  </data>
+  <data name="in_dflt_dr_acc_desc" xml:space="preserve">
+    <value>Default Debit A/C</value>
+    <comment>gridBank-FARMREG</comment>
+  </data>
+  <data name="in_farmer_addr1" xml:space="preserve">
+    <value>Address Line</value>
+    <comment>gridAddress-FARMREG</comment>
+  </data>
+  <data name="in_farmer_addrtype" xml:space="preserve">
+    <value>Address Type</value>
+    <comment>gridAddress-FARMREG</comment>
+  </data>
+  <data name="in_farmer_country" xml:space="preserve">
+    <value>Country</value>
+    <comment>gridAddress-FARMREG</comment>
+  </data>
+  <data name="in_farmer_dist" xml:space="preserve">
+    <value>District</value>
+    <comment>gridAddress-FARMREG</comment>
+  </data>
+  <data name="in_farmer_panchayat" xml:space="preserve">
+    <value>Gram Panchayat</value>
+    <comment>gridAddress-FARMREG</comment>
+  </data>
+  <data name="in_farmer_pincode" xml:space="preserve">
+    <value>Pincode</value>
+    <comment>gridAddress-FARMREG</comment>
+  </data>
+  <data name="in_farmer_state" xml:space="preserve">
+    <value>State</value>
+    <comment>gridAddress-FARMREG</comment>
+  </data>
+  <data name="in_farmer_taluk" xml:space="preserve">
+    <value>Taluk</value>
+    <comment>gridAddress-FARMREG</comment>
+  </data>
+  <data name="in_farmer_village" xml:space="preserve">
+    <value>Village</value>
+    <comment>gridAddress-FARMREG</comment>
+  </data>
+  <data name="in_ifsc_code" xml:space="preserve">
+    <value>IFSC Code</value>
+    <comment>gridBank-FARMREG</comment>
+  </data>
+  <data name="in_proof_doc_adharno" xml:space="preserve">
+    <value>Confirm Document No</value>
+    <comment>gridKyc-FARMREG</comment>
+  </data>
+  <data name="in_proof_doc_desc" xml:space="preserve">
+    <value>Proof Sub-Type</value>
+    <comment>gridKyc-FARMREG</comment>
+  </data>
+  <data name="in_proof_doc_no" xml:space="preserve">
+    <value>Document No</value>
+    <comment>gridKyc-FARMREG</comment>
+  </data>
+  <data name="in_proof_type_desc" xml:space="preserve">
+    <value>Proof Type</value>
+    <comment>gridKyc-FARMREG</comment>
+  </data>
+  <data name="in_proof_valid_till" xml:space="preserve">
+    <value>Valid Till</value>
+    <comment>gridKyc-FARMREG</comment>
+  </data>
+  <data name="in_status_desc" xml:space="preserve">
+    <value>Status</value>
+    <comment>gridAddress-FARMREG</comment>
+  </data>
+  <data name="lblDateOfBirth" xml:space="preserve">
+    <value>Date Of Birth</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblFarmerID" xml:space="preserve">
+    <value>Farmer ID</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblfarmername" xml:space="preserve">
+    <value>farmer name</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblFarmerPhoto" xml:space="preserve">
+    <value>Farmer Photo</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblfhwname" xml:space="preserve">
+    <value>Father / Husband / Wife's Name</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblgender" xml:space="preserve">
+    <value>Gender</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblMemberCode" xml:space="preserve">
+    <value>Member Code</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblQRCode" xml:space="preserve">
+    <value>QR Code</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblRegisteredMobileNo" xml:space="preserve">
+    <value>Registered Mobile No</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblStatus" xml:space="preserve">
+    <value>Status</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblsurname" xml:space="preserve">
+    <value>Surname</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="out_farmer_addr2" xml:space="preserve">
+    <value>Farmer Addr2</value>
+    <comment>gridlist-FARMREG</comment>
+  </data>
+  <data name="out_farmer_code" xml:space="preserve">
+    <value>Farmer Code</value>
+    <comment>gridlist-FARMREG</comment>
+  </data>
+  <data name="out_farmer_dob" xml:space="preserve">
+    <value>DOB</value>
+    <comment>gridlist-FARMREG</comment>
+  </data>
+  <data name="out_farmer_name" xml:space="preserve">
+    <value>Farmer First Name</value>
+    <comment>gridlist-FARMREG</comment>
+  </data>
+  <data name="out_farmer_panchayat_desc" xml:space="preserve">
+    <value>Gram Panchayat</value>
+    <comment>gridlist-FARMREG</comment>
+  </data>
+  <data name="out_farmer_rowid" xml:space="preserve">
+    <value>Farmer Rowid</value>
+    <comment>gridlist-FARMREG</comment>
+  </data>
+  <data name="out_farmer_taluk_desc" xml:space="preserve">
+    <value>Taluk</value>
+    <comment>gridlist-FARMREG</comment>
+  </data>
+  <data name="out_farmer_village_desc" xml:space="preserve">
+    <value>Village</value>
+    <comment>gridlist-FARMREG</comment>
+  </data>
+  <data name="out_fhw_name" xml:space="preserve">
+    <value>Father/Husband Name</value>
+    <comment>gridlist-FARMREG</comment>
+  </data>
+  <data name="out_gender_flag_desc" xml:space="preserve">
+    <value>Gender</value>
+    <comment>gridlist-FARMREG</comment>
+  </data>
+  <data name="out_member_code" xml:space="preserve">
+    <value>Member Code</value>
+    <comment>gridlist-FARMREG</comment>
+  </data>
+  <data name="out_photo_farmer" xml:space="preserve">
+    <value>photo_farmer</value>
+    <comment>gridlist-FARMREG</comment>
+  </data>
+  <data name="out_reg_mobile_no" xml:space="preserve">
+    <value>Mobile Number</value>
+    <comment>gridlist-FARMREG</comment>
+  </data>
+  <data name="out_status_desc" xml:space="preserve">
+    <value>Status</value>
+    <comment>gridlist-FARMREG</comment>
+  </data>
+  <data name="out_sur_name" xml:space="preserve">
+    <value>Farmer Sur Name</value>
+    <comment>gridlist-FARMREG</comment>
+  </data>
+  <data name="out_version_no" xml:space="preserve">
+    <value>version no</value>
+    <comment>gridlist-FARMREG</comment>
+  </data>
+  <data name="btn_Edit" xml:space="preserve">
+    <value>संपादित करें</value>
+    <comment>BUTTON-FARMREG</comment>
+  </data>
+  <data name="btn_new" xml:space="preserve">
+    <value>नया बनाओ</value>
+    <comment>BUTTON-FARMREG</comment>
+  </data>
+  <data name="btn_View" xml:space="preserve">
+    <value>दृश्य</value>
+    <comment>BUTTON-FARMREG</comment>
+  </data>
+  <data name="btnSave" xml:space="preserve">
+    <value>सहेजें</value>
+    <comment>BUTTON-FARMREG</comment>
+  </data>
+  <data name="btnSaveEd" xml:space="preserve">
+    <value>Save</value>
+    <comment>BUTTON-FARMREG</comment>
+  </data>
+  <data name="reviewEd" xml:space="preserve">
+    <value>समीक्षा के लिए तैयार</value>
+    <comment>BUTTON-FARMREG</comment>
+  </data>
+  <data name="lblCountry1" xml:space="preserve">
+    <value>देश</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblDateOfBirth1" xml:space="preserve">
+    <value>जन्म की तारीख</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lbldistrict1" xml:space="preserve">
+    <value>जिला</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblFarmerID1" xml:space="preserve">
+    <value>किसान आईडी'</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblfarmername1" xml:space="preserve">
+    <value>किसान का नाम</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblFarmerPhoto1" xml:space="preserve">
+    <value>किसान फोटो</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblfhwname1" xml:space="preserve">
+    <value>पिता/पति/पत्नी का नाम</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblgender1" xml:space="preserve">
+    <value>किसान का नाम</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblgrampanchayat1" xml:space="preserve">
+    <value>ग्राम पंचायत</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblMemberCode1" xml:space="preserve">
+    <value>सदस्य कोड</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblPermanentAddress11" xml:space="preserve">
+    <value>पता - पंक्ति १</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblPermanentAddress21" xml:space="preserve">
+    <value>पता - पंक्ति 2</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblpincode1" xml:space="preserve">
+    <value>पिन कोड</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblQRCode1" xml:space="preserve">
+    <value>क्यूआर कोड</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblRegisteredMobileNo1" xml:space="preserve">
+    <value>पंजीकृत मोबाइल नंबर</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblState1" xml:space="preserve">
+    <value>राज्य</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblStatus1" xml:space="preserve">
+    <value>स्थिति</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblsurname1" xml:space="preserve">
+    <value>उपनाम</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lbltaluk1" xml:space="preserve">
+    <value>तहसील</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblvillage1" xml:space="preserve">
+    <value>गाँव</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblFarmer_name" xml:space="preserve">
+    <value>Farmer Name</value>
+    <comment>lbl-FARMPREF</comment>
+  </data>
+  <data name="lblFarmer_name1" xml:space="preserve">
+    <value>किसान का नाम</value>
+    <comment>lbl-FARMPREF</comment>
+  </data>
+  <data name="lblfhw_name" xml:space="preserve">
+    <value>Father / Husband / Wife's Name</value>
+    <comment>lbl-FARMPREF</comment>
+  </data>
+  <data name="lblfhw_name1" xml:space="preserve">
+    <value>पिता/पति/पत्नी का नाम</value>
+    <comment>lbl-FARMPREF</comment>
+  </data>
+  <data name="lblPermanent_Address1" xml:space="preserve">
+    <value>Permanent Address 1</value>
+    <comment>lbl-FARMPREF</comment>
+  </data>
+  <data name="lblPermanent_Address11" xml:space="preserve">
+    <value>पता - पंक्ति १</value>
+    <comment>lbl-FARMPREF</comment>
+  </data>
+  <data name="lblPermanent_Address2" xml:space="preserve">
+    <value>Permanent Address 2</value>
+    <comment>lbl-FARMPREF</comment>
+  </data>
+  <data name="lblPermanent_Address21" xml:space="preserve">
+    <value>पता - पंक्ति 2</value>
+    <comment>lbl-FARMPREF</comment>
+  </data>
+  <data name="lblsur_name" xml:space="preserve">
+    <value>Sur Name</value>
+    <comment>lbl-FARMPREF</comment>
+  </data>
+  <data name="lblsur_name1" xml:space="preserve">
+    <value>उपनाम</value>
+    <comment>lbl-FARMPREF</comment>
+  </data>
+  <data name="lblCountry" xml:space="preserve">
+    <value>Country</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblgrampanchayat" xml:space="preserve">
+    <value>Gram Panchayat</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblhamlet" xml:space="preserve">
+    <value>Hamlet</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblhamlet1" xml:space="preserve">
+    <value>छोटा गांव</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblhouseno" xml:space="preserve">
+    <value>House No.</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblhouseno1" xml:space="preserve">
+    <value>माकन नंबर।</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblState" xml:space="preserve">
+    <value>State</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblsur_name11" xml:space="preserve">
+    <value>उपनाम</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblsur_name2" xml:space="preserve">
+    <value>Sur Name</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblvillage" xml:space="preserve">
+    <value>Village</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lbldistrict" xml:space="preserve">
+    <value>District</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lblpincode" xml:space="preserve">
+    <value>PinCode</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+  <data name="lbltaluk" xml:space="preserve">
+    <value>Taluk</value>
+    <comment>lbl-FARMREG</comment>
+  </data>
+</root>

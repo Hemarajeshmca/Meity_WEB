@@ -1,0 +1,310 @@
+﻿@{
+    ViewBag.Form = "Track My Equipment";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+
+<link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.0/mapsjs-ui.css?dp-version=1533195059" />
+<script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-core.js"></script>
+<script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-service.js"></script>
+<script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-ui.js"></script>
+<script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-mapevents.js"></script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+<script src="~/CommonScripts/Common_func.js"></script>
+<script src="~/CommonScripts/common.js"></script>
+
+<form id="Initiation_form" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="cmb_loantype" class="col-sm-4 control-label required">Filter</label>
+                        <div class="col-sm-6">
+                            <input id="cmb_loantype" type="text" value="Service Initiated" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4" style="display:none">
+                    <div class=" form-group">
+                        <label for="esp_code" class=" col-sm-5 control-label">Input Centre Name</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="esp_code" name="esp_code" class="form-control" maxlength="50" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="cmb_Eqptype" class="col-sm-4 control-label required">Equipment Name</label>
+                        <div class="col-sm-7">                            
+                            <input type="text" id="txt_equip_name" name="change_ifsc_code" class="form-control" maxlength="50" readonly>
+                        </div>
+                        <div>
+                            <a class="HelpWindow fa fa-search fa-lg" role="button" id="pay_help1" data-toggle="modal" href="../HelpFilter/HelpFilter" hdrtitle="Member" searchid="S50" data-target="#HelpModal" onclick=transfer(this,"form","","form_control"); title="Search" style="font-size: 19px; "></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div id="locationMap" class="col-sm-4">
+                            <div class="form-group">
+                                <input type="button" class="btn btn-info"  id="btn_map" onclick="listpageloadfetch()" value="Track">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group" style="display:none;">
+                            <label for="txt_equp_code" class="col-sm-5 control-label">Equipment code</label>
+                            <div class="col-sm-4">
+                                <input type="text" id="txt_equp_code" value="en_US" name="equipment_code" class="form-control" maxlength="50">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group" style="display:none;">
+                            <label for="txt_lat" class="col-sm-5 control-label">latitude</label>
+                            <div class="col-sm-4">
+                                <input type="text" id="txt_lat" name="latitude" class="form-control" maxlength="50">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group" style="display:none;">
+                            <label for="txt_long" class="col-sm-5 control-label">longitude</label>
+                            <div class="col-sm-4">
+                                <input type="text" id="txt_long" name="longitude" class="form-control" maxlength="50">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group" style="display:none;">
+                            <label for="txt_imei_no" class="col-sm-5 control-label">imei no</label>
+                            <div class="col-sm-4">
+                                <input type="text" id="txt_imei_no"  name="imeino" class="form-control" maxlength="100">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="show_map" style="padding-bottom:15px;">
+                    <div class="col-sm-4" style="padding-left:150px">
+                        <div style="width: 1000px; height: 400px ;" id="mapDiv"></div>
+                    </div>
+                </div>
+                <div style="color:red">
+                    <table align="center">
+                        <tr>
+                            <td>
+                                @if (@ViewBag.Message == "This Value is empty")
+                                {
+                                    <span >@ViewBag.Message</span>
+                                }
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="~/API_Scripts/track_equipment_retrievetrackmyequipmentList_APIClient.js"></script>
+<script src="~/API_Scripts/retrievetrackmyequipmentList_Model.js"></script>
+<script src="~/API_Scripts/EquipmentTrack.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+
+<script>
+    $(document).ready(function () {
+        //master_userRoleNew();
+        $("#Topsubheader").show();
+        $("#bottomFooter").show();
+        $("#btndiv").show();
+        $("#frmlayerdiv").hide();
+        $("#divCreate").hide();
+        $("#divEdit").hide();
+        $("#divView").show();
+        $("#DocStat").show();
+        $(".edtviw_item").show();
+        $(".create_item").hide();      
+        $("#trackeup").hide();
+        //$("#show_map").hide();
+        $("#bottom_menus").hide();
+        $("#form_design").css("padding-top", "80px");
+        $(".file_attach").attr("hdrtitle", "HSN");
+        $(".notes").attr("hdrtitle", "HSN");
+        $("#lblForm_menuid").text("AEPSHSN");
+       
+        $("#form_design").css("padding-top", "70px");       
+        var lat = $("#txt_lat").val();
+        var long = $("#txt_long").val()
+        var org_id = getlocalStorage('org_id');
+        $('#esp_code').val(org_id);
+
+        $('#HelpModal').on('hide.bs.modal', function (e) {
+            if ($("#txtmember_id").val() != undefined && $("#txtmember_id").val() != "") {
+
+            }
+        });
+    });
+</script>
+<script>
+    var map;
+    var defaultLayers;
+    function listpageloadfetch() {
+        try {
+            var formval = form_Serialize("Initiation_form");
+            var obj_val = JSON.parse(formval);          
+            $("#show_map").show();
+            var c = $('#cmb_loantype');           
+            if ($('#txt_equip_name').val() == "") {
+                kendoAlert("Kindly Select the  Equipment");
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    data: "{imeino: '" + $("#txt_imei_no").val() + "' }",
+                    dataType: "json",
+                    url: '@Url.Action("gpstrack", "TrackEqup")',
+                    success: function (data) {
+                      alert(data)
+                        if (data == "This value is empty") {
+                            kendoAlert("GPS Id is not configure for this Equipment");
+                            //mapshow();
+                            document.getElementById('mapDiv').innerHTML = "<b></b>";
+                            mapremove();
+                        } else {
+                            document.getElementById('mapDiv').innerHTML = "<b></b>";
+                            var gps = data[data.length - 1]
+                            //debugger;
+                            $("#txt_lat").val(gps.latitude);
+                            $("#txt_long").val(gps.longitude);
+                            var lat = $("#txt_lat").val(gps.latitude);
+                            var long = $("#txt_long").val(gps.longitude);
+                            $("#show_map").show();
+                            mapshow();
+
+                            addMarkersToMap(map)
+                        }
+
+                    }
+                });
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    //map marker
+    function addMarkersToMap(map) {
+
+        var lat = $("#txt_lat").val();
+        var lng = $("#txt_long").val();
+       
+        var vehicle = new H.map.Marker({ lat: lat, lng: lng });
+        map.addObject(vehicle);
+
+    }
+
+    //map remove function
+
+    function mapremove() {      
+        //map.removeLayer(defaultLayers);
+        mapshow();
+        $("#show_map").show();
+    }
+
+    //map show function
+
+    function mapshow() {
+        //Initialize the platform object:
+        var platform = new H.service.Platform({
+            'app_id': 'AfDUAXtqHM81ItQE1V97',
+            'app_code': 'y8_LFBAMuH37isWkEVoQdQ',
+            useHTTPS: true
+        });
+        //var platform = new H.service.Platform({
+        //    'app_id': 'Bqs0M6eimKqCEezcbqlT',
+        //    'app_code': 'YpY-4nBfxDebd7vw1-AMvg'
+        //    useHTTPS: true
+        //});
+        var pixelRatio = window.devicePixelRatio || 1;
+
+        defaultLayers = platform.createDefaultLayers({
+            tileSize: pixelRatio === 1 ? 256 : 512,
+            ppi: pixelRatio === 1 ? undefined : 320
+        });
+
+        //Step 2: initialize a map - this map is centered over Europe
+        
+        map = new H.Map(document.getElementById('mapDiv'),
+          defaultLayers.satellite.map,
+            {
+              center: { lat: 13.0706, lng: 80.224 },
+              zoom: 10,
+              pixelRatio: pixelRatio
+
+            }
+            );
+
+        //Step 3: make the map interactive
+        // MapEvents enables the event system
+        // Behavior implements default interactions for pan/zoom (also on mobile touch environments)
+        var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+
+        // Create the default UI components
+        var ui = H.ui.UI.createDefault(map, defaultLayers);
+
+        // Now use the map as required...
+
+        //  addMarkersToMap(map);
+    }
+
+//lookup function
+    function grid_control() {
+        var control_Name = [
+
+        ];
+        return control_Name;
+    }
+
+    function form_control() {
+        var control_Name = [
+            { "dataCol": "equipment_code", "controlId": "cmb_Eqptype", "type": "Text" },
+            { "dataCol": "member_name", "controlId": "txt_equp_code", "type": "Text" },
+             { "dataCol": "equipment_name", "controlId": "txt_equip_name", "type": "Text" },
+             { "dataCol": "imei_no", "controlId": "txt_imei_no", "type": "Text" },
+        ];
+        return control_Name;
+
+    }
+    function trans_input_data() {
+        try {
+            var trans_coll = [
+             { "trasfer": "Yes", "dataCol": "esp_code", "controlId": "esp_code", "grid_id": "grid_inward", "grid_row_col": "" },
+              { "trasfer": "Yes", "dataCol": "equipment_name", "controlId": "txt_equip_name", "grid_id": "grid_inward", "grid_row_col": "equipment_name" },
+            ];
+            return trans_coll;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<style type="text/css">
+    .show {
+        display: block;
+    }
+
+    .hide {
+        display: none;
+    }
+</style>
+
+
+
+
+
+
+

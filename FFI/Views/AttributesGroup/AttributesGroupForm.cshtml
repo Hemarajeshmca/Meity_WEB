@@ -1,0 +1,707 @@
+﻿@{
+    ViewBag.Form = "Attributes Group";
+    ViewBag.helpName = "AttributesGroupForm.html";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+
+<form id="Attributes_New" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:10px">
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="txt_Attr_rowid" class="col-sm-5 control-label">Attribute id:</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txt_Attr_rowid" name="In_entitygrp_rowid" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:10px">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="txt_attr_code" class="col-sm-5 control-label required">Attribute Group Code:</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txt_attr_code" name="In_entitygrp_code" class="form-control" maxlength="15">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="rbtype" class="col-sm-5 control-label required">Attribute Group Type:</label>
+                        <div class="col-lg-2">
+                            <input type="radio" name="In_multiline_flag" value="S" id="rbtype" data-role="radio" checked="checked">Single
+                        </div>
+                        <div class="col-lg-2">
+                            <input type="radio" name="In_multiline_flag" value="M" id="rbtype1" data-role="radio" />Multiple
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="txtname" class="col-sm-5 control-label required">Attribute Group Name:</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtname" name="In_entitygrp_name" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="txttname" class="col-sm-5 control-label required">Attribute Group Name(Local Lang):</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txttname" name="In_entitygrp_ll_name" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row" style="padding-bottom:10px">
+
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="status_code" class="col-sm-5 control-label">Status_code</label>
+                        <div class="col-sm-4">
+                            <input type="text" value="A" id="txt_status_code" name="In_status_code" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="txtMode" class="col-sm-5 control-label">Mode</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtMode" name="In_mode_flag" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="row_timestamp" class="col-sm-5 control-label">Timestamp:</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txt_row_timestamp" name="In_row_timestamp" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12">
+
+                <div id="grid_Drop_list"></div>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+<script>
+    click_act_name = "AttributesGrouplist";
+    click_ctrl_name = "AttributesGroup";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script>
+    $(document).ready(function () {
+
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#Attributes_New");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+
+        Screen_Id = "ATTR_GRP";
+        permission = sec_Permission(Screen_Id);
+
+        $(".file_attach").attr("hdrtitle", "Attributes Group");
+        $(".notes").attr("hdrtitle", "Attributes Group");
+        $("#lblForm_menuid").text("ATTR_GRP");
+        $("#hide_div").hide();
+
+        gridFilter([]);
+
+        if (getlocalStorage('btn_clk_val') == "Create") {
+            $('#divCreate #review').hide();
+            $("#bottom_menus").hide();
+            $("#txtMode").val("I");
+        }
+        else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
+            debugger;
+            $('#divEdit #reviewEd').hide();
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("Attributes_New");
+                var obj_val = JSON.parse(formval);
+                obj_val.In_entitygrp_rowid = data.Out_entitygrp_rowid;
+                obj_val.In_entitygrp_code = data.Out_entitygrp_code;
+                $("#txt_attr_code").val(data.Out_entitygrp_code);
+                $("#txt_Attr_rowid").val(data.Out_entitygrp_rowid);
+                $("#txtMode").val("U");
+                var data = {};
+                data.context = WebAPIProxy.getContext();;
+                data.context.Header = obj_val;
+                var Context = data.context;
+
+                var data = { userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, entitygrp_rowid: Context.Header.In_entitygrp_rowid, entitygrp_code: Context.Header.In_entitygrp_code  };
+              $.ajax({
+          url: '@Url.Action("Attributesfetch", "AttributesGroup")',
+         type: "post",
+        contentType: 'application/x-www-form-urlencoded',
+         data: data,
+        success: function (response1) {
+                debugger;
+                if (response1 != null) {
+                    generate_attribute_group_header(response1.context.Header);
+                    generate_attribute_group_detail(response1.context.Detail);
+                }
+
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+        });
+
+
+                // HTTP Get Api purpose venkat Commented 10-9-2020 start
+
+                //$.ajax({
+                //    type: "POST",
+                //    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, entitygrp_rowid: Context.Header.In_entitygrp_rowid, entitygrp_code: Context.Header.In_entitygrp_code  }),
+                //    url: "/AttributesGroup/Attributesfetch",
+                //    dataType: "json",
+                //    contentType: 'application/json; charset=utf-8',
+                //    success: function (response) {
+                //        debugger;
+                //        if (response.context != null) {
+                //            generate_attribute_group_header(response.context.Header);
+                //            generate_attribute_group_detail(response.context.Detail);
+                //            //SetPager(response.context.Filter.out_record_count)
+                //        }
+                //        else {
+                //            grid_role([]);
+                //        }
+                //    },
+                //    error: function (er) {
+                //        alert(er)
+                //        console.log(er)
+                //    }
+
+                //});
+
+
+                setlocalStorage('doc_no', $("#txt_attr_code").val());
+                setlocalStorage('doc_row_id', $("#txt_Attr_rowid").val());
+            }
+        }
+
+    });
+    function clear_val() {
+        try {
+            $("#txt_Attr_rowid").val("");
+            $("#txt_attr_code").val("");
+            $("#txtname").val("");
+            $("#txttname").val("");
+            $("#txt_status_code").val("");
+            $("#txtMode").val("");
+            $("#txt_row_timestamp").val("");
+            if (res.multiline_flag == "S") {
+                $("#rbtype").prop("checked", false)
+            }
+            else {
+                $("#rbtype1").prop("checked", false)
+            }
+            gridFilter([]);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function get_attribute_group_details(id) {
+        try {
+            //clear_val();
+
+            var formval = form_Serialize("Attributes_New");
+            var obj_val = JSON.parse(formval);
+            obj_val.In_entitygrp_rowid = id;
+            obj_val.In_entitygrp_code = $("#txt_attr_code").val();
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Header = obj_val;
+            var Context = data.context;
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, entitygrp_rowid: Context.Header.In_entitygrp_rowid, entitygrp_code: Context.Header.In_entitygrp_code }),
+                url: "/AttributesGroup/Attributesfetch",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    if (response.context != null) {
+                        generate_attribute_group_header(response.context.Header);
+                        generate_attribute_group_detail(response.context.Detail);
+                        //SetPager(response.context.Filter.out_record_count)
+                    }
+                    else {
+                        grid_role([]);
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function dublicate() {
+        try {
+            var sourcegrid = $('#grid_Drop_list').data('kendoGrid');        //SOURCE GRID
+            //  var destinationgrid = $('#grid_Drop_list').data('kendoGrid'); // DESTINATION GRID
+            sourcegrid.select().each(function () {
+                var dataItem = sourcegrid.dataItem($(this));
+
+                var column = dataItem.entity_name; // whatever the name of the unique id for your data source
+                alert(column);
+                if (sourcegrid.dataSource.get(column) == column) {
+                    alert('exists'); // DESTINATION DATASOURCE
+                }
+                else {
+                    alert('already exists');
+                }
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+</script>
+
+<script>
+    function load_master_code() {
+        try {
+            debugger;
+            var data = {};
+            var context = WebAPIProxy.getContext();
+            data.userId = context.userId
+            data.orgnId = context.orgnId
+            data.locnId = context.locnId
+            data.localeId = context.localeId
+            data.screen_Id = "ATTR_GRP";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+</script>
+
+<script>
+    var depend_desc_list = "";
+    var entity_type_desc_list = "";
+    function gridFilter(data) {
+        try {
+            $("#grid_Drop_list").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                In_row_slno: { type: "string", validation: { required: { message: "Row. No cannot be blank" } } },
+                                In_attribute_name: { type: "string" },
+                                In_entity_code: {
+                                    type: "string", validation: {
+                                        required: { message: "Attribute Code cannot be blank" },
+                                        maxlength:
+                                    function (input) {
+                                        if (input.val().length > 50) {
+                                            input.attr("data-maxlength-msg", "Max length is 50");
+                                            return false;
+                                        }
+                                        return true;
+                                    }
+                                    }
+                                },
+                                In_depends_on: { type: "string" },
+                                In_attribute_type: { type: "string" },
+
+                                In_entity_name: {
+                                    validation: {
+                                        required: { message: "Name cannot be blank" },
+                                        maxlength:
+                                    function (input) {
+                                        if (input.val().length > 50) {
+                                            input.attr("data-maxlength-msg", "Max length is 50");
+                                            return false;
+                                        }
+                                        return true;
+                                    }
+                                    }
+                                },
+
+                                In_entity_ll_name: {
+                                    validation: {
+                                        required: { message: "Name cannot be blank" },
+                                        maxlength:
+                                    function (input) {
+                                        if (input.val().length > 50) {
+                                            input.attr("data-maxlength-msg", "Max length is 50");
+                                            return false;
+                                        }
+                                        return true;
+                                    }
+                                    }
+                                },
+
+                                In_entity_type: { type: "string", required: true },
+                                In_entity_type_desc: {
+                                    type: "string",
+                                    validation: {
+                                        dropdownlistValidation: function (input) {
+                                            if (input.is("[name='entity_type_desc']")) {
+                                                var isValid = true;
+                                                input.attr("data-dropdownlistValidation-msg", "Attribute Type cannot be blank"); if (input.val().length <= 0) {
+                                                    isValid = false;
+                                                }
+                                                return isValid;
+                                            }
+                                            return true;
+                                        }
+                                    },
+                                },
+                                In_entity_length: { validation: { required: true } },
+                                In_mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+                toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 400,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_Drop_list').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+
+                sortable: true,
+                selectable: true,
+
+                navigatable: true,
+                columns: [{
+                    command: [
+                {
+                    name: "Delete",
+                    id: "Delete",
+                    imageClass: "fa fa-close",
+                    click: function (e) {
+                        // e.preventDefault();
+                        var grid = $("#grid_Drop_list").data("kendoGrid");
+                        var dataItem = $("#grid_Drop_list").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                        DeleteWindowEvent(e, dataItem, grid);
+                        e.stopImmediatePropagation()
+                    }
+                },
+                    ], title: "&nbsp;", width: "25px",
+                },
+                 {
+                     field: "In_entity_rowid",
+                     title: "Row id",
+                     width: 100,
+                     hidden: true,
+
+                 },
+
+
+                 {
+                     field: "In_row_slno",
+                     title: "Sl No",
+                     width: 100,
+                     editor: function (container, options) {
+                         numeric_editor(container, options.field, '2', '1');
+                     },
+
+                 },
+                 {
+                     field: "In_entity_code",
+                     title: "Attribute Code",
+                     width: 100,
+                 },
+
+                 {
+                     field: "In_entity_name",
+                     title: "Attribute Name In English",
+
+                     width: 100,
+
+                 }, {
+                     field: "In_entity_ll_name",
+                     title: "Attribute Name In Local Lang.",
+
+                     width: 100,
+
+                 },
+                 {
+                     field: "In_depend_code",
+                     title: "Depends On",
+                     hidden: true,
+                     width: 1
+
+                 },
+
+                 {
+                     field: "In_depend_desc",
+                     title: "Depends On",
+                     editor: function (container, options) {
+                         combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "In_depend_code", "grid_Drop_list")
+                     },
+                     width: 100
+
+                 },
+
+                {
+                    field: "In_entity_type",
+                    title: "Attribute Type",
+                    hidden: true,
+                    width: 1
+                },
+                {
+                    field: "In_entity_type_desc",
+                    title: "Attribute Type",
+                    editor: function (container, options) {
+                        combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "In_entity_type", "grid_Drop_list")
+                    },
+
+                    width: 100
+                },
+                 {
+                     field: "In_entity_length",
+                     title: "Length",
+                     width: 100,
+                     editor: function (container, options) {
+                         item_rate(container, options.field, '9', '0');
+                     },
+                 },
+
+                {
+                    field: "In_mode_flag",
+                    title: "Mode",
+                    width: 100,
+                    hidden: true
+                },
+                {
+                    field: "In_entity_width",
+                    title: "Width",
+                    width: 100,
+                    hidden: true,
+
+                }],
+                editable: true,
+                edit: function (e) {
+                    var fieldName = e.container.find("input").attr("name");
+                    if (fieldName == 'entity_code' && e.model.mode_flag != 'I') { this.closeCell(); }
+                },
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+
+        }
+    }
+    load_master_code();
+    In_depend_desc_list = grid_comboScreen_mastercodes("SYS");
+    In_entity_type_desc_list = grid_comboScreen_mastercodes("ET_TYPE");
+</script>
+<script>
+    function save() {
+        try {
+            var mandatory_check = true;
+            if ($("#txt_Attr_rowid").val() == "") {
+                $("#txt_Attr_rowid").val('0');
+            }
+            if ($("#txtMode").val() == "") {
+                $("#txtMode").val('I');
+            }
+
+            if ($("#txtMode").val() == "S") {
+                $("#txtMode").val('U');
+            }
+
+            var formval = form_Serialize("Attributes_New");
+            var obj_val = JSON.parse(formval);
+            var grid_val = JSON.stringify($("#grid_Drop_list").data().kendoGrid._data);
+            var Bind = {};
+            Bind = grid_val;
+            var result = JSON.parse(Bind);
+            var grid_validate_msg = "";
+
+            if (result.length == 0) {
+                kendoAlert("Atleast one record needs to be entered");
+                mandatory_check = false;
+                return false;
+            }
+            $.each(result, function (key, value) {
+                if (mandatory_check == false) {
+                    kendoAlert(grid_validate_msg);
+                    return false;
+                }
+            });
+            if (mandatory_check == true) {
+                $.each(result, function (index, value) {
+                    var row_id = value.In_entity_rowid;
+                    var row_code = value.In_entity_code;
+                    var row_width = value.In_entity_width;
+                    var row_flag = value.In_mode_flag;
+                    if (row_id == undefined) {
+                        result[index].In_entity_rowid = "0";
+                    }
+                    if (row_code == undefined) {
+                        result[index].In_entity_code = "0";
+                    }
+                    if (row_width == undefined) {
+                        result[index].In_entity_width = "0";
+                    }
+                    if (row_width == undefined) {
+                        result[index].In_entity_width = "0";
+                    }
+
+                    if (row_flag == "S") {
+                        result[index].In_mode_flag = "U";
+                    }
+                });
+                var obj_grid_val = result;
+
+                var data = {};
+                data.context = WebAPIProxy.getContext();;
+                data.context.Header = obj_val;
+                data.context.Detail = obj_grid_val;
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, Header: Context.Header, Detail: Context.Detail }),
+                    url: "/AttributesGroup/AttributesSave",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        console.log(response)
+                        var Res = JSON.parse(response);
+                        if (Res.context != null) {
+                            console.log(Res);
+                            var mode = $("#txtMode").val();
+                            if (mode == "I") {
+                                kendoAlert("Attribute Group  Details saved successfully");
+                                get_attribute_group_details(Res.context.Header.In_entitygrp_rowid);
+                            }
+                            else if (mode == "D") {
+                                kendoAlert("Attribute Group  Details inactivate successfully");
+                                get_attribute_group_details(Res.context.Header.In_entitygrp_rowid);
+                            }
+                            else {
+                                kendoAlert("Attribute Group  Details saved successfully");
+                                get_attribute_group_details(Res.context.Header.In_entitygrp_rowid);
+                            }
+                        }
+                        else {
+                            kendoAlert(Res.ApplicationException.errorDescription);
+                        }
+                    },
+                    error: function (er) {
+                        alert(er)
+                        console.log(er)
+                    }
+
+                });
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function DeleteDetails() {
+        try {
+            $("#txtMode").val('D');
+            save();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function generate_attribute_group_header(res) {
+        try {
+            
+            //$("#txt_attr_code").val(res.entitygrp_code);
+            $("#txt_attr_code").attr("readonly", "");
+            $("#txtname").val(res.In_entitygrp_name);
+            $("#txttname").val(res.In_entitygrp_ll_name);
+            $("#txt_status_code").val(res.In_status_desc);
+            $("#DocStat").val(res.In_status_desc);
+            $("#txtMode").val(res.In_mode_flag);
+
+            $("#txt_row_timestamp").val(res.In_row_timestamp);
+            if (res.In_multiline_flag == "S") {
+                $("#rbtype").prop("checked", true)
+            }
+            else {
+                $("#rbtype1").prop("checked", true)
+            }
+        } catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function generate_attribute_group_detail(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+
+                gridFilter(data);
+            }
+            else {
+                gridFilter([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+</script>
+
+
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>
+
+
+
+

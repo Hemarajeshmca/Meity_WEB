@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Role>
+  <RoleInfo>
+    <Id>1</Id>
+    <Name>FIS Maker</Name>
+  </RoleInfo>
+
+  <RoleInfo>
+    <Id>2</Id>
+    <Name>FIS Checker</Name>
+  </RoleInfo>
+
+  <RoleInfo>
+    <Id>3</Id>
+    <Name>FPO Admin</Name>
+  </RoleInfo>
+
+  <RoleInfo>
+    <Id>4</Id>
+    <Name>NAF Admin</Name>
+  </RoleInfo>
+
+  <RoleInfo>
+    <Id>5</Id>
+    <Name>LRS Maker</Name>
+  </RoleInfo>
+
+  <RoleInfo>
+    <Id>6</Id>
+    <Name>LRS Checker</Name>
+  </RoleInfo>
+
+  <RoleInfo>
+    <Id>7</Id>
+    <Name>LRS Approver</Name>
+  </RoleInfo>
+
+  <RoleInfo>
+    <Id>8</Id>
+    <Name>Platform Admin</Name>
+  </RoleInfo>
+
+ 
+
+  <Org>Facilitator Org</Org>
+  <Org>FPO</Org>
+  <Org>Milk Aggregator Org</Org>
+
+
+
+</Role>

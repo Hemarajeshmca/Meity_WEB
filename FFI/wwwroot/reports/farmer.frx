@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="05/07/2020 18:00:22" ReportInfo.Modified="05/07/2020 18:06:14" ReportInfo.CreatorVersion="2020.1.0.0">
+  <Styles Name="Standard">
+    <Style Name="Title" Font="Arial, 12pt, style=Bold"/>
+    <Style Name="Header" Font="Arial, 10pt, style=Bold"/>
+    <Style Name="Group" Font="Arial, 10pt, style=Bold"/>
+    <Style Name="Data" Font="Arial, 10pt"/>
+    <Style Name="Footer" Font="Arial, 10pt"/>
+    <Style Name="EvenRows" Fill.Color="WhiteSmoke" Font="Arial, 10pt"/>
+  </Styles>
+  <Dictionary>
+    <MySqlDataConnection Name="Connection" ConnectionString="rijcmlqJ9ltPwNsYyX+2oAnmCElmGIz/SJ0vefyWJNqFvJ9CpVcxZe7+FQFpmKpxbZDWz0V6R67CmUYRz08CylTygPQ7nDcjcvkNbgb9EaWfKfta/Q=">
+      <TableDataSource Name="core_mst_tfarmer" DataType="System.Int32" Enabled="true" TableName="core_mst_tfarmer">
+        <Column Name="farmer_rowid" DataType="System.Int32"/>
+        <Column Name="farmer_code" DataType="System.String"/>
+        <Column Name="version_no" DataType="System.Int32"/>
+        <Column Name="farmer_name" DataType="System.String"/>
+        <Column Name="sur_name" DataType="System.String"/>
+        <Column Name="fhw_name" DataType="System.String"/>
+        <Column Name="farmer_dob" DataType="System.DateTime"/>
+        <Column Name="farmer_addr1" DataType="System.String"/>
+        <Column Name="farmer_addr2" DataType="System.String"/>
+        <Column Name="farmer_ll_name" DataType="System.String"/>
+        <Column Name="sur_ll_name" DataType="System.String"/>
+        <Column Name="fhw_ll_name" DataType="System.String"/>
+        <Column Name="farmer_ll_addr1" DataType="System.String"/>
+        <Column Name="farmer_ll_addr2" DataType="System.String"/>
+        <Column Name="farmer_country" DataType="System.String"/>
+        <Column Name="farmer_state" DataType="System.String"/>
+        <Column Name="farmer_dist" DataType="System.String"/>
+        <Column Name="farmer_taluk" DataType="System.String"/>
+        <Column Name="farmer_panchayat" DataType="System.String"/>
+        <Column Name="farmer_village" DataType="System.String"/>
+        <Column Name="farmer_pincode" DataType="System.String"/>
+        <Column Name="marital_status" DataType="System.String"/>
+        <Column Name="gender_flag" DataType="System.String"/>
+        <Column Name="reg_mobile_no" DataType="System.String"/>
+        <Column Name="photo_farmer" DataType="System.String"/>
+        <Column Name="reg_note" DataType="System.String"/>
+        <Column Name="status_code" DataType="System.String"/>
+        <Column Name="created_datetime" DataType="System.DateTime"/>
+        <Column Name="created_by" DataType="System.String"/>
+        <Column Name="modified_datetime" DataType="System.DateTime"/>
+        <Column Name="modified_by" DataType="System.String"/>
+        <Column Name="row_timestamp" DataType="System.DateTime"/>
+      </TableDataSource>
+    </MySqlDataConnection>
+  </Dictionary>
+  <ReportPage Name="Page1" Landscape="true" PaperWidth="297" PaperHeight="210" Watermark.Font="Arial, 60pt">
+    <ReportTitleBand Name="ReportTitle1" Width="1047.06" Height="37.8">
+      <TextObject Name="Text1" Width="1047.06" Height="37.8" Dock="Fill" Text="Farmer Report" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold" Style="Title"/>
+    </ReportTitleBand>
+    <PageHeaderBand Name="PageHeader1" Top="41.8" Width="1047.06" Height="28.35">
+      <TextObject Name="Text3" Width="94.5" Height="18.9" Text="farmer_code" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text5" Left="94.5" Width="94.5" Height="18.9" Text="farmer_name" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text7" Left="189" Width="94.5" Height="18.9" Text="fhw_name" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text9" Left="283.5" Width="94.5" Height="18.9" Text="farmer_dob" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text11" Left="378" Width="94.5" Height="18.9" Text="farmer_country" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text13" Left="472.5" Width="94.5" Height="18.9" Text="farmer_state" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text15" Left="567" Width="94.5" Height="18.9" Text="farmer_dist" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text17" Left="661.5" Width="94.5" Height="18.9" Text="farmer_taluk" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text19" Left="756" Width="94.5" Height="18.9" Text="farmer_panchayat" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text21" Left="850.5" Width="94.5" Height="18.9" Text="farmer_village" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text23" Left="945" Width="94.5" Height="18.9" Text="farmer_pincode" Font="Arial, 10pt, style=Bold" Style="Header"/>
+    </PageHeaderBand>
+    <DataBand Name="Data1" Top="74.15" Width="1047.06" Height="18.9" EvenStyle="EvenRows" DataSource="core_mst_tfarmer">
+      <TextObject Name="Text2" Width="94.5" Height="18.9" Text="[core_mst_tfarmer.farmer_code]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text4" Left="94.5" Width="94.5" Height="18.9" Text="[core_mst_tfarmer.farmer_name]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text6" Left="189" Width="94.5" Height="18.9" Text="[core_mst_tfarmer.fhw_name]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text8" Left="283.5" Width="94.5" Height="18.9" Text="[core_mst_tfarmer.farmer_dob]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text10" Left="378" Width="94.5" Height="18.9" Text="[core_mst_tfarmer.farmer_country]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text12" Left="472.5" Width="94.5" Height="18.9" Text="[core_mst_tfarmer.farmer_state]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text14" Left="567" Width="94.5" Height="18.9" Text="[core_mst_tfarmer.farmer_dist]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text16" Left="661.5" Width="94.5" Height="18.9" Text="[core_mst_tfarmer.farmer_taluk]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text18" Left="756" Width="94.5" Height="18.9" Text="[core_mst_tfarmer.farmer_panchayat]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text20" Left="850.5" Width="94.5" Height="18.9" Text="[core_mst_tfarmer.farmer_village]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text22" Left="945" Width="94.5" Height="18.9" Text="[core_mst_tfarmer.farmer_pincode]" Font="Arial, 10pt" Style="Data"/>
+    </DataBand>
+    <PageFooterBand Name="PageFooter1" Top="97.05" Width="1047.06" Height="18.9">
+      <TextObject Name="Text24" Width="1047.06" Height="18.9" Dock="Fill" Text="[PageN]" HorzAlign="Right" Font="Arial, 10pt" Style="Footer"/>
+    </PageFooterBand>
+  </ReportPage>
+</Report>

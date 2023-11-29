@@ -1,0 +1,361 @@
+﻿@{
+    ViewBag.List = "Warehouse Receipting";
+    Layout = "~/Views/Shared/ListViewLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-xs-12">
+        <div id="whslist"></div>
+    </div>
+</div>
+
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/CommonScripts/ExportExcel.js"></script>
+<script src="~/CommonScripts/Common_func.js"></script>
+<script src="~/API_Scripts/PAWHS_getPaymentCollection_Model.js"></script>
+<script src="~/API_Scripts/PAWHS_getWarehouseReceipt_Model.js"></script>
+<script src="~/API_Scripts/PAWHS_getWarehouseReceiptList_Model.js"></script>
+<script src="~/API_Scripts/PAWHS_savePaymentCollection_Model.js"></script>
+<script src="~/API_Scripts/PAWHS_saveWarehouseReceipt_Model.js"></script>
+<script src="~/API_Scripts/Warehouse_Receipting_PAWHS_getPaymentCollection_APIClient.js"></script>
+<script src="~/API_Scripts/Warehouse_Receipting_PAWHS_savePaymentCollection_APIClient.js"></script>
+<script src="~/API_Scripts/Warehouse_Receipting_PAWHS_getWarehouseReceiptList_APIClient.js"></script>
+<script src="~/API_Scripts/Warehouse_Receipting_PAWHS_saveWarehouseReceipt_APIClient.js"></script>
+<script src="~/API_Scripts/Warehouse_Receipting_PAWHS_getWarehouseReceipt_APIClient.js"></script>
+<script src="~/API_Scripts/PAWHSWarehouseReceipting.js"></script>
+
+<script>
+   
+    function WarhouseReceipt(data) {
+        try {
+            $("#whslist").kendoGrid({
+                dataSource: {
+                    data: data,
+                    pageSize: 20,
+                },
+                toolbar: "<button type= 'button' id = 'Exportclick' class = 'k-grid-excel' style = 'display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                excelExport: function (e) {
+                    var gd = $("#whslist").data("kendoGrid");
+                    var len = gd.dataSource._data.length;
+                    var chkall = $('#chkall').is(':checked');
+                    var chkfilter = $('#chkfilter').is(':checked');
+                    var chktemp = $('#chktemp').is(':checked');
+                    
+                    var twokendobox = true;
+                    gd.dataSource.pageSize(len);
+                    if (e.sender.dataSource._data.length == len) {
+                        twokendobox = false;
+                        exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                    }
+                    else {
+                        exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                    }
+                    gd.dataSource.pageSize('10');
+                    return false;
+                },
+                scrollable: true,
+                filterable: {
+                    enabled: true,
+                    delay: 1500,
+                    mode: "menu, row",
+                    height: 200,
+                    click: function (e) {
+                        var gd = $("#whslist").data("kendoGrid");
+                        filter_row(gd);
+                    }
+                },
+                filterMenuInit: function (e) {
+                    var gd = $("#whslist").data("kendoGrid");
+                    filter_row(gd);
+                },
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#whslist').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                height: 450,
+                sortable: true,
+                selectable: true,
+                change: selectRow,
+                selectable: "singl",   //  Grid Row Selection
+                pageable: {
+                    refresh: false,
+                    pageSizes: true,
+                    buttonCount: 5
+                },
+                navigatable: true,
+                groupable: false,
+               
+                columns: [
+                          {
+                        field: "Out_whs_receipt_rowid",
+                              title: "WHS Receipt Rowid",
+                              width: 100,
+                              hidden: true,
+                          },
+                        {
+                            field: "Out_grn",
+                            title: "GRN",
+                            width: 100,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            },
+                        },
+                        {
+                            field: "Out_farmer_code",
+                            title: "Farmer Code",
+                            width: 100,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            },
+                        },
+                        {
+                            field: "Out_farmer_name",
+                            title: "Farmer Name",
+                            width: 100,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            },
+                        },
+                        {
+                            field: "Out_pickup_request_id",
+                            title: "Request ID",
+                            width: 140,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            },
+                        },
+                        {
+                            field: "Out_pickup_date",
+                            title: "Pick-up Date",
+                            width: 100,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            },
+                        },
+                        {
+                            field: "Out_pickup_slot",
+                            title: "Pick-up Slot",
+                            width: 100,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            },
+                        },
+                        {
+                            field: "Out_procurement",
+                            title: "Procurement/Service",
+                            width: 160,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            },
+                        },
+                        {
+                            field: "Out_status_desc",
+                            title: "Status",
+                            width: 100,
+                            //hidden: true,
+                        },
+                        {
+                            field: "Out_status_code",
+                            title: "Status ",
+                            hidden: true,
+                            width: 100,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            },
+                        },
+                        
+                        {
+                            field: "Out_row_timestamp",
+                            title: "Row Timestamp",
+                            width: 100,
+                            hidden: true,
+                        },
+                ],
+            });
+            $(".k-dropdown-operator").css('display', 'none');
+            $("#whslist .k-input").attr('disabled', 'false');
+
+            var gridRowID = 1;
+            function sel_checkbox() {
+                gridRowID++;
+                return '<input id="chk_sel_' + gridRowID + '" class="checkbox" type="checkbox" />';
+            }
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function selectRow() {
+        try {
+            var grid = $("#whslist").data("kendoGrid");
+            var selectedItem = grid.dataItem(grid.select());
+            setlocalStorage("ls_pageList", selectedItem);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<script>
+    $("#btn_Edit").bind("click", function () {
+       // btn_onClick('Edit');
+        getSerializedSelectedRows('edit');
+    });
+
+    $("#btn_View").bind("click", function () {
+       // btn_onClick('View');
+        getSerializedSelectedRows('View');
+
+    });
+
+    $("#btn_new").bind("click", function () {
+        btn_onClick('Create');
+        location.href = "../PAWHSWarehouseReceipt/WarehouseReceiptForm";
+    });
+
+    function getSerializedSelectedRows(mode) {
+        try {
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var items = getlocalStorage("ls_pageList");
+                if (items.length == 0) {
+                    kendoAlert("Please select records");
+                }
+
+                else {
+                    if (mode == "edit") {
+                        btn_onClick('Edit');
+                        location.href = "../PAWHSWarehouseReceipt/WarehouseReceiptForm";
+                    }
+                    else if (mode == "View") {
+                        btn_onClick('View');
+                        location.href = "../PAWHSWarehouseReceipt/WarehouseReceiptForm";
+                    }
+                }
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+        $(".adv_filter").attr("hdrtitle", "Warehouse Receipt List");
+        $(".adv_filter").attr("fltid", "WhsRecpt");
+        $(".Export").attr("hdrtitle", "Warehouse Receipt List");
+        $(".Export").attr("SubTreeId", "Warehouse Receipt");
+        list_grid_id = "WHSRECEPT";
+        listpageloadfetch();
+        Screen_Id = "WHSRECEPT";
+        permission = sec_Permission(Screen_Id);
+        page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+        filterhover();
+    });
+
+</script>
+<script>
+    function listpageloadfetch() {
+        try {
+            var formval = form_Serialize("WarehouseMaster");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_FromValue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_FromValue = ".";
+            }
+            obj_val.FilterBy_ToValue = ".";
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Filter = obj_val;
+            var Context = data.context;
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, Filter: Context.Filter }),
+                url: "/PAWHSWarehouseReceipt/ServiceList",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    if (response.context != null) {
+                        generate_WhsRecpt_list(response.context.List)
+                        //listgrid(response.context.List);
+                        //SetPager(response.context.Filter.out_record_count)
+                    }
+                    else {
+                        WarhouseReceipt([]);
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+            //retrieve_WarehouseRecpt_list(data);
+            filterhover();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function listRefresh() {
+        try {
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function generate_WhsRecpt_list(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                $("#whslist").empty();
+                WarhouseReceipt(data);
+            }
+            else {
+                WarhouseReceipt([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>

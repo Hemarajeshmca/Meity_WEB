@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <row>
+    <parameter>FY</parameter>
+  </row>
+  <row>
+    <parameter>Debt</parameter>
+  </row>
+  <row>
+    <parameter>Grant</parameter>
+  </row>
+  <row>
+    <parameter>Authorized Capital</parameter>
+  </row>
+  <row>
+    <parameter>Paid Up Capital</parameter>
+  </row>
+  <row>
+    <parameter>Max Shares Per Applicant</parameter>
+  </row>
+  <row>
+    <parameter>Price Per Share</parameter>
+  </row>
+</root>

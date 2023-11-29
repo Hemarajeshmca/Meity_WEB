@@ -1,0 +1,354 @@
+﻿@{
+    ViewBag.List = "Manage Pick-up";
+    Layout = "~/Views/Shared/ListViewLayout.cshtml";
+}
+
+<form id="Readyforpickup_form" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="grid_Readypick">
+                <div id="Readypick"></div>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="~/API_Scripts/ReadyTo_pickup_PAWHS_getReadyToPickup_APIClient.js"></script>
+<script src="~/API_Scripts/ReadyTo_pickup_PAWHS_getReadyToPickupList_APIClient.js"></script>
+<script src="~/API_Scripts/ReadyTo_pickup_PAWHS_saveReadyToPickup_APIClient.js"></script>
+<script src="~/API_Scripts/PAWHS_getReadyToPickup_Model.js"></script>
+<script src="~/API_Scripts/PAWHS_getReadyToPickupList_Model.js"></script>
+<script src="~/API_Scripts/PAWHS_saveReadyToPickup_Model.js"></script>
+<script src="~/API_Scripts/PAWHSReadyforpickup.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/CommonScripts/AdvanceFilter.js"></script>
+
+<script>
+    click_act_name = "FormerEditView";
+    click_ctrl_name = "ReadyToPickUp";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+
+
+        Screen_Id = "READYFORPICK";
+        permission = sec_Permission(Screen_Id);
+        page_load_list_permission(permission);
+        $("#btn_new").hide();
+        $(".adv_filter").attr("hdrtitle", "Ready To Pickup List");
+        $(".adv_filter").attr("fltid", "ReadyPickup");
+        $(".Export").attr("hdrtitle", "Ready To Pickup List");
+        $(".Export").attr("SubTreeId", "READYFORPICK");
+        list_grid_id = "Readypick";
+        listpageloadfetch();
+
+        setlocalStorage("ls_pageList", "");
+        filterhover();
+    });
+</script>
+
+<script>
+    function listpageloadfetch() {
+        try {
+            var formval = form_Serialize("PAWHSAggregator_Registration");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_FromValue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_FromValue = ".";
+            }
+            obj_val.FilterBy_ToValue = ".";
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Filter = obj_val;
+            var Context = data.context;
+            $.ajax({
+                type: "POST",
+                url: '/PAWHSReadyForPickUp/ReadyForPickUpListfetch',
+                dataType: 'json',
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, FilterBy_Option: Context.Filter.FilterBy_Option, FilterBy_Code: Context.Filter.FilterBy_Code, FilterBy_Fromvalue: Context.Filter.FilterBy_FromValue, FilterBy_ToValue: Context.Filter.FilterBy_ToValue }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    //var list = JSON.parse(response);
+                    if (response.context.List != null) {
+                        generate_ReadyForPickup_list(response.context.List);
+                    }
+                    else {
+                        Readyforpickup([]);
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+            //setlocalStorage('flt_condition', "");
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    var status_Priority = [];
+    function Readyforpickup(data) {
+        try {
+            $.each(data, function (index, value) {
+                var flag = false;
+                $.each(status_Priority, function (sindex, svalue) {
+                    if (svalue == value.status_desc) {
+                        flag = true;
+                    }
+                });
+                if (flag == false) {
+                    status_Priority.push(value.status_desc);
+                }
+            });   
+            $("#Readypick").kendoGrid(
+                {
+                    dataSource: {
+                        data: data,
+                        pageSize: 20,
+                        change: function (e) {
+                            setTimeout(function () {
+                                var gd = $("#Readypick").data("kendoGrid");
+                                gd.status_desc = "request",
+                                filter_row(gd);
+                                $('.k-i-close').css('display', 'none');
+                                $('button.k-button-icon').css('display', 'none');
+                                $('#Readypick .k-input').prop('disabled', false);
+                                $('#Readypick .k-input').prop('readonly', true);
+
+                            }, 1);
+                        },
+                    },
+                    toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                    excelExport: function (e) {
+                        var gd = $("#Readypick").data("kendoGrid");
+                        var len = gd.dataSource._data.length;
+                        var chkall = $('#chkall').is(':checked');
+                        var chkfilter = $('#chkfilter').is(':checked');
+                        var chktemp = $('#chktemp').is(':checked');
+                        var twokendobox = true;
+                        gd.dataSource.pageSize(len);
+                        if (e.sender.dataSource._data.length == len) {
+                            twokendobox = false;
+                            exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                        }
+                        else {
+                            exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                        }
+                        gd.dataSource.pageSize('10');
+                        return false;
+                    },
+                    filterable: {
+                        enabled: true,
+                        delay: 1500,
+                        mode: "menu, row",
+                        height: 200,
+                        click: function (e) {
+                            var gd = $("#Readypick").data("kendoGrid");
+                            gd.status_desc = "request",
+                            filter_row(gd);
+                        }
+                    },
+                    filterMenuInit: function (e) {
+                        var gd = $("#Readypick").data("kendoGrid");
+                        gd.status_desc="request",
+                        filter_row(gd);
+                    },
+                    change: selectRow,
+                    height: 450,
+                    sortable: true,
+                    selectable: true,
+                    selectable: "singl",   //  Grid Row Selection
+                    pageable: {
+                        refresh: false,
+                        pageSizes: true,
+                        buttonCount: 5
+                    },
+                    navigatable: true,
+                    groupable: false,
+                    columns: [                         
+                          {
+                            field: "Out_pickup_rowid",
+                              title: "pickup_rowid",
+                              width: 1,
+                              hidden: true,
+                          },
+                        {
+                            field: "Out_farmer_code",
+                            title: "Farmer Code",
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    contains:"test",
+                                    inputWidth: 1500
+                                }
+                            },
+                            width: 100
+                        },
+
+                        {
+                            field: "Out_farmer_name",
+                            title: "Farmer Name",
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500,                                   
+                                }
+                            },
+                            width: 100
+                        },
+                        {
+                            field: "Out_pickup_request_id",
+                            title: "PickUp Request Id",
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            },
+                            width: 100
+
+                        },
+                         {
+                             field: "Out_pickup_date",
+                             title: "PickUp Date",
+                             filterable: {
+                                 cell: {
+                                     operator: "contains",
+                                     inputWidth: 1500
+                                 }
+                             },
+                             width: 100
+
+                         },
+                         {
+                             field: "Out_status_code",
+                             title: "status_code",
+                             width: 1,
+                             hidden: true,
+                         },
+               
+                          {
+                              field: "Out_status_desc",
+                              title: "Status",
+                              filterable: {
+                                  cell: {                                    
+                                      operator: "contains",                                     
+                                      inputWidth: 1500,
+                                      suggestionOperator: "contains",
+                                  }                                 
+                              },
+                              width: 100
+                          },
+                           {
+                               field: "Out_row_timestamp",
+                               title: "row_timestamp",
+                               width: 1,
+                               hidden: true,
+                           },
+                    ]
+                });
+            $(".k-dropdown-operator").css('display', 'none');
+            $("#Readypick .k-input").attr('disabled', 'false');
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function statusFilter(element) {    // Dropdown list functionality
+        element.kendoDropDownList({
+            dataSource: status_Priority,
+            optionLabel: "--Select Value--"
+        });
+    }
+
+    function selectRow() {
+        try {
+            var grid = $("#Readypick").data("kendoGrid");
+            var selectedItem = grid.dataItem(grid.select());
+            setlocalStorage("ls_pageList", selectedItem);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<script>
+    $("#btn_Edit").bind("click", function () {
+        getSerializedSelectedRows('edit');
+    });
+
+    $("#btn_View").bind("click", function () {
+        getSerializedSelectedRows('view');
+    });
+
+
+    $("#btn_new").bind("click", function () {
+        btn_onClick('Create');
+        location.href = "../PAWHSReadyForPickUp/ReadyForPickupForm";
+    });
+    function getSerializedSelectedRows(mode) {
+        try {
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var items = getlocalStorage("ls_pageList");
+                if (items.length == 0) {
+                    kendoAlert("Please select records");
+                }
+
+                else {
+                    if (mode == "edit") {
+                        btn_onClick('Edit');
+                        location.href = "../PAWHSReadyForPickUp/ReadyForPickupForm";
+                    }
+                    else if (mode == "view") {
+                        btn_onClick('View');
+                        location.href = "../PAWHSReadyForPickUp/ReadyForPickupForm";
+                    }
+                }
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_ReadyForPickup_list(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                $("#grid_Readypick").empty();
+                $("#grid_Readypick").append("<div id='Readypick'></div>");
+                Readyforpickup(data);
+            }
+            else {
+                Readyforpickup([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function listRefresh() {
+        try {
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+
+

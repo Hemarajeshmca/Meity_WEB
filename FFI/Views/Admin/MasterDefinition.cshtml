@@ -1,0 +1,218 @@
+﻿
+@{
+    ViewBag.FormName = "MasterDefinition";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+
+<form id="master_form" class="form-horizontal" data-role="validator" novalidate="novalidate" style="padding-top:39px">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row">
+                <!-- Left col -->
+                <div class="col-lg-3">
+                    <!-- Custom tabs (Charts with tabs)-->
+                    <div class="nav-tabs-custom">
+                        <div id="grid_master_code">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-9" style="padding-left:0px">
+                    <!-- Map box -->
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                <label for="txtMastercode" class="col-sm-4 control-label">Master Code:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="txtMastercode" name="MasterCode" class="form-control" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="txtMasterDesc" class="col-sm-5 control-label">Master Description:</label>
+                                <div class="col-sm-7">
+                                    <input type="text" id="txtMasterDesc" class="form-control" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div id="grid_master_list"></div>
+                            @*<div id="window"></div>
+                                <script id="slotsTemplate" type="text/x-kendo-tmpl">
+                                    <input type="text" title="code is required" value="#= code #" required disabled />
+                                    <button class="fa fa-search fa-lg" style="height:20px; font-size:15px;" data-toggle="modal" disabled />
+                                </script>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<script>
+    $(function () {
+        
+        master_userRoleNew();
+        grid([]);
+        grid_master([]);
+
+        $("#form_design").css("padding-top", "70px");
+        
+    });
+
+  
+
+    function grid(data) {
+        $("#grid_master_code").kendoGrid({
+            dataSource: {
+                data: data,
+                // pageSize: 20
+            },
+            height: 450,
+            sortable: true,
+            selectable: true,           
+            selectable: "singl",   //  Grid Row Selection
+            navigatable: true,
+            columns: [{
+                field: "master_code",
+                title: "Master Code",
+                width: 100
+            }, {
+                field: "master_descripton",
+                title: "Description",
+                width: 100
+            }]
+        });
+    }
+
+
+     
+
+
+    function grid_master(master_data) {
+        $("#grid_master_list").kendoGrid({
+            dataSource: {
+                data: master_data,
+                // pageSize: 20,
+
+                schema: {
+                    model: {
+                        fields: {
+                            code: { type: "string", editable: true, validation: { required: { message: "Code cannot be blank" } } },
+                            description: { type: "string", editable: true, validation: { required: { message: "Description cannot be blank" } } },
+                            status_code: { type: "string", editable: false, defaultValue: "Active" },
+code_type_code: { type: "string", editable: false, defaultValue: "USER" },
+                            dependent_code: { editable: true },
+                            dependent_desc: { editable: false },
+                            mode_flag: { type: "string" }
+                        }
+                    }
+                }
+            },
+            height: 400,
+            navigatable: true,
+            sortable: true,
+            selectable: true,
+            //change: onChangeSelection,
+            selectable: "singl",   //  Grid Row Selection
+            dataBinding: setDefaultValues,
+            dataBound: function (e) {
+                resultData = e.sender._data;
+                var rows = $('#grid_master_list').data('kendoGrid').tbody.children();
+                setColor(rows, resultData);
+            },
+        
+            //pageable: {
+            //    pageSizes: true,
+            //    buttonCount: 5
+            //},
+            //  toolbar: ["create"],
+            toolbar: "<a class=' k-grid-add'  id = 'btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+            columns: [
+                {
+                    command: [
+               {
+                   name: "Delete",
+                   id: "Delete",
+                   imageClass: "fa fa-close",
+                   click: function (e) {
+                       // e.preventDefault();
+                       var grid = $("#grid_master_list").data("kendoGrid");
+                       var dataItem = $("#grid_master_list").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                       DeleteWindowEvent(e, dataItem, grid);
+                       e.stopImmediatePropagation()
+                   }
+               },
+                  {
+                      name: "Copy",
+                      imageClass: "fa fa-clipboard",
+                      click: function (e) {
+                          var grid_master_list = $("#grid_master_list").data("kendoGrid");
+                          var row = $(e.target).closest("tr");
+                          grid_master_list.select().each(function () {
+                              var dataItem = grid_master_list.dataItem($(this));
+                              if (dataItem.code != "") {
+                                  grid_master_list.dataSource.add({
+                                      code: dataItem.code, description: dataItem.description,
+                                      status_desc: dataItem.status_desc, mode_flag: "I"
+                                  });
+                              }
+                              e.stopImmediatePropagation();
+                              e.preventDefault();
+                              return false;
+                          });
+                      }
+                  }], title: "&nbsp;", width: "40px",
+                },
+                {
+                    field: "code",
+                    title: "Code",
+                    width: 120,
+
+                }, {
+                    field: "description",
+                    title: "Description",
+                    width: 100
+                },
+{
+                    field: "code_type_code",
+                    title: "Code Type",
+                    width: 100,
+hidden:true,
+
+                },
+                {
+                    field: "dependent_code",
+                    title: "Dependent Code",
+                    width: 100
+                },
+                {
+                    field: "dependent_desc",
+                    title: "Dependent Desc",
+                    width: 100,
+                    editable:false
+                },
+                
+            {
+                field: "status_code",
+                title: "Status",
+                width: 150
+            },
+            {
+                field: "mode_flag",
+                title: "Mode",
+                width: 3
+            }
+            ],
+            editable: true,
+        });
+    }
+
+ 
+
+</script>
+

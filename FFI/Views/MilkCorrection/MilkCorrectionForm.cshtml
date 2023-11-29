@@ -1,0 +1,838 @@
+﻿@{
+    ViewBag.Form = "Milk Payment Advice Correction";  
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+
+<form id="MapMilk_DNew_form" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">            
+                <div class="row" style="padding-top:10px;">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="txt_bill" class="col-sm-4 control-label">Advice For Bill</label>
+                            <div class="col-sm-5" style="width:200px;">
+                                <input type="text" id="txt_bill" name="ccbill_no" class="form-control" maxlength="50" onchange="advice_bill()" readonly>@**@
+
+                            </div>
+                            <div id="pay_help">
+                                <a class="HelpWindow fa fa-search fa-lg" role="button" id="pay_help" data-toggle="modal" href="/HelpFilter/HelpFilter" hdrtitle="Member" searchid="S06" data-target="#HelpModal" onclick=transfer(this,"form","","form_control"); title="Search" style="font-size: 19px; "></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+
+                            <label for="txt_supply_period" class="col-sm-5 control-label">Milk Supply Period</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="txt_supply_period" name="milk_supply_period" class="form-control" maxlength="50" style="width:175px" readonly>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+
+                        <div class="form-group">
+                            <label for="txtpayment_date" class="col-sm-5 control-label required">Payment Advice Date</label>
+                            <div class="col-sm-5" id="pays_date" style="display:block">
+                                <input class="cusDate" data-role='datepicker' id="txtpayment_date" name="payment_date" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" style="width:100%" readonly />
+                                <span data-for='valid' class='k-invalid-msg'></span>
+                            </div>
+                            <div class="col-sm-5" id="paydate" style="display:none">
+                                <input id="txtpay_date" name="pay" readonly class="form-control" />
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtRoleDesc" class="col-sm-4 control-label">Payment Correction ID</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_collection" style="width: 100%">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txtEmailId" class=" col-sm-4 control-label">Payment Correction Date</label>
+                        <div class=" col-sm-7">
+                            <input class="cusDate" type="date" data-role='datepicker' id="txtValidity" data-checkdate-msg="Enter Valid Date" name="valid_until" style="width:100%" onkeypress="return date_validate(event)" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="cmb_purpose" class="col-sm-4 control-label">Purpose</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_purpose" style="width: 100%">
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+                <div class="row">
+                    <div class="col-sm-5" style="display:none">
+                        <div class="form-group">
+                            <label for="txt_paymenthead_rowid" class="col-sm-5 control-label">Payment Row Id:</label>
+                            <div class="col-sm-7">
+                                <input type="text" id="txt_paymenthead_rowid" name="paymenthead_rowid" class="form-control" maxlength="125">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-5" style="display:none">
+                        <div class="form-group">
+                            <label for="txtpayment_id" class="col-sm-5 control-label">Payment No:</label>
+                            <div class="col-sm-7">
+                                <input type="text" id="txtpayment_id" name="payment_no" class="form-control" maxlength="125">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-5" style="display:none">
+                        <div class="form-group">
+                            <label for="txt_row_timestamp" class="col-sm-5 control-label">Timestamp:</label>
+                            <div class="col-sm-7">
+                                <input type="text" id="txt_row_timestamp" name="row_timestamp" class="form-control" maxlength="125">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-5" style="display:none">
+                        <div class="form-group">
+                            <label for="txt_status_code" class="col-sm-5 control-label">Status Code:</label>
+                            <div class="col-sm-7">
+                                <input type="text" id="txt_status_code" name="status_code" class="form-control" maxlength="125">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3" style=" display:none">
+                        <div class="form-group" style=" display:none">
+                            <label for="txtMode" class="col-sm-5 control-label">Mode Flag</label>
+                            <div class="col-sm-7">
+                                <input type="text" id="txtMode" name="mode_flag" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-5" style="display:none">
+                        <div class="form-group">
+                            <label for="txt_retailsale_amount" class="col-sm-5 control-label">Retailsale amount:</label>
+                            <div class="col-sm-7">
+                                <input type="text" id="txt_retailsale_amount" name="retailsale_amount" class="form-control" maxlength="125">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-5" style="display:none">
+
+                    </div>
+                    <div class="col-sm-5" style="display:none">
+                        <div class="form-group">
+                            <label for="txtcp_bill_amount" class="col-sm-5 control-label">Amount:</label>
+                            <div class="col-sm-7">
+                                <input type="text" id="txtcp_bill_amount" name="cp_bill_amount" class="form-control" maxlength="125">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-5" style="display:none">
+                        <div class="form-group">
+                            <label for="txt_deduction_per_ltr" class="col-sm-5 control-label">Deduction per ltr:</label>
+                            <div class="col-sm-7">
+                                <input type="text" id="txt_deduction_per_ltr" name="deduction_per_ltr" class="right" maxlength="125">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3" style=" display:none">
+                        <div class="form-group" style=" display:none">
+                            <label for="txtdeduction_amount" class="col-sm-5 control-label"> Deduction amount</label>
+                            <div class="col-sm-7">
+                                <input type="text" id="txtdeduction_amount" name="deduction_amount" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3" style=" display:none">
+                        <div class="form-group" style=" display:none">
+                            <label for="txtprocess_status" class="col-sm-5 control-label">Process status</label>
+                            <div class="col-sm-7">
+                                <input type="text" id="txtprocess_status" name="process_status" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3" style=" display:none">
+                        <div class="form-group" style=" display:none">
+                            <label for="txtprocess_payment" class="col-sm-5 control-label">Process payment</label>
+                            <div class="col-sm-7">
+                                <input type="text" id="txtprocess_payment" name="process_payment" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="padding-bottom:15px">
+                    <div class="col-xs-8">
+                        <label>Bill Details</label>
+                        <div id="MilkBill_grid">
+                        </div>
+                    </div>
+                    <div class="col-xs-4">
+                        <label>Retail Details</label>
+                        <div id="Milk_retail_grid">
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="row" style="padding-top:15px;padding-bottom:15px" id="editpay">
+
+
+                    <div class="col-xs-12" style="padding-bottom:15px">
+                        <div class="col-sm-2"><label style="padding-left:0px;margin-left:-15px">Payment Advice ID</label></div>
+                        <div class="col-sm-7"></div>
+
+                        <div class="col-sm-3">
+                            @*<button type="button" class="btn btn-info" onclick="payment()">Calculate Payment Advice</button>*@
+                            <a data-toggle="modal" id="btnReport" type="button" class="Export btn btn-sm btn-info" href="~/Reportlist/Report" data-target="#ReportModal"><span class="glyphicon glyphicon-export"></span></a>
+                            @*<button type="button" class="Export btn btn-sm btn-info" id="btnExc" onclick="export_fuc1()" style="width: 45px; height: 33px;"> <span class=" glyphicon glyphicon-export  "></span>  </button>*@
+                        </div>
+                    </div>
+                    <div class="col-xs-12" style="margin-top:-15px;padding-bottom:20px">
+                        <div id="grid">
+                        </div>
+
+                        <div class="row" style="padding-top:15px; padding-bottom:15px">
+
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label for="txt_gross_qty" class="col-sm-5  ">Gross Quantity</label>
+                                    <div class=" col-sm-5">
+                                        <input type="text" id="txt_gross_qty" name="gross_qty" class="form-control" style="text-align:right" maxlength="50" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label for="txtgross_amount" class="col-sm-5  ">Gross Amount (Rs.)</label>
+                                    <div class=" col-sm-5">
+                                        <input type="text" id="txtgross_amount" name="gross_amount" class="form-control" maxlength="50" style="text-align:right" readonly>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label for="txtnetamount" class="col-sm-5  ">Net Amount (Rs.)</label>
+                                    <div class=" col-sm-5">
+                                        <input type="text" id="txtnetamount" name="net_amount" class="form-control" maxlength="50" style="text-align:right" readonly>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4">
+                                <div class="form-group" style="display:none">
+                                    <label class="col-sm-4 ">Deductions</label>
+
+                                    <div class="col-sm-3">
+                                        <input type="radio" name="deduction_type" id="radio_ded_type" value="F" onchange="change_val()" disabled />Flat Amt &nbsp;
+                                        <input type="radio" name="deduction_type" id="radio_ded_type1" value="L" onchange="clear_val()" disabled />Per litre <br />
+                                    </div>
+                                    <div class="col-sm-3">
+
+                                        <input type="text" id="txtflat" name="deduction_amount" style="width: 100px; height: 18px;text-align:right" disabled onchange="flat_change();"><br />
+                                        <input type="text" id="txtltr" name="deduction_per_ltr" style="width: 100px; height: 18px;text-align:right" disabled onchange="ltr_change();">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group" style="display:none">
+                                    <label for="txt_totaldeduction" class="col-sm-5 control-label ">Total Deductions (Rs.)</label>
+                                    <div class=" col-sm-5">
+                                        <input type="text" id="txt_totaldeduction" name="deduction_total_amount" class="form-control" maxlength="50" style="text-align:right" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+
+
+
+                            <div class="col-sm-4">
+                                <div class="form-group" style="display:none">
+                                    <label for="txtrate" class="col-sm-5 control-label" style="padding-right:0px">Adjusted Rate Per It (Rs.)</label>
+                                    <div class=" col-sm-5">
+                                        <input type="text" id="txtrate" name="calcrate_per_ltr" class="form-control" maxlength="50" style="text-align:right" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+</form>
+
+
+<script>
+    click_act_name = "MilkCorrectionList";
+    click_ctrl_name = "MilkCorrection";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+<script>
+    $(document).ready(function () {
+
+        $("#frmlayerdiv").hide();
+        $("#FDR").show();
+        $("#farmer_id").text("Correction ID")
+
+        kendodate_format();
+        //var data = [{
+        //    payment_no: "PAYADV/00053", milkman_code: "MMID/000000035", farmer_name: "P Sekar Perumal", milk_qty: "23.7",
+        //    calc_amount: "639.9", advance_amount: "", payment_status_desc: "Ready For Payment Advice Generation", payment_mode_desc: "",
+        //    cr_bank_code: "BOB", cr_bank_acc_type: "QCD_ACC_SAVINGS", cr_bank_acc_no: "QCD_ACC_SAVINGS", cr_bank_ifsc_code: "BARBOUTHIRA"
+        //}]
+        gridFilter([]);
+        grid_adv([]);
+        bill_details([]);
+        retail_details([]);
+        $(".Export").attr("hdrtitle", "Payment Advice List");
+        $(".Export").attr("SubTreeId", "");
+        $("#bottom_menus").hide();
+        $("#divCreate").hide();
+        $('#divUserRole3').show();
+        
+    });
+</script>
+<script>
+    //var data = [];
+    function gridFilter(data) {
+        try {
+            $("#grid_Drop_list").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+
+                                report_ref_no: { type: "string" },
+                                payment_for: { type: "string" },
+                                period_from: { type: "string" },
+                                period_to: { type: "string" },
+                                report_date: { type: "string" },
+                                Records_processed: { type: "string" },
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+
+                height: 200,
+                sortable: true,
+                selectable: true,
+                selectable: "singl", //  Grid Row Selection
+                navigatable: true,
+                groupable: false,
+
+                columns: [{
+                    command: [
+            {
+                name: "View",
+                id: "View",
+                imageClass: "fa fa-print",
+
+            },
+                    ], title: "Action", width: "25px",
+                }, {
+
+
+                    field: "report_ref_no",
+                    title: "Report Reference No",
+                    width: 100
+
+                },
+
+                {
+                    field: "payment_for",
+                    title: "Payment for",
+                    width: 100
+
+                },
+                 {
+                     field: "payment_advice_date",
+                     title: "Payment Advice Date",
+                     width: 100
+
+                 },
+
+                  {
+                      field: "records_processed",
+                      title: "Records Processed",
+                      width: 100
+
+                  },
+
+
+                {
+                    field: "mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }],
+                editable: true
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<script>
+    function grid_adv(data) {
+        try {
+            $("#grid").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+
+                                payment_no: { type: "string", editable: false },
+                                milkman_code: { type: "string", editable: false },
+
+                                farmer_name: { type: "string", editable: false },
+                                milk_qty: { type: "string", editable: false },
+                                calc_amount: { type: "string", editable: false },
+                                advance_amount: { type: "string", editable: false },
+
+
+                                payment_status_desc: { type: "string", editable: false },
+                                payment_mode_desc: { type: "string", editable: false },
+
+                                cr_bank_code: { type: "string", editable: false },
+                                cr_bank_acc_type: { type: "string", editable: false },
+                                cr_bank_acc_no: { type: "string", editable: false },
+                                cr_bank_ifsc_code: { type: "string", editable: false },
+
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+                toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                excelExport: function (e) {
+                    var gd = $("#grid").data("kendoGrid");
+                    var len = gd.dataSource._data.length;
+                    var chkall = $('#chkall').is(':checked');
+                    var chkfilter = $('#chkfilter').is(':checked');
+                    var chktemp = $('#chktemp').is(':checked');
+                    var twokendobox = true;
+                    gd.dataSource.pageSize(len);
+                    if (e.sender.dataSource._data.length == len) {
+                        twokendobox = false;
+                        exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                    }
+                    else {
+                        exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                    }
+                    gd.dataSource.pageSize('10');
+                    return false;
+                },
+                height: 200,
+                groupable: false,
+                //  editable:false,
+
+
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                       {
+                           field: "payment_no",
+                           title: "Payment ID",
+                           width: 100
+
+                       },
+                    {
+                        field: "milkman_code",
+                        title: "Milkman ID",
+                        width: 100
+
+                    },
+                    {
+                        field: "farmer_code",
+                        title: "Farmer cde",
+                        hidden: true,
+                        width: 100
+
+                    },
+
+                {
+                    field: "farmer_name",
+                    title: "Farmer Name",
+                    width: 150
+
+                },
+                // {
+                //    field: "milk_qty",
+                //    title: "milk Quantity",
+                //    hidden: true,
+                //    width: 100
+
+                //},
+                 {
+                     field: "milk_qty",
+                     title: "Milk Quantity",
+                     attributes: { style: "text-align:right;" },
+                     width: 90
+
+                 },
+                 {
+                     field: "adj_qty",
+                     title: "Paid Quantity",
+                     attributes: { style: "text-align:right;" },
+                     width: 110
+
+                 },
+                 {
+                     field: "rate",
+                     title: "Adjust rate",
+                     attributes: { style: "text-align:right;" },
+                     width: 110
+
+                 },
+                 {
+                     field: "calc_amount",
+                     title: "Gross Amount",
+                     attributes: { style: "text-align:right;" },
+                     width: 90
+
+                 },
+                  {
+                      field: "advance_amount",
+                      title: "Advance",
+                      attributes: { style: "text-align:right;" },
+                      width: 80
+
+                  },
+                   {
+                       field: "payment_amount",
+                       title: " Payment Amount",
+                       attributes: { style: "text-align:right;" },
+                       //   hidden: true,
+                       width: 110
+
+                   },
+
+                    {
+                        field: "payment_mode",
+                        title: "Paymode Method",
+                        hidden: true,
+                        width: 100
+
+                    },
+
+                     {
+                         field: "dr_bank_code",
+                         title: "Bank Name",
+                         hidden: true,
+                         width: 100
+
+                     },
+
+                       {
+                           field: "dr_bank_acc_type",
+                           title: "Acct Type",
+                           hidden: true,
+                           width: 100
+
+                       },
+                       {
+                           field: "dr_bank_acc_no",
+                           title: "Acct Number",
+                           hidden: true,
+
+                           width: 100
+
+                       },
+                         {
+                             field: "dr_bank_ifsc_code",
+                             title: "IFSC Code",
+                             hidden: true,
+
+                             width: 100
+
+                         },
+                     {
+                         field: "cr_bank_code",
+                         title: "Bank Name",
+
+                         width: 100
+
+                     },
+
+                       {
+                           field: "cr_bank_acc_type",
+                           title: "Acct Type",
+
+                           width: 150
+
+                       },
+                       {
+                           field: "cr_bank_acc_no",
+                           title: "Acct Number",
+                           //    attributes: { style: "text-align:right;" },
+                           width: 100
+
+                       },
+                         {
+                             field: "cr_bank_ifsc_code",
+                             title: "IFSC Code",
+                             //  attributes: { style: "text-align:right;" },
+                             width: 100
+
+                         },
+                          {
+                              field: "payment_mode_desc",
+                              title: "Payment Mode Desc ",
+                              width: 150,
+                              hidden: true
+
+                          },
+                        {
+                            field: "payment_status_desc",
+                            title: "Payment status",
+                            width: 200
+
+                        },
+
+
+                {
+                    field: "mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }],
+                editable: true
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>
+
+    function bill_details(data) {
+        try {
+            $("#MilkBill_grid").kendoGrid(
+             {
+                 dataSource: {
+                     data: data,
+
+                 },
+
+                 height: 100,
+                 sortable: true,
+                 selectable: true,
+                 selectable: "singl",   //  Grid Row Selection
+
+                 navigatable: true,
+                 groupable: false,
+
+                 columns: [
+                       {
+                           field: "cc_aggrloc_code",
+                           title: "CC Code",
+                           hidden: true,
+                           width: 45
+                       },
+                    {
+                        field: "cc_aggrloc_desc",
+                        title: "CC Code",
+                        width: 100
+                    },
+                    {
+                        field: "cp_aggrloc_code",
+                        title: "CP Code",
+                        hidden: true,
+                        width: 45
+                    },
+
+                    {
+                        field: "cp_aggrloc_desc",
+                        title: "CP Code",
+                        width: 100
+                    },
+                     {
+                         field: "milk_from",
+                         title: "Milk From",
+                         width: 60
+                     },
+
+                   {
+                       field: "milk_supply_from",
+                       title: "Supplied From",
+                       width: 60
+                   },
+
+                     {
+                         field: "milk_supply_to",
+                         title: "Supplied To",
+                         width: 60
+                     },
+                     {
+                         field: "accepted_qty",
+                         title: "Total Milk Accepted (Lts.)",
+                         attributes: { style: "text-align:right;" },
+                         width: 60
+                     },
+                     {
+                         field: "milk_amount",
+                         title: "Gross Amt. (Rs)",
+                         attributes: { style: "text-align:right;" },
+                         //   format: "{0:n2}",
+                         //   template: '#= kendo.toString(Quantity, "n2")#  #=Unit#',
+                         //  format: "{0:##.##}",
+                         //   editor: numberEditor,
+                         //  format: '{0:n3}',
+                         width: 75
+
+                     },
+                 ]
+             });
+
+
+        }
+
+
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+
+<script>
+
+    function retail_details(data) {
+        try {
+            gridRowID = -1;
+            data = addRandomNum(data);
+            $("#Milk_retail_grid").kendoGrid(
+             {
+                 dataSource: {
+                     data: data,
+                     pageSize: 20,
+                     change: function (e) {
+                         setTimeout(function () {
+                             var gd = $("#Milk_retail_grid").data("kendoGrid");
+                             filter_row(gd);
+                             $('.k-i-close').css('display', 'none');
+                             $('button.k-button-icon').css('display', 'none');
+                             $('#Milk_retail_grid .k-input').prop('readonly', false);
+                             $('#Milk_retail_grid .k-input').prop('readonly', true);
+                         }, 1);
+                     },
+                 },
+
+                 //filterable: {
+                 //    enabled: true,
+                 //    delay: 1500,
+                 //    mode: "menu, row",
+                 //    height: 200,
+                 //    click: function (e) {
+                 //        var gd = $("#Milk_retail_grid").data("kendoGrid");
+                 //        filter_row(gd);
+                 //    }
+                 //},
+                 //filterMenuInit: function (e) {
+                 //    var gd = $("#Milk_retail_grid").data("kendoGrid");
+                 //    filter_row(gd);
+                 //},
+                 // change: selectRow,
+                 height: 100,
+                 sortable: true,
+                 selectable: true,
+                 selectable: "singl",   //  Grid Row Selection
+                 //pageable: {
+                 //    refresh: false,
+                 //    pageSizes: true,
+                 //    buttonCount: 5
+                 //},
+                 navigatable: true,
+                 groupable: false,
+
+                 columns: [
+                       {
+                           field: "cust_name",
+                           title: "Customer Name",
+                           width: 100
+                       },
+
+                        {
+                            field: "retail_total_milk",
+                            title: "Total Milk(Lts.)",
+                            attributes: { style: "text-align:right;" },
+                            width: 60
+                        },
+                    {
+                        field: "retail_total_amount",
+                        title: "Total Amount(Rs.pp)",
+                        attributes: { style: "text-align:right;" },
+                        width: 60
+                    },
+                 ]
+             });
+
+            $(".k-dropdown-operator").css('display', 'none');
+            $("#Milk_retail_grid .k-input").attr('readonly', 'false');
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>
+    function grid_control() {
+        var control_Name = [
+
+        ];
+        return control_Name;
+    }
+
+    function form_control() {
+        var control_Name = [
+            { "dataCol": "ccbill_no", "controlId": "txt_bill", "type": "Text" },
+
+        ];
+        return control_Name;
+
+    }
+    function trans_input_data() {
+        var trans_coll = [
+            { "trasfer": "Yes", "dataCol": "ccbill_no", "controlId": "", "grid_id": "", "grid_row_col": "" },
+            { "trasfer": "No", "dataCol": "", "controlId": "", "grid_id": "", "grid_row_col": "" }
+        ];
+        return trans_coll;
+    }
+
+
+  
+</script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+<style type="text/css">
+    .right {
+        text-align: right;
+    }
+
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>

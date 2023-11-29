@@ -1,0 +1,230 @@
+﻿@{
+    ViewBag.List = "FPO Farmer Map";
+    Layout = "~/Views/Shared/ListViewLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-xs-12">
+        <div id="FPOGrid"></div>
+    </div>
+</div>
+
+<script>
+    click_act_name = "FPOMappingForm";
+    click_ctrl_name = "FPOMapping";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+
+
+<script>
+    var data = [{farmer_id:"101",member_id:"1001",given_name:"kumar",given_surname:"k",dob:"04/05/1976",gender:"Male",fig_name:"",regd_mobileno:"9874563210",status:"active"}]
+    $("#FPOGrid").kendoGrid(
+        {
+            dataSource: {
+                data: data,
+                pageSize: 20,
+                change: function (e) {
+                    setTimeout(function () {
+                        var gd = $("#FPOGrid").data("kendoGrid");
+                        filter_row(gd);
+                        $('.k-i-close').css('display', 'none');
+                        $('button.k-button-icon').css('display', 'none');
+                        $('#FPOGrid .k-input').prop('disabled', false);
+                        $('#FPOGrid .k-input').prop('readonly', true);
+
+                    }, 1);
+                },
+            },
+            toolbar: "<button type= 'button' id = 'Exportclick' class = 'k-grid-excel' style = 'display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+            excelExport: function (e) {
+                var chkall = $('#chkall').is(':checked');
+                var chkfilter = $('#chkfilter').is(':checked');
+                var chktemp = $('#chktemp').is(':checked');
+                var gd = $("#FPOGrid").data("kendoGrid");
+                var len = gd.dataSource._data.length;
+                gd.dataSource.pageSize(len);
+                exportfunction(e, chkall, chkfilter, chktemp);
+                gd.dataSource.pageSize('10');
+            },
+            filterable: {
+                enabled: true,
+                delay: 1500,
+                mode: "menu, row",
+                height: 200,
+                click: function (e) {
+                    var gd = $("#FPOGrid").data("kendoGrid");
+                    filter_row(gd);
+                }
+            },
+            filterMenuInit: function (e) {
+                var gd = $("#FPOGrid").data("kendoGrid");
+                filter_row(gd);
+            },
+            dataBound: function (o) {
+                var gd = $("#FPOGrid").data("kendoGrid");
+                for (var i = 0; i < gd.columns.length; i++) {
+                    gd.showColumn(i);
+                }
+                $("div.k-group-indicator").each(function (i, v) {
+                    gd.hideColumn($(v).data("field"));
+                })
+            },
+            height: 450,
+            sortable: true,
+            selectable: true,
+            //change: onChangeSelection,
+            selectable: "singl",   //  Grid Row Selection
+            pageable: {
+                refresh: false,
+                pageSizes: true,
+                buttonCount: 5
+            },
+            navigatable: true,
+            groupable: false,
+
+            columns: [
+                   {
+                       title: "Sel", width: 40,
+                       template: '#=sel_checkbox()#'
+
+                   },
+                {
+                    field: "farmer_id",
+                    title: "Farmer ID",
+                    filterable: {
+                        cell: { operator: "contains", inputWidth: 1500 }
+                    }
+                },
+
+                {
+                    field: "member_id",
+                    title: "Member ID",
+                    filterable: {
+                        cell: {
+                            operator: "contains",
+                            inputWidth: 1500
+                        }
+                    }
+                },
+
+                 {
+                     field: "given_name",
+                     title: "Given Name",
+                     filterable: {
+                         cell: {
+                             operator: "contains",
+                             inputWidth: 1500
+                         }
+                     }
+                 },
+
+                  {
+                      field: "given_surname",
+                      title: "Given Surname",
+                      filterable: {
+                          cell: {
+                              operator: "contains",
+                              inputWidth: 1500
+                          }
+                      }
+                  },
+                    {
+                        field: "dob",
+                        title: "DOB",
+                        filterable: {
+                            cell: {
+                                operator: "contains",
+                                inputWidth: 1500
+                            }
+                        }
+                    },
+
+            {
+                field: "gender",
+                title: "Gender",
+                filterable: {
+                    cell: {
+                        operator: "contains",
+                        inputWidth: 1500
+                    }
+                }
+            },
+
+
+            {
+                field: "fig_name",
+                title: "FIG Name",
+                //filterable: {
+                //    cell: {
+                //        operator: "contains",
+                //        inputWidth: 1500
+                //    }
+                //}
+                hidden:true
+            },
+
+            {
+                field: "regd_mobileno",
+                title: "Regd Mobile No",
+                filterable: {
+                    cell: {
+                        operator: "contains",
+                        inputWidth: 1500
+                    }
+                }
+            },
+
+            {
+                field: "status",
+                title: "Status",
+                filterable: {
+                    cell: {
+                        operator: "contains",
+                        inputWidth: 1500
+                    }
+                }
+            },
+            ]
+
+        });
+
+
+
+    $(".k-dropdown-operator").css('display', 'none');
+    $("#FPOGrid .k-input").attr('disabled', 'false');
+
+    var gridRowID = -1;
+    function sel_checkbox() {
+        gridRowID++;
+        return '<input id="chk_sel_' + gridRowID + '" class="checkbox" type="checkbox" />';
+    }
+
+
+</script>
+
+<script>
+    $("#btn_Edit").bind("click", function () {
+        btn_onClick('Edit');
+        location.href = "../FPOMapping/FPOMappingForm";
+    });
+
+    $("#btn_View").bind("click", function () {
+        btn_onClick('View');
+        location.href = "../FPOMapping/FPOMappingForm";
+    });
+
+    $("#btn_new").bind("click", function () {
+        btn_onClick('Create');
+        location.href = "../FPOMapping/FPOMappingForm";
+    });
+</script>
+<script>
+    $(document).ready(function () {
+
+        $(".adv_filter").attr("hdrtitle", "Farmer Profile List Record");
+        $(".adv_filter").attr("fltid", "");
+        $(".Export").attr("hdrtitle", "FPO Registration List");
+
+
+    });
+</script>

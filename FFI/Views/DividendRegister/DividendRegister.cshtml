@@ -1,0 +1,736 @@
+﻿@{
+    ViewBag.Form = "Dividend Register";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+
+<form id="Dividend_Reg" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="cmb_generate" class="col-sm-5 control-label required">Register Name</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_generate" name="cmb_generate" data-role="filtercombo" style="width:100%" disabled placeholder="Dividend Register" />
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label for="txtReportDate" class=" col-md-5 control-label required">Report Date:</label>
+                        <div class=" col-sm-7">
+
+                            <input class="cusDate" data-role='datepicker' id="txtReportDate" data-checkdate-msg="Enter Valid Date" name="In_report_date" style="width:100%" onkeypress="return date_validate(event)" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label for="txtDeclaredDate" class=" col-md-5 control-label required">Dividend Declared Date:</label>
+                        <div class=" col-sm-7">
+
+                            <input class="cusDate" data-role='datepicker' id="txtDeclaredDate" data-checkdate-msg="Enter Valid Date" name="In_declared_date" style="width:100%" onkeypress="return date_validate(event)" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-top:15px;padding-bottom:15px">
+
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label for="cmb_Ref" class=" col-md-5 control-label required">Dividend Structure Reference:</label>
+                        <div class=" col-sm-7">
+                            <input id="cmb_Ref" name="Active_id" data-role="filtercombo" style="width:100%" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label for="cmb_PAyor" class="col-sm-5 control-label required">Payor Bank For dividend:</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_PAyor" name="In_payor_bank_code" data-role="filtercombo" style="width:100%" disabled />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-4">
+                    <button title="" id="btnSearch" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button" data-original-title="Refresh" onclick="mandatory()"> <span class="glyphicon glyphicon-refresh"></span></button>
+                    <input type="hidden" id="register_rowid" name="IOU_register_rowid" value="" />
+                    <input type="hidden" id="register_no" name="IOU_register_no" value="" />
+                    <input type="hidden" id="register_name" name="In_register_name" value="" />
+                    <input type="hidden" id="mode_flag" name="mode_flag">
+                    <input type="hidden" id="finyear_code" name="finyear_code">
+                    <input type="hidden" id="dividendstru_rowid" name="In_dividendstru_rowid">
+                </div>
+            </div>
+            <div class="row" style="padding-top:15px;padding-bottom:15px">
+                <div class="col-xs-12">
+                    <div id="Div_Reg_grid">
+                    </div>
+                </div>
+                <div class="row" style="padding-top:15px;padding-bottom:15px">
+
+                </div>
+                <div class="col-sm-12" style="display:none;">
+                    <label>Register History</label>
+                    <div id="grid_Reg_History"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+<script src="~/API_Scripts/Dividend_Management_retrieveDividendRegister_APIClient.js"></script>
+<script src="~/API_Scripts/Dividend_Management_retrieveDividendRegisterList_APIClient.js"></script>
+<script src="~/API_Scripts/Dividend_Management_saveDividendRegister_APIClient.js"></script>
+<script src="~/API_Scripts/retrieveDividendRegister_Model.js"></script>
+<script src="~/API_Scripts/saveDividendRegister_Model.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/API_Scripts/DividendRegister.js"></script>
+<script>
+    var permission = "";
+    $(document).ready(function () {
+        debugger;
+        kendodate_format();
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#Dividend_Reg");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+
+        Screen_Id = "DIVREG";
+        permission = sec_Permission(Screen_Id);
+
+        $('#btndiv').show();
+        $("#common_id").css("display", "none");
+        $("#txtcommon_id").css("display", "none");
+
+        setlocalStorage("status", "Active");
+        setlocalStorage('status_code', "A");
+        // $("#form_design").css("padding-top", "95px");
+        master_userRoleNew1();
+
+        load_master_code();
+        //first combo
+        var combo_data = [];
+        filter_combobox("cmb_generate", combo_data);
+
+        //secound combo
+        var Ref = "";
+        $("#cmb_Ref").empty();
+        Ref = grid_comboScreen_mastercodes("DIVREF");
+        filter_combobox("cmb_Ref", Ref);
+
+        //third combo
+        var payour_bank = "";
+        $("#cmb_PAyor").empty();
+        payour_bank = grid_comboScreen_mastercodes("DIVREFBANK");
+        filter_combobox("cmb_PAyor", payour_bank);
+        DivReggrid([]);
+        gridRegHistory([]);
+
+        if (getlocalStorage('btn_clk_val') == "Create") {
+            $('#divCreate #review').hide();
+            $("#txtcommon_id").hide();
+            $("#mode_flag").val("I");
+            $("#bottom_menus").hide();
+            $("#DocStat").val("New");
+            $("#btnSearch").show();
+
+        }
+        else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
+            $('#divEdit #reviewEd').hide();
+            $("#btnSearch").hide();
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var txt = data.dividendstru_desc;
+                var code = txt.split("  ");
+                var formval = form_Serialize("Dividend_Reg");
+                var obj_val = JSON.parse(formval);
+                var org_id = getlocalStorage('org_id');
+
+                obj_val.IOU_fpoorgn_code = org_id;
+                obj_val.IOU_register_rowid = data.register_rowid;
+                obj_val.IOU_register_no = data.register_no;
+                obj_val.IOU_register_name = data.register_name;
+                obj_val.IOU_finyear_code = code[0];
+                obj_val.In_dividendstru_rowid = data.dividendstru_rowid;
+                obj_val.IOU_report_date = getFormated_StringDate(code[2]);
+                obj_val.IOU_declared_date = getFormated_StringDate(code[3]);
+                obj_val.IOU_payor_bank_code = code[4];
+                if (obj_val.IOU_register_rowid == undefined || obj_val.IOU_register_rowid == "") {
+                    obj_val.IOU_register_rowid = "0";
+                }
+                if (obj_val.In_dividendstru_rowid == undefined || obj_val.In_dividendstru_rowid == "") {
+                    obj_val.In_dividendstru_rowid = "0";
+                }
+                if (obj_val.IOU_register_no == undefined || obj_val.IOU_register_no == "") {
+                    obj_val.IOU_register_no = "0";
+                }
+                if (obj_val.IOU_register_name == undefined || obj_val.IOU_register_name == "") {
+                    obj_val.IOU_register_name = "0";
+                }
+                var data = {};
+                data.context = WebAPIProxy.getContext();;
+                data.context.Header = obj_val;
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, Header: Context.Header }),
+                    url: "/DividendRegister/FetchServiceList",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        debugger;
+                        if (response.context.Header != null) {
+                            generate_DividendRegister_header(response.context.Header)
+                            //listgrid(response.context.List);
+                            //SetPager(response.context.Filter.out_record_count)
+                        }
+                        if (response.context.Detail != null) {
+                            generate_DividendRegister_detail(response.context.Detail)
+                        }
+                       
+                        else {
+                            gridFilter([]);
+                        }
+                        if (response.ApplicationException != null) {
+                            kendoAlert(response.ApplicationException.errorDescription);
+                        }
+                    },
+                    error: function (er) {
+                        alert(er)
+                        console.log(er)
+                    }
+                });
+                //retrieve_DividendRegister_details(data);
+                $("#mode_flag").val("S");
+                $("#txtReportDate").val(getFormated_StringDate(code[2]));
+                $("#txtDeclaredDate").val(getFormated_StringDate(code[3]));
+                $("#cmb_PAyor").data("kendoComboBox").value(code[4]);
+                var from = code[2].split('/').join('-');
+                $("#cmb_Ref").data("kendoComboBox").value(code[0] + ' ' + code[1] + ' ' + from + ' ' + code[4] + ' ' + obj_val.In_dividendstru_rowid);
+            }
+        }
+    });
+</script>
+<script>
+    click_act_name = "DividendRegisterList";
+    click_ctrl_name = "DividendRegisterList";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+<script>
+    function load_master_code() {
+        try {
+            var data = {};
+            var context = WebAPIProxy.getContext();
+            data.userId = context.userId
+            data.orgnId = context.orgnId
+            data.locnId = context.locnId
+            data.localeId = context.localeId
+            data.screen_Id = "DIVREG";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+<script>
+    //var data = [];
+    function DivReggrid(data) {
+        try {
+            $("#Div_Reg_grid").kendoGrid(
+                {
+                    dataSource: {
+                        data: data,
+                        schema: {
+                            model: {
+                                fields: {
+                                    farmer_code: { type: "string", editable: false },
+                                    farmer_name: { type: "string", editable: false },
+                                    member_name: { type: "string", editable: false },
+                                    certificate_no: { type: "string", editable: false },
+                                    dist_from: { type: "string", editable: false },
+                                    dist_to: { type: "string", editable: false },
+                                    //dividend_due: { type: "string", editable: false },
+                                    mode_flag: { type: "string", defaultValue: "I" }
+                                }
+                            }
+                        }
+                    },
+
+                    height: 200,
+                    sortable: true,
+                    selectable: true,
+                    selectable: "singl",   //  Grid Row Selection
+                    navigatable: true,
+                    groupable: false,
+
+                    columns: [
+                        {
+                            field: "In_dividend_rowid",
+                            title: "dividend_rowid",
+                            hidden: true
+                        },
+                        {
+                            field: "In_dividendstru_rowid",
+                            title: "dividendstru_rowid",
+                            hidden: true
+                        },
+                        {
+                            field: "In_fpomember_rowid",
+                            title: "fpomember_rowid",
+                            hidden: true
+                        },
+                        {
+                            field: "In_farmer_code",
+                            title: "Member ID",
+                            width: 200,
+
+                        },
+                        {
+                            field: "In_fpomember_code",
+                            title: "fpomember_code",
+                            hidden: true
+                        },
+                        {
+                            field: "In_farmer_name",
+                            title: "farmer_name",
+                            hidden: true
+                        },
+                        {
+                            field: "In_member_name",
+                            title: "Member Name",
+                            width: 200,
+
+                        },
+                        {
+                            field: "In_certificate_no",
+                            title: "Share certificate No",
+                            width: 200,
+
+                        },
+                        {
+                            field: "In_dist_from",
+                            title: "Distinct From",
+                            width: 200,
+
+                        },
+                        {
+                            field: "In_dist_to",
+                            title: "Distinct To",
+                            width: 200,
+
+                        },
+                        {
+                            field: "In_dividend_due",
+                            title: "Dividend Due ",
+                            width: 200,
+
+                        },
+                        {
+                            field: "In_bank_code",
+                            title: "bank_code",
+                            hidden: true
+                        },
+                        {
+                            field: "In_bank_acc_type",
+                            title: "bank_acc_type",
+                            hidden: true
+                        },
+                        {
+                            field: "In_bank_acc_type_desc",
+                            title: "bank_acc_type_desc",
+                            hidden: true
+                        },
+                        {
+                            field: "In_bank_acc_no",
+                            title: "bank_acc_no",
+                            hidden: true
+                        },
+                        {
+                            field: "In_ifsc_code",
+                            title: "ifsc_code",
+                            hidden: true
+                        },
+                        {
+                            field: "In_bank_ref_no",
+                            title: "bank_ref_no",
+                            hidden: true
+                        },
+                        {
+                            field: "In_mode_flag",
+                            title: "mode_flag",
+                            hidden: true
+                        },
+                        {
+                            field: "In_row_timestamp",
+                            title: "row_timestamp",
+                            hidden: true
+                        }
+                    ],
+                    editable: true
+                });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+<script>
+    function gridRegHistory(data) {
+
+        try {
+            $("#grid_Reg_History").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                report_ref: { editable: false },
+                                reg_name: { editable: false },
+                                report_date: { editable: false },
+                                records_processed: { editable: false },
+
+                            }
+                        }
+                    },
+                },
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_Reg_History').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+
+                height: 200,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [{
+                    command: [
+                        {
+                            name: "view",
+                            id: "view",
+                            imageClass: "fa fa-view",
+
+                        },
+                    ], title: "Action", width: "255px",
+                },
+                {
+                    field: "In_dividend_rowid",
+                    title: "dividend_rowid",
+                    hidden: true
+                },
+                {
+                    field: "In_dividendstru_rowid",
+                    title: "dividendstru_rowid",
+                    hidden: true
+                },
+                {
+                    field: "register_no",
+                    title: "Report Reference No"
+                },
+                {
+                    field: "register_name",
+                    title: "Register Name"
+                },
+                {
+                    field: "report_date",
+                    title: "Report Date"
+                },
+                {
+                    field: "record_processed",
+                    title: "Records Processed"
+                },
+
+
+                ]
+            });
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+
+<script>
+    function mandatory() {
+        debugger;
+        try {
+            var mandatory_check = true;
+
+            var grid_validate_msg = "";
+
+            if ($("#txtReportDate").val() == "") {
+                grid_validate_msg += "Report Date cannot be blank <br>";
+                mandatory_check = false;
+            }
+            if ($("#txtDeclaredDate").val() == "") {
+                grid_validate_msg += "Dividend Declared Date cannot be blank <br>";
+                mandatory_check = false;
+            }
+            if ($('#cmb_Ref').data("kendoComboBox").value() == "") {
+                grid_validate_msg += "Dividend Structure Reference cannot be blank <br>";
+                mandatory_check = false;
+            }
+            if ($('#cmb_PAyor').data("kendoComboBox").value() == "") {
+                grid_validate_msg += "Payor Bank For dividend cannot be blank <br>";
+                mandatory_check = false;
+            }
+
+            if (mandatory_check == false) {
+                kendoAlert(grid_validate_msg);
+                return false;
+            }
+            else {
+                return fetch();
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+
+<script>
+    function fetch() {
+        debugger;
+        try {
+            var formval = form_Serialize("Dividend_Reg");
+            var obj_val = JSON.parse(formval);
+            if (obj_val != undefined) {
+                var org_id = getlocalStorage('org_id');
+                obj_val.IOU_fpoorgn_code = org_id;
+                if (obj_val.IOU_register_rowid == undefined || obj_val.IOU_register_rowid == "") {
+                    obj_val.IOU_register_rowid = "0";
+                }
+                if (obj_val.In_dividendstru_rowid == undefined || obj_val.In_dividendstru_rowid == "") {
+                    obj_val.In_dividendstru_rowid = "0";
+                }
+                if (obj_val.IOU_register_no == undefined || obj_val.IOU_register_no == "") {
+                    obj_val.IOU_register_no = "0";
+                }
+                if (obj_val.IOU_register_name == undefined || obj_val.IOU_register_name == "") {
+                    obj_val.IOU_register_name = "0";
+                }
+
+                var data_fetch = {};
+                data_fetch.context = WebAPIProxy.getContext();
+                data_fetch.context.Header = obj_val;
+                var Context = data_fetch.context;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, Header: Context.Header }),
+                    url: "/DividendRegister/FetchServiceList",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        debugger;
+                        if (response.context.Header != null) {
+                            generate_DividendRegister_header(response.context.Header)
+                            //listgrid(response.context.List);
+                            //SetPager(response.context.Filter.out_record_count)
+                        }
+                        if (response.context.Detail != null) {
+                            generate_DividendRegister_detail(response.context.Detail)
+                        }                       
+                        else {
+                            DivReggrid([]);
+                        }
+
+                        if (response.ApplicationException != null ) {
+                            kendoAlert(response.ApplicationException.errorDescription);
+                        }
+                    },
+                    error: function (er) {
+                        alert(er)
+                        console.log(er)
+                    }
+                });
+                //retrieve_DividendRegister_details(data_fetch);
+                var colCount = $("#Div_Reg_grid").find('.k-grid-header colgroup > col').length;
+
+                //If There are no results place an indicator row
+                if ($("#Div_Reg_grid").data("kendoGrid").dataSource._view.length == 0) {
+                    $("#Div_Reg_grid").find('.k-grid-content tbody')
+                        .append('<tr class="kendo-data-row"><td colspan="' +
+                            colCount +
+                            '" style="text-align:center; padding-top:10px;background-color:#AFE4FA"><b> No share holders match the provided criteria for Dividend payout </b></td></tr>');
+                }
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function generate_DividendRegister_header(res) {
+
+        try {
+            if (res != null) {
+                $("#register_rowid").val(res.IOU_register_rowid);
+                $("#register_no").val(res.IOU_register_no);
+                $("#register_name").val(res.IOU_register_name);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function generate_DividendRegister_detail(res) {
+
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                DivReggrid(data);
+            }
+            else {
+                DivReggrid([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function save() {
+
+        try {
+            $('#cmb_PAyor').data('kendoComboBox').enable(true);
+            var formval = form_Serialize("Dividend_Reg");
+            var obj_val = JSON.parse(formval);
+            var org_id = getlocalStorage('org_id');
+            obj_val.In_fpoorgn_code = org_id;
+            if (obj_val.IOU_register_rowid == undefined || obj_val.IOU_register_rowid == "") {
+                obj_val.IOU_register_rowid = "0";
+            }
+            if (obj_val.In_dividendstru_rowid == undefined || obj_val.In_dividendstru_rowid == "") {
+                obj_val.In_dividendstru_rowid = "0";
+            }
+            if (obj_val.IOU_register_no == undefined || obj_val.IOU_register_no == "") {
+                obj_val.IOU_register_no = "0";
+            }
+            if (obj_val.In_register_name == undefined || obj_val.In_register_name == "") {
+                obj_val.In_register_name = "0";
+            }
+
+            var grid_val = JSON.stringify($("#Div_Reg_grid").data().kendoGrid._data);
+            var Bind = {};
+            Bind = grid_val;
+            var result = JSON.parse(Bind);
+            $.each(result, function (index, value) {
+                var dividend_rowid = value.In_dividend_rowid;
+                if (dividend_rowid == undefined) {
+                    result[index].In_dividend_rowid = "0";
+                }
+                var mmode = result[index].In_mode_flag;
+                if (mmode == "S") {
+                    result[index].In_mode_flag = "U";
+                }
+
+            });
+            var obj_grid_val = result;
+            $('#cmb_PAyor').data('kendoComboBox').enable(false);
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_val;
+            data.context.Detail = obj_grid_val;
+            var Context = data.context;
+
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ orgnId: Context.orgnId, locnId: Context.locnId, userId: Context.userId, localeId: Context.localeId, Header: Context.Header, Detail: Context.Detail }),
+                url: "/DividendRegister/SaveDividendRegister",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    //var Res = JSON.parse(response);
+                    //if (Res != null) {
+                    //    var msg = Res.ApplicationException;
+                    //    //retrive_SingleFetch_Details(Res.context);
+                    //    if (Res.ApplicationException == null || Res.ApplicationException == "") {
+                    //        kendoAlert("Dividend register details saved successfully");
+                    //        get_Div_Reg__details(Res)
+                    //    }
+                    //    else {
+                    //        kendoAlert(Res.ApplicationException.errorDescription);
+                    //    }
+
+
+                    //}
+
+                    var Res = JSON.parse(response);
+                    if (Res.context != null) {
+                        //var msg = Res.ApplicationException;
+                        ////retrive_SingleFetch_Details(Res.context);
+                        //if (msg.errorDescription == null || msg.errorDescription == "") {
+                            
+                        //}
+                        //else {
+                        //    kendoAlert(Res.ApplicationException.errorDescription);
+                        //}
+                        kendoAlert("Dividend register details saved successfully");
+                        generate_DividendRegister_header(Res.context.header)
+                      
+
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+            //save_DividendRegister_details(data);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function get_Div_Reg__details(res) {
+        fetch();
+    }
+</script>
+
+<script>
+    $("#cmb_Ref").change(function () {
+        var c = $('#cmb_Ref');
+        var formval = c.data('kendoComboBox').value();
+        var code = formval.split(" ");
+        var txt = c.data('kendoComboBox').text();
+        var len = code[3].length;
+        var val_bank = code[3];
+        var val_divstrid = code[4];
+        $("#cmb_PAyor").data("kendoComboBox").value(val_bank);
+        $("#dividendstru_rowid").val(val_divstrid);
+    });
+</script>
+
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>

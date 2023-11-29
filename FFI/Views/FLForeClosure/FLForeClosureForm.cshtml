@@ -1,0 +1,803 @@
+﻿@{
+    ViewBag.Form = "FL-ForeClosure";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+<script src="~/CommonScripts/HelpFile.js"></script>
+<script src="~/CommonScripts/Common_func.js"></script>
+<form id="Foreclosure_form" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+
+                        <label for="txtlan_no" class="col-sm-5 control-label ">Loan Account No</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txtlan_no" name="loan_no" class="form-control" maxlength="100" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="col-sm-4" style="right:0;">
+                            <a class="HelpWindow fa fa-search fa-lg" role="button" id="pay_help1" data-toggle="modal" href="/HelpFilter/HelpFilter" hdrtitle="Farmer Details" searchid="S13" data-target="#HelpModal" onclick=transfer(this,"form","","form_control"); title="Search" style="font-size: 19px; margin-left: 0px; margin-top: 10px;"></a>
+                            @*<button type="button" class="btn btn-info"><span class="glyphicon glyphicon-search"></span></button>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+
+                        <label for="txtapp_from" class="col-sm-5 control-label ">Member ID</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txtmember_id" name="fpomember_code" class="form-control" maxlength="100" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtfarmer_code" class=" col-sm-5 control-label">Farmer ID</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txtfarmer_code" name="farmer_code" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtfarmer_name" class="col-sm-5 control-label ">Farmer Name</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txtfarmer_name" name="farmer_name" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtfarmer_surname" class="col-sm-5 control-label ">Farmer Surname</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txtfarmer_surname" name="sur_name" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtappref_no" class=" col-sm-5 control-label">Application Reference No.</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txtappref_no" name="loanapp_no" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="application_date" class=" col-sm-5 control-label">Application Date</label>
+                        <div class=" col-sm-6">
+                            <input class="cusDate" data-role='datepicker' readonly id="application_date" data-checkdate-msg="Enter Valid Date" name="app_date" data-required-msg="Date cannot be blank" style="width:100%" onkeypress="return date_validate(event)" />
+                            @*<span data-for='valid' class='k-invalid-msg'></span>*@
+                        </div>
+                       
+                    </div>
+                </div>
+
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="cmbfl_scheme" class="col-sm-5 control-label ">FL Scheme</label>
+                        <div class="col-sm-6">
+                            <input id="cmbfl_scheme" data-role="filtercombo" name="loanscheme_desc" style="width:100%" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtinterest_rate" class=" col-sm-5 control-label">Int. Rate</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txtinterest_rate" name="interest_rate" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txttenor" class=" col-sm-5 control-label">Tenure</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txttenor" class="form-control" name="Tenure" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="loanamt_applied" class="col-sm-5 control-label ">Loan Amount</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="loanamt_applied" class="form-control" name="loan_amount" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtprinc_repaid" class=" col-sm-5 control-label">Princ. Paid</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txtprinc_repaid" class="form-control" name="principle_paid" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtprinc_out" class=" col-sm-5 control-label">Princ. Outstanding</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txtprinc_out" class="form-control" name="principle_due" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txttota_int" class="col-sm-5 control-label ">Interest Paid</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txttota_int" class="form-control" name="interest_paid" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtno_instal" class=" col-sm-5 control-label">Instalment Paid</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txtno_instal" class="form-control" name="instalment_paid" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="cmbstatus_lan" class="col-sm-5 control-label ">Loan Status</label>
+                        <div class="col-sm-6">
+                            <input id="cmbstatus_lan" data-role="filtercombo" name="loan_status_desc" style="width:100%" readonly>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-sm-3" style="display:none">
+                    <div class="form-group">
+                        <label for="txt_row_timestamp" class="col-sm-5 control-label">Timestamp:</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txt_row_timestamp" name="row_timestamp" class="form-control" maxlength="125">
+                            <input type="text" id="txtprinciple_amount" name="principle_amount" class="form-control" maxlength="125">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3" style=" display:none">
+                    <div class="form-group" style=" display:none">
+                        <label for="txtMode" class="col-sm-5 control-label">Mode Flag</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtMode" name="mode_flag" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3" style=" display:none">
+                    <div class="form-group" style=" display:none">
+                        <label for="txtMode" class="col-sm-5 control-label">Loanscheme Code</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtloanschemecode" name="loanscheme_code" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3" style=" display:none">
+                    <div class="form-group" style=" display:none">
+                        <label for="txtMode" class="col-sm-5 control-label">Loanscheme Code</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtloanstatus" name="loan_status" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <div>
+                        <a data-toggle="modal" onclick="return LoadLoanNo()" style="float:right" href="~/FLForeClosure/FLForeClosureEdit" data-target="#foreclosureModal">Generate O/S On Date</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <section class="col-md-12">
+                    <div id="tab_list" class="col-md-12">
+                        <ul class="nav nav-tabs">
+                            <li class="active">
+                                <a href="#ForeClosure" role="tab" data-toggle="tab">
+                                    Fore Closure Details
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane fade active in" id="ForeClosure">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div class="row" style="padding-bottom:15px">
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label for="txt_reqdate" class="col-sm-5 control-label required">Request Date</label>
+                                                    <div class=" col-sm-6">
+                                                        <input class="cusDate" data-role='datepicker' id="txtValidity2" data-checkdate-msg="Enter Valid Date" name="req_date" style="width:100%" onkeypress="return date_validate(event)" />
+                                                        @*<span data-for='valid' class='k-invalid-msg'></span>*@
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label for="txtFLPrinc_out" class="col-sm-5 control-label ">Princ. Outstanding</label>
+                                                    <div class=" col-sm-6">
+                                                        <input type="text" id="txtFLPrinc_out" name="principle" class="form-control" maxlength="50" readonly>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label for="txt_waiveamt" class="col-sm-5 control-label required">Waiver</label>
+                                                    <div class=" col-sm-6">
+                                                        <input type="text" id="txt_waiveamt" name="waive_amount" class="form-control" maxlength="50">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="row" style="padding-bottom:15px">
+
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label for="txtother_charges" class="col-sm-5 control-label required">Penalty / Others Charges</label>
+                                                    <div class=" col-sm-6">
+                                                        <input type="text" id="txtother_charges" name="other_charges" class="form-control" maxlength="50">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label for="txtnet_amt" class="col-sm-5 control-label ">Net Amount</label>
+                                                    <div class=" col-sm-6">
+                                                        <input type="text" id="txtnet_amt" name="princi_amount" class="form-control" maxlength="50" readonly>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class=" form-group">
+                                                    <label for="txtbank_ref" class=" col-sm-5 control-label required">Bank Ref. NO.</label>
+                                                    <div class=" col-sm-6">
+                                                        <input type="text" id="txtbank_ref" name="bank_ref_no" class="form-control" maxlength="50">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-bottom:15px">
+                                            <div class="col-sm-4">
+                                                <div class=" form-group">
+                                                    <label for="txt_payrecvdate" class=" col-sm-5 control-label required">Pre-Payment Recd. Date</label>
+                                                    <div class=" col-sm-6">
+                                                        <input class="cusDate" data-role='datepicker' id="txtValidity3" data-checkdate-msg="Enter Valid Date" name="prepayment_date" style="width:100%" onkeypress="return date_validate(event)" />
+                                                        @*<span data-for='valid' class='k-invalid-msg'></span>*@
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label for="cmbstatus_credit" class="col-sm-5 control-label required">Received Credit</label>
+                                                    <div class="col-sm-6">
+                                                        <input id="cmbstatus_credit" name="received_date" data-role="filtercombo" style="width:100%">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3" style=" display:none">
+                                                <div class="form-group" style=" display:none">
+                                                    <label for="mode_flag" class="col-sm-5 control-label">Mode Flag</label>
+                                                    <div class="col-sm-7">
+                                                        <input type="text" id="mode_flag" name="mode_flag1" class="form-control">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-xs-12">
+                    <div>
+                        <label>Comments:</label>
+                        <textarea id="TextArea1" rows="4" cols="20" style="width:1180px;height:77px;" class="form-control"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    click_act_name = "FLForeClosureList";
+    click_ctrl_name = "FLForeClosure";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+<script src="~/API_Scripts/FLForeClosure_retrieveFLFore_Closure_APIClient.js"></script>
+<script src="~/API_Scripts/FLForeClosure_retrieveFLFore_ClosureList_APIClient.js"></script>
+<script src="~/API_Scripts/FLForeClosure_saveFLFore_Closure_APIClient.js"></script>
+<script src="~/API_Scripts/Foreclosure.js"></script>
+<script src="~/API_Scripts/saveFLFore_Closure_Model.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/API_Scripts/retrieveFLFore_Closure_Model.js"></script>
+<script src="~/API_Scripts/retrieveFLFore_ClosureList_Model.js"></script>
+<script>
+    $(document).ready(function () {
+        kendodate_format();
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#Foreclosure_form");
+        kendo.init(container);
+        container.kendoValidator({
+            rules: {
+                checkdate: function (input) {
+                    if (input.attr("data-role") == "datepicker") {
+                        var res = isDate(input.val());
+                        return res;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+            }
+        });
+
+        $(".file_attach").attr("hdrtitle", "FL-ForeClosure");
+        $(".notes").attr("hdrtitle", "FL-ForeClosure");
+        $("#lblForm_menuid").text("FL-ForeClosure");
+        $("#lblForm_menuid").text("FLFCLOSE");
+
+
+        Screen_Id = "FLFCLOSE";
+        permission = sec_Permission(Screen_Id);
+        load_master_code();
+
+        //$("#common_id").text("Loan Account No")
+        $("#hide_div").hide();
+        var combo_flscheme = "";
+        $("#cmbfl_scheme").empty();
+        combo_flscheme = grid_comboScreen_mastercodes("SCHECODE");
+        filter_combobox("cmbfl_scheme", combo_flscheme);
+
+        var combo_statuscredit = "";
+        $("#cmbstatus_lan").empty();
+        combo_statuscredit = grid_comboScreen_mastercodes("QCD_LOANSTATUS");
+        filter_combobox("cmbstatus_lan", combo_statuscredit);
+
+        var combo_Receivedcredit = "";
+        $("#cmbstatus_credit").empty();
+        combo_Receivedcredit = grid_comboScreen_mastercodes("QCD_FL_RecCredit");
+        filter_combobox("cmbstatus_credit", combo_Receivedcredit);
+
+        if (getlocalStorage('btn_clk_val') == "Create") {
+            $('#divCreate #review').hide();
+            $("#txtMode").val("I");
+            $("#bottom_menus").hide();
+            $("#DocStat").val("New");
+            $("#mode_flag").val('I');
+
+        }
+        else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
+        
+            if (permission.auth == true) {
+                $('#divEdit #reviewEd').hide();
+                field_disable();
+            }
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("Foreclosure_form");
+                var obj_val = JSON.parse(formval);
+                obj_val.loan_no = data.loan_no;
+                var data_fetch = {};
+                data_fetch.context = WebAPIProxy.getContext();
+                data_fetch.context.Header = obj_val;
+                retrieve_Foreclosure_details(data_fetch);
+                //$("#txt_attr_code").val(data.entitygrp_code);
+                 $("#DocStat").val("Active");
+                 //localStorage.docno = $("#txtlan_no").val();
+                 setlocalStorage('doc_no', $("#txtlan_no").val());
+                 setlocalStorage('doc_row_id', $("#txtappref_no").val())
+                 //setlocalStorage('doc_code', $("#txtmember_id").val());
+            }
+        }
+       
+
+        $('#HelpModal').on('hide.bs.modal', function (e) {
+            if ($("#txtlan_no").val() != undefined && $("#txtlan_no").val() != "") {
+                fetch_loan();
+            }
+        });
+        
+        $('#txtother_charges').keypress(function (event) {
+            var $this = $(this);
+            if ((event.which != 46 || $this.val().indexOf('.') != -1) &&
+               ((event.which < 48 || event.which > 57) &&
+               (event.which != 0 && event.which != 8))) {
+                event.preventDefault();
+            }
+
+            var text = $(this).val();
+            if (text.indexOf('.') != -1) {
+                if ((text.indexOf('.') != -1) &&
+               (text.substring(text.indexOf('.')).length > 2) &&
+               (event.which != 0 && event.which != 8) &&
+               ($(this)[0].selectionStart >= text.length - 2)) {
+                    event.preventDefault();
+                }
+            }
+            else {
+                if ($this.val().length > 17) {
+                    if (event.which != 46) {
+                        event.preventDefault();
+                    }
+                }
+            }
+
+        });
+        $('#txt_waiveamt').keypress(function (event) {
+            var $this = $(this);
+            if ((event.which != 46 || $this.val().indexOf('.') != -1) &&
+               ((event.which < 48 || event.which > 57) &&
+               (event.which != 0 && event.which != 8))) {
+                event.preventDefault();
+            }
+
+            var text = $(this).val();
+            if (text.indexOf('.') != -1) {
+                if ((text.indexOf('.') != -1) &&
+               (text.substring(text.indexOf('.')).length > 2) &&
+               (event.which != 0 && event.which != 8) &&
+               ($(this)[0].selectionStart >= text.length - 2)) {
+                    event.preventDefault();
+                }
+            }
+            else {
+                if ($this.val().length > 17) {
+                    if (event.which != 46) {
+                        event.preventDefault();
+                    }
+                }
+            }
+
+        });
+
+        $("input[id*='txtother_charges']").keydown(function (event) {           
+            if (event.shiftKey == true) {
+                event.preventDefault();
+            }
+
+            if ((event.keyCode >= 48 && event.keyCode <= 57) ||
+                (event.keyCode >= 96 && event.keyCode <= 105) ||
+                event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37 ||
+                event.keyCode == 39 || event.keyCode == 46 || event.keyCode == 190) {
+
+            } else {
+                event.preventDefault();
+            }
+
+            if ($(this).val().indexOf('.') !== -1 && event.keyCode == 190)
+                event.preventDefault();
+            //if a decimal has been added, disable the "."-button
+        });
+        $("#txt_waiveamt").focusout(function (event) {
+            var txtFLPrinc_out = $("#txtFLPrinc_out").val();
+            if (this.value != "" || this.value != undefined) {
+                if (parseFloat(this.value) > parseFloat(txtFLPrinc_out)) {
+                    kendoAlert("Waiver amount must be less than or equal to principle amount");
+                    $("#txt_waiveamt").val("0");
+                    return;
+                }
+                else {
+                    calculatenet();
+                }
+            }
+            else {
+                $("#txt_waiveamt").val("0");
+            }
+        });
+        $("#txtother_charges").focusout(function (event) {
+            if (this.value != "" || this.value != undefined) {
+                calculatenet();
+            }
+            else {
+                $("#txtother_charges").val("0");
+            }
+        });
+
+    });
+        function calculatenet() {
+            var txtFLPrinc_out = $("#txtFLPrinc_out").val();
+            var txt_waiveamt = $("#txt_waiveamt").val();
+            var other_charges = $("#txtother_charges").val();
+            if (txtFLPrinc_out == "" || txtFLPrinc_out == undefined) {
+                txtFLPrinc_out = 0;
+            }
+            if (txt_waiveamt == "" || txt_waiveamt == undefined) {
+                txt_waiveamt = 0;
+            }
+            if (other_charges == "" || other_charges == undefined) {
+                other_charges = 0;
+            }
+            var net_amt = (parseFloat(txtFLPrinc_out) + parseFloat(txt_waiveamt)) - parseFloat(other_charges);
+            $("#txtnet_amt").val(net_amt);
+        }
+     
+
+
+
+
+  
+</script>
+<script>
+    function LoadLoanNo() {
+        var formva = form_Serialize("Foreclosure_form");
+        var obj_val = JSON.parse(formva);
+        localStorage.loan_no = obj_val.loan_no;
+
+    }
+    function load_master_code() {
+        debugger;
+        var data = {};
+        var context = WebAPIProxy.getContext();
+        data.userId = context.userId
+        data.orgnId = context.orgnId
+        data.locnId = context.locnId
+        data.localeId = context.localeId
+        data.screen_Id = "FLFCLOSE";
+        var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+    }
+    function field_enable() {
+ 
+        $("#txtValidity2").removeAttr("readonly");
+        $("#txtValidity2").prop("disabled", false);
+        $("#txt_waiveamt").removeAttr("readonly");
+        $("#txt_waiveamt").prop("disabled", false);
+        $("#txtother_charges").removeAttr("readonly");
+        $("#txtother_charges").prop("disabled", false);
+        $("#txtbank_ref").removeAttr("readonly");
+        $("#txtbank_ref").prop("disabled", false);
+        $("#txtValidity3").removeAttr("readonly");
+        $("#txtValidity3").prop("disabled", false);
+        $("#cmbstatus_credit").data("kendoComboBox").enable(true);
+        $("#txtifsc_code").removeAttr("readonly");
+        $("#txtifsc_code").prop("disabled", false);
+        $("#txtremarks").removeAttr("readonly");
+        $("#txtremarks").prop("disabled", false);
+    }
+    function field_disable() {
+        $("#txtValidity2").attr("readonly");
+        $("#txtValidity2").prop("disabled", true);
+        $("#txt_waiveamt").attr("readonly");
+        $("#txt_waiveamt").prop("disabled", true);
+        $("#txtother_charges").attr("readonly");
+        $("#txtother_charges").prop("disabled", true);
+        $("#txtbank_ref").attr("readonly");
+        $("#txtbank_ref").prop("disabled", true);
+        $("#txtValidity3").attr("readonly");
+        $("#txtValidity3").prop("disabled", true);
+        $("#cmbstatus_credit").data("kendoComboBox").enable(false);
+        $("#txtifsc_code").attr("readonly");
+        $("#txtifsc_code").prop("disabled", true);
+        $("#txtremarks").attr("readonly");
+        $("#txtremarks").prop("disabled", true);
+    }
+    function fetch_loan() {
+        try {
+            var formval = form_Serialize("Foreclosure_form");
+            var obj_val = JSON.parse(formval);
+            if (obj_val != undefined) {
+                obj_val.loan_no = $("#txtlan_no").val();
+                var data_fetch = {};
+                data_fetch.context = WebAPIProxy.getContext();
+                data_fetch.context.Header = obj_val;
+                retrieve_Foreclosure_details(data_fetch);
+                setlocalStorage("loan_no", $("#txtlan_no").val());
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function generate_Foreclosure_header(res) {
+        if (res != null) {
+            $("#txtlan_no").val(res.loan_no);
+        }
+    }
+    function generate_Foreclosure_Loandetail(res) {
+        if (res != null) {
+
+            $('#txtmember_id').val(res.fpomember_code);
+            $('#txtfarmer_code').val(res.farmer_code);
+            $('#txtfarmer_name').val(res.farmer_name);
+            $('#txtfarmer_surname').val(res.sur_name);
+            $('#txtappref_no').val(res.loanapp_no);
+            $('#application_date').val(res.app_date);
+            $('#cmbfl_scheme').data("kendoComboBox").value(res.loanscheme_code);
+            $('#txtinterest_rate').val(res.interest_rate);
+            $('#txttenor').val(res.Tenure);
+            $('#loanamt_applied').val(res.loan_amount);
+            $('#txtprinc_repaid').val(res.principle_paid);
+            $('#txtprinc_out').val(res.principle_due);
+            $('#txtFLPrinc_out').val(res.principle_due);
+            $('#txttota_int').val(res.interest_paid);
+            $('#txtno_instal').val(res.instalment_paid);
+            $('#cmbstatus_lan').data("kendoComboBox").value(res.loan_status_desc);
+
+        }
+    }
+    function generate_Foreclosure_detail(res) {
+        if (res != null) {
+            if ($("#DocStat").val() == "New") {
+                $("#txtFLPrinc_out").val(res.principle_due);
+            }
+            else {
+
+                $("#txtMode").val(res.mode_flag);
+                $("#txtValidity2").val(res.req_date);
+                $("#txtFLPrinc_out").val(res.principle_due);
+                $("#txt_waiveamt").val(res.waive_amount);
+                $("#txtother_charges").val(res.other_charges);
+                $("#txtbank_ref").val(res.bank_ref_no);
+                $("#txtValidity3").val(res.prepayment_date);
+                var net_amt = (parseFloat(res.principle_due) + parseFloat(res.waive_amount)) - parseFloat(res.other_charges);
+                $("#txtnet_amt").val(net_amt);
+            }
+        }
+    }
+
+</script>
+<script>
+    function save() {
+        field_enable();
+        try {
+
+
+            if ($("#txtMode").val() == "S") {
+                $("#txtMode").val('U');
+
+            }
+            var formval = form_Serialize("Foreclosure_form");
+            var obj_val = JSON.parse(formval);
+            var obj_val2 = JSON.parse(formval);
+            var obj_val3 = JSON.parse(formval);
+            obj_val.loan_no = $("#txtlan_no").val();
+            if (obj_val3.req_date != "" && obj_val3.req_date != undefined) {
+                obj_val3.req_date = getFormated_StringDate($("#txtValidity2").val());
+            }
+            else {
+                obj_val3.req_date = "";
+            }
+            if (obj_val3.prepayment_date != "" && obj_val3.prepayment_date != undefined) {
+                obj_val3.prepayment_date = getFormated_StringDate($("#txtValidity3").val());
+            }
+            else {
+                obj_val3.prepayment_date = "";
+            }
+            if ($("#loanamt_applied").val() != "" && $("#loanamt_applied").val() != undefined) {
+                obj_val3.principle_amount = $("#loanamt_applied").val();
+            }
+            else {
+                obj_val3.principle_amount = "";
+            }
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_val;
+            data.context.Detail = obj_val2;
+            data.context.ForeClosureDtl = obj_val3;
+            field_disable();
+            save_Foreclosure_details(data);
+        }
+        catch (err) {
+            field_disable();
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function get_Foreclosure_details() {
+        try {
+            var formval = form_Serialize("Foreclosure_form");
+            var obj_val = JSON.parse(formval);
+            if (obj_val != undefined) {
+                obj_val.loan_no = $("#txtlan_no").val();
+                var data_fetch = {};
+                data_fetch.context = WebAPIProxy.getContext();
+                data_fetch.context.Header = obj_val;
+                retrieve_Foreclosure_details(data_fetch);
+                setlocalStorage("loan_no", $("#txtlan_no").val());
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<script>
+    function grid_control() {
+        var control_Name = [
+
+        ];
+        return control_Name;
+    }
+
+
+    function form_control() {
+        var control_Name = [
+            { "dataCol": "loan_no", "controlId": "txtlan_no", "type": "Text" }
+        ];
+        return control_Name;
+
+    }
+
+    function trans_input_data() {
+        var trans_coll = [
+             { "trasfer": "Yes", "dataCol": "loan_no", "controlId": "", "grid_id": "", "grid_row_col": "" },
+        ];
+        return trans_coll;
+    }
+
+    function review() {
+        try {
+            $("#txtMode").val('R');
+            save();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function approve() {
+        try {
+            $("#txtMode").val('A');
+            save();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function reject() {
+        try {
+            $("#txtMode").val('J');
+            save();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>

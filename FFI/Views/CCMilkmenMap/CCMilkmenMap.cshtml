@@ -1,0 +1,832 @@
+﻿@{
+    ViewBag.Form = "Milkmen Mapping";
+    ViewBag.helpName = "CCMilkmenMap.html";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+<form id="MapMilk_DNew" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row">
+                <div class="col-sm-5">
+                    <div class="form-group" style="">
+                        <label for="cmb_cc" class="col-sm-4 control-label required">Collection Centre</label>
+                        <div class="col-sm-6">
+                            <input id="cmb_cc" name="cc_aggrloc_code" style="width: 100%" data-role="filtercombo">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-5">
+                    <div class="form-group">
+                        <label for="lblvillage" class="col-sm-4  control-label">Village(s) Covered</label>
+                        <div class="col-sm-8">
+                            <input id="lblvillage" type="text" name="lblvillage" class="form-control" style="border:0;font-weight:bold;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <label>Farmers Not Mapped</label>
+                <div id="gd_mappcc_list">
+                    <div id="MilkMap_grid">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-12">
+            <button type="button" class="btn btn-info" onclick="map()">
+                <span class="fa fa-arrow-circle-down">Map</span>
+            </button>
+        </div>
+
+
+        <div class="col-xs-12">
+            <label>Milkmen Mapped To Collection Centre</label>
+            <div id="gd_milkmap_list">
+                <div id="MilkMapCC_grid">
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+<script>
+    click_act_name = "CCMilkmenMap";
+    click_ctrl_name = "CCMilkmenMap";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+
+<script src="~/API_Scripts/CCMilkman.js"></script>
+<script src="~/API_Scripts/CCMilkman_Map_retrieveCCMilkmanMap_APIClient.js"></script>
+<script src="~/API_Scripts/CCMilkman_Map_retrieveCCMilkmanMapList_APIClient.js"></script>
+<script src="~/API_Scripts/CCMilkman_Map_saveCCMilkmanMap_APIClient.js"></script>
+<script src="~/API_Scripts/saveCCMilkmanMap_Model.js"></script>
+<script src="~/API_Scripts/retrieveCCMilkmanMapList_Model.js"></script>
+<script src="~/API_Scripts/retrieveCCMilkmanMap_Model.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+        master_milkmap();
+        MilkMap_grid_details([]);
+        MilkMapCC_grid_details([]);
+
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#MapMilk_DNew");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+
+        $(".file_attach").attr("hdrtitle", "Milkmen Mapping");
+        $(".notes").attr("hdrtitle", "Milkmen Mapping");
+        $("#lblForm_menuid").text("MAPMAP");
+
+        Screen_Id = "MAPMAP";
+        permission = sec_Permission(Screen_Id);
+        $("#hide_div").hide();
+        load_master_code();
+
+        page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+        function get_tamil_lang() {
+            getLanguageListMode("ACT_FAR_REG", "MilkMapCC_grid", "taIN", "enUS");
+            listpageloadfetch();
+        }
+
+        function get_english_lang() {
+            getLanguageListMode("ACT_FAR_REG", "MilkMapCC_grid", "enUS", "taIN");
+            listpageloadfetch();
+        }
+        setlocalStorage("status", "Active");
+
+
+        var gtmap_in = "";
+        $("#cmb_cc").empty();
+        gtmap_in = grid_comboScreen_mastercodes("CC");
+        filter_combobox("cmb_cc", gtmap_in);
+
+
+        //var grid = $("#MilkMapCC_grid").getKendoGrid();
+        //grid.bind("beforeEdit", beforeEditHandler);
+
+
+    });
+    //function beforeEditHandler(e) {
+    //    alert("before edit");
+    //}
+</script>
+
+<script>
+    function load_master_code() {
+        try {
+            debugger;
+            var data = {};
+            var context = WebAPIProxy.getContext();
+            data.userId = context.userId
+            data.orgnId = context.orgnId
+            data.locnId = context.locnId
+            data.localeId = context.localeId
+            data.screen_Id = "MAPMAP";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+</script>
+
+<script>
+    var status_Priority = [];
+    function MilkMap_grid_details(data) {
+        try {
+            $.each(data, function (index, value) {
+                var flag = false;
+                $.each(status_Priority, function (sindex, svalue) {
+                    if (svalue == value.status_desc) {
+                        flag = true;
+                    }
+                });
+                if (flag == false) {
+                    status_Priority.push(value.status_desc);
+                }
+            });
+            gridRowID = -1;
+            data = addRandomNum(data);
+
+            $("#MilkMap_grid").kendoGrid(
+          {
+              dataSource: {
+                  data: data,
+              },
+              height: 200,
+              sortable: true,
+              selectable: true,
+              selectable: "singl",   //  Grid Row Selection
+              change: selectRow,
+              navigatable: true,
+              groupable: false,
+
+              columns: [
+                  {
+                      field: "farmer_code",
+                      title: "Farmer ID",
+
+                  },
+                   {
+                       field: "farmer_name",
+                       title: "Given Name",
+
+                   },
+
+                    {
+                        field: "sur_name",
+                        title: "Surname",
+
+                    },
+                      {
+                          field: "farmer_dob",
+                          title: "DOB",
+
+                      },
+                      {
+                          field: "gender_flag",
+                          title: "Gender",
+                          hidden: true,
+                      },
+              {
+                  field: "gender_flag_desc",
+                  title: "Gender",
+              },
+              {
+                  field: "reg_mobile_no",
+                  title: "Regd Mobile No",
+
+              },
+               {
+                   field: "status_code",
+                   title: "Status",
+                   hidden: true,
+               },
+               {
+                   field: "status_desc",
+                   title: "Status",
+
+               },
+
+              ]
+
+          });
+
+
+            $(".k-dropdown-operator").css('display', 'none');
+            $("#MilkMap_grid .k-input").attr('disabled', 'false');
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    var ddl = "";
+    $("#cmb_cc").change(function () {
+        var c = $('#cmb_cc');
+        ddl = c.data('kendoComboBox').value();
+        if (ddl != "" && ddl != undefined) {
+            setlocalStorage("ls_List", '');
+            var formval = form_Serialize("MapMilk_DNew");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_Fromvalue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_Fromvalue = ".";
+            }
+            obj_val.FilterBy_Tovalue = ".";
+            obj_val.cc_aggrloc_code = ddl;
+            var data_list = {};
+            data_list.context = WebAPIProxy.getContext();
+            data_list.context.Filter = obj_val;
+            retrieve_ccmilkman_list(data_list);
+
+            var ddl = $('#cmb_cc').data('kendoComboBox').value();
+            var formval = form_Serialize("MapMilk_DNew");
+            var obj_val = JSON.parse(formval);
+            var org_id = getlocalStorage('org_id');
+            var org_type = getlocalStorage('org_type');
+            obj_val.cc_aggrloc_code = ddl;
+            obj_val.aggrorgn_code = org_id;
+            obj_val.aggrorgn_type = org_type;
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Header = obj_val;
+            retrieve_ccmilkman_details(data);
+        }
+        else {
+            MilkMap_grid_details([]);
+            MilkMapCC_grid_details([]);
+            $("#lblvillage").val('');
+        }
+    });
+
+
+    function listpageloadfetch() {
+        try {
+            var formval = form_Serialize("MapMilk_DNew");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_FromValue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_FromValue = ".";
+            }
+            setlocalStorage('flt_condition', "");
+        } catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function selectRow() {
+        try {
+            var grid = $("#MilkMap_grid").data("kendoGrid");
+            var selectedItem = grid.dataItem(grid.select());
+            setlocalStorage("ls_List", selectedItem);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+
+<script>
+    function PopulateItemGrid() {
+        try {
+            var productBookGrid = $("#MilkMap_grid").data("kendoGrid");
+            var itemGrid = $("#MilkMapCC_grid").data("kendoGrid");
+            //For check Dupliacte
+            debugger;
+            var data = getlocalStorage("ls_List");
+            var currentFarmerName = data.farmer_name;
+            var currentFarmerCode = data.farmer_code;
+            var currentflag = data.sel_flag;
+            var griddata = itemGrid.dataSource.data();
+            for (item in griddata) {
+
+                if (griddata[item].farmer_code == currentFarmerCode &&
+                   griddata[item].farmer_name == currentFarmerName) {
+                    kendoAlert("Already exists in Milkmen Mapped To Collection Centre");
+                    return false;
+                }
+                if (currentflag == "C") {
+                    kendoAlert(" ** ");
+                    return false;
+                }
+
+
+            }
+            //End
+            productBookGrid.select().each(function () {
+
+                var dataItem = productBookGrid.dataItem($(this));
+
+                itemGrid.dataSource.add(dataItem);
+
+            });
+            itemGrid.refresh();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+
+
+
+</script>
+
+
+<script>
+    function MilkMapCC_grid_details(data) {
+        try {
+
+            $("#MilkMapCC_grid").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                milkman_rowid: { type: "string", editable: false },
+                                farmer_code: { type: "string", editable: false },
+                                milkman_code: { type: "string" },
+                                farmer_name: { type: "string", editable: false },
+                                sur_name: { type: "string", editable: false },
+                                farmer_dob: { type: "string", editable: false },
+                                gender_flag_desc: { type: "string", editable: false },
+                                gender_flag: { type: "string", editable: false },
+                                reg_mobile_no: { type: "string", editable: false },
+                                status_code: { type: "string", editable: false },
+                                status_desc: { type: "string", editable: false },
+                                row_timestamp: { type: "string", editable: false },
+                                mode_flag: { type: "string", editable: false },
+
+                            }
+                        }
+                    }
+                },
+                toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                excelExport: function (e) {
+                    var gd = $("#MilkMapCC_grid").data("kendoGrid");
+                    var len = gd.dataSource._data.length;
+                    var chkall = $('#chkall').is(':checked');
+                    var chkfilter = $('#chkfilter').is(':checked');
+                    var chktemp = $('#chktemp').is(':checked');
+                    var twokendobox = true;
+                    gd.dataSource.pageSize(len);
+                    if (e.sender.dataSource._data.length == len) {
+                        twokendobox = false;
+                        exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                    }
+                    else {
+                        exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                    }
+                    gd.dataSource.pageSize('10');
+                    return false;
+                },
+                filterable: {
+                    enabled: true,
+
+                    delay: 1500,
+                    mode: "menu, row",
+                    height: 200,
+                    click: function (e) {
+                        var gd = $("#MilkMapCC_grid").data("kendoGrid");
+                        filter_row(gd);
+                    }
+                },
+                filterMenuInit: function (e) {
+                    var gd = $("#MilkMapCC_grid").data("kendoGrid");
+                    filter_row(gd);
+                },
+                //change: selectRow,
+                height: 450,
+                edit: OnEdit,
+                sortable: true,
+                selectable: true,
+                editable: true,
+                //beforeEdit: function (e) {
+                //    alert("guhgjgfh");
+                //    var columnIndex = this.cellIndex(e.container);
+                //    var fieldName = this.thead.find("th").eq(columnIndex).data("field");
+
+                //    if (!isEditable(fieldName, e.model)) {
+                //        e.preventDefault();
+                //    }
+                //},
+
+
+                //selectable: "singl",   //  Grid Row Selection
+                pageable: {
+                    refresh: false,
+                    pageSizes: true,
+                    buttonCount: 5
+                },
+                navigatable: false,
+                groupable: false,
+                columns: [{
+                    command: [
+            {
+                name: "Delete",
+                id: "Delete",
+                imageClass: "fa fa-close",
+                click: function (e) {
+                    var grid = $("#MilkMapCC_grid").data("kendoGrid");
+                    var dataItem = $("#MilkMapCC_grid").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                    DeleteWindowEvent(e, dataItem, grid);
+                    e.stopImmediatePropagation();
+                }
+            },
+                    ], title: "Action", width: "55px",
+                },
+                {
+                    field: "milkman_rowid",
+                    title: "milkman_rowid",
+                    hidden: true,
+                },
+                   {
+                       field: "farmer_code",
+                       title: "Farmer ID",
+                       filterable: {
+                           cell: {
+                               operator: "contains",
+                               inputWidth: 1500
+                           }
+                       }
+                   },
+                    {
+                        field: "milkman_code",
+                        title: "MILKMAN ID",
+                        editable: function (dataItem) {
+                            return dataItem.isNew();
+                        },
+                        attributes: { style: "text-align:right;" },
+                        editor: function (container, options) {
+                            numeric_editor(container, options.field, '5', '3');
+                        },
+
+                        filterable: {
+                            cell: {
+                                operator: "contains",
+                                inputWidth: 1500,
+
+
+                            }
+                        }
+
+
+                    },
+               {
+                   field: "farmer_name",
+                   title: "Given Name",
+                   filterable: {
+                       cell: {
+                           operator: "contains",
+                           inputWidth: 1500
+                       }
+                   }
+               },
+
+
+                {
+                    field: "sur_name",
+                    title: "Surname",
+                    filterable: {
+                        cell: {
+                            operator: "contains",
+                            inputWidth: 1500
+                        }
+                    }
+                },
+                  {
+                      field: "farmer_dob",
+                      title: "DOB",
+                      filterable: {
+                          cell: {
+                              operator: "contains",
+                              inputWidth: 1500
+                          }
+                      }
+                  },
+                  {
+                      field: "gender_flag",
+                      title: "Gender",
+                      hidden: true,
+                  },
+          {
+              field: "gender_flag_desc",
+              title: "Gender",
+              filterable: {
+                  cell: {
+                      operator: "contains",
+                      inputWidth: 1500
+                  }
+              }
+          },
+          {
+              field: "reg_mobile_no",
+              title: "Regd Mobile No",
+              filterable: {
+                  cell: {
+                      operator: "contains",
+                      inputWidth: 1500
+                  }
+              }
+          },
+           {
+               field: "status_code",
+               title: "Status",
+               hidden: true,
+           },
+           {
+               field: "status_desc",
+               title: "Status",
+               filterable: {
+                   cell: {
+                       operator: "contains",
+                       inputWidth: 1500
+                   }
+               }
+           },
+           {
+               field: "row_timestamp",
+               title: "row_timestamp",
+               hidden: true,
+           },
+           {
+               field: "mode_flag",
+               title: "mode_flag",
+               hidden: true,
+           },
+                ]
+
+            });
+            $(".k-dropdown-operator").css('display', 'none');
+            $("#MilkMapCC_grid .k-input").attr('disabled', 'false');
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+
+        }
+    }
+    function OnEdit(e) {
+        setDefaultValues(e);
+        if (e.model.status_code == "A") {
+            e.container.find("input[name='milkman_code']").prop('disabled', true);
+        }
+
+    }
+
+</script>
+
+<script language="javascript" type="text/javascript">
+    function popitup(url) {
+        newwindow = window.open(url, 'name', 'height=650,width=850');
+        if (window.focus) { newwindow.focus() }
+        return false;
+
+    }
+</script>
+
+<script>
+    function save() {
+        try {
+            if ($("#txtMode").val() == "S") {
+                $("#txtMode").val('U');
+            }
+            var formval = form_Serialize("MapMilk_DNew");
+            var obj_val = JSON.parse(formval);
+            var ddl = $('#cmb_cc').data('kendoComboBox').value();
+            var org_id = getlocalStorage('org_id');
+            var org_type = getlocalStorage('org_type');
+            obj_val.cc_aggrloc_code = ddl;
+            obj_val.aggrorgn_code = org_id;
+            obj_val.aggrorgn_type = org_type;
+
+            var grid_val1 = JSON.stringify($("#MilkMapCC_grid").data("kendoGrid").dataSource._data);
+            var Bind1 = {};
+            Bind1 = grid_val1;
+            var result1 = JSON.parse(Bind1);
+            var milkmancode = 0;
+            $.each(result1, function (index, value) {
+                var milkman_rowid = value.milkman_rowid;
+                if (milkman_rowid == undefined) {
+                    result1[index].milkman_rowid = "0";
+                }
+                var mode = result1[index].mode_flag;
+                if (mode == "S") {
+                    result1[index].mode_flag = "U";
+                }
+                if (mode == "" || mode == undefined) {
+                    result1[index].mode_flag = "I";
+                }
+                var milkman_code = result1[index].milkman_code;
+                if (milkman_code == "" || milkman_code == undefined) {
+                    result1[index].milkman_code = "0";
+                }
+                if (milkman_code == "" || milkman_code == undefined || milkman_code == 0) {
+                    milkmancode = 0;
+                    kendoAlert("Kindly fill the MilkmanCode.!!");
+                    return false;
+                } else {
+                    milkmancode = 1
+                }
+                var rowstamp = result1[index].row_timestamp;
+                if (rowstamp == "" || rowstamp == undefined) {
+                    result1[index].row_timestamp = "";
+                }
+               
+            });
+
+            for (var i = 0; i < result1.length; i++) {
+                var currentDataItem = result1[i];
+                var milkman1 = currentDataItem.milkman_code;
+                for (var j = i + 1; j < result1.length; j++) {
+                    var nextDataItem = result1[j];
+                    var milkman2 = nextDataItem.milkman_code;
+
+                    if (milkman1 == milkman2) {
+                        kendoAlert("This " + milkman1 + " MilkmanCode is already exists");
+                        return false;
+                    }
+
+                }
+            }
+
+
+            if (milkmancode == 1) {
+                var obj_grid_val1 = result1;
+                var data_save = {};
+                data_save.context = WebAPIProxy.getContext();
+                data_save.context.Header = obj_val;
+                data_save.context.Map = obj_grid_val1;
+                save_ccmilkman_details(data_save);
+            }
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function generate_ccmilkman_header(res) {
+        try {
+            $("#lblvillage").val(res.village_covered);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function generate_ccmilkman_detail(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                $("#gd_milkmap_list").empty();
+                $("#gd_milkmap_list").append("<div id='MilkMapCC_grid'></div>");
+                MilkMapCC_grid_details(data);
+            }
+            else {
+
+                MilkMapCC_grid_details([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function get_ccmilkman_details(res) {
+        try {
+            var c = $('#cmb_cc');
+            ddl = c.data('kendoComboBox').value();
+            if (ddl != "" && ddl != undefined) {
+                setlocalStorage("ls_List", '');
+                var formval = form_Serialize("MapMilk_DNew");
+                var obj_val = JSON.parse(formval);
+                obj_val.FilterBy_Option = "ALL";
+                obj_val.FilterBy_Code = ".";
+                if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                    obj_val.FilterBy_Fromvalue = getlocalStorage('flt_condition');
+                }
+                else {
+                    obj_val.FilterBy_Fromvalue = ".";
+                }
+                //obj_val.FilterBy_FromValue = ".";
+                obj_val.FilterBy_Tovalue = ".";
+                obj_val.cc_aggrloc_code = ddl;
+                var data_list = {};
+                data_list.context = WebAPIProxy.getContext();;
+                data_list.context.Filter = obj_val;
+                retrieve_ccmilkman_list(data_list);
+
+                var ddl = $('#cmb_cc').data('kendoComboBox').value();
+                var formval = form_Serialize("MapMilk_DNew");
+                var obj_val = JSON.parse(formval);
+                var org_id = getlocalStorage('org_id');
+                var org_type = getlocalStorage('org_type');
+                obj_val.cc_aggrloc_code = ddl;
+                obj_val.aggrorgn_code = org_id;
+                obj_val.aggrorgn_type = org_type;
+                var data_get = {};
+                data_get.context = WebAPIProxy.getContext();;
+                data_get.context.Header = obj_val;
+                retrieve_ccmilkman_details(data_get);
+            }
+            else {
+                MilkMap_grid_details([]);
+                MilkMapCC_grid_details([]);
+                $("#lblvillage").val('');
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+
+<script>
+    function generate_ccmilkman_list(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                $("#gd_mappcc_list").empty();
+                $("#gd_mappcc_list").append("<div id='MilkMap_grid'></div>");
+                MilkMap_grid_details(data);
+                lblvillage.text = res.locnId;
+            }
+            else {
+                MilkMap_grid_details([]);
+                lblvillage.text = "";
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function listRefresh() {
+        try {
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+
+<script>
+    function map() {
+        try {
+            var items = getlocalStorage("ls_List");
+            if (items == undefined || items == '') {
+                kendoAlert("Please select records");
+            }
+            else {
+                PopulateItemGrid();
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>

@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <list>
+    <id>FIS_001</id>
+    <ser>Investor Services</ser>
+    <date>2/12/2016</date>
+    <status>Active</status>
+  </list>
+  <list>
+    <id>MAP_001</id>
+    <ser>Milk Aggregation Web</ser>
+    <date>2/12/2016</date>
+    <status>Active</status>
+  </list>
+  <list>
+    <id>LRS_001</id>
+    <ser>Loan Recovery</ser>
+    <date>2/12/2016</date>
+    <status>Active</status>
+  </list>
+  <list>
+    <id>FDR_001</id>
+    <ser>Famer Data</ser>
+    <date>2/12/2016</date>
+    <status>Active</status>
+  </list>
+  <grid>
+    <id>1</id>
+    <name>Farmer Registration</name>
+  </grid>
+  <grid>
+    <id>2</id>
+    <name>FPO Registration</name>
+  </grid>
+  <grid>
+    <id>3</id>
+    <name>FPO Share Application</name>
+  </grid>
+</root>

@@ -1,0 +1,28 @@
+ [29/03/2023 02:50:32.437 PM]- PAWHS-PO Save-start
+ [29/03/2023 02:50:32.452 PM]- PAWHS-PO Save-start'''11'
+ [29/03/2023 02:50:32.453 PM]- PAWHS-PO Save_method '''11'
+ [29/03/2023 02:50:33.220 PM]- PAWHS-PO Result '''11'
+ [03/04/2023 03:24:44.971 PM]- User Name - ADMINMethod Name -readexcel_dataSystem.NullReferenceException: Object reference not set to an instance of an object.
+   at FFI.Controllers.BulkUploadsController.readexcel_data(IFormFile importExcelFile, String column_name, String user_id, String menu_id, String Procedure_type, String orgn_id) in E:\Prema\Meity Kanchi\GIT\FEB-06-2023\WEB\meity-web-frontend\FFI\Controllers\BulkUploadsController.cs:line 604
+ [03/04/2023 03:27:07.450 PM]- User Name - ADMINMethod Name -readexcel_dataSystem.AggregateException: One or more errors occurred. (A task was canceled.)
+ ---> System.Threading.Tasks.TaskCanceledException: A task was canceled.
+   --- End of inner exception stack trace ---
+   at System.Threading.Tasks.Task.ThrowIfExceptional(Boolean includeTaskCanceledExceptions)
+   at System.Threading.Tasks.Task`1.GetResultCore(Boolean waitCompletionNotification)
+   at FFI.Controllers.BulkUploadsController.readexcel_data(IFormFile importExcelFile, String column_name, String user_id, String menu_id, String Procedure_type, String orgn_id) in E:\Prema\Meity Kanchi\GIT\FEB-06-2023\WEB\meity-web-frontend\FFI\Controllers\BulkUploadsController.cs:line 538
+ [03/04/2023 03:29:29.701 PM]- User Name - ADMINMethod Name -readexcel_dataSystem.NullReferenceException: Object reference not set to an instance of an object.
+   at FFI.Controllers.BulkUploadsController.readexcel_data(IFormFile importExcelFile, String column_name, String user_id, String menu_id, String Procedure_type, String orgn_id) in E:\Prema\Meity Kanchi\GIT\FEB-06-2023\WEB\meity-web-frontend\FFI\Controllers\BulkUploadsController.cs:line 604
+ [03/04/2023 03:32:05.041 PM]- User Name - ADMINMethod Name -readexcel_dataSystem.AggregateException: One or more errors occurred. (A task was canceled.)
+ ---> System.Threading.Tasks.TaskCanceledException: A task was canceled.
+   --- End of inner exception stack trace ---
+   at System.Threading.Tasks.Task.ThrowIfExceptional(Boolean includeTaskCanceledExceptions)
+   at System.Threading.Tasks.Task`1.GetResultCore(Boolean waitCompletionNotification)
+   at FFI.Controllers.BulkUploadsController.readexcel_data(IFormFile importExcelFile, String column_name, String user_id, String menu_id, String Procedure_type, String orgn_id) in E:\Prema\Meity Kanchi\GIT\FEB-06-2023\WEB\meity-web-frontend\FFI\Controllers\BulkUploadsController.cs:line 538
+ [03/04/2023 03:35:31.500 PM]- User Name - ADMINMethod Name -readexcel_dataSystem.AggregateException: One or more errors occurred. (A task was canceled.)
+ ---> System.Threading.Tasks.TaskCanceledException: A task was canceled.
+   --- End of inner exception stack trace ---
+   at System.Threading.Tasks.Task.ThrowIfExceptional(Boolean includeTaskCanceledExceptions)
+   at System.Threading.Tasks.Task`1.GetResultCore(Boolean waitCompletionNotification)
+   at FFI.Controllers.BulkUploadsController.readexcel_data(IFormFile importExcelFile, String column_name, String user_id, String menu_id, String Procedure_type, String orgn_id) in E:\Prema\Meity Kanchi\GIT\FEB-06-2023\WEB\meity-web-frontend\FFI\Controllers\BulkUploadsController.cs:line 538
+ [03/04/2023 05:55:28.920 PM]- User Name - ADMINMethod Name -readexcel_dataSystem.NullReferenceException: Object reference not set to an instance of an object.
+   at FFI.Controllers.BulkUploadsController.readexcel_data(IFormFile importExcelFile, String column_name, String user_id, String menu_id, String Procedure_type, String orgn_id) in E:\Prema\Meity Kanchi\GIT\FEB-06-2023\WEB\meity-web-frontend\FFI\Controllers\BulkUploadsController.cs:line 604

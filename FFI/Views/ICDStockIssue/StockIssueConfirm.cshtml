@@ -1,0 +1,394 @@
+﻿@{
+    ViewBag.List = "Stock Issue Confirm";
+    Layout = "~/Views/Shared/ListViewLayout.cshtml";
+}
+<style>
+    .pull-right {
+        margin-top: -1%;
+    }
+</style>
+
+<form id="frm_issue" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="gd_issue">
+                <div id="Issue_grid"></div>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+        $(".adv_filter").attr("hdrtitle", "Stock Inward List Record");
+        $(".adv_filter").attr("fltid", "Inward");
+        $(".Export").attr("hdrtitle", "Stock Issue");
+        $(".Export").attr("SubTreeId", "Stock_Inward");
+        list_grid_id = "Issue_grid";
+        listpageloadfetch();
+        Screen_Id = "ICDISSUECONFM";
+        permission = sec_Permission(Screen_Id);
+        debugger;
+        //page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+        filterhover();
+        $("#RI").hide();
+        $("#FPO").hide();
+    });
+</script>
+
+<script>
+    function listpageloadfetch() {
+        try {
+            var formval = form_Serialize("frm_issue");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_FromValue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_FromValue = ".";
+            }
+            obj_val.FilterBy_ToValue = ".";
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Filter = obj_val;
+            var Context = data.context;
+            var data = { user: Context.userId, org: Context.orgnId, locn: Context.locnId, lang: Context.localeId, filterby_option: Context.Filter.FilterBy_Option, filterby_code: Context.Filter.FilterBy_Code, filterby_fromvalue: Context.Filter.FilterBy_FromValue, filterby_tovalue: Context.Filter.FilterBy_ToValue, issue_status: "QCD_INWARD_CONFIRMISSUE" };
+             $.ajax({
+            url: '@Url.Action("IssueList", "ICDStockIssue")',
+            type: "post",
+            contentType: 'application/x-www-form-urlencoded',
+            data: data,
+                 success: function (response) {
+                   console.log(response);
+                     if (response != null) {
+                         Issuegrid(response.IssueTransferList);
+                }
+                else {
+                    Issuegrid([]);
+                }
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+        });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function selectRow() {
+        try {
+            var grid = $("#Issue_grid").data("kendoGrid");
+            var selectedItem = grid.dataItem(grid.select());
+            setlocalStorage("ls_pageList", selectedItem);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    var status_Priority = [];
+    function Issuegrid(data) {
+        try {
+            $("#Issue_grid").kendoGrid(
+                {
+                    excel: {
+                        fileName: "Stock Inward List.xlsx",
+                        filterable: true,
+                        allPages: false
+                    },
+                    dataSource: {
+                        data: data,
+                        pageSize: 20,
+                        change: function (e) {
+                            setTimeout(function () {
+                                var gd = $("#Issue_grid").data("kendoGrid");
+                                filter_row(gd);
+                                $('.k-i-close').css('display', 'none');
+                                $('button.k-button-icon').css('display', 'none');
+                                $('#Issue_grid .k-input').prop('disabled', false);
+                                $('#Issue_grid .k-input').prop('readonly', true);
+
+                            }, 1);
+                        },
+                    },
+                    toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                    excelExport: function (e) {
+                        var gd = $("#Issue_grid").data("kendoGrid");
+                        var gd_fi = $("#Issue_grid").data("kendoGrid").dataSource;
+                        var filters = gd_fi.filter();
+                        var allData = gd_fi.data();
+                        var query = new kendo.data.Query(allData);
+                        var data = query.filter(filters).data;
+                        var data_tt = gd.dataSource.data();
+
+                        var sheet = e.workbook.sheets[0];
+                        var gridColumns = gd.columns;
+
+                        var columnCells = [];
+                        for (var c = 0; c < gridColumns.length; c++) {
+                            var fieldName = gd.columns[c].hidden;
+                            if (typeof (fieldName) === "undefined") {
+                                var cellValue = gridColumns[c].title ? gridColumns[c].title : gridColumns[c].field;
+                                columnCells.push({ value: cellValue, autoWidth: true, background: "#7a7a7a", color: "#fff" });
+                            }
+                        }
+                        var rows = [{ cells: columnCells, type: "header" }];
+                        for (var i = 0; i < data.length; i++) {
+                            var rowCells = [];
+                            for (var j = 0; j < gridColumns.length; j++) {
+
+                                var fieldName = gd.columns[j].hidden;
+                                if (typeof (fieldName) === "undefined") {
+                                    var cellValue = data[i][gridColumns[j].field];
+                                    rowCells.push({ value: cellValue });
+                                }
+                            }
+                            rows.push({ cells: rowCells, type: "data" });
+                        }
+                        sheet.rows = rows;
+                        return false;
+                    },
+                    //filterable: {
+                    //    enabled: false,
+                    //    delay: 1500,
+                    //    //  mode: "menu, row",
+                    //    height: 200,
+                    //    click: function (e) {
+                    //        var gd = $("#Issue_grid").data("kendoGrid");
+                    //        filter_row(gd);
+                    //    }
+                    //},
+                    filterable: true,
+                    resizable:true,
+                    filterMenuInit: function (e) {
+                        var gd = $("#Issue_grid").data("kendoGrid");
+                        filter_row(gd);
+                    },
+                    change: selectRow,
+                    height: 450,
+                    sortable: true,
+                    selectable: true,
+                    selectable: "singl",   //  Grid Row Selection
+                    pageable: {
+                        refresh: false,
+                        pageSizes: true,
+                        buttonCount: 5
+                    },
+                    navigatable: true,
+                    groupable: false,
+                    columns: [
+                        {
+                            field: "Out_inward_rowid",
+                            title: "inward_rowid",
+                            hidden: true,
+                        },
+                        {
+                            field: "Out_ic_code",
+                            title: "ic_code",
+                            hidden: true,
+                        },
+                        {
+                            field: "Out_ic_name",
+                            title: "Input Centre Name",
+
+                            filterable: {
+                                extra: false,
+                                operators: {
+                                    string: {
+                                        contains: "Contains"
+                                    }
+                                }
+                            },
+                            width: 200
+                        },
+                        {
+                            field: "product_code",
+                            title: "Product Name",
+                            filterable: {
+                                extra: false,
+                                operators: {
+                                    string: {
+                                        contains: "Contains"
+                                    }
+                                }
+                            },
+                            width: 200
+                        },
+
+
+                        {
+                            field: "Out_grn_no",
+                            title: "GRN NO",
+                            filterable: {
+                                extra: false,
+                                operators: {
+                                    string: {
+                                        contains: "Contains"
+                                    }
+                                }
+                            },
+                            width: 150
+                        },
+                        {
+                            field: "Out_grn_date",
+                            title: "GRN Date",
+                            filterable: {
+                                extra: false,
+                                operators: {
+                                    string: {
+                                        contains: "Contains"
+                                    }
+                                }
+                            },
+                            width: 150
+                        },
+                        {
+                            field: "Out_supplier_name",
+                            title: "Suplier Name",
+                            hidden: true,
+                            width: 200
+                        },
+                        {
+                            field: "Out_product_name",
+                            title: "product Name",
+                            hidden: true,
+                            width: 200
+                        },
+                        {
+                            field: "Out_supplier_location",
+                            title: "Suplier Location",
+                            hidden: true,
+                            width: 150
+                        },
+                        {
+                            field: "Out_from_state",
+                            title: "From State",
+                            hidden: true,
+                            width: 150
+                        },
+                        {
+                            field: "Out_status_code",
+                            title: "Status",
+                            hidden: true,
+                        },
+                        {
+                            field: "received_qty",
+                            title: "Received Qty",
+                            template: '#= kendo.toString(received_qty, "n2") #',
+                            attributes: { style: "text-align:right;" },
+                        },
+                        {
+                            field: "accepted_qty",
+                            title: "Accepted Qty",
+                            template: '#= kendo.toString(accepted_qty, "n2") #',
+                            attributes: { style: "text-align:right;" },
+                        },
+                        {
+                            field: "uom_code",
+                            title: "uom_code",
+                            hidden: true,
+                            width: 150
+                        },
+                        {
+                            field: "noofstock",
+                            title: "noofstock",
+                            hidden: true,
+                            width: 150
+                        }
+                    ]
+                });
+            $(".k-dropdown-operator").css('display', 'none');
+            $("#Issue_grid .k-input").attr('disabled', 'false');
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function selectRow() {
+        debugger;
+        try {
+            var grid = $("#Issue_grid").data("kendoGrid");
+            var selectedItem = grid.dataItem(grid.select());
+            setlocalStorage("ls_pageList", selectedItem);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>
+
+    $("#btn_Edit").bind("click", function () {
+        getSerializedSelectedRows('edit');
+    });
+    $("#btn_View").bind("click", function () {
+        getSerializedSelectedRows('view');
+    });
+    $("#btn_new").bind("click", function () {
+        debugger;
+        btn_onClick('Create');
+        location.href = "../ICDStockIssue/IssueConfirmForm";
+    });
+
+    function getSerializedSelectedRows(mode) {
+        try {
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var items = getlocalStorage("ls_pageList");
+                if (items.length == 0) {
+                    kendoAlert("Please select records");
+                }
+
+                else {
+                    if (mode == "edit") {
+                        btn_onClick('Edit');
+                        location.href = "../ICDStockIssue/IssueConfirmForm";
+                    }
+                    else if (mode == "view") {
+                        btn_onClick('View');
+                        location.href = "../ICDStockIssue/IssueConfirmForm";
+                    }
+                }
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+</script>
+<script>
+    function generate_Stockinward_list(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                $("#gd_issue").empty();
+                $("#gd_issue").append("<div id='Issue_grid'></div>");
+                Issuegrid(data);
+            }
+            else {
+                Issuegrid([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function listRefresh() {
+        try {
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>

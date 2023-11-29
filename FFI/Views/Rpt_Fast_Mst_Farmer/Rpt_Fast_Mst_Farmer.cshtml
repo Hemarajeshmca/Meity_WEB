@@ -1,0 +1,19 @@
+﻿
+@{
+    ViewData["Title"] = "Sample Farmer Report";
+}
+
+<form id="Reportfarmer" class="form-horizontal" data-role="validator" novalidate="novalidate">
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <input type="button" class="addYourCSSClassHere" value="Back" onclick="window.location= '@Url.Action( "Reportlist", "Reportlist" )'" />
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+
+
+@await ViewBag.WebReport.Render()

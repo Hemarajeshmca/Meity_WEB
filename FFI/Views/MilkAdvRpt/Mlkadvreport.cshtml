@@ -1,0 +1,291 @@
+﻿@{
+    ViewBag.Form = "Milk Advance Amount Report";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+<form id="mlkadvrpt" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px;padding-top:12px;">
+                <div class="col-xs-4" style="display:none">
+                    <div class=" form-group">
+                        <label for="ic_code" class=" col-sm-5 control-label">Revenue Report</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="ic_code" name="ic_code" class="form-control" maxlength="50" disabled>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    @*<div class="col-sm-3">
+
+                        <label for="cmb_reqtype" class="col-sm-3 control-label required">Module</label>
+                        <div class="col-sm-6  ">
+                            @Html.DropDownList("FromJson", new SelectList(Enumerable.Empty<SelectListItem>()), new { @class = "drpdwn" })
+
+                        </div>
+
+
+                    </div>*@
+                    <div class="col-sm-3">
+
+                        <label for="txt_fromdate" class="col-sm-4 control-label required">Date From</label>
+                        <div class="col-sm-8">
+                            <input class="cusDate" data-role='datepicker' id="txt_fromdate" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="From_date" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <label for="txt_todate" class="col-sm-3 control-label required">Date To</label>
+                        <div class="col-sm-8">
+                            <input class="cusDate" data-role='datepicker' id="txt_todate" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="To_date" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                    <button id="refresh" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button"
+                            data-original-title="Refresh">
+                        <span class="glyphicon glyphicon-refresh"></span>
+                    </button>
+
+                    <div class="pull-right">
+                        <button id="clear" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button"
+                                data-original-title="clear" onclick="listclear()">
+                            clear
+                        </button>
+                        <a data-toggle="modal" class="Export btn btn-sm btn-info" href="~/ExportExcel/ExportExcel" hdrtitle="" data-target="#exportexcelModal"><span class=" glyphicon glyphicon-export mr"></span></a>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+
+                            <div id="gd_ser">
+                                <div id="revexgrid_grid"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="~/CommonScripts/Common_func.js"></script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+<style>
+    .drpdwn {
+        width: 137px;
+        height: 30px;
+        border-radius: 4px;
+        border: 1px solid #AAAAAA;
+    }
+</style>
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+        //var jso = ["PAWHS", "ICD", "FARMLEASE"]
+        //for (var i in jso) {
+        //    $("#FromJson").append('<option value="' + jso[i] + '">' + jso[i] + '</option>');
+        //}
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#mlkadvrpt");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        $("#Topsubheader").show();
+        $("#bottomFooter").show();
+        $("#bottom_menus").hide();
+        $("#btndiv").show();
+        $("#frmlayerdiv").hide();
+        $("#divCreate").hide();
+        $("#divEdit").hide();
+        $("#divView").show();
+        $("#DocStat").show();
+        $(".edtviw_item").show();
+        $(".create_item").hide();
+        $('#btnExport').hide();
+        $(".Export").attr("hdrtitle", "Farmer Advance List");
+        $(".Export").attr("SubTreeId", "Advance Report");
+        var org_id = getlocalStorage('org_id');
+        //var userId = getlocalStorage('User_Id_Value');
+        console.log(org_id);
+        //console.log(userId);
+        $("#txt_fromdate").kendoDatePicker({
+            max: new Date(),// sets max date
+            format: "dd/MM/yyyy"
+        });
+        $("#txt_todate").kendoDatePicker({
+            max: new Date(),// sets max date
+            format: "dd/MM/yyyy"
+        });
+        listgrid();
+    });
+
+    $(function () {
+        $('#refresh').click(function () {
+            var from_date1 = $("#txt_fromdate").val();
+            var to_date1 = $("#txt_todate").val();
+            var userId = getlocalStorage('User_Id_Value');
+            if (from_date1 != "" && to_date1 != "" && $('#FromJson').val() != "") {
+                //var from_date1 = $("#txt_fromdate").val();
+                // var to_date1 = $("#txt_todate").val();
+
+                var parts = from_date1.split('/');
+                var from_date = parts[2] + '-' + parts[1] + '-' + parts[0];
+                var parts1 = to_date1.split('/');
+                var to_date = parts1[2] + '-' + parts1[1] + '-' + parts1[0];
+                var org_id = getlocalStorage('org_id');
+                //var cmb_code = $("#FromJson").val();
+                $.ajax({
+                    type: "POST",
+                    data: '{fromdate:"' + from_date + '",todate:"' + to_date + '",usrid:"' + userId + '"}',
+                    url: "/MilkAdvRpt/MILKADVReport",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        console.log(response)
+                        listgrid(response);
+                    },
+                    error: function (er) {
+                        alert(er)
+                        console.log(er)
+                    }
+                });
+            }
+            else {
+                if (from_date1 == "") {
+                    kendoAlert('Please Select From Date');
+                }
+                else if (to_date1 == "") {
+                    kendoAlert('Please Select To Date');
+                }
+
+            }
+
+            return false;
+        });
+    });
+    function listclear() {
+        try {
+
+            listgrid([]);
+            $('#mlkadvrpt').find('input:text').val('');
+            //location.reload();
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+
+
+<script>
+
+    function listgrid(data) {
+        $("#revexgrid_grid").kendoGrid({
+            dataSource: {
+                data: data,
+                schema: {
+                    model: {
+                        fields: {
+
+                            rehead: { type: "string", required: true },
+                            redate: { type: "string", required: true },
+                            redesc: { type: "string", required: true },
+                            rebill: { type: "string", required: true },
+                            reamt: { type: "number", defaultValue: "0" },
+                            emat: { type: "number", defaultValue: "0" },
+
+
+                        }
+                    }
+                },
+                aggregate: [{ field: "reamt", aggregate: "sum" },
+                { field: "emat", aggregate: "sum" }],
+                pageSize: 10
+            },
+            toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+            excelExport: function (e) {
+                var gd = $("#revexgrid_grid").data("kendoGrid");
+                var len = gd.dataSource._data.length;
+                var chkall = $('#chkall').is(':checked');
+                var chkfilter = $('#chkfilter').is(':checked');
+                var chktemp = $('#chktemp').is(':checked');
+                var twokendobox = true;
+                gd.dataSource.pageSize(len);
+                if (e.sender.dataSource._data.length == len) {
+                    twokendobox = false;
+                    exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                }
+                else {
+                    exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                }
+                gd.dataSource.pageSize('10');
+                return false;
+            },
+            height: 450,
+            scrollable: true,
+            sortable: true,
+            pageable: {
+                refresh: false,
+                pageSizes: true,
+                previousNext: false,
+                buttonCount: 8
+            },
+
+            columns: [
+
+                  {
+                      field: "milksession_code",
+                      title: "Session ID",
+                      width: 80,
+
+                  },
+                   {
+                       field: "farmer_code",
+                       title: "Farmer Code",
+                       width: 80,
+                     
+
+                   },
+                    {
+                        field: "milkman_code",
+                        title: "Milkman Code",
+                        width: 80,
+
+                    },
+
+              {
+                  field: "farmer_name",
+                  title: "Farmer Name",
+              
+                  width: 60
+
+              },
+              {
+                  field: "received_qty",
+                  title: "Received Milk Amount",
+                  width: 80,
+               
+                  attributes: { style: "text-align:right;" }
+
+              },
+
+
+              {
+                  field: "advance_amount",
+                  title: "Advance Amount",
+                  width: 60, 
+                  attributes: { style: "text-align:right;" }
+
+              },
+
+            ],
+            editable: false,
+
+        });
+
+    }
+
+</script>
+

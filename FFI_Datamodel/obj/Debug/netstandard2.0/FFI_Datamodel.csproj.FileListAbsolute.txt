@@ -1,0 +1,74 @@
+E:\FRONTEND_KANCHI\FFI_Datamodel\bin\Debug\netstandard2.0\FFI_Datamodel.deps.json
+E:\FRONTEND_KANCHI\FFI_Datamodel\bin\Debug\netstandard2.0\FFI_Datamodel.dll
+E:\FRONTEND_KANCHI\FFI_Datamodel\bin\Debug\netstandard2.0\FFI_Datamodel.pdb
+E:\FRONTEND_KANCHI\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.csprojAssemblyReference.cache
+E:\FRONTEND_KANCHI\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.AssemblyInfoInputs.cache
+E:\FRONTEND_KANCHI\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.AssemblyInfo.cs
+E:\FRONTEND_KANCHI\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.csproj.CoreCompileInputs.cache
+E:\FRONTEND_KANCHI\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.dll
+E:\FRONTEND_KANCHI\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.pdb
+F:\Aruljothi\Kanchi-Solutions\FRONTEND_KANCHI\FRONTEND_KANCHI\FFI_Datamodel\bin\Debug\netstandard2.0\FFI_Datamodel.deps.json
+F:\Aruljothi\Kanchi-Solutions\FRONTEND_KANCHI\FRONTEND_KANCHI\FFI_Datamodel\bin\Debug\netstandard2.0\FFI_Datamodel.dll
+F:\Aruljothi\Kanchi-Solutions\FRONTEND_KANCHI\FRONTEND_KANCHI\FFI_Datamodel\bin\Debug\netstandard2.0\FFI_Datamodel.pdb
+F:\Aruljothi\Kanchi-Solutions\FRONTEND_KANCHI\FRONTEND_KANCHI\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.csprojAssemblyReference.cache
+F:\Aruljothi\Kanchi-Solutions\FRONTEND_KANCHI\FRONTEND_KANCHI\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.csproj.CoreCompileInputs.cache
+F:\Aruljothi\Kanchi-Solutions\FRONTEND_KANCHI\FRONTEND_KANCHI\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.AssemblyInfoInputs.cache
+F:\Aruljothi\Kanchi-Solutions\FRONTEND_KANCHI\FRONTEND_KANCHI\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.AssemblyInfo.cs
+F:\Aruljothi\Kanchi-Solutions\FRONTEND_KANCHI\FRONTEND_KANCHI\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.dll
+F:\Aruljothi\Kanchi-Solutions\FRONTEND_KANCHI\FRONTEND_KANCHI\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.pdb
+E:\B.Sanchu\FrontEnd\KANCHI_Uppro_Updated_56\KANCHI_Uppro_Updated_56\FFI_Datamodel\bin\Debug\netstandard2.0\FFI_Datamodel.deps.json
+E:\B.Sanchu\FrontEnd\KANCHI_Uppro_Updated_56\KANCHI_Uppro_Updated_56\FFI_Datamodel\bin\Debug\netstandard2.0\FFI_Datamodel.dll
+E:\B.Sanchu\FrontEnd\KANCHI_Uppro_Updated_56\KANCHI_Uppro_Updated_56\FFI_Datamodel\bin\Debug\netstandard2.0\FFI_Datamodel.pdb
+E:\B.Sanchu\FrontEnd\KANCHI_Uppro_Updated_56\KANCHI_Uppro_Updated_56\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.csprojAssemblyReference.cache
+E:\B.Sanchu\FrontEnd\KANCHI_Uppro_Updated_56\KANCHI_Uppro_Updated_56\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.AssemblyInfoInputs.cache
+E:\B.Sanchu\FrontEnd\KANCHI_Uppro_Updated_56\KANCHI_Uppro_Updated_56\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.AssemblyInfo.cs
+E:\B.Sanchu\FrontEnd\KANCHI_Uppro_Updated_56\KANCHI_Uppro_Updated_56\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.csproj.CoreCompileInputs.cache
+E:\B.Sanchu\FrontEnd\KANCHI_Uppro_Updated_56\KANCHI_Uppro_Updated_56\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.dll
+E:\B.Sanchu\FrontEnd\KANCHI_Uppro_Updated_56\KANCHI_Uppro_Updated_56\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.pdb
+F:\Arul\LIVE-UPPRO\KANCHI_Uppro_Updated_59\FFI_Datamodel\bin\Debug\netstandard2.0\FFI_Datamodel.deps.json
+F:\Arul\LIVE-UPPRO\KANCHI_Uppro_Updated_59\FFI_Datamodel\bin\Debug\netstandard2.0\FFI_Datamodel.dll
+F:\Arul\LIVE-UPPRO\KANCHI_Uppro_Updated_59\FFI_Datamodel\bin\Debug\netstandard2.0\FFI_Datamodel.pdb
+F:\Arul\LIVE-UPPRO\KANCHI_Uppro_Updated_59\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.AssemblyInfoInputs.cache
+F:\Arul\LIVE-UPPRO\KANCHI_Uppro_Updated_59\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.AssemblyInfo.cs
+F:\Arul\LIVE-UPPRO\KANCHI_Uppro_Updated_59\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.csproj.CoreCompileInputs.cache
+F:\Arul\LIVE-UPPRO\KANCHI_Uppro_Updated_59\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.dll
+F:\Arul\LIVE-UPPRO\KANCHI_Uppro_Updated_59\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.pdb
+F:\Arul\LIVE-UPPRO\KANCHI_Uppro_Updated_59\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.csprojAssemblyReference.cache
+D:\Ramya\Kanchi\Projects\Uttra Pradesh\Production\From Vinoth\KANCHI_Uppro_Updated_59\FFI_Datamodel\bin\Debug\netstandard2.0\FFI_Datamodel.deps.json
+D:\Ramya\Kanchi\Projects\Uttra Pradesh\Production\From Vinoth\KANCHI_Uppro_Updated_59\FFI_Datamodel\bin\Debug\netstandard2.0\FFI_Datamodel.dll
+D:\Ramya\Kanchi\Projects\Uttra Pradesh\Production\From Vinoth\KANCHI_Uppro_Updated_59\FFI_Datamodel\bin\Debug\netstandard2.0\FFI_Datamodel.pdb
+D:\Ramya\Kanchi\Projects\Uttra Pradesh\Production\From Vinoth\KANCHI_Uppro_Updated_59\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.csprojAssemblyReference.cache
+D:\Ramya\Kanchi\Projects\Uttra Pradesh\Production\From Vinoth\KANCHI_Uppro_Updated_59\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.csproj.CoreCompileInputs.cache
+D:\Ramya\Kanchi\Projects\Uttra Pradesh\Production\From Vinoth\KANCHI_Uppro_Updated_59\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.AssemblyInfoInputs.cache
+D:\Ramya\Kanchi\Projects\Uttra Pradesh\Production\From Vinoth\KANCHI_Uppro_Updated_59\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.AssemblyInfo.cs
+D:\Ramya\Kanchi\Projects\Uttra Pradesh\Production\From Vinoth\KANCHI_Uppro_Updated_59\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.dll
+D:\Ramya\Kanchi\Projects\Uttra Pradesh\Production\From Vinoth\KANCHI_Uppro_Updated_59\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.pdb
+D:\MIT UP\KANCHI_Uppro_mit_Updated_01\KANCHI_Uppro_Updated_100\FFI_Datamodel\bin\Debug\netstandard2.0\FFI_Datamodel.deps.json
+D:\MIT UP\KANCHI_Uppro_mit_Updated_01\KANCHI_Uppro_Updated_100\FFI_Datamodel\bin\Debug\netstandard2.0\FFI_Datamodel.dll
+D:\MIT UP\KANCHI_Uppro_mit_Updated_01\KANCHI_Uppro_Updated_100\FFI_Datamodel\bin\Debug\netstandard2.0\FFI_Datamodel.pdb
+D:\MIT UP\KANCHI_Uppro_mit_Updated_01\KANCHI_Uppro_Updated_100\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.csproj.AssemblyReference.cache
+D:\MIT UP\KANCHI_Uppro_mit_Updated_01\KANCHI_Uppro_Updated_100\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.GeneratedMSBuildEditorConfig.editorconfig
+D:\MIT UP\KANCHI_Uppro_mit_Updated_01\KANCHI_Uppro_Updated_100\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.AssemblyInfoInputs.cache
+D:\MIT UP\KANCHI_Uppro_mit_Updated_01\KANCHI_Uppro_Updated_100\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.AssemblyInfo.cs
+D:\MIT UP\KANCHI_Uppro_mit_Updated_01\KANCHI_Uppro_Updated_100\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.csproj.CoreCompileInputs.cache
+D:\MIT UP\KANCHI_Uppro_mit_Updated_01\KANCHI_Uppro_Updated_100\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.dll
+D:\MIT UP\KANCHI_Uppro_mit_Updated_01\KANCHI_Uppro_Updated_100\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.pdb
+E:\Prema\Meity Kanchi\GIT\FEB-06-2023\WEB\meity-web-frontend\FFI_Datamodel\bin\Debug\netstandard2.0\FFI_Datamodel.deps.json
+E:\Prema\Meity Kanchi\GIT\FEB-06-2023\WEB\meity-web-frontend\FFI_Datamodel\bin\Debug\netstandard2.0\FFI_Datamodel.dll
+E:\Prema\Meity Kanchi\GIT\FEB-06-2023\WEB\meity-web-frontend\FFI_Datamodel\bin\Debug\netstandard2.0\FFI_Datamodel.pdb
+E:\Prema\Meity Kanchi\GIT\FEB-06-2023\WEB\meity-web-frontend\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.csprojAssemblyReference.cache
+E:\Prema\Meity Kanchi\GIT\FEB-06-2023\WEB\meity-web-frontend\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.AssemblyInfoInputs.cache
+E:\Prema\Meity Kanchi\GIT\FEB-06-2023\WEB\meity-web-frontend\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.AssemblyInfo.cs
+E:\Prema\Meity Kanchi\GIT\FEB-06-2023\WEB\meity-web-frontend\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.csproj.CoreCompileInputs.cache
+E:\Prema\Meity Kanchi\GIT\FEB-06-2023\WEB\meity-web-frontend\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.dll
+E:\Prema\Meity Kanchi\GIT\FEB-06-2023\WEB\meity-web-frontend\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.pdb
+D:\Live\Meity\Updated\FEB-06-2023\WEB\meity-web-frontend\FFI_Datamodel\bin\Debug\netstandard2.0\FFI_Datamodel.deps.json
+D:\Live\Meity\Updated\FEB-06-2023\WEB\meity-web-frontend\FFI_Datamodel\bin\Debug\netstandard2.0\FFI_Datamodel.dll
+D:\Live\Meity\Updated\FEB-06-2023\WEB\meity-web-frontend\FFI_Datamodel\bin\Debug\netstandard2.0\FFI_Datamodel.pdb
+D:\Live\Meity\Updated\FEB-06-2023\WEB\meity-web-frontend\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.csproj.AssemblyReference.cache
+D:\Live\Meity\Updated\FEB-06-2023\WEB\meity-web-frontend\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.GeneratedMSBuildEditorConfig.editorconfig
+D:\Live\Meity\Updated\FEB-06-2023\WEB\meity-web-frontend\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.AssemblyInfoInputs.cache
+D:\Live\Meity\Updated\FEB-06-2023\WEB\meity-web-frontend\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.AssemblyInfo.cs
+D:\Live\Meity\Updated\FEB-06-2023\WEB\meity-web-frontend\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.csproj.CoreCompileInputs.cache
+D:\Live\Meity\Updated\FEB-06-2023\WEB\meity-web-frontend\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.dll
+D:\Live\Meity\Updated\FEB-06-2023\WEB\meity-web-frontend\FFI_Datamodel\obj\Debug\netstandard2.0\FFI_Datamodel.pdb

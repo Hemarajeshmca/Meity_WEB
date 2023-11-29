@@ -1,0 +1,10 @@
+D:\Live\Meity\Updated\FEB-06-2023\WEB\meity-web-frontend\FFI_Datamodel\bin\Release\netstandard2.0\FFI_Datamodel.deps.json
+D:\Live\Meity\Updated\FEB-06-2023\WEB\meity-web-frontend\FFI_Datamodel\bin\Release\netstandard2.0\FFI_Datamodel.dll
+D:\Live\Meity\Updated\FEB-06-2023\WEB\meity-web-frontend\FFI_Datamodel\bin\Release\netstandard2.0\FFI_Datamodel.pdb
+D:\Live\Meity\Updated\FEB-06-2023\WEB\meity-web-frontend\FFI_Datamodel\obj\Release\netstandard2.0\FFI_Datamodel.csproj.AssemblyReference.cache
+D:\Live\Meity\Updated\FEB-06-2023\WEB\meity-web-frontend\FFI_Datamodel\obj\Release\netstandard2.0\FFI_Datamodel.GeneratedMSBuildEditorConfig.editorconfig
+D:\Live\Meity\Updated\FEB-06-2023\WEB\meity-web-frontend\FFI_Datamodel\obj\Release\netstandard2.0\FFI_Datamodel.AssemblyInfoInputs.cache
+D:\Live\Meity\Updated\FEB-06-2023\WEB\meity-web-frontend\FFI_Datamodel\obj\Release\netstandard2.0\FFI_Datamodel.AssemblyInfo.cs
+D:\Live\Meity\Updated\FEB-06-2023\WEB\meity-web-frontend\FFI_Datamodel\obj\Release\netstandard2.0\FFI_Datamodel.csproj.CoreCompileInputs.cache
+D:\Live\Meity\Updated\FEB-06-2023\WEB\meity-web-frontend\FFI_Datamodel\obj\Release\netstandard2.0\FFI_Datamodel.dll
+D:\Live\Meity\Updated\FEB-06-2023\WEB\meity-web-frontend\FFI_Datamodel\obj\Release\netstandard2.0\FFI_Datamodel.pdb

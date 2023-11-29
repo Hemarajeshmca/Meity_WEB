@@ -1,0 +1,317 @@
+﻿
+@{
+    ViewBag.List = "Milk Receipts";   
+    Layout = "~/Views/Shared/ListViewLayout.cshtml";
+}
+<form id="frm_milk_receipts" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="gd_milkcc">
+                <div id="MilkCC_grid"></div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    click_act_name = "MilkReceiptsCCForm";
+    click_ctrl_name = "MilkReceiptsCC";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+<script src="~/API_Scripts/milk_receipt_defaultfetch_APIClient.js"></script>
+<script src="~/API_Scripts/milk_receipt_retrievemilkreceipt_APIClient.js"></script>
+<script src="~/API_Scripts/milk_receipt_retrievemilkreceiptList_APIClient.js"></script>
+<script src="~/API_Scripts/milk_receipt_savemilkreceipt_APIClient.js"></script>
+<script src="~/API_Scripts/retrievemilkreceiptList_Model.js"></script>
+<script src="~/API_Scripts/retrievemilkreceipt_Model.js"></script>
+<script src="~/API_Scripts/savemilkreceipt_Model.js"></script>
+<script src="~/API_Scripts/defaultfetch_Model.js"></script>
+<script src="~/API_Scripts/MilkReceipts.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script>
+    $(document).ready(function () {
+
+        $(".adv_filter").attr("hdrtitle", "");
+        $(".adv_filter").attr("fltid", "");
+        $(".Export").attr("hdrtitle", "Milk Receipts List");
+        $(".Export").attr("SubTreeId", "CPRECPT");
+
+        Screen_Id = "CPRECPT";
+        permission = sec_Permission(Screen_Id);
+        page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+    });
+</script>
+
+
+<script>   
+    function listpageloadfetch() {
+        try{       
+            var formval = form_Serialize("frm_milk_receipts");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_Fromvalue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_Fromvalue = ".";
+            }
+            obj_val.FilterBy_Tovalue = ".";
+
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Filter = obj_val;
+            retrieve_milkreceipts_list(data);            
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err.message);
+        }
+    }
+
+    var status_Priority = [];
+    function milkccgrid(data) {
+        try {
+            $.each(data, function (index, value) {
+                var flag = false;
+                $.each(status_Priority, function (sindex, svalue) {
+                    if (svalue == value.status_desc) {
+                        flag = true;
+                    }
+                });
+                if (flag == false) {
+                    status_Priority.push(value.status_desc);
+                }
+            });
+            $("#MilkCC_grid").kendoGrid(
+             {
+                 dataSource: {
+                     data: data,
+                     pageSize: 20,
+                     change: function (e) {
+                         setTimeout(function () {
+                             var gd = $("#MilkCC_grid").data("kendoGrid");
+                             filter_row(gd);
+                             $('.k-i-close').css('display', 'none');
+                             $('button.k-button-icon').css('display', 'none');
+                             $('#MilkCC_grid .k-input').prop('disabled', false);
+                             $('#MilkCC_grid .k-input').prop('readonly', true);
+
+                         }, 1);
+                     },
+                 },
+                 toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                 excelExport: function (e) {
+                     var chkall = $('#chkall').is(':checked');
+                     var chkfilter = $('#chkfilter').is(':checked');
+                     var chktemp = $('#chktemp').is(':checked');
+                     var gd = $("#MilkCC_grid").data("kendoGrid");
+                     var len = gd.dataSource._data.length;
+                     gd.dataSource.pageSize(len);
+                     exportfunction(e, chkall, chkfilter, chktemp);
+                     gd.dataSource.pageSize('10');
+                 },
+                 filterable: {
+                     enabled: true,
+                     delay: 1500,
+                     mode: "menu, row",
+                     height: 200,
+                     click: function (e) {
+                         var gd = $("#MilkCC_grid").data("kendoGrid");
+                         filter_row(gd);
+                     }
+                 },
+                 filterMenuInit: function (e) {
+                     var gd = $("#MilkCC_grid").data("kendoGrid");
+                     filter_row(gd);
+                 },
+                 change: selectRow,
+                 height: 450,
+                 sortable: true,
+                 selectable: true,
+                 selectable: "singl",   //  Grid Row Selection
+                 pageable: {
+                     refresh: false,
+                     pageSizes: true,
+                     buttonCount: 5
+                 },
+                 navigatable: true,
+                 groupable: false,
+
+                 columns: [
+                        {
+                            field: "cpsession_rowid",
+                            title: "CP Session ID",
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            },
+                            hidden: true
+                        },
+
+                     {
+                         field: "session_date",
+                         title: "CP Session Date",
+                         filterable: {
+                             cell: {
+                                 operator: "contains",
+                                 inputWidth: 1500
+                             }
+                         }
+                     },
+
+                      {
+                          field: "cpsession_code",
+                          title: "CP Session ID",
+                          filterable: {
+                              cell: {
+                                  operator: "contains",
+                                  inputWidth: 1500
+                              }
+                          },
+                     
+                      },
+                      {
+                          field: "received_qty",
+                          title: "Milk Qty Received (Lts)",
+                          filterable: {
+                              cell: {
+                                  operator: "contains",
+                                  inputWidth: 1500
+                              }
+                          }
+                      },
+                     {
+                         field: "accepted_qty",
+                         title: "Milk Qty Accepted (Lts)",
+                         filterable: {
+                             cell: {
+                                 operator: "contains",
+                                 inputWidth: 1500
+                             }
+                         }
+                     },
+
+                     //{
+                     //    field: "milk_qty_rejected",
+                     //    title: "Milk Qty Rejected (Lts)",
+                     //    filterable: {
+                     //        cell: {
+                     //            operator: "contains",
+                     //            inputWidth: 1500
+                     //        }
+                     //    }
+                     //},
+                      {
+                          field: "status_code",
+                          title: "Status",
+                          hidden:true
+                      },
+
+                 {
+                     field: "status_desc",
+                     title: "Status",
+                     filterable: {
+                         cell: {
+                             operator: "contains",
+                             inputWidth: 1500
+                         }
+                     }
+                 },
+                 ]
+
+             });
+            $(".k-dropdown-operator").css('display', 'none');
+            $("#MilkCC_grid .k-input").attr('disabled', 'false');
+        }
+  catch (err) {
+        javascript_log4j_root(arguments.callee.name, err);
+    }
+}
+    function selectRow() {
+        var grid = $("#MilkCC_grid").data("kendoGrid");
+        var selectedItem = grid.dataItem(grid.select());
+        setlocalStorage("ls_pageList", selectedItem);
+    }
+
+    function statusFilter(element) {    // Dropdown list functionality
+        element.kendoDropDownList({
+            dataSource: status_Priority,
+            optionLabel: "--Select Value--"
+        });
+    }
+</script>
+
+
+<script>
+    $("#btn_Edit").bind("click", function () {
+        getSerializedSelectedRows('edit');
+    });
+
+    $("#btn_View").bind("click", function () {
+        getSerializedSelectedRows('view');
+    });
+
+    $("#btn_new").bind("click", function () {
+        btn_onClick('Create');
+        location.href = "../MilkReceiptsCC/MilkReceiptsCCForm";
+    });
+    function getSerializedSelectedRows(mode) {
+        try {
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var items = getlocalStorage("ls_pageList");
+                if (items.length == 0) {
+                    kendoAlert("Please select records");
+                }
+                else {
+                    if (mode == "edit") {
+                        btn_onClick('Edit');
+                        location.href = "../MilkReceiptsCC/MilkReceiptsCCForm";
+                    }
+                    else if (mode == "view") {
+                        btn_onClick('View');
+                        location.href = "../MilkReceiptsCC/MilkReceiptsCCForm";
+                    }
+                }
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>
+    function generate_milkreceipts_list(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                $("#gd_milkcc").empty();
+                $("#gd_milkcc").append("<div id='MilkCC_grid'></div>");
+                milkccgrid(data);
+            }
+            else {
+                milkccgrid([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function listRefresh() {
+        try {
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+
+
+
+

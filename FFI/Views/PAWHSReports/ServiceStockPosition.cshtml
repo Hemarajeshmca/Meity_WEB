@@ -1,0 +1,395 @@
+﻿@{
+    ViewBag.Form = "Stock Position";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+<form id="frm_stockposition" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <label for="farmer_name" class="col-sm-4 control-label required">Farmer Name</label>
+                    <div class="col-sm-6">
+                        <input id="farmer_name" name="farmer_name" data-role="filtercombo" data-bind="source:votingStatusList" style=" width:111%" readonly />
+                    </div>
+                    <div class="col-sm-1">
+                        <a class="HelpWindow fa fa-search fa-lg" role="button" id="pay_help2" data-toggle="modal" href="/HelpFilter/HelpFilter" hdrtitle="Farmer Details Search" searchid="S32" data-target="#HelpModal" onclick=transfer(this,"form","","form_control"); title="Search" style="font-size: 19px; "></a>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="farmer_code" class="col-sm-5 control-label required">Farmer Code</label>
+                        <div class="col-sm-6">
+                            <input id="farmer_code" name="farmer_code" data-role="filtercombo" style="width:111%" readonly />
+                        </div>
+                        <div class="col-sm-1">
+                            <button id="refresh" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button"
+                                    data-original-title="Refresh" onclick="listRefresh()">
+                                <span class="glyphicon glyphicon-refresh"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="pull-right" style="margin-top: 18px;">
+                        <button id="clear" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button"
+                                data-original-title="clear" onclick="listclear()">
+                            clear
+                        </button>
+                        <a data-toggle="modal" class="Export btn btn-sm btn-info" href="~/ExportExcel/ExportExcel" hdrtitle="" data-target="#exportexcelModal"><span class=" glyphicon glyphicon-export mr"></span></a>
+                    </div>
+
+                    <div class="col-sm-4" style="display:none">
+                        <div class="form-group">
+                            <label for="agg_code" class=" col-sm-4 control-label required">Agg Code</label>
+                            <div class="col-sm-6">
+                                <input id="agg_code" name="agg_code" data-role="filtercombo" style="width:100%" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="gd_stockpositionreport">
+                            <div id="StockPositionReport_grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </div>
+</form>
+@*<script src="~/API_Scripts/Loan_Disbursement_retrieveFLDisbursementAdviceGen_APIClient.js"></script>
+    <script src="~/API_Scripts/Loan_Disbursement_saveFLDisbursementAdviceGen_APIClient.js"></script>
+    <script src="~/API_Scripts/retrieveFLDisbursementAdviceGen_Model.js"></script>
+    <script src="~/API_Scripts/saveFLDisbursementAdviceGen_Model.js"></script>
+    <script src="~/API_Scripts/FLDisbursementAdvice.js"></script>*@
+<script src="~/CommonScripts/Common_func.js"></script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+@*<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+    <script src="~/CommonScripts/report.js"></script>*@
+<script>
+    click_act_name = "home ";
+    click_ctrl_name = "home";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+
+</script>
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#frm_stockposition");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        $("#Topsubheader").show();
+        $("#bottomFooter").show();
+        $("#bottom_menus").hide();
+        $("#btndiv").show();
+        $("#frmlayerdiv").hide();
+        $("#divCreate").hide();
+        $("#divEdit").hide();
+        $("#divView").show();
+        $("#DocStat").show();
+        $(".edtviw_item").show();
+        $(".create_item").hide();
+        $('#btnExport').hide();
+        $(".Export").attr("hdrtitle", "Service StockPosition Report");
+        $(".Export").attr("SubTreeId", "PAWHSSERSTOCKPOSITIONRPT");
+
+        Screen_Id = "PAWHSSERSTOCKPOSITIONRPT";
+        //load_master_code();
+        var org_id = getlocalStorage('org_id');
+        $('#ic_code').val(org_id);
+        permission = sec_Permission(Screen_Id);
+        page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+        var combo_data = "";
+        $("#farmer_code").empty();
+        $("#farmer_name").empty();
+        listgrid([]);
+    });
+</script>
+<script>
+    //function load_master_code() {
+    //    var data = {};
+    //    data.screen_Id = "PAWHSSERSTOCKPOSITIONRPT";
+    //    var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+    //}
+</script>
+
+<script>
+    $(function () {
+        $('#refresh').click(function () {
+            var farmer_code = $("#farmer_code").val();
+            var farmer_name = $('#farmer_name').val()
+            var org_id = getlocalStorage('org_id');
+            var datas = { "farmer_code": farmer_code, "farmer_name": farmer_name, "orgid": org_id };
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify(datas),
+                //data: '{farmer_code: "' + farmer_code + '",farmer_name:"' + farmer_name + '",orgid:"' + org_id + '"}',
+                url: "/PAWHSReports/ServiceStock_PositionReport",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    console.log(response)
+                    listgrid(response);
+
+                },
+                error: function (er) {
+                    console.log(er)
+                }
+
+            });
+            return false;
+        });
+    });
+
+    function listpageloadfetch() {
+        try {
+            if ($('#cmb_sanction').data("kendoComboBox").value() == "QCD_FL_Disbapproved") {
+                $("#divUserRole16 #btnnew").show();
+                $("#divUserRole16 #btnReport").hide();
+                selectitem = false;
+            }
+            else {
+                $("#divUserRole16 #btnnew").hide();
+                $("#divUserRole16 #btnReport").show();
+                //$("#closure_grid").data("kendoGrid").hideColumn(0);
+                //grid.hideColumn("loan_rowid");
+                //selectitem=true;
+            }
+            var formval = form_Serialize("frm_stockposition");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_Fromvalue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_Fromvalue = ".";
+            }
+            obj_val.FilterBy_Tovalue = ".";
+            if (obj_val.status_option == "" || obj_val.status_option == undefined) {
+                obj_val.status_option = "V";
+            }
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Filter = obj_val;
+            retrieve_FarmerLoanDisbursement_details(data);
+            var colCount = $("#StockPositionReport_grid").find('.k-grid-header colgroup > col').length;
+
+            //If There are no results place an indicator row
+            if ($("#StockPositionReport_grid").data("kendoGrid").dataSource._view.length == 0) {
+                $("#StockPositionReport_grid").find('.k-grid-content tbody')
+                    .append('<tr class="kendo-data-row"><td colspan="' +
+                        colCount +
+                   '" style="text-align:center; padding-top:10px;background-color:#AFE4FA"><b> No pending records available for the selected status; please try later!!!</b></td></tr>');
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    var status_Priority = [];
+    function listgrid(data) {
+        $("#StockPositionReport_grid").kendoGrid({
+            dataSource: {
+                data: data,
+                schema: {
+                    model: {
+                        fields: {
+
+                            item_code: { type: "string", required: true },
+                            item_name: { type: "string", required: true },
+                        }
+                    }
+                },
+                batch: true,
+                pageSize: 15,
+            },
+            toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+            excelExport: function (e) {
+                var gd = $("#StockPositionReport_grid").data("kendoGrid");
+                var len = gd.dataSource._data.length;
+                var chkall = $('#chkall').is(':checked');
+                var chkfilter = $('#chkfilter').is(':checked');
+                var chktemp = $('#chktemp').is(':checked');
+                var twokendobox = true;
+                gd.dataSource.pageSize(len);
+                if (e.sender.dataSource._data.length == len) {
+                    twokendobox = false;
+                    exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                }
+                else {
+                    exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                }
+                gd.dataSource.pageSize('10');
+                return false;
+            },
+
+            height: 450,
+            sortable: true,
+            selectable: true,
+
+            selectable: "singl",   //  Grid Row Selection
+            navigatable: true,
+            groupable: false,
+            pageable: {
+                refresh: false,
+                pageSizes: true,
+                previousNext: false,
+                buttonCount: 8
+            },
+            columns: [
+
+
+                 {
+                     field: "item_code",
+                     title: "Product Code",
+                     width: 80,
+
+                 },
+
+                 {
+                     field: "item_name",
+                     title: "Product Name",
+                     width: 80,
+
+                 },
+                    {
+                        field: "uom",
+                        title: "Uom Type",
+                        width: 80,
+
+                    },
+                    {
+                        field: "over_all_in_qty",
+                        title: "OverAll In Quantity",
+                        width: 80,
+                        attributes: { style: "text-align:right;" }
+                    },
+                    {
+                        field: "over_all_out_qty",
+                        title: "OverAll Out Quantity",
+                        width: 80,
+                        attributes: { style: "text-align:right;" }
+                    },
+
+                 {
+                     field: "over_all_current_qty",
+                     title: "Current Quantity",
+                     width: 80,
+                     attributes: { style: "text-align:right;" }
+                 },
+
+            ],
+            editable: true
+        });
+
+    }
+
+</script>
+<script>
+    function generate_FLDisbursementAdviceGen_list(res) {
+
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                $("#gd_stockpositionreport").empty();
+                $("#gd_stockpositionreport").append("<div id='StockPositionReport_grid'></div>");
+                listgrid(data);
+            }
+            else {
+                listgrid([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function get_FLDisbursementAdviceGen_details() {
+        try {
+            var formval = form_Serialize("frm_stockposition");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_Fromvalue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_Fromvalue = ".";
+            }
+            obj_val.FilterBy_Tovalue = ".";
+            obj_val.status_option = "V";
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Filter = obj_val;
+            retrieve_FarmerLoanDisbursement_details(data);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function listRefresh() {
+        try {
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function listclear() {
+        try {
+
+            listgrid([]);
+
+            $('#frm_stockposition').find('input:text').val('');
+            location.reload();
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function grid_control() {
+        var control_Name = [
+
+        ];
+        return control_Name;
+    }
+
+    function form_control() {
+        var control_Name = [
+
+            { "dataCol": "farmer_code", "controlId": "farmer_code", "type": "Text" },
+            { "dataCol": "farmer_name", "controlId": "farmer_name", "type": "Text" },
+            { "dataCol": "agg_code", "controlId": "agg_code", "type": "Text" }
+        ];
+        return control_Name;
+    }
+    function trans_input_data() {
+        var trans_coll = [
+            // { "trasfer": "Yes", "dataCol": "agg_code", "controlId": "ic_code", "grid_id": "", "grid_row_col": "" },
+            //{ "trasfer": "Yes", "dataCol": "item_name", "controlId": "item_name", "grid_id": "", "grid_row_col": "farmer_code" },
+            //{ "trasfer": "Yes", "dataCol": "item_code", "controlId": "item_code", "grid_id": "", "grid_row_col": "farmer_name" }
+        ];
+        return trans_coll;
+    }
+    function generate_Invoiceproduct_list(res) {
+        var dataItem = $("#StockPositionReport_grid").data("kendoGrid").dataSource.data()[0];
+
+        dataItem.set("ProductName", res[0].product_name);
+        dataItem.set("ProductCode", res[0].product_code);
+
+    }
+</script>
+
+

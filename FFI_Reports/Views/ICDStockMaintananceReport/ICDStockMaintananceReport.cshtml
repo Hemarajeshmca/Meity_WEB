@@ -1,0 +1,284 @@
+﻿
+@{
+    ViewBag.Form = "ICD Stock  Movement Report";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+<style>
+    a.k-button.k-button-icontext.k-grid-Edit, a.k-button.k-button-icontext.k-grid-View, a.k-button.k-button-icontext.k-grid-Delete, a.k-button.k-button-icontext.k-grid-edit {
+        background-color: #00c0ef;
+        border-color: #00c0ef;
+    }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.min.js"></script>
+<form id="frm_farmerexceptionalreport" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+
+            <div class="row" style="padding-bottom:15px;padding-top:12px;">
+                <div class="col-sm-12">
+                    <div class="row">
+                        
+                        <div class="form-group" style="margin-top:-10px">
+                            <div class=" col-sm-3" style="margin-left:20px">
+                                <label for="txtValidity" class=" col-md-4 control-label"> Start Date:</label>
+                                <input class="cusDate" type="date" data-role='datepicker' id="txtStartDate" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="In_Start_date" style="width:100%" />
+                                <span data-for='valid' class='k-invalid-msg'></span>
+                            </div>
+
+                            <div class=" col-sm-3">
+                                <label for="txtValidity" class=" col-md-4 control-label"> End Date:</label>
+                                <input class="cusDate" type="date" data-role='datepicker' id="txtEndDate" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="In_End_date" style="width:100%" />
+                                <span data-for='valid' class='k-invalid-msg'></span>
+                            </div>
+
+                            <div class=" col-sm-3" style="margin-top:26px">
+                                <button id="refresh" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button"
+                                        data-original-title="Refresh" style="margin-left:16px;">
+                                    Fetch Report
+                                </button>
+                                <label id="lblprog" style="color:red;display:none"> In Progress..Please Wait </label>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div id="gd_IcdReport">
+                                    <div id="icdrpt_grid"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+</form>
+
+<script src="~/CommonScripts/Common_func.js"></script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+<script src="~/CommonScripts/ExportExcel.js"></script>
+
+<script>
+    click_act_name = "home ";
+    click_ctrl_name = "home";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+
+</script>
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+        debugger;
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#frm_farmerexceptionalreport");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        $("#Topsubheader").show();
+        $("#bottomFooter").show();
+        $("#bottom_menus").hide();
+        $("#btndiv").show();
+        $("#frmlayerdiv").hide();
+        $("#divCreate").hide();
+        $("#divEdit").hide();
+        $("#divView").show();
+        $("#DocStat").show();
+        $(".edtviw_item").show();
+        $(".create_item").hide();
+
+        $(".Export").attr("hdrtitle", "ICD Report");
+        $(".Export").attr("SubTreeId", "ICDSTOCKRPT");
+
+        Screen_Id = "ICDSTOCKRPT";
+        permission = sec_Permission(Screen_Id);
+        setlocalStorage("ls_pageList", "");
+
+        $("#txtStartDate").kendoDatePicker({
+            max: new Date(),// sets max date to Jan 1st, 2013
+            format: "dd-MM-yyyy"
+        });
+
+        $("#txtEndDate").kendoDatePicker({
+            max: new Date(),// sets max date to Jan 1st, 2013
+            format: "dd-MM-yyyy"
+        });
+        /*  Prema added for fpo based abd ri user base loading*/
+        var role = getlocalStorage("orgn_level");
+        if (role == "ORG_FO") {
+            debugger;
+            $("#RIform").show();
+            $("#FPOform").show();
+            filter_combobox("cmb_RIBelongform", getlocalStorage("rilist"));
+            filter_combobox("cmb_FPOBelongform", getlocalStorage("fpolist"));
+            var cmb_riform3 = $("#cmb_RIBelongform").data("kendoComboBox");
+            cmb_riform3.value(getlocalStorage("org_id"));
+            $("#cmb_RIBelongform").data("kendoComboBox").enable(false);
+            $("#cmb_FPOBelongform").data("kendoComboBox").value("All");
+            $("#cmb_FPOBelongform").data("kendoComboBox").enable(true);
+            //var cmap_inselform = $("#cmb_FPOBelongform").data("kendoComboBox");
+            //cmap_inselform.value(getlocalStorage("org"));
+        }
+        if (role == "ORG_PF") {
+            debugger;
+            $("#RIform").show();
+            $("#FPOform").show();
+            filter_combobox("cmb_RIBelongform", getlocalStorage("rilist"));
+            filter_combobox("cmb_FPOBelongform", getlocalStorage("fpolist"));
+            $("#cmb_RIBelongform").data("kendoComboBox").value("All");
+            $("#cmb_FPOBelongform").data("kendoComboBox").value("All");
+            $("#cmb_RIBelongform").data("kendoComboBox").enable(true);
+            $("#cmb_FPOBelongform").data("kendoComboBox").enable(true);
+
+        }
+        if (role == "ORG_FPO") {
+            debugger;
+            $("#RIform").show();
+            $("#FPOform").show();
+            filter_combobox("cmb_RIBelongform", getlocalStorage("rilist"));
+            filter_combobox("cmb_FPOBelongform", getlocalStorage("fpolist"));
+            var cmb_riform3 = $("#cmb_RIBelongform").data("kendoComboBox");
+            cmb_riform3.value(getlocalStorage("parent_code"));
+            $("#cmb_RIBelongform").data("kendoComboBox").enable(false);
+            $("#cmb_FPOBelongform").data("kendoComboBox").enable(false);
+            var cmap_inselform = $("#cmb_FPOBelongform").data("kendoComboBox");
+            cmap_inselform.value(getlocalStorage("org_code"));
+        }
+        /*  prema ended*/
+
+    });
+
+</script>
+
+<script>
+    $(function () {
+        $('#refresh').click(function () {
+            debugger;
+            $('#refresh').hide();
+            $('#lblprog').show();
+            var startdate = $("#txtStartDate").val();
+            var enddate = $("#txtEndDate").val();
+            var org_id = getlocalStorage('org_id');
+            var data = { In_StartDate: startdate, In_EndDate: enddate, In_OrgnCode: org_id};
+            $.ajax({
+                type: "POST",              
+                data: data,
+                url: "/ICDStockMaintananceReport/Get_ICDStockMaintananceReport",
+                dataType: "json",
+                contentType: 'application/x-www-form-urlencoded', 
+                success: function (Data1) {
+                    $('#lblprog').hide();
+                    $('#refresh').show();
+                    $("#exportExcel").show();
+                    var columns = [];
+                    var chkval = Data1;
+                    var data = Data1;
+                    var i = 0;
+
+                    var entryIndex = "entries[" + i + "]";
+                    for (var key in data[0]) {
+                        debugger;
+                        var propType = typeof data[0][key];
+
+                        if (key == "FPO Name" ) {
+                            columns.push({
+                                field: entryIndex,
+                                title: key,
+                                type: propType,
+                                width: 210,
+                                attributes: { style: "text-align: center;" },
+                                filterable: false,
+                            });
+                        } 
+
+                        if (key != "" && key != "FPO Name" ) {
+                            columns.push({
+                                field: entryIndex,
+                                title: key,
+                                type: propType,
+                                width: 160,
+                                attributes: { style: "text-align: center;" },
+                                filterable: true,
+                            });
+                        }
+
+                        i = i + 1;
+                        entryIndex = "entries[" + i + "]";
+                    }
+                    debugger;
+                    var rows = [];
+                    var data1 = Data1;
+
+                    $.each(data1, function (i, e) {
+                        var entryArray = [];
+                        $.each(e, function (key, val) {
+                            entryArray.push(val);
+                        });
+                        rows.push(kendo.observable({
+                            entries: entryArray
+                        }));
+                    });
+                    var viewModel = kendo.observable({
+                        gridRows: rows
+
+                    });
+                    var configuration = {
+                        height: 450,
+                        navigatable: true,
+                        groupable: false,
+                        editable: false,
+                        sortable: true,
+                        scrollable: true,
+                        attributes: { style: "text-align: center;" },
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        },
+                        pageable: {
+                            refresh: false,
+                            //  pageSizes: true,
+                            buttonCount: 5,
+                            pageSizes: [100, 200, 500, 2000, "All"]
+                        }, 
+                        pageSize: 100,
+                        resizable: true,
+                        persistSelection: true,
+                        selectable: "false",
+                        columns: columns,
+                        toolbar: ["excel"],
+                        excel: {
+                            fileName: "ICD Stock Movement Report.xlsx",
+                            filterable: true,
+                            allPages: false
+
+                        },
+                        rows: viewModel
+                    };
+
+                    $("#example").remove();
+                    $('#icdrpt_grid').append('<div id="example" style="position:relative;" class="k-content"><table id="grid1"  data-bind="source: gridRows" style="position:relative;overflow:scroll;width:100%"></table></div>');
+                    var timeEditGrid = $("#grid1").kendoGrid(configuration).data("kendoGrid");
+                    kendo.bind($("#grid1"), viewModel);
+                },
+
+                error: function (er) {
+                    $('#lblprog').hide();
+                    $('#refresh').show();
+                    alert(er)
+                    console.log(er)
+                }
+            });
+
+            return false;
+        });
+    });
+
+</script>
+<style>
+    .k-footerTemplate {
+        text-align: right;
+    }
+</style>

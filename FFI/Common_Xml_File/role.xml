@@ -1,0 +1,50 @@
+﻿<root>
+  <row>
+    <role_code>1</role_code>
+    <role_name>FIS Maker</role_name>
+    <orgn_type>ORG-FPO</orgn_type>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <role_code>2</role_code>
+    <role_name>FIS Checker</role_name>
+    <orgn_type>ORG-FPO</orgn_type>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <role_code>3</role_code>
+    <role_name>FPO Admin</role_name>
+    <orgn_type>ORG-FO</orgn_type>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <role_code>4</role_code>
+    <role_name>NAF Admin</role_name>
+    <orgn_type>ORG-PF</orgn_type>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <role_code>5</role_code>
+    <role_name>LRS Maker</role_name>
+    <orgn_type>ORG-FPO</orgn_type>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <role_code>6</role_code>
+    <role_name>LRS Checker</role_name>
+    <orgn_type>ORG-FPO</orgn_type>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <role_code>7</role_code>
+    <role_name>LRS Approver</role_name>
+    <orgn_type>ORG-FPO</orgn_type>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <role_code>8</role_code>
+    <role_name>Platform Admin</role_name>
+    <orgn_type>ORG-PF</orgn_type>
+    <status_code>Active</status_code>
+  </row>
+</root>

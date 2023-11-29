@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <row>
+    <code>ORG_PF</code>
+    <description>Platform</description>
+   </row>
+  <row>
+    <code>ORG_FO</code>
+    <description>Facilitator Org</description>
+  </row>
+  <row>
+    <code>ORG_FPO</code>
+    <description>FPO</description>
+  </row>
+  <row>
+    <code>MGO</code>
+    <description>Milk Aggregator Org</description>
+     </row>
+</root>

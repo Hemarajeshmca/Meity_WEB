@@ -1,0 +1,461 @@
+﻿@{
+    ViewBag.List = "Customer Master";
+    Layout = "~/Views/Shared/ListViewLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-xs-12">
+        <div id="CustomerMaster"></div>
+    </div>
+</div>
+
+<script src="~/API_Scripts/Customer_master_PAWHS_getCustomerMaster_APIClient.js"></script>
+<script src="~/API_Scripts/PAWHSCustomerMaster.js"></script>
+<script src="~/API_Scripts/Customer_master_PAWHS_getCustomerMasterList_APIClient.js"></script>
+<script src="~/API_Scripts/Customer_master_PAWHS_saveCustomerMaster_APIClient.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/API_Scripts/PAWHS_getCustomerMaster_Model.js"></script>
+<script src="~/API_Scripts/PAWHS_getCustomerMasterList_Model.js"></script>
+<script src="~/API_Scripts/PAWHS_saveCustomerMaster_Model.js"></script>
+<script src="~/CommonScripts/ExportExcel.js"></script>
+<script src="~/CommonScripts/Common_func.js"></script>
+
+
+<script>
+    $("#btn_Edit").bind("click", function () {
+        getSerializedSelectedRows('edit');
+    });
+
+    $("#btn_View").bind("click", function () {
+        getSerializedSelectedRows('View');
+    });
+
+    $("#btn_new").bind("click", function () {
+        btn_onClick('Create');
+        location.href = "../PAWHSCustomerMaster/CustomerMasterForm";
+    });
+</script>
+
+<script>
+
+    $(document).ready(function () {
+        CustomerList();
+        $(".adv_filter").attr("hdrtitle", "Customer Master Record");
+        $(".adv_filter").attr("fltid", "Cus_Mas");
+        $(".Export").attr("hdrtitle", "Customer Master List");
+
+        $(".Export").attr("SubTreeId", "PWCUSMAS");
+        list_grid_id = "CustomerMaster";
+        listpageloadfetch();
+
+        //var data = {};
+        //data.context = WebAPIProxy.getContext();
+        //   data.context.Filter = "";
+        Screen_Id = "PWCUSMAS";
+        permission = sec_Permission(Screen_Id);
+        page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+        filterhover();
+    });
+
+    function CustomerList(data) {
+        $("#CustomerMaster").kendoGrid({
+            excel: {
+                fileName: "Customer Master.xlsx",
+                filterable: true,
+                allPages: false
+            },
+            dataSource: {
+                data: data,
+                pageSize: 20,
+                change: function (e) {
+                    setTimeout(function () {
+                        var gd = $("#CustomerMaster").data("kendoGrid");
+                        filter_row(gd);
+                        $('.k-i-close').css('display', 'none');
+                        $('button.k-button-icon').css('display', 'none');
+                        $('#CustomerMaster .k-input').prop('disabled', false);
+                        $('#CustomerMaster .k-input').prop('readonly', true);
+
+                    }, 1);
+                },
+            },
+            toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+
+            excelExport: function (e) {
+                debugger;
+                var gd = $("#CustomerMaster").data("kendoGrid");
+                var gd_fi = $("#CustomerMaster").data("kendoGrid").dataSource;
+                var filters = gd_fi.filter();
+                var allData = gd_fi.data();
+                var query = new kendo.data.Query(allData);
+                var data = query.filter(filters).data;
+                var data_tt = gd.dataSource.data();
+                var sheet = e.workbook.sheets[0];
+                var gridColumns = gd.columns;
+                var columns = gridColumns.map(function (col) {
+                    var hidden_vl = col.hidden;
+
+                    if (typeof (hidden_vl) == "undefined") {
+                        return {
+                            value: col.title ? col.title : col.field,
+                            autoWidth: true,
+                            background: "#7a7a7a",
+                            color: "#fff"
+                        }
+                    };
+                });
+                var rows = [{ cells: columns, type: "header" }];
+                for (var i = 0; i < data.length; i++) {
+                    var rowCells = [];
+                    for (var j = 0; j < gridColumns.length; j++) {
+
+                        var fieldName = gd.columns[j].hidden;
+                        if (typeof (fieldName) === "undefined") {
+                            var cellValue = data[i][gridColumns[j].field];
+                            rowCells.push({ value: cellValue });
+                        }
+                    }
+                    rows.push({ cells: rowCells, type: "data" });
+                }
+                sheet.rows = rows;
+                return false;
+            },
+            filterable: {
+                enabled: true,
+                delay: 1500,
+                mode: "menu, row",
+                height: 200,
+                click: function (e) {
+                    var gd = $("#CustomerMaster").data("kendoGrid");
+                    filter_row(gd);
+                }
+            },
+            filterMenuInit: function (e) {
+                var gd = $("#CustomerMaster").data("kendoGrid");
+                filter_row(gd);
+            },
+            dataBound: function (o) {
+                //var gd = $("#CustomerMaster").data("kendoGrid");
+                //for (var i = 0; i < gd.columns.length; i++) {
+                //    gd.showColumn(i);
+                //}
+                //$("div.k-group-indicator").each(function (i, v) {
+                //    gd.hideColumn($(v).data("field"));
+                //})
+            },
+            height: 450,
+            sortable: true,
+            selectable: true,
+            change: selectRow,
+            //change: onChangeSelection,
+            selectable: "singl",   //  Grid Row Selection
+            pageable: {
+                refresh: false,
+                pageSizes: true,
+                buttonCount: 5
+            },
+            navigatable: true,
+            groupable: false,
+
+
+            columns: [
+                //{
+
+                //    field: "action",
+                //    title: "Action",
+                //    width: 50,
+                 //},
+                 {
+                    field: "Out_customer_code",
+                     title: "C.M Code",
+                     width: 100,
+                     filterable: {
+                         cell: {
+                             operator: "contains",
+                             inputWidth: 1500
+                         }
+                     }
+                 },
+                  {
+                      field: "Out_customer_type",
+                      title: "C.M  Type",
+                      width: 100,
+                      filterable: {
+                          cell: {
+                              operator: "contains",
+                              inputWidth: 1500
+                          }
+                      }
+                  },
+        {
+            field: "Out_customer_name",
+            title: "C.M  Name",
+            width: 180,
+            filterable: {
+                cell: {
+                    operator: "contains",
+                    inputWidth: 1500
+                }
+            }
+        },
+          {
+              field: "Out_customer_addr1",
+              title: "C.M  Addr1",
+              width: 150,
+              filterable: {
+                  cell: {
+                      operator: "contains",
+                      inputWidth: 1500
+                  }
+              }
+          },
+            {
+                field: "Out_customer_addr2",
+                title: "C.M  Addr2",
+                width: 150,
+                filterable: {
+                    cell: {
+                        operator: "contains",
+                        inputWidth: 1500
+                    }
+                }
+            },
+            {
+                field: "Out_customer_village",
+                title: "Village",
+                width: 100,
+                filterable: {
+                    cell: {
+                        operator: "contains",
+                        inputWidth: 1500
+                    }
+                }
+            },
+        {
+            field: "Out_customer_panchayat",
+            title: "Panchayat",
+            width: 120,
+            filterable: {
+                cell: {
+                    operator: "contains",
+                    inputWidth: 1500
+                }
+            }
+        },
+        {
+            field: "Out_customer_taluk",
+            title: "Taluk",
+            width: 100,
+            filterable: {
+                cell: {
+                    operator: "contains",
+                    inputWidth: 1500
+                }
+            }
+        },
+        {
+            field: "Out_customer_dist",
+            title: "District",
+            width: 100,
+            filterable: {
+                cell: {
+                    operator: "contains",
+                    inputWidth: 1500
+                }
+            }
+        },
+            {
+                field: "Out_customer_country",
+                title: "Country",
+                hidden: true,
+                width: 100,
+                filterable: {
+                    cell: {
+                        operator: "contains",
+                        inputWidth: 1500
+                    }
+                }
+            },
+               
+                 {
+
+                     field: "Out_customer_rowid",
+                     title: "C.M Rowid",
+                     width: 100,
+                     filterable: {
+                         cell: {
+                             operator: "contains",
+                             inputWidth: 1500
+                         }
+                     },
+                     hidden: true,
+                 },
+           
+       
+            {
+                field: "Out_customer_state",
+                title: "State",
+                hidden:true,
+                width: 100,
+                filterable: {
+                    cell: {
+                        operator: "contains",
+                        inputWidth: 1500
+                    }
+                }
+            },
+        
+         {
+             field: "Out_customer_pincode",
+             title: "Pincode",
+             hidden: true,
+             width: 100,
+             filterable: {
+                 cell: {
+                     operator: "contains",
+                     inputWidth: 1500
+                 }
+             },
+             attributes: { style: "text-align:right;" },
+         },
+        {
+            field: "Out_status_code",
+            title: "Status",
+            hidden: true,
+            width: 100,
+            filterable: {
+                cell: {
+                    operator: "contains",
+                    inputWidth: 1500
+                }
+            }
+        }
+            ],
+        });
+        $(".k-dropdown-operator").css('display', 'none');
+        $("#LVMarker .k-input").attr('disabled', 'false');
+
+        var gridRowID = 1;
+        function sel_checkbox() {
+            gridRowID++;
+            return '<input id="chk_sel_' + gridRowID + '" class="checkbox" type="checkbox" />';
+        }
+
+    }
+
+    function selectRow() {
+
+        try {
+            var grid = $("#CustomerMaster").data("kendoGrid");
+            var selectedItem = grid.dataItem(grid.select());
+            setlocalStorage("ls_pageList", selectedItem);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function getSerializedSelectedRows(mode) {
+        try {
+            debugger;
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var items = getlocalStorage("ls_pageList");
+                if (items.length == 0) {
+                    kendoAlert("Please select records");
+                }
+
+                else {
+                    if (mode == "edit") {
+                        btn_onClick('Edit');
+                        location.href = "../PAWHSCustomerMaster/CustomerMasterForm";
+                    }
+                    else if (mode == "View") {
+                        btn_onClick('View');
+                        location.href = "../PAWHSCustomerMaster/CustomerMasterForm";
+                    }
+                }
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function listpageloadfetch() {
+        try {
+            var formval = form_Serialize("CustomerMaster");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_FromValue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_FromValue = ".";
+            }
+            obj_val.FilterBy_ToValue = ".";
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Filter = obj_val;
+            var Context = data.context;
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, Filter: Context.Filter }),
+                url: "/PAWHSCustomerMaster/ServiceList",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    if (response.context != null) {
+                        generate_Customer_list(response.context.List)
+                        //listgrid(response.context.List);
+                        //SetPager(response.context.Filter.out_record_count)
+                    }
+                    else {
+                        CustomerList([]);
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+            //retrieve_customermaster_list(data);
+            //setlocalStorage('flt_condition', "");
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function generate_Customer_list(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                $("#CustomerMaster").empty();
+                CustomerList(data);
+            }
+            else {
+                CustomerList([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function listRefresh() {
+        try {
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+

@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="05/28/2020 16:56:10" ReportInfo.Modified="05/28/2020 18:32:59" ReportInfo.CreatorVersion="2020.1.0.0">
+  <Styles Name="Standard">
+    <Style Name="Title" Font="Arial, 12pt, style=Bold"/>
+    <Style Name="Header" Font="Arial, 10pt, style=Bold"/>
+    <Style Name="Group" Font="Arial, 10pt, style=Bold"/>
+    <Style Name="Data" Font="Arial, 10pt"/>
+    <Style Name="Footer" Font="Arial, 10pt"/>
+    <Style Name="EvenRows" Fill.Color="WhiteSmoke" Font="Arial, 10pt"/>
+  </Styles>
+  <Dictionary>
+    <MySqlDataConnection Name="Connection" ConnectionString="rijcmlqJ9ltPwNsYyX+2oAnmCElmGIz/SJ0vefyWJNqFvJ9CpVcxZe7+FQFpmKpxbZDWz0V6JezihMLHf9zFqtmqW5z1reoeE6aFE0oiywaY8kXQSI=" CommandTimeout="0">
+      <TableDataSource Name="Table" DataType="System.Int32" Enabled="true" SelectCommand="call FIS_report_ANNUAL_DIVIDEND_REGISTER('UTRFPCL')">
+        <Column Name="RegisterID" DataType="System.String"/>
+        <Column Name="DeclaredDate" DataType="System.String"/>
+        <Column Name="Reference" DataType="System.String"/>
+        <Column Name="PayorBank" DataType="System.String"/>
+        <Column Name="MemberID" DataType="System.String"/>
+        <Column Name="FirstName" DataType="System.String"/>
+        <Column Name="LastName" DataType="System.String"/>
+        <Column Name="CertificateNo" DataType="System.String"/>
+        <Column Name="DistinctFrom" DataType="System.Int32"/>
+        <Column Name="DistinctTo" DataType="System.Int32"/>
+        <Column Name="DividendDue" DataType="System.String"/>
+        <Column Name="Paymode" DataType="System.String"/>
+        <Column Name="DespatchDate" DataType="System.String"/>
+        <Column Name="BankRefNo" DataType="System.String"/>
+        <Column Name="DespatchStatus" DataType="System.String"/>
+        <Column Name="Remarks" DataType="System.String"/>
+        <CommandParameter Name="orgnId" DataType="253"/>
+      </TableDataSource>
+    </MySqlDataConnection>
+    <Parameter Name="orgnId" DataType="System.String"/>
+  </Dictionary>
+  <ReportPage Name="Page1" PaperWidth="300" Watermark.Font="Arial, 60pt">
+    <ReportTitleBand Name="ReportTitle1" Width="1058.4" Height="37.8">
+      <TextObject Name="Text1" Width="1058.4" Height="37.8" Dock="Fill" Text="ANNUAL DIVIDEND REGISTER" HorzAlign="Center" VertAlign="Center" Font="Calibri, 14pt, style=Bold"/>
+    </ReportTitleBand>
+    <PageHeaderBand Name="PageHeader1" Top="41.8" Width="1058.4" Height="94.5">
+      <TableObject Name="Table1" Left="18.9" Top="9.45" Width="1039.5" Height="37.8" Border.Lines="All">
+        <TableColumn Name="Column1" Width="240.03"/>
+        <TableColumn Name="Column2" Width="211.68"/>
+        <TableColumn Name="Column3" Width="98.28"/>
+        <TableColumn Name="Column4" Width="230.58"/>
+        <TableColumn Name="Column5" Width="258.93"/>
+        <TableRow Name="Row1">
+          <TableCell Name="Cell1" Border.Lines="All" Text="Register ID" Font="Calibri, 11pt, style=Bold"/>
+          <TableCell Name="Cell2" Border.Lines="All" Text="[Table.RegisterID]" Font="Calibri, 11pt"/>
+          <TableCell Name="Cell3" Border.Lines="All" Font="Arial, 10pt"/>
+          <TableCell Name="Cell4" Border.Lines="All" Text="Dividend Declared Date" Font="Calibri, 11pt, style=Bold"/>
+          <TableCell Name="Cell5" Border.Lines="All" Text="[Table.DeclaredDate]" Font="Calibri, 11pt"/>
+        </TableRow>
+        <TableRow Name="Row2">
+          <TableCell Name="Cell6" Border.Lines="All" Text="Dividend Structure Reference" Font="Calibri, 11pt, style=Bold"/>
+          <TableCell Name="Cell7" Border.Lines="All" Text="[Table.Reference]" Font="Calibri, 11pt"/>
+          <TableCell Name="Cell8" Border.Lines="All" Font="Arial, 10pt"/>
+          <TableCell Name="Cell9" Border.Lines="All" Text="Payor Bank for Dividend" Font="Calibri, 11pt, style=Bold"/>
+          <TableCell Name="Cell10" Border.Lines="All" Text="[Table.PayorBank]" Font="Calibri, 11pt"/>
+        </TableRow>
+      </TableObject>
+      <TableObject Name="Table2" Left="18.9" Top="47.25" Width="1040.28" Height="47.25" Border.Lines="All">
+        <TableColumn Name="Column6" Width="86.69"/>
+        <TableColumn Name="Column7" Width="86.69"/>
+        <TableColumn Name="Column8" Width="86.69"/>
+        <TableColumn Name="Column9" Width="86.69"/>
+        <TableColumn Name="Column10" Width="86.69"/>
+        <TableColumn Name="Column11" Width="86.69"/>
+        <TableColumn Name="Column12" Width="86.69"/>
+        <TableColumn Name="Column13" Width="86.69"/>
+        <TableColumn Name="Column14" Width="86.69"/>
+        <TableColumn Name="Column15" Width="86.69"/>
+        <TableColumn Name="Column16" Width="77.24"/>
+        <TableColumn Name="Column17" Width="96.14"/>
+        <TableRow Name="Row3" Height="47.25">
+          <TableCell Name="Cell11" Border.Lines="All" Text="Member ID" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell12" Border.Lines="Right, Top, Bottom" Text="Member First Name" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell13" Border.Lines="Right, Top, Bottom" Text="Member Last Name" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell14" Border.Lines="Right, Top, Bottom" Text="Share Certificate No" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell15" Text="Distinct From" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell16" Border.Lines="All" Text="Distinct To" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell17" Text="Dividend Due" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell18" Border.Lines="All" Text="Paymode" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell19" Text="Despatch Date" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell20" Border.Lines="All" Text="Bank Ref No" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell21" Border.Lines="Right, Top, Bottom" Text="Despatch Status" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell22" Border.Lines="Right, Top, Bottom" Text="Remarks" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+        </TableRow>
+      </TableObject>
+    </PageHeaderBand>
+    <DataBand Name="Data1" Top="140.3" Width="1058.4" Height="47.25" EvenStyle="EvenRows" DataSource="Table">
+      <TableObject Name="Table1" Left="18.9" Width="1040.28" Height="47.25" Border.Lines="All">
+        <TableColumn Name="Column18" Width="86.69"/>
+        <TableColumn Name="Column19" Width="86.69"/>
+        <TableColumn Name="Column20" Width="86.69"/>
+        <TableColumn Name="Column21" Width="86.69"/>
+        <TableColumn Name="Column22" Width="86.69"/>
+        <TableColumn Name="Column23" Width="86.69"/>
+        <TableColumn Name="Column24" Width="86.69"/>
+        <TableColumn Name="Column25" Width="86.69"/>
+        <TableColumn Name="Column26" Width="86.69"/>
+        <TableColumn Name="Column27" Width="86.69"/>
+        <TableColumn Name="Column28" Width="77.24"/>
+        <TableColumn Name="Column29" Width="96.14"/>
+        <TableRow Name="Row4" Height="47.25">
+          <TableCell Name="Cell23" Border.Lines="All" Text="[Table.MemberID]" Font="Arial, 10pt"/>
+          <TableCell Name="Cell24" Border.Lines="Right, Top, Bottom" Text="[Table.FirstName]" Font="Arial, 10pt"/>
+          <TableCell Name="Cell25" Border.Lines="Right, Top, Bottom" Text="[Table.LastName]" Font="Arial, 10pt"/>
+          <TableCell Name="Cell26" Text="[Table.CertificateNo]" HorzAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell27" Border.Lines="All" Text="[Table.DistinctFrom]" HorzAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell28" Border.Lines="Right, Top, Bottom" Text="[Table.DistinctTo]" HorzAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell29" Border.Lines="Right, Top, Bottom" Text="[Table.DividendDue]" Font="Arial, 10pt"/>
+          <TableCell Name="Cell30" Border.Lines="Right, Top, Bottom" Text="[Table.Paymode]" HorzAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell31" Text="[Table.DespatchDate]" HorzAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell32" Border.Lines="All" Text="[Table.BankRefNo]" HorzAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell33" Border.Lines="Right, Top, Bottom" Text="[Table.DespatchStatus]" Font="Arial, 10pt"/>
+          <TableCell Name="Cell34" Border.Lines="Right, Top, Bottom" Text="[Table.Remarks]" Font="Arial, 10pt"/>
+        </TableRow>
+      </TableObject>
+    </DataBand>
+    <PageFooterBand Name="PageFooter1" Top="191.55" Width="1058.4" Height="18.9">
+      <TextObject Name="Text34" Width="1058.4" Height="18.9" Dock="Fill" Text="[PageN]" HorzAlign="Right" Font="Arial, 10pt" Style="Footer"/>
+    </PageFooterBand>
+  </ReportPage>
+</Report>

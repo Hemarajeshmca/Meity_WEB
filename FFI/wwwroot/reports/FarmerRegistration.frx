@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="05/13/2020 13:02:05" ReportInfo.Modified="05/13/2020 14:03:00" ReportInfo.CreatorVersion="2020.1.0.0">
+  <Dictionary>
+    <MySqlDataConnection Name="Connection1" ConnectionString="rijcmlqJ9ltPwNsYyX+2oAnmCElmGIz/SJ0vefyWJNqFvJ9CpVcxZe7+FQFpmKpxbZDWz0V6JezihMLHf9zFqtmqW5z1i5A88xs5cyUFN1VTXIiCxk=">
+      <TableDataSource Name="Table1" DataType="System.Int32" Enabled="true" SelectCommand="call report_FarmerBank ">
+        <Column Name="farmer_code" DataType="System.String"/>
+        <Column Name="farmer_name" DataType="System.String"/>
+        <Column Name="sur_name" DataType="System.String"/>
+        <Column Name="bank_acc_no" DataType="System.String"/>
+        <Column Name="bank_acc_type_desc" DataType="System.String"/>
+        <Column Name="bank_code" DataType="System.String"/>
+        <Column Name="bank_desc" DataType="System.String"/>
+        <Column Name="branch_code" DataType="System.String"/>
+        <Column Name="branch_desc" DataType="System.String"/>
+        <Column Name="ifsc_code" DataType="System.String"/>
+        <Column Name="dflt_dr_acc_desc" DataType="System.String"/>
+        <Column Name="dflt_cr_acc_desc" DataType="System.String"/>
+      </TableDataSource>
+    </MySqlDataConnection>
+    <MySqlDataConnection Name="Connection2" ConnectionString="rijcmlqJ9ltPwNsYyX+2oAnmCElmGIz/SJ0vefyWJNqFvJ9CpVcxZe7+FQFpmKpxbZDWz0V6JezihMLHf9zFqtmqW5z1n2+mBch9INaqJZno0HjrLU=">
+      <TableDataSource Name="Table2" DataType="System.Int32" Enabled="true" SelectCommand="call report_FarmerKYC">
+        <Column Name="farmer_code" DataType="System.String"/>
+        <Column Name="farmer_name" DataType="System.String"/>
+        <Column Name="sur_name" DataType="System.String"/>
+        <Column Name="proof_type_desc" DataType="System.String"/>
+        <Column Name="proof_doc_desc" DataType="System.String"/>
+        <Column Name="proof_doc_no" DataType="System.String"/>
+        <Column Name="proof_valid_till" DataType="System.String"/>
+      </TableDataSource>
+    </MySqlDataConnection>
+    <MySqlDataConnection Name="Connection" ConnectionString="rijcmlqJ9ltPwNsYyX+2oAnmCElmGIz/SJ0vefyWJNqFvJ9CpVcxZe7+FQFpmKpxbZDWz0V6JezihMLHf9zFqtmqW5z1nuQAxlP6RC9iE7aDssf5A4=">
+      <TableDataSource Name="Table" DataType="System.Int32" Enabled="true" SelectCommand=" call  report_FarmerRegistration()">
+        <Column Name="orgn_name" DataType="System.String"/>
+        <Column Name="farmer_code" DataType="System.String"/>
+        <Column Name="farmer_name" DataType="System.String"/>
+        <Column Name="sur_name" DataType="System.String"/>
+        <Column Name="fhw_name" DataType="System.String"/>
+        <Column Name="farmer_dob" DataType="System.String"/>
+        <Column Name="farmer_fig" DataType="System.String"/>
+        <Column Name="farmer_addr1" DataType="System.String"/>
+        <Column Name="farmer_addr2" DataType="System.String"/>
+        <Column Name="farmer_country" DataType="System.String"/>
+        <Column Name="farmer_state" DataType="System.String"/>
+        <Column Name="farmer_dist" DataType="System.String"/>
+        <Column Name="farmer_taluk" DataType="System.String"/>
+        <Column Name="farmer_panchayat" DataType="System.String"/>
+        <Column Name="farmer_village" DataType="System.String"/>
+        <Column Name="farmer_pincode" DataType="System.String"/>
+        <Column Name="marital_status" DataType="System.String"/>
+        <Column Name="gender_flag" DataType="System.String"/>
+        <Column Name="reg_mobile_no" DataType="System.String"/>
+      </TableDataSource>
+    </MySqlDataConnection>
+  </Dictionary>
+  <ReportPage Name="Page1" Landscape="true" PaperWidth="457" PaperHeight="210" Watermark.Font="Arial, 60pt">
+    <ReportTitleBand Name="ReportTitle1" Width="1651.86" Height="37.8"/>
+    <PageHeaderBand Name="PageHeader1" Top="41.8" Width="1651.86" Height="37.8">
+      <TextObject Name="Text1" Left="283.5" Width="292.95" Height="28.35" Text="Famer Registration Details&#13;&#10;" Font="Calibri, 14pt"/>
+    </PageHeaderBand>
+    <DataBand Name="Data1" Top="83.6" Width="1651.86" Height="28.35">
+      <SubreportObject Name="Subreport1" Left="9.45" Top="9.45" Width="94.5" Height="18.9" ReportPage="Page2"/>
+    </DataBand>
+    <DataBand Name="Data2" Top="115.95" Width="1651.86" Height="37.8" StartNewPage="true" PrintOnBottom="true">
+      <SubreportObject Name="Subreport2" Left="9.45" Top="9.45" Width="94.5" Height="18.9" ReportPage="Page3"/>
+    </DataBand>
+    <DataBand Name="Data3" Top="157.75" Width="1651.86" Height="37.8" StartNewPage="true" PrintOnBottom="true">
+      <SubreportObject Name="Subreport3" Left="9.45" Top="9.45" Width="94.5" Height="18.9" ReportPage="Page4"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page2" Landscape="true" PaperWidth="457" PaperHeight="210" Watermark.Font="Arial, 60pt">
+    <DataBand Name="Data4" Width="1651.86" Height="56.7" DataSource="Table">
+      <TableObject Name="Table3" Top="18.9" Width="1549.8" Height="28.35">
+        <TableColumn Name="Column1" Width="92.61"/>
+        <TableColumn Name="Column2" Width="102.06"/>
+        <TableColumn Name="Column3" Width="73.71"/>
+        <TableColumn Name="Column4" Width="73.71"/>
+        <TableColumn Name="Column5" Width="83.16"/>
+        <TableColumn Name="Column6" Width="85.05"/>
+        <TableColumn Name="Column7" Width="122.85"/>
+        <TableColumn Name="Column8" Width="113.4"/>
+        <TableColumn Name="Column10" Width="113.4"/>
+        <TableColumn Name="Column11" Width="94.5"/>
+        <TableColumn Name="Column14" Width="122.85"/>
+        <TableColumn Name="Column15" Width="113.4"/>
+        <TableColumn Name="Column16" Width="132.3"/>
+        <TableColumn Name="Column12" Width="113.4"/>
+        <TableColumn Name="Column13" Width="113.4"/>
+        <TableRow Name="Row1" Height="28.35">
+          <TableCell Name="Cell1" Text="[Table.farmer_code]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell2" Text="[Table.farmer_name]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell3" Text="[Table.sur_name]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell4" Text="[Table.fhw_name]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell5" Text="[Table.farmer_dob]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell6" Text="[Table.farmer_fig]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell7" Text="[Table.farmer_addr1]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell8" Text="[Table.farmer_addr2]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell10" Text="[Table.farmer_country]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell11" Text="[Table.farmer_state]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell14" Text="[Table.farmer_dist]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell15" Text="[Table.farmer_taluk]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell16" Text="[Table.farmer_panchayat]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell12" Text="[Table.farmer_pincode]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell13" Text="[Table.reg_mobile_no]" Font="Calibri, 10pt"/>
+        </TableRow>
+      </TableObject>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page3" Landscape="true" PaperWidth="457" PaperHeight="210" Watermark.Font="Arial, 60pt">
+    <DataBand Name="Data5" Width="1651.86" Height="47.25">
+      <TableObject Name="Table4" Left="9.45" Top="9.45" Width="1634.85" Height="28.35">
+        <TableColumn Name="Column17" Width="141.75"/>
+        <TableColumn Name="Column18" Width="141.75"/>
+        <TableColumn Name="Column19" Width="122.85"/>
+        <TableColumn Name="Column20" Width="151.2"/>
+        <TableColumn Name="Column21" Width="179.55"/>
+        <TableColumn Name="Column22" Width="132.3"/>
+        <TableColumn Name="Column23" Width="141.75"/>
+        <TableColumn Name="Column24" Width="141.75"/>
+        <TableColumn Name="Column25" Width="141.75"/>
+        <TableColumn Name="Column26" Width="122.85"/>
+        <TableColumn Name="Column27" Width="113.4"/>
+        <TableColumn Name="Column28" Width="103.95"/>
+        <TableRow Name="Row2" Height="28.35">
+          <TableCell Name="Cell17" Text="[Table1.farmer_code]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell18" Text="[Table1.farmer_name]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell19" Text="[Table1.sur_name]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell20" Text="[Table1.bank_acc_no]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell21" Text="[Table1.bank_acc_type_desc]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell22" Text="[Table1.bank_code]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell23" Text="[Table1.bank_desc]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell24" Text="[Table1.branch_code]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell25" Text="[Table1.branch_desc]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell26" Text="[Table1.ifsc_code]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell27" Text="[Table1.ifsc_code]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell28" Text="[Table1.dflt_cr_acc_desc]" Font="Calibri, 10pt"/>
+        </TableRow>
+      </TableObject>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page4" Landscape="true" PaperWidth="457" PaperHeight="210" Watermark.Font="Arial, 60pt">
+    <DataBand Name="Data6" Width="1651.86" Height="47.25">
+      <TableObject Name="Table5" Left="18.9" Top="9.45" Width="1001.7" Height="28.35">
+        <TableColumn Name="Column29" Width="160.65"/>
+        <TableColumn Name="Column30" Width="132.3"/>
+        <TableColumn Name="Column31" Width="132.3"/>
+        <TableColumn Name="Column32" Width="132.3"/>
+        <TableColumn Name="Column33" Width="151.2"/>
+        <TableColumn Name="Column34" Width="151.2"/>
+        <TableColumn Name="Column35" Width="141.75"/>
+        <TableRow Name="Row3" Height="28.35">
+          <TableCell Name="Cell29" Text="[Table2.farmer_code]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell30" Text="[Table2.farmer_name]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell31" Text="[Table2.sur_name]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell32" Text="[Table2.proof_type_desc]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell33" Text="[Table2.proof_doc_desc]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell34" Text="[Table2.proof_doc_no]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell35" Text="[Table2.proof_valid_till]" Font="Calibri, 10pt"/>
+        </TableRow>
+      </TableObject>
+    </DataBand>
+  </ReportPage>
+</Report>

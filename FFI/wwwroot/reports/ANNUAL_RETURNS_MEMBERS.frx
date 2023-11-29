@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="05/28/2020 18:34:32" ReportInfo.Modified="05/28/2020 18:46:54" ReportInfo.CreatorVersion="2020.1.0.0">
+  <Styles Name="Standard">
+    <Style Name="Title" Font="Arial, 12pt, style=Bold"/>
+    <Style Name="Header" Font="Arial, 10pt, style=Bold"/>
+    <Style Name="Group" Font="Arial, 10pt, style=Bold"/>
+    <Style Name="Data" Font="Arial, 10pt"/>
+    <Style Name="Footer" Font="Arial, 10pt"/>
+    <Style Name="EvenRows" Fill.Color="WhiteSmoke" Font="Arial, 10pt"/>
+  </Styles>
+  <Dictionary>
+    <MySqlDataConnection Name="Connection" ConnectionString="rijcmlqJ9ltPwNsYyX+2oAnmCElmGIz/SJ0vefyWJNqFvJ9CpVcxZe7+FQFpmKpxbZDWz0V6JezihMLHf9zFqtmqW5z1tlunK7+5Im+KhRO5RKF1u8=" CommandTimeout="0">
+      <TableDataSource Name="Table" DataType="System.Int32" Enabled="true" SelectCommand="call FIS_report_ANNUAL_RETURNS_MEMBERS('UTRFPCL')">
+        <Column Name="MemberID" DataType="System.String"/>
+        <Column Name="FirstName" DataType="System.String"/>
+        <Column Name="LastName" DataType="System.String"/>
+        <Column Name="Address1" DataType="System.String"/>
+        <Column Name="Address2" DataType="System.String"/>
+        <Column Name="Village" DataType="System.String"/>
+        <Column Name="GramPanchayat" DataType="System.String"/>
+        <Column Name="Taluk" DataType="System.String"/>
+        <Column Name="District" DataType="System.String"/>
+        <Column Name="PIN" DataType="System.String"/>
+        <Column Name="Shares" DataType="System.Int64"/>
+        <Column Name="ShareAmount" DataType="System.Decimal"/>
+        <CommandParameter Name="orgnId" DataType="253"/>
+      </TableDataSource>
+    </MySqlDataConnection>
+    <Parameter Name="orgnId" DataType="System.String"/>
+  </Dictionary>
+  <ReportPage Name="Page1" PaperWidth="300" Watermark.Font="Arial, 60pt">
+    <ReportTitleBand Name="ReportTitle1" Width="1058.4" Height="37.8">
+      <TextObject Name="Text1" Width="1058.4" Height="37.8" Dock="Fill" Text="ANNUAL RETURNS - MEMBERS" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold" Style="Title"/>
+    </ReportTitleBand>
+    <PageHeaderBand Name="PageHeader1" Top="41.8" Width="1058.4" Height="47.25">
+      <TableObject Name="Table2" Left="9.45" Width="1049.76" Height="47.25" Border.Lines="All">
+        <TableColumn Name="Column6" Width="87.48"/>
+        <TableColumn Name="Column7" Width="87.48"/>
+        <TableColumn Name="Column8" Width="87.48"/>
+        <TableColumn Name="Column9" Width="87.48"/>
+        <TableColumn Name="Column10" Width="87.48"/>
+        <TableColumn Name="Column11" Width="87.48"/>
+        <TableColumn Name="Column12" Width="87.48"/>
+        <TableColumn Name="Column13" Width="87.48"/>
+        <TableColumn Name="Column14" Width="87.48"/>
+        <TableColumn Name="Column15" Width="87.48"/>
+        <TableColumn Name="Column16" Width="78.03"/>
+        <TableColumn Name="Column17" Width="96.93"/>
+        <TableRow Name="Row3" Height="47.25">
+          <TableCell Name="Cell11" Border.Lines="All" Text="Member ID" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell12" Border.Lines="Right, Top, Bottom" Text=" First Name" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell13" Border.Lines="Right, Top, Bottom" Text="Last Name" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell14" Border.Lines="Right, Top, Bottom" Text="Address Line1" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell15" Text="Address Line2" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell16" Border.Lines="All" Text="Village" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell17" Text="Gram Panchayat" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell18" Border.Lines="All" Text="Taluk" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell19" Text="District" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell20" Border.Lines="All" Text="PIN" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell21" Border.Lines="Right, Top, Bottom" Text="No of Shares" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell22" Border.Lines="Right, Top, Bottom" Text="Share Amount" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+        </TableRow>
+      </TableObject>
+    </PageHeaderBand>
+    <DataBand Name="Data1" Top="93.05" Width="1058.4" Height="47.25" EvenStyle="EvenRows" DataSource="Table">
+      <TableObject Name="Table1" Left="9.45" Width="1049.76" Height="47.25" Border.Lines="All">
+        <TableColumn Name="Column18" Width="87.48"/>
+        <TableColumn Name="Column19" Width="87.48"/>
+        <TableColumn Name="Column20" Width="87.48"/>
+        <TableColumn Name="Column21" Width="87.48"/>
+        <TableColumn Name="Column22" Width="87.48"/>
+        <TableColumn Name="Column23" Width="87.48"/>
+        <TableColumn Name="Column24" Width="87.48"/>
+        <TableColumn Name="Column25" Width="87.48"/>
+        <TableColumn Name="Column26" Width="87.48"/>
+        <TableColumn Name="Column27" Width="87.48"/>
+        <TableColumn Name="Column28" Width="78.03"/>
+        <TableColumn Name="Column29" Width="96.93"/>
+        <TableRow Name="Row4" Height="47.25">
+          <TableCell Name="Cell23" Border.Lines="All" Text="[Table.MemberID]" Font="Arial, 10pt"/>
+          <TableCell Name="Cell24" Border.Lines="Right, Top, Bottom" Text="[Table.FirstName]" HorzAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell25" Border.Lines="Right, Top, Bottom" Text="[Table.LastName]" HorzAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell26" Border.Lines="Right, Top, Bottom" Text="[Table.Address1]" HorzAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell27" Text="[Table.Address2]" HorzAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell28" Border.Lines="All" Text="[Table.Village]" HorzAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell29" Text="[Table.GramPanchayat]" HorzAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell30" Border.Lines="All" Text="[Table.Taluk]" HorzAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell31" Text="[Table.District]" HorzAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell32" Border.Lines="All" Text="[Table.PIN]" HorzAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell33" Border.Lines="Right, Top, Bottom" Text="[Table.Shares]" HorzAlign="Center" Font="Arial, 10pt"/>
+          <TableCell Name="Cell34" Border.Lines="Right, Top, Bottom" Text="[Table.ShareAmount]" HorzAlign="Center" Font="Arial, 10pt"/>
+        </TableRow>
+      </TableObject>
+    </DataBand>
+    <PageFooterBand Name="PageFooter1" Top="144.3" Width="1058.4" Height="18.9">
+      <TextObject Name="Text26" Width="1058.4" Height="18.9" Dock="Fill" Text="[PageN]" HorzAlign="Right" Font="Arial, 10pt" Style="Footer"/>
+    </PageFooterBand>
+  </ReportPage>
+</Report>

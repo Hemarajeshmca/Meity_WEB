@@ -1,0 +1,65 @@
+﻿<root>
+  <row>
+    <activity_code>ACT_FAR_REG</activity_code>
+    <entitygrp_code>EC_PER_FARMER</entitygrp_code>
+    <row_slno>1</row_slno>
+    <description>Personal Details</description>
+	<multiline_flag>N</multiline_flag>
+  </row>
+  <row>
+    <activity_code>ACT_FAR_REG</activity_code>
+    <entitygrp_code>EC_ADDR</entitygrp_code>
+    <row_slno>2</row_slno>
+    <description>Address</description>
+	<multiline_flag>Y</multiline_flag>
+  </row>
+  <row>
+    <activity_code>ACT_FAR_REG</activity_code>
+    <entitygrp_code>EC_USER</entitygrp_code>
+    <row_slno>3</row_slno>
+    <description>Contact</description>
+	<multiline_flag>Y</multiline_flag>
+  </row>
+  <row>
+    <activity_code>ACT_FAR_REG</activity_code>
+    <entitygrp_code>EC_FAMILYDET</entitygrp_code>
+    <row_slno>4</row_slno>
+    <description>Family Details</description>
+	<multiline_flag>Y</multiline_flag>
+  </row>
+  <row>
+    <activity_code>ACT_FAR_REG</activity_code>
+    <entitygrp_code>EC_LOANDET</entitygrp_code>
+    <row_slno>5</row_slno>
+    <description>Loan Details</description>
+	<multiline_flag>Y</multiline_flag>
+  </row>
+  <row>
+    <activity_code>ACT_FAR_REG</activity_code>
+    <entitygrp_code>EC_LANDDET</entitygrp_code>
+    <row_slno>6</row_slno>
+    <description>Land Details</description>
+	<multiline_flag>Y</multiline_flag>
+  </row>
+  <row>
+    <activity_code>ACT_FAR_REG</activity_code>
+    <entitygrp_code>EC_LIVESTOCKDET</entitygrp_code>
+    <row_slno>7</row_slno>
+    <description>Live Stock Details</description>
+	<multiline_flag>Y</multiline_flag>
+  </row>
+  <row>
+    <activity_code>ACT_FAR_REG</activity_code>
+    <entitygrp_code>EC_ASSET</entitygrp_code>
+    <row_slno>8</row_slno>
+    <description>Asset Details</description>
+	<multiline_flag>Y</multiline_flag>
+  </row>
+  <row>
+    <activity_code>ACT_FAR_REG</activity_code>
+    <entitygrp_code>EC_INSURANCE</entitygrp_code>
+    <row_slno>9</row_slno>
+    <description>Insurance Details</description>
+    <multiline_flag>Y</multiline_flag>
+  </row>
+</root>

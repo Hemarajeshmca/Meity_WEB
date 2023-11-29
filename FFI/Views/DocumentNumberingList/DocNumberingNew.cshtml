@@ -1,0 +1,623 @@
+﻿@{
+    ViewBag.Form = "Document Numbering";
+    ViewBag.helpName = "DocNumberingNew.html";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+<script>
+    click_act_name = "DocNumberingList";
+    click_ctrl_name = "DocumentNumberingList";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+
+<form id="Doc_num" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="cmb_activity_code" class="col-sm-4 control-label required">Activity/Screen Name</label>
+                        <div class="col-sm-8">
+                            <input id="cmb_activity_code" name="In_activity_code" style="width: 100%" data-role="filtercombo">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="cmb_finyear_code" class="col-sm-5 control-label required">Financial Year</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_finyear_code" name="In_finyear_code" style="width: 100%" data-role="filtercombo">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-xs-12">
+                    <div id="grid_Drop_list">
+                    </div>
+                    <label for="docnum_preview" style="padding-top:15px">Document Number Preview : </label>
+                    <input id="docnum_preview" name="In_docnum_preview" style="width:1020px;">
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:10px">
+
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="txt_docnum_rowid" class="col-sm-5 control-label">docnum_rowid</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txt_docnum_rowid" name="In_docnum_rowid" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="status_code" class="col-sm-5 control-label">Status_code</label>
+                        <div class="col-sm-4">
+                            <input type="text" value="A" id="txt_status_code" name="In_status_code" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="txtMode" class="col-sm-5 control-label">Mode</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtMode" name="In_mode_flag" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="row_timestamp" class="col-sm-5 control-label">Timestamp:</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txt_row_timestamp" name="In_row_timestamp" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    $(document).ready(function () {
+
+        setlocalStorage("status", "Active");
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        Screen_Id = "DOCNUM";
+        permission = sec_Permission(Screen_Id);
+        var container = $("#Doc_num");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        $(".file_attach").attr("hdrtitle", "Document Numbering");
+        $(".notes").attr("hdrtitle", "Document Numbering");
+        $("#lblForm_menuid").text("DIV_NUMB");
+        $("#hide_div").hide();
+
+        //Activity Screen
+        var ACT_SCRN = "";
+        $("#cmb_activity_code").empty();
+        ACT_SCRN = grid_comboScreen_mastercodes("ACTIVITY");
+        filter_combobox("cmb_activity_code", ACT_SCRN);
+
+        var fy_year = "";
+        $("#cmb_finyear_code").empty();
+        fy_year = grid_comboScreen_mastercodes("FY");
+        filter_combobox("cmb_finyear_code", fy_year);
+
+        gridFilter([]);
+        if (getlocalStorage('btn_clk_val') == "Create") {
+            $('#divCreate #review').hide();
+            $("#bottom_menus").hide();
+            $("#txtMode").val("I");
+            $("#DocStat").val("New");
+        }
+        else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
+            $('#divEdit #reviewEd').hide();
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("Doc_num");
+                var obj_val = JSON.parse(formval);
+                obj_val.In_activity_code = data.Out_activity_code;
+                obj_val.In_finyear_code = data.Out_finyear_code;
+                obj_val.In_docnum_rowid = data.Out_docnum_rowid;
+
+                $('#cmb_activity_code').data("kendoComboBox").value(data.Out_activity_code);
+                $('#cmb_finyear_code').data("kendoComboBox").value(data.Out_finyear_code);
+                $("#txt_docnum_rowid").val(data.Out_docnum_rowid);
+                $('#cmb_activity_code').data("kendoComboBox").enable(false);
+                $('#cmb_finyear_code').data("kendoComboBox").enable(false);
+                var data = {};
+                data.context = WebAPIProxy.getContext();;
+                data.context.Header = obj_val;
+                var activity_code = data.context.Header.In_activity_code;
+                var finyear_code = data.context.Header.In_finyear_code;
+                var docnum_rowid = data.context.Header.In_docnum_rowid;
+                var Context = data.context;
+                var data = { userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, activity_code: activity_code, finyear_code: finyear_code, docnum_rowid: docnum_rowid };
+
+                    $.ajax({
+
+          url: '@Url.Action("GetDocNumber", "DocumentNumberingList")',
+     type: "post",
+     contentType: 'application/x-www-form-urlencoded',
+            data: data,
+                        success: function (response2) {
+                            debugger;
+                 
+                            if (response2.context != null) {
+                                generate_DocNumberActivity_header(response2.context.Header);
+                                generate_DocNumberActivity_detail(response2.context.Detail);
+                         
+                        $("#txtMode").val("U");
+                }
+                       else {
+                            console.log("Issue where Dropped");
+                        }
+                    },
+                    error: function (er) {
+                        console.log(er);
+                    }
+        });
+
+                setlocalStorage('doc_no', $("#cmb_activity_code ").val());
+                setlocalStorage('doc_row_id', $("#txt_docnum_rowid").val());
+                setlocalStorage('doc_code', $("#cmb_finyear_code").val());
+            }
+        }
+    });
+
+    function load_master_code() {
+        try {
+            debugger;
+            var data = {};
+            var context = WebAPIProxy.getContext();
+            data.userId = context.userId
+            data.orgnId = context.orgnId
+            data.locnId = context.locnId
+            data.localeId = context.localeId
+            data.screen_Id = "DOCNUM";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function clear_val() {
+        try {
+            gridFilter([]);
+            $("#txtMode").val("");
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function get_DocNumberActivity_details(id) {
+        try {
+            debugger;
+            var formval = form_Serialize("Doc_num");
+            var obj_val = JSON.parse(formval);
+            obj_val.In_docnum_rowid = id;
+            var data = {};
+                data.context = WebAPIProxy.getContext();;
+            data.context.Header = obj_val;
+            var activity_code = data.context.Header.In_activity_code;
+            var finyear_code = data.context.Header.In_finyear_code;
+            var docnum_rowid = id;
+            var Context = data.context;
+            var data = { userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, activity_code: activity_code, finyear_code: finyear_code, docnum_rowid: docnum_rowid };
+           $.ajax({
+
+          url: '@Url.Action("GetDocNumber", "DocumentNumberingList")',
+     type: "post",
+     contentType: 'application/x-www-form-urlencoded',
+            data: data,
+                        success: function (response3) {
+                            debugger;
+                       // var res = JSON.parse(response2);
+                            if (response3.context != null) {
+                                generate_DocNumberActivity_header(response3.context.Header);
+                                generate_DocNumberActivity_detail(response3.context.Detail);
+                    }
+                    else {
+                        console.log("Issue where Dropped");
+                    }
+                },
+                error: function (er) {
+                    console.log(er);
+                }
+
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+
+<script>
+    var format_type_desc_list = "";
+    function gridFilter(data) {
+        try {
+            $("#grid_Drop_list").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+
+                                In_row_slno: { type: "string", validation: { required: { message: "Row. No cannot be blank" } } },
+
+                                In_format_desc: {
+                                    type: "string", type: "string", validation: {
+                                        required: { message: "Field Description cannot be blank" },
+                                        maxlength:
+                                    function (input) {
+                                        // dublicate();
+                                        if (input.val().length > 50) {
+                                            input.attr("data-maxlength-msg", "Max length is 50");
+                                            return false;
+                                        }
+                                        return true;
+                                    }
+                                    }
+                                },
+
+                                In_format_type: { type: "string", required: true },
+
+                                In_format_type_desc: {
+                                    type: "string", validation: {
+                                        dropdownlistValidation: function (input) {
+                                            if (input.is("[name='format_type_desc']")) {
+                                                var isValid = true;
+                                                input.attr("data-dropdownlistValidation-msg", "Value Type cannot be blank"); if (input.val().length <= 0) {
+                                                    isValid = false;
+                                                }
+                                                return isValid;
+                                            }
+                                            return true;
+                                        }
+                                    }
+                                },
+                                //format_length: {
+                                //    type: "number", validation: {
+                                //        required: { message: "Value cannot be blank" },
+                                //        maxlength:
+                                //    function (input) {
+                                //        // dublicate();
+                                //        if (input.val().length > 50) {
+                                //            input.attr("data-maxlength-msg", "Max length is 50");
+                                //            return false;
+                                //        }
+                                //        return true;
+                                //    }
+                                //    }
+                                //},
+                                In_format_length: { type: "string", validation: { required: { message: "Length cannot be blank" } } },
+
+                                In_format_value: {
+                                    type: "string", validation: {
+                                        required: { message: "Value cannot be blank" },
+                                        maxlength:
+                                    function (input) {
+                                        // dublicate();
+                                        if (input.val().length > 50) {
+                                            input.attr("data-maxlength-msg", "Max length is 50");
+                                            return false;
+                                        }
+                                        return true;
+                                    }
+                                    }
+                                },
+                                In_status_code: { type: "string" },
+                                In_row_timestamp: { type: "string" },
+                                In_mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+                toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 400,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_Drop_list').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                edit: OnEdit,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [{
+                    command: [
+            {
+                name: "Delete",
+                id: "Delete",
+                imageClass: "fa fa-close",
+                click: function (e) {
+                    // e.preventDefault();
+                    var grid = $("#grid_Drop_list").data("kendoGrid");
+                    var dataItem = $("#grid_Drop_list").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                    DeleteWindowEvent(e, dataItem, grid);
+                    e.stopImmediatePropagation()
+                }
+            },
+                    ], title: "&nbsp;", width: "25px",
+                },
+                {
+                    field: "In_docnumformat_rowid",
+                    title: "docnumformat_rowid",
+                    hidden: true
+                },
+                 {
+                     field: "In_row_slno",
+                     title: "Seq No",
+                     width: 100,
+
+                 },
+                 {
+                     field: "In_format_desc",
+                     title: "Field Descripition",
+
+                     width: 100,
+
+                 },
+                 {
+                     field: "In_format_type",
+                     title: "format_type",
+                     hidden: true,
+                     width: 100,
+                 },
+                {
+                    field: "In_format_type_desc",
+                    title: "Value Type",
+                    editor: function (container, options) {
+                        combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "In_format_type", "grid_Drop_list")
+                    },
+
+                    width: 100
+                },
+
+                 {
+                     field: "In_format_length",
+                     title: "Length",
+                     //editor: function (container, options) {
+                     //    item_rate(container, options.field, '9', '2');
+                     //},
+                     width: 100,
+
+                 }, {
+                     field: "In_format_value",
+                     title: "Value",
+                     width: 100,
+
+                 },
+
+
+                {
+                    field: "In_status_code",
+                    title: "status_code",
+                    hidden: true
+                },
+
+                {
+                    field: "In_row_timestamp",
+                    title: "row_timestamp",
+                    hidden: true
+                },
+                {
+                    field: "In_mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }],
+                editable: true
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function OnEdit(e) {
+        setDefaultValues(e);
+        e.container.find("input[name='In_format_length']").attr('maxlength', '2');
+        e.container.find("input[name='In_format_length']").attr('onkeypress', 'return event.charCode >= 48 && event.charCode <= 57');
+
+        e.container.find("input[name='In_row_slno']").attr('maxlength', '2');
+        e.container.find("input[name='In_row_slno']").attr('onkeypress', 'return event.charCode >= 48 && event.charCode <= 57');
+
+    }
+    load_master_code();
+    In_format_type_desc_list = grid_comboScreen_mastercodes("DOCNUM_FORMAT");
+</script>
+<script>
+    function save(mode) {
+        debugger;
+        try {
+            var mandatory_check = true;
+            if ($("#txt_docnum_rowid").val() == "") {
+                $("#txt_docnum_rowid").val(0);
+            }
+
+            if ($("#txtMode").val() == "") {
+                $("#txtMode").val('I');
+            }
+            if ($("#DocStat").val() == "Active") {
+                $("#txtMode").val('U');
+            }
+
+            if (mode != undefined) {
+                $("#txtMode").val('D');
+            }
+           
+            $('#cmb_activity_code').data("kendoComboBox").enable(true);
+            $('#cmb_finyear_code').data("kendoComboBox").enable(true);
+            var formval = form_Serialize("Doc_num");
+            var obj_val = JSON.parse(formval);
+
+            var grid_val = JSON.stringify($("#grid_Drop_list").data().kendoGrid._data);
+            var Bind = {};
+            Bind = grid_val;
+            var result = JSON.parse(Bind);
+            var grid_validate_msg = "";
+
+            if (result.length == 0) {
+                kendoAlert("Atleast one record needs to be entered");
+                mandatory_check = false;
+                return false;
+            }
+            $.each(result, function (key, value) {
+               
+                if (value.In_docnum_rowid == "") {
+                    grid_validate_msg += "Seq no cannot be blank <br>";
+                    mandatory_check = false;
+                }
+                if (value.In_row_slno == "") {
+                    grid_validate_msg += "Seq no cannot be blank <br>";
+                    mandatory_check = false;
+                }
+                if (value.In_format_desc == "") {
+                    grid_validate_msg += "Field Description cannot be blank <br>";
+                    mandatory_check = false;
+                }
+                if (value.In_format_type_desc == "") {
+                    grid_validate_msg += "Value type cannot be blank <br>";
+                    mandatory_check = false;
+                }
+                if (value.In_format_length == "") {
+                    grid_validate_msg += "Length cannot be blank <br>";
+                    mandatory_check = false;
+                }
+
+                if (value.In_format_value == "") {
+                    grid_validate_msg += "Value cannot be blank <br>";
+                    mandatory_check = false;
+                }
+                if (mandatory_check == false) {
+                    kendoAlert(grid_validate_msg);
+                    return false;
+                }
+
+            });
+
+            if (mandatory_check == true) {
+                $.each(result, function (index, value) {
+                    var row_id = value.In_docnumformat_rowid;
+                    if (row_id == undefined) {
+                        result[index].In_docnumformat_rowid = 0;
+                    }
+                    var In_row_slno = value.In_row_slno;
+                    if (In_row_slno == undefined) {
+                        result[index].In_row_slno = 0;
+                    }
+                    var mode = result[index].In_mode_flag;
+                    if (mode == "S") {
+                        result[index].In_mode_flag = "U";
+                    }
+
+                });
+                var obj_grid_val = result;
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                data.context.Detail = obj_grid_val;
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, Header: Context.Header, Detail: Context.Detail }),
+                    url: "/DocumentNumberingList/SaveDocNumber",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        console.log(response)
+                        var Res = JSON.parse(response);
+                        if (Res.context != null) {
+                            var mode = $("#txtMode").val();
+                            if (mode == "I") {
+                                kendoAlert("Document Numbering Details saved successfully");
+                                get_DocNumberActivity_details(Res.context.header.in_docnum_rowid);
+                            }
+                            else if (mode == "D") {
+                                kendoAlert("Document Numbering Details inactivate successfully");
+                                get_DocNumberActivity_details(Res.context.header.in_docnum_rowid);
+                            }
+                            else {
+                                kendoAlert("Document Numbering Details saved successfully");
+                                get_DocNumberActivity_details(Res.context.header.in_docnum_rowid);
+                            }
+                        }
+                        else {
+                            kendoAlert(Res.ApplicationException.errorDescription);
+                        }
+                    },
+                    error: function (er) {
+                        alert(er)
+                        console.log(er)
+                    }
+
+                });
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function DeleteDetails() {
+        //  $("#txtMode").val("D");
+        save("D");
+    }
+    // bug no: 17 fixed by vinoth added In_docnum_rowid
+    function generate_DocNumberActivity_header(res) {
+        try {
+            $("#txt_docnum_rowid").val(res.In_docnum_rowid);            
+            $("#cmb_finyear_code").data("kendoComboBox").value(res.In_finyear_code);
+            $("#DocStat").val(res.In_status_desc);
+            $("#txtMode").val(res.In_mode_flag);
+            $('#cmb_activity_code').data("kendoComboBox").value(res.In_activity_code);
+            $("#docnum_preview").val(res.In_docnum_preview);
+            $('#cmb_activity_code').data("kendoComboBox").enable(false);
+            $('#cmb_finyear_code').data("kendoComboBox").enable(false);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function generate_DocNumberActivity_detail(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                gridFilter(data);
+            }
+            else {
+                gridFilter([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>
+

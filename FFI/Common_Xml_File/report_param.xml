@@ -1,0 +1,15 @@
+﻿<root>
+  <row>
+    <reportparam_rowid>1</reportparam_rowid>
+    <report_code>RPT-GETMASTER</report_code>
+    <param_slno>1</param_slno>
+    <param_name>@parent_code</param_name>
+    <param_desc>Parent Code</param_desc>
+    <param_type>Int</param_type>
+     <param_type>String</param_type>
+    <param_type>Date</param_type>
+    <param_length>16</param_length>
+    <status_code>Active</status_code>
+  
+  </row>
+</root>

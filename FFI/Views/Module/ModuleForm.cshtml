@@ -1,0 +1,147 @@
+﻿
+@{
+    ViewBag.Form = "Modules";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+
+<form id="downloadTemplate" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtRoleDesc" class="col-sm-4 control-label required">Module ID:</label>
+                        <div class="col-sm-8">
+                            <input id="Text1" value="" style="width: 100%">
+                                 </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtRoleDesc" class="col-sm-5 control-label required">Module Name:</label>
+                        <div class="col-sm-7">
+                            <input id="Text3" value="" style="width: 100%">  
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+            <div class="col-xs-12">
+                <div id="grid">
+                </div>
+            </div>
+
+        </div>
+    </div>
+</form>
+
+<script>
+    click_act_name = "Modulelist";
+    click_ctrl_name = "Module";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+
+
+<script>
+    $(document).ready(function () {
+
+        // $("#form_design").css("padding-top", "95px");
+      
+      
+        $(".file_attach").attr("hdrtitle", "Module");
+        $(".notes").attr("hdrtitle", "Module");
+        $("#lblForm_menuid").text("MODULE");
+        var data = [];
+        grid();
+
+       
+        //var xmlIdentity_Code = "";
+        //var RecieveData = ajaxcall_url_with_1param("../Module/Moduleformgrid", JSON.stringify({ GetName: xmlIdentity_Code }));
+        //data = JSON.parse(RecieveData);
+      
+    });
+</script>
+
+<script>
+    function grid(data) {
+        try {
+            $("#grid").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+
+                                seq_no: { type: "string" },
+                                menu_name: { type: "string" },
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+                toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 400,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [{
+                    command: [
+            {
+                name: "Delete",
+                id: "Delete",
+                imageClass: "fa fa-close",
+                click: function (e) {
+                    // e.preventDefault();
+                    var grid = $("#grid").data("kendoGrid");
+                    var dataItem = $("#grid").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                    DeleteWindowEvent(e, dataItem, grid);
+                    e.stopImmediatePropagation()
+                }
+            },
+                    ], title: "Action", width: "50px",
+                },
+                 {
+                     field: "seq_no",
+                     title: "Seq No",
+                     width: 100
+
+                 },
+                {
+                    field: "menu_name",
+                    title: "Menu Name",
+                    editor: function (container, options) {
+                        combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "", "grid")
+                    },
+                    width: 100
+                },
+                
+                {
+                    field: "mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+
+    var grid_menu_name = [{ code: 1, description: "Farmer Registration" },
+    { code: 2, description: "Farmer Profiling" }, { code: 2, description: "FPO Registration" }, { code: 2, description: "Map Farmer To FPO" } ];
+
+    menu_name_list = getGridComboList(grid_menu_name);
+
+  
+
+</script>
+

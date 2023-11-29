@@ -1,0 +1,1485 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+
+  <search id="S01" description="Bank Details Search"  multiple_select="NO" colname ='bank_code'>
+    <inputs table="core_mst_tbankifsc">
+      <input seqno="1" column="in_bank_code"	            coldesc="Bank Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <input seqno="2" column="branch_name"	          coldesc="Branch Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <input seqno="3" column="ifsc_code"	            coldesc="IFSC code"	            datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+    </inputs>
+    <outputs orderby="1,2,3">
+      <output seqno="1" column="bank_code"  	             coldesc="Bank Code"	          textalign="left" />
+      <output seqno="2" column="branch_name"	             coldesc="Branch"	           textalign="left" />
+      <output seqno="3" column="ifsc_code"  	             coldesc="IFSC Code"	          textalign="left" />
+
+    </outputs>
+  </search>
+	<search id="Sbank" description="Bank Details Search"  multiple_select="NO" colname ='bank_code'>
+		<inputs table="ic_bank_ifsc">
+			<input seqno="1" column="bank_code"	            coldesc="Bank Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+			<input seqno="2" column="branch_name"	          coldesc="Branch Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+			<input seqno="3" column="ifsc_code"	            coldesc="IFSC code"	            datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+		</inputs>
+		<outputs orderby="1,2,3">
+			<output seqno="1" column="bank_code"  	             coldesc="Bank Code"	          textalign="left" />
+			<output seqno="2" column="branch_name"	             coldesc="Branch"	           textalign="left" />
+			<output seqno="3" column="ifsc_code"  	             coldesc="IFSC Code"	          textalign="left" />
+
+		</outputs>
+	</search>
+  <search id="S02" description="Address Details Search"  multiple_select="NO" colname ='orgn_state_desc'>
+    <inputs table="village_list_vw ">
+
+      <input seqno="1" column="orgn_state_desc"	            coldesc="state"	            datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <input seqno="2" column="orgn_dist_desc"	            coldesc="Dist"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="3" column="orgn_taluk_desc"	            coldesc="Taluk"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="4" column="orgn_village_desc"	            coldesc="Village"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1,2,3,4,5,6,7,8,9">
+      <output seqno="1" column="orgn_state_desc"	             coldesc="state"	           textalign="left" />
+      <output seqno="2" column="orgn_village_desc"	           coldesc="Village"	           textalign="left" />
+      <output seqno="3" column="orgn_dist_desc"	               coldesc="Dist"	           textalign="left" />
+      <output seqno="4" column="orgn_taluk_desc"	             coldesc="Taluk"	           textalign="left" />
+      <!--<output seqno="5" column="orgn_country_desc"  	         coldesc="Country"	          textalign="left" />-->
+      <output seqno="5" column="orgn_grampan_desc"  	         coldesc="Gram Panchayat"	          textalign="left" />
+      <output seqno="6" column="orgn_village"  	               coldesc="Village Code"	          textalign="left" />
+      <output seqno="7" column="orgn_dist"	                   coldesc="Dist Code"	           textalign="left" />
+      <output seqno="8" column="orgn_taluk"	                   coldesc="Taluk Code"	           textalign="left" />
+      <output seqno="9" column="orgn_grampan"	                 coldesc="Gram Panchayat Code"	           textalign="left" />
+    </outputs>
+  </search>
+
+  <search id="S03" description="User Name Search"  multiple_select="NO" colname ='user_name'>
+    <inputs table="core_mst_tuser">
+      <input seqno="1" column="user_code"	            coldesc="User Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <input seqno="2" column="user_name"	          coldesc="User Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+    </inputs>
+    <outputs orderby="1,2">
+      <output seqno="1" column="user_code"  	             coldesc="User Code"	          textalign="left" />
+      <output seqno="2" column="user_name"	             coldesc="User Name"	           textalign="left" />
+    </outputs>
+  </search>
+
+  <search id="S04" description="Bill Details Search">
+    <inputs table="bill_vw">
+      <input seqno="1" column="user_code"	              coldesc="User Code"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+      <input seqno="2" column="ccbill_no"	              coldesc="CC Bill No"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+
+    </inputs>
+    <outputs orderby="1,2,3">
+      <output seqno="1" column="ccbill_no"  	          coldesc="CC Bill No"	          textalign="left" />
+      <output seqno="2" column="cc_aggrloc_desc"  	      coldesc="Aggr Loc"	          textalign="left" />
+      <output seqno="3" column="cc_aggrloc_code"  	          coldesc="Aggr Code"	    textalign="left" />
+    </outputs>
+  </search>
+
+  <search id="S05" description="Service Details Search">
+    <inputs table="FPOFarmer_vw">
+      <input seqno="1" column="fpoorgn_code"	              coldesc="Org Code"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+      <input seqno="1" column="fpomember_code"	              coldesc="Member ID"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <!--<input seqno="2" column="servicereq_no"	              coldesc="CC Bill No"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="3" column="servicereq_no"	              coldesc="CC Bill No"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+       <input seqno="4" column="servicereq_no"	              coldesc="CC Bill No"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>-->
+
+    </inputs>
+    <outputs orderby="1,2,3">
+      <output seqno="1" column="farmer_code"  	          coldesc="Farmer ID"	          textalign="left" />
+      <output seqno="2" column="fpomember_code"  	      coldesc="Member ID"	          textalign="left" />
+      <output seqno="3" column="member_name"  	          coldesc="Farmer Name"	    textalign="left" />
+      <output seqno="4" column="member_sur_name"  	          coldesc="Farmer Surname"	    textalign="left" />
+    </outputs>
+  </search>
+  <search id="S06" description="Service Details Search">
+    <inputs table="fis_mst_tfpomember">
+      <input seqno="1" column="fpoorgn_code"	              coldesc="Org Code"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+      <input seqno="1" column="fpomember_code"	              coldesc="Receiving Member ID"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <!--<input seqno="2" column="servicereq_no"	              coldesc="CC Bill No"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="3" column="servicereq_no"	              coldesc="CC Bill No"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+       <input seqno="4" column="servicereq_no"	              coldesc="CC Bill No"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>-->
+
+    </inputs>
+    <outputs orderby="1,2,3">
+      <output seqno="1" column="farmer_code"  	          coldesc="Receiving Farmer ID"	          textalign="left" />
+      <output seqno="2" column="fpomember_code"  	      coldesc="Receiving Member ID"	          textalign="left" />
+      <output seqno="3" column="member_name"  	          coldesc="Receiving Farmer Given Name"	    textalign="left" />
+      <output seqno="4" column="member_sur_name"  	          coldesc="Receiving Farmer Surname"	    textalign="left" />
+    </outputs>
+  </search>
+  <search id="S07" description="Share Member Details Search">
+    <inputs table="fis_mst_tfpomember">
+      <input seqno="1" column="fpoorgn_code"	              coldesc="Org Code"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+      <input seqno="2" column="fpomember_code"	              coldesc="Member ID"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1,2,3">
+      <output seqno="1" column="farmer_code"  	          coldesc="Receiving Farmer ID"	          textalign="left" />
+      <output seqno="2" column="fpomember_code"  	      coldesc="Receiving Member ID"	          textalign="left" />
+      <output seqno="3" column="member_name"  	          coldesc="Receiving Farmer Given Name"	    textalign="left" />
+      <output seqno="4" column="member_sur_name"  	          coldesc="Receiving Farmer Surname"	    textalign="left" />
+    </outputs>
+  </search>
+  <search id="S08" description="Bank Details Search"  multiple_select="NO" colname ='bank_code'>
+    <inputs table="core_mst_tbankifsc">
+      <input seqno="1" column="bank_code"	            coldesc="Bank Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <input seqno="2" column="branch_name"	          coldesc="Branch Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <input seqno="3" column="ifsc_code"	            coldesc="IFSC code"	            datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+    </inputs>
+    <outputs orderby="1,2,3">
+      <output seqno="1" column="bank_code"  	             coldesc="Bank Code"	          textalign="left" />
+      <output seqno="2" column="branch_name"	             coldesc="Branch"	           textalign="left" />
+      <output seqno="3" column="ifsc_code"  	             coldesc="IFSC Code"	          textalign="left" />
+
+    </outputs>
+  </search>
+  <search id="S09" description="Loan disbursement Search">
+    <inputs table="Loandisbursement_vw">
+      <input seqno="1" column="farmer_code"	              coldesc="Receiving Member ID"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <!--<input seqno="2" column="servicereq_no"	              coldesc="CC Bill No"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="3" column="servicereq_no"	              coldesc="CC Bill No"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+       <input seqno="4" column="servicereq_no"	              coldesc="CC Bill No"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>-->
+
+    </inputs>
+    <outputs orderby="1,2,3">
+      <output seqno="1" column="farmer_code"  	          coldesc="Receiving Farmer ID"	          textalign="left" />
+      <output seqno="2" column="fpomember_code"  	        coldesc="Receiving Member ID"	          textalign="left" />
+      <output seqno="3" column="member_name"  	          coldesc="Receiving Farmer Given Name"	  textalign="left" />
+      <output seqno="4" column="member_sur_name"  	      coldesc="Receiving Farmer Surname"	    textalign="left" />
+      <output seqno="5" column="loan_amount"  	          coldesc="Loan Amount"	                  textalign="left" />
+      <output seqno="6" column="bank_acc_no"  	          coldesc="Bank Account No"	              textalign="left" />
+      <output seqno="7" column="bank_acc_type"  	        coldesc="Bank Account Type"	            textalign="left" />
+      <output seqno="8" column="bank_code"  	            coldesc="Bank Code"	                    textalign="left" />
+      <output seqno="9" column="ifsc_code"  	            coldesc="IFSC Code"	                    textalign="left" />
+      <output seqno="10" column="sanctioned_date"  	      coldesc="sanctioned Date"	              textalign="left" />
+      <output seqno="11" column="payment_mode"  	        coldesc="Payment mode"	              textalign="left" />
+      <output seqno="11" column="sanctioned_amount"  	    coldesc="Sanctioned amount"	              textalign="left" />
+    </outputs>
+  </search>
+
+
+  <search id="S10" description="Farmer Loan Search">
+    <inputs table="FarmerLoan_vw">
+      <input seqno="1" column="farmer_code"	              coldesc="Receiving Member ID"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <!--<input seqno="2" column="servicereq_no"	              coldesc="CC Bill No"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="3" column="servicereq_no"	              coldesc="CC Bill No"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+       <input seqno="4" column="servicereq_no"	              coldesc="CC Bill No"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>-->
+
+    </inputs>
+    <outputs orderby="1,2,3">
+      <output seqno="1" column="farmer_code"  	          coldesc="Receiving Farmer ID"	          textalign="left" />
+      <output seqno="2" column="fpomember_code"  	        coldesc="Receiving Member ID"	          textalign="left" />
+      <output seqno="3" column="member_name"  	          coldesc="Receiving Farmer Given Name"	  textalign="left" />
+      <output seqno="4" column="member_sur_name"  	      coldesc="Receiving Farmer Surname"	    textalign="left" />
+      <output seqno="6" column="bank_acc_no"  	          coldesc="Bank Account No"	              textalign="left" />
+      <output seqno="7" column="bank_acc_type"  	        coldesc="Bank Account Type"	            textalign="left" />
+      <output seqno="8" column="bank_code"  	            coldesc="Bank Code"	                    textalign="left" />
+      <output seqno="9" column="ifsc_code"  	            coldesc="IFSC Code"	                    textalign="left" />
+    </outputs>
+  </search>
+  <search id="S11" description="Sub Elements Search" multiple_select="NO" colname ='element_desc'>
+    <inputs table="chkelement_view">
+      <input seqno="1" column="In_element_desc"	            coldesc="Element Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <input seqno="2" column="subelement_desc"	          coldesc="Subelement Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1,2,3">
+      <output seqno="1" column="In_element_desc"	             coldesc="Element Code"	           textalign="left" />
+      <output seqno="2" column="subelement_code"  	             coldesc="Subelement Code"	          textalign="left" />
+      <output seqno="3" column="subelement_desc"	             coldesc="Subelement Name"	           textalign="left" />
+    </outputs>
+  </search>
+  <search id="S12" description="Loan Account No. Search">
+    <inputs table="Repayment_vw">
+      <input seqno="1" column="fpoorgn_code"	              coldesc="Org Code"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+      <input seqno="1" column="loan_no"	            coldesc="Loan Account No."	            datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+    </inputs>
+    <outputs orderby="1">
+      <!--<output seqno="1" column="element_desc"	             coldesc="Element Code"	           textalign="left" />-->
+      <output seqno="1" column="loan_no"  	             coldesc="Loan Account No"	          textalign="left" />
+      <!--<output seqno="3" column="subelement_desc"	             coldesc="Subelement Name"	           textalign="left" />-->
+    </outputs>
+  </search>
+
+  <search id="S13" description="Loan Account No. Search">
+    <inputs table="LoanForeClosure_vw">
+      <input seqno="1" column="loan_no"	            coldesc="Loan Account No."	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1">
+      <!--<output seqno="1" column="element_desc"	             coldesc="Element Code"	           textalign="left" />-->
+      <output seqno="1" column="loan_no"  	             coldesc="Loan Account No"	          textalign="left" />
+      <!--<output seqno="3" column="subelement_desc"	             coldesc="Subelement Name"	           textalign="left" />-->
+    </outputs>
+  </search>
+  <search id="S14" description="Farmer Search">
+    <inputs table="Credit_farmer_vw">
+      <input seqno="1" column="farmer_code"	              coldesc="Receiving Member ID"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+
+    </inputs>
+    <outputs orderby="1,2,3">
+      <output seqno="1" column="farmer_code"  	          coldesc="Receiving Farmer ID"	          textalign="left" />
+      <output seqno="2" column="fpomember_code"  	        coldesc="Receiving Member ID"	          textalign="left" />
+      <output seqno="3" column="member_name"  	          coldesc="Receiving Farmer Given Name"	  textalign="left" />
+    </outputs>
+  </search>
+  <search id="S15" description="CP Session Details Search">
+    <inputs table="vw_cpsession">
+      <input seqno="1" column="cpsession_code"	              coldesc="CP Session ID"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="1" column="aggrloc_name"	              coldesc="Chilling Plant"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="1" column="session_date"	              coldesc="Session Date"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1,2,3">
+      <output seqno="1" column="cpsession_code"  	          coldesc="CP Session ID"	          textalign="left" />
+      <output seqno="1" column="aggrloc_name"  	          coldesc="Chilling Plant"	          textalign="left" />
+      <output seqno="1" column="session_date"  	          coldesc="Session Date"	          textalign="left" />
+
+    </outputs>
+  </search>
+  <search id="S119" description="HSN Search">
+    <inputs table="HSN_list_vw">
+      <input seqno="1" column="HSN_code"	            coldesc="HSN Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <!--<input seqno="1" column="HSN_category"	            coldesc="HSN Category"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>-->
+      <input seqno="2" column="hsn_description"	          coldesc="HSN Description"    	      datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <!--<input seqno="2" column="HSN_uom"	          coldesc="HSN UOM"    	      datatype="A"    entflg="Y" defval="" 	defcondt="like"/>-->
+    </inputs>
+    <outputs orderby="1,2">
+      <output seqno="1" column="HSN_master"	          coldesc="HSN Master Code"	            textalign="left" />
+      <output seqno="1" column="HSN_code"	          coldesc="HSN Code"	            textalign="left" />
+      <!--<output seqno="2" column="HSN_category"  	      coldesc="HSN Category"	          textalign="left" />-->
+      <output seqno="2" column="hsn_description"  	      coldesc="HSN Description"	          textalign="left" />
+      <!--<output seqno="2" column="HSN_uom"  	      coldesc="HSN UOM"	          textalign="left" />-->
+    </outputs>
+  </search>
+
+	<search id="S16" description="HSN Search">
+		<inputs table="HSN_list_vw">
+			<input seqno="1" column="HSN_code"	            coldesc="HSN Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<!--<input seqno="1" column="HSN_category"	            coldesc="HSN Category"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>-->
+			<input seqno="2" column="hsn_description"	          coldesc="HSN Description"    	      datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<!--<input seqno="2" column="HSN_uom"	          coldesc="HSN UOM"    	      datatype="A"    entflg="Y" defval="" 	defcondt="like"/>-->
+		</inputs>
+		<outputs orderby="1,2">
+			<output seqno="1" column="HSN_master"	          coldesc="HSN Master Code"	            textalign="left" />
+			<output seqno="1" column="HSN_code"	          coldesc="HSN Code"	            textalign="left" />
+			<!--<output seqno="2" column="HSN_category"  	      coldesc="HSN Category"	          textalign="left" />-->
+			<output seqno="2" column="hsn_description"  	      coldesc="HSN Description"	          textalign="left" />
+			<!--<output seqno="2" column="HSN_uom"  	      coldesc="HSN UOM"	          textalign="left" />-->
+		</outputs>
+	</search>
+
+  <search id="S17" description="Product Search">
+    <inputs table="Product_list_vw">
+
+      <input seqno="1" column="product_category"	            coldesc="Product Category"	            datatype="S"    entflg="Y" defval="" 	defcondt="like"/>
+
+      <input seqno="2" column="product_sub_category"	          coldesc="Product Sub Category"    	      datatype="S"    entflg="Y" defval="" 	defcondt="like"/>
+
+      <!--<input seqno="3" column="product_code"	          coldesc="Product Code"    	      datatype="S"    entflg="Y" defval="" 	defcondt="like"/>
+    
+      <input seqno="4" column="product_name"	          coldesc="Product Name"    	      datatype="S"    entflg="Y" defval="" 	defcondt="like"/>-->
+    </inputs>
+    <outputs orderby="1,2,3">
+      <output seqno="1" column="productcategory"	          coldesc="Product Category Code"	            textalign="left" />
+      <output seqno="1" column="product_category"	          coldesc="Product Category"	            textalign="left" />
+      <output seqno="2" column="productsubcategory"  	      coldesc="Product Sub Category Code"	          textalign="left" />
+      <output seqno="2" column="product_sub_category"  	      coldesc="Product Sub Category"	          textalign="left" />
+      <!--<output seqno="3" column="productcode"	          coldesc="Product's Code"	            textalign="left" />
+      <output seqno="3" column="product_code"	          coldesc="Product Code"	            textalign="left" />
+      <output seqno="4" column="productname"	          coldesc="Product Code"    	      datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <output seqno="4" column="product_name"	          coldesc="Product Name"    	      datatype="A"    entflg="Y" defval="" 	defcondt="like"/>-->
+    </outputs>
+  </search>
+  <search id="S18" description="grn Search">
+    <inputs table="User_Details_list">
+      <input seqno="1" column="hsn_code"	            coldesc="GRN NO"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1,2">
+      <output seqno="1" column="hsn_code"	          coldesc="GRN Date"	            textalign="left" />
+      <output seqno="1" column="hsn_code"	          coldesc="Supplier Name"	            textalign="left" />
+      <output seqno="1" column="hsn_code"	          coldesc="Supplier Location"	            textalign="left" />
+      <output seqno="1" column="hsn_code"	          coldesc="GRN Status"	            textalign="left" />
+    </outputs>
+  </search>
+  <search id="S19" description="farmer Search">
+    <inputs table="User_Details_list">
+      <input seqno="1" column="hsn_code"	            coldesc="Farmer Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1,2">
+      <output seqno="1" column="hsn_code"	          coldesc="Farmer Name"	            textalign="left" />
+      <output seqno="1" column="hsn_code"	          coldesc="Receiver Location"	            textalign="left" />
+    </outputs>
+  </search>
+  <search id="S20" description="farmer_invoice Search">
+    <inputs table="User_Details_list">
+      <input seqno="1" column="hsn_code"	            coldesc="Farmer Name/Customer Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1,2">
+      <output seqno="1" column="hsn_code"	          coldesc="Farmer Name/Customer Name"	            textalign="left" />
+      <output seqno="1" column="hsn_code"	          coldesc="Receiver Location"	            textalign="left" />
+    </outputs>
+  </search>
+  <search id="S21" description="Product Search"  multiple_select="NO" colname ='product_catg_desc'>
+         <!-- <inputs table="TransactionProduct_list_vw"> -->
+   <inputs table="TransactionProduct_listInterState_vw">
+      <input seqno="1" column="ic_code"	                    coldesc="Input Center Code"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+      <input seqno="1" column="Provider_Location"	                    coldesc="Provider Location"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+      <input seqno="2" column="productcategory_desc"	            coldesc="Product Category"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="3" column="productsubcategory_desc"	          coldesc="Product Sub Category"    	      datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="1" column="product_code"	                  coldesc="Product Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1,2,3">
+    
+      <output seqno="1" column="productcategory_desc"	          coldesc="Product Category"	            textalign="left" />
+   
+      <output seqno="2" column="productsubcategory_desc"  	      coldesc="Product Sub Category"	          textalign="left" />
+      <output seqno="3" column="product_name"  	      coldesc="Product Name"	          textalign="left" />
+      <output seqno="4" column="product_code"  	      coldesc="Product Code"	          textalign="left" />
+    
+      <output seqno="5" column="uomtype_code_desc"  	      coldesc="UOM Type Description"	    textalign="left" />
+      <!--<output seqno="6" column="hsn_code"  	      coldesc="HSN Master Code"	          textalign="left" />-->
+      <output seqno="7" column="hsn_code"  	      coldesc="HSN Code Desc"	          textalign="left" />
+      <output seqno="8" column="hsn_desc"  	      coldesc="HSN Master Desc"	          textalign="left" />
+      <output seqno="9" column="cgst_rate"  	      coldesc="CGST RATE"	          textalign="left" />
+      <output seqno="10" column="sgst_rate"  	      coldesc="SGST RATE"	          textalign="left" />
+      <output seqno="11" column="igst_rate"  	      coldesc="IGST RATE"	          textalign="left" />
+      <output seqno="12" column="ugst_rate"  	      coldesc="UGST RATE"	          textalign="left" />
+      <output seqno="13" column="tax_rate"  	      coldesc="TAX RATE"	          textalign="left" />
+      <output seqno="14" column="sugst_rate"  	      coldesc="SGST OR UGST RATE"	          textalign="left" />
+      <output seqno="15" column="productcategory"	          coldesc="Product Category Code"	            textalign="left" />
+
+      <output seqno="16" column="uomtype_code"  	      coldesc="UOM Type"	          textalign="left" />
+     <output seqno="17" column="productsubcategory"  	      coldesc="Product Sub Category Code"	          textalign="left" />
+    </outputs>
+  </search>
+  <search id="P22" description="GRN Search" >
+    <inputs table="new_pawhs_purchasereturn_vw">
+      <input seqno="1" column="agg_code"	                    coldesc="Input Center Code"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+      <input seqno="1" column="po_no"	            coldesc="GRN NO"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="2" column="po_date"	            coldesc="GRN Date"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="3" column="buyer_name"	            coldesc="Supplier Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="4" column="buyer_location"	            coldesc="Supplier Location"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>     
+    </inputs>
+    <outputs orderby="1">
+      <output seqno="1" column="po_no"	          coldesc="GRN NO"	                textalign="left" />     
+      <output seqno="4" column="buyer_name"  coldesc="SUPPLIER NAME"	    textalign="left" />
+     
+    </outputs>
+  </search>
+  <search id="P23" description="INVOICE Search"  multiple_select="NO" colname ='product_catg_desc'>
+    <inputs table="New_PAWHS_trn_Invoice_Vw">
+      <input seqno="1" column="agg_code"	                    coldesc="Input Center Code"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+      <input seqno="2" column="po_no"	            coldesc="Invoice NO "	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1">
+      <output seqno="1" column="po_no"	          coldesc="INVOICE NO"	            textalign="left" />
+      <!--<output seqno="2" column="invoice_date"	        coldesc="INVOICE DATE Credit Issue Date"	            textalign="left" />
+      <output seqno="3" column="customer_address"  	  coldesc="CUSTOMER ADDRESS"	          textalign="left" />
+      <output seqno="4" column="status_code"  	      coldesc="INVOICE STATUS"	          textalign="left" />-->
+    </outputs>
+  </search>
+  <search id="S22" description="GRN Search"  multiple_select="NO" colname ='product_catg_desc'>
+    <inputs table="ic_trn_inward">
+      <input seqno="1" column="ic_code"	                    coldesc="Input Center Code"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+      <input seqno="1" column="grn_no"	            coldesc="GRN NO"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="2" column="grn_date"	            coldesc="GRN Date"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="3" column="supplier_name"	            coldesc="Supplier Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="4" column="supplier_location"	            coldesc="Supplier Location"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="5" column="from_state"	            coldesc="Supplier State"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1">      
+      <output seqno="1" column="grn_no"	          coldesc="GRN NO"	                textalign="left" /> 
+      <output seqno="3" column="supplier_location"  coldesc="SUPPLIER LOCATION"	    textalign="left" />
+       <output seqno="4" column="supplier_name"  coldesc="SUPPLIER name"	    textalign="left" />
+        <output seqno="2" column="grn_date"	          coldesc="GRN DATE"	            textalign="left" />
+      <output seqno="5" column="status_code"  	      coldesc="GRN STATUS"	          textalign="left" />
+    </outputs>
+  </search>
+  <search id="S23" description="INVOICE Search"  multiple_select="NO" colname ='product_catg_desc'>
+    <inputs table="Stock_Adjectment_Vw">
+      <input seqno="1" column="ic_code"	                    coldesc="Input Center Code"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+      <input seqno="1" column="grn_no"	            coldesc="Invoice NO "	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1">
+      <output seqno="1" column="grn_no"	          coldesc="INVOICE NO"	            textalign="left" />
+      <!--<output seqno="2" column="invoice_date"	        coldesc="INVOICE DATE Credit Issue Date"	            textalign="left" />
+      <output seqno="3" column="customer_address"  	  coldesc="CUSTOMER ADDRESS"	          textalign="left" />
+      <output seqno="4" column="status_code"  	      coldesc="INVOICE STATUS"	          textalign="left" />-->
+    </outputs>
+  </search>
+
+  <search id="S24" description="ProductCategory Search"  multiple_select="NO" colname ='Invoiceno'>
+    <inputs table="AdjustmentTypeProduct_vw">
+      <input seqno="1" column="receipt_ref_doc_no"	            coldesc="GRN NO"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+      <input seqno="1" column="adjustment_type"	            coldesc="Adjustment Type"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+      <input seqno="1" column="ProductCategory"	            coldesc="Product Category"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="2" column="ProductSubCategory"	          coldesc="Product Sub Category"    	      datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1,2,3">
+    
+      <output seqno="1" column="ProductCategory"	          coldesc="Product Category"	            textalign="left" />
+     
+      <output seqno="2" column="ProductSubCategory"  	      coldesc="Product Sub Category"	          textalign="left" />
+      <output seqno="3" column="ProductCode"  	      coldesc="Product code"	          textalign="left" />
+      <output seqno="4" column="ProductName"  	      coldesc="Product Name"	          textalign="left" />
+      <output seqno="5" column="product_catg_code"	          coldesc="Product Category Code"	            textalign="left" />
+      <output seqno="6" column="product_subcatg_code"  	      coldesc="Product Sub Category Code"	          textalign="left" />
+    </outputs>
+  </search>
+  <search id="S25" description="ProductCategory Search"  multiple_select="NO" colname ='Invoiceno'>
+    <inputs table="Product_HSN_vw">
+      <input seqno="1" column="hsn_code_desc"	            coldesc="HSN Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="2" column="hsn_desc"	      coldesc="HSN Description"	    datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1,2,3">
+      <output seqno="1" column="taxrate_rowid"	          coldesc="Taxrate RowID"	            textalign="left" />
+      <output seqno="2" column="hsn_code"	    coldesc="HSN Code"	      textalign="left" />
+      <output seqno="2" column="hsn_code_desc"	    coldesc="HSN Code"	      textalign="left" />
+      <output seqno="3" column="hsn_desc"  	coldesc="HSN Description"	  textalign="left" />
+    </outputs>
+  </search>
+
+	<search id="S26" description="invoice/credit Search"  multiple_select="NO" colname ='Invoiceno'>
+		<inputs table="ICD_farmer_vw">
+			<input seqno="1" column="ic_code"	                coldesc="Input Center Code"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+			<input seqno="2" column="RegMoileNo"	            coldesc="Mobile_no"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="3" column="farmer_name"	                coldesc="Farmer Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="4" column="sur_name"	                coldesc="Sur Name"	                datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="5" column="TalukName"	            coldesc="Taluk"	                        datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="6" column="PanchayatName"	            coldesc="Panchayat"	                datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="7" column="VillageName"	            coldesc="Village"	                     datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+
+		</inputs>
+		<outputs orderby="1,2,3">
+			<output seqno="1" column="farmer_code"  	          coldesc="Farmer ID"	            textalign="left" />
+			<output seqno="2" column="farmer_name"  	          coldesc=" Farmer Name"	        textalign="left" />
+			<output seqno="3" column="sur_name"                    coldesc="Sur Name"               textalign="left" />
+			<output seqno="4" column="VillageName"  	        coldesc="Village Name"	            textalign="left" />
+			<output seqno="5" column="PanchayatName"             coldesc="Panchayat Name"            textalign="left"/>
+			<output seqno="6" column="FarmerAddress"  	          coldesc="Address"	                textalign="left" />
+			<output seqno="7" column="StateName"  	              coldesc="State Name"	            textalign="left" />
+			<!--<output seqno="8" column="farmer_village"  	        coldesc="Village code"	            textalign="left" />-->
+			<output seqno="9" column="farmer_state"  	        coldesc="State Code"	            textalign="left" />
+			<output seqno="8" column="RegMoileNo"              coldesc="Mobile_no"                  textalign="left" />
+		</outputs>
+	</search>
+  <search id="S27" description="Product Search"  multiple_select="NO" colname ='product_catg_desc'>
+    <inputs table="inter_InvoicProduct_list_vw">
+      <input seqno="1" column="ic_code"	                    coldesc="Input Center Code"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+      <input seqno="2" column="provider_location"	            coldesc="provider location"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+      <input seqno="3" column="reciver_location"	            coldesc="reciver location"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+      <input seqno="4" column="productcategory_desc"	            coldesc="Product Category"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="5" column="productsubcategory_desc"	          coldesc="Product Sub Category"    	      datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1,2,3">
+      <output seqno="1" column="productcategory"	          coldesc="Product Category Code"	            textalign="left" />
+      <output seqno="2" column="productcategory_desc"	          coldesc="Product Category"	            textalign="left" />
+      <output seqno="3" column="productsubcategory"  	      coldesc="Product Sub Category Code"	          textalign="left" />
+      <output seqno="4" column="productsubcategory_desc"  	      coldesc="Product Sub Category"	          textalign="left" />
+      <output seqno="5" column="product_name"  	      coldesc="Product Name"	          textalign="left"  />
+      <output seqno="6" column="product_code"  	      coldesc="Product Code"	          textalign="left" />
+      <output seqno="7" column="uomtype_code"  	      coldesc="UOM type code"	          textalign="left" />
+      <output seqno="8" column="uomtype_code_desc"  	      coldesc="UOM type code desc"	          textalign="left" />
+      <output seqno="9" column="base_price"  	      coldesc="Base price"	          textalign="left" />
+      <output seqno="10" column="hsn_code"  	      coldesc="HSN Master Code"	          textalign="left" />
+      <output seqno="11" column="hsn_code_desc"  	      coldesc="HSN Code Desc"	          textalign="left" />
+      <output seqno="12" column="hsn_desc"  	      coldesc="HSN Master Desc"	          textalign="left" />
+      <output seqno="13" column="cgst_rate"  	      coldesc="CGST RATE"	          textalign="left" />
+      <output seqno="14" column="sgst_rate"  	      coldesc="SGST RATE"	          textalign="left" />
+      <output seqno="15" column="igst_rate"  	      coldesc="IGST RATE"	          textalign="left" />
+      <output seqno="16" column="ugst_rate"  	      coldesc="UGST RATE"	          textalign="left" />
+      <output seqno="17" column="tax_rate"  	      coldesc="TAX RATE"	          textalign="left" />
+      <output seqno="18" column="sugst_rate"  	      coldesc="SGST OR UGST RATE"	          textalign="left" />
+      <output seqno="18" column="current_qty"  	      coldesc="Current Qty"	          textalign="left" />
+    </outputs>
+  </search>
+  <search id="S28" description="Equipment Search">
+    <inputs table="Equipment">
+      <input seqno="1" column="equipment_name"	            coldesc="Equipment Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1,2">
+      <output seqno="1" column="equipment_code"	          coldesc="Equipment Name"	            textalign="left" />
+      <output seqno="1" column="equipment_name"	          coldesc="Equipment Code"	            textalign="left" />
+    </outputs>
+  </search>
+  <search id="S29" description="Service Details Search">
+    <inputs table="fis_mst_tfpomember">
+      <input seqno="2" column="farmer_code"	            coldesc="farmer Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="3" column="farmer_name"	            coldesc="Farmer Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="4" column="VillageName"	            coldesc="Village"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1,2,3">
+      <output seqno="1" column="farmer_code"  	          coldesc="Farmer ID"	          textalign="left" />
+      <output seqno="2" column="member_name"  	          coldesc="Farmer Name"	    textalign="left" />
+      <output seqno="3" column="member_sur_name"  	          coldesc="Surname"	    textalign="left" />
+      <output seqno="4" column="farmer_code"  	          coldesc="Farmer village"	          textalign="left" />
+      <output seqno="5" column="member_name"  	          coldesc="panchayat"	    textalign="left" />
+      <output seqno="6" column="member_sur_name"  	          coldesc="district"	    textalign="left" />
+      <output seqno="5" column="member_name"  	          coldesc="mobile number"	    textalign="left" />
+      <output seqno="6" column="member_sur_name"  	          coldesc="Pincode"	    textalign="left" />
+    </outputs>
+  </search>
+  <search id="S30" description="FPO Search">
+    <inputs table="core_mst_torgnvw">
+      <input seqno="1" column="orgn_name"	            coldesc="FPO Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1,2">
+      <output seqno="1" column="orgn_name"	          coldesc="FPO Name"	            textalign="left" />
+      <output seqno="1" column="orgn_code"	          coldesc="FPO Code"	            textalign="left" />
+      <output seqno="1" column="orgn_ll_name"	          coldesc="FPO Namell"	            textalign="left" />
+    </outputs>
+  </search>
+	<search id="S31" description="Member - Search"  multiple_select="NO" colname ='Invoiceno'>
+		<inputs table="FL_farmer_vw">
+      <input seqno="1" column="farmer_code"	                coldesc="Farmer Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="1" column="farmer_name"	                coldesc="Farmer Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="2" column="sur_name"	                coldesc="Sur Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="3" column="TalukName"	            coldesc="Taluk"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="4" column="PanchayatName"	            coldesc="Panchayat"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="5" column="VillageName"	            coldesc="Village"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="6" column="reg_mobile_no"	            coldesc="Reg Mobile_no"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+		</inputs>
+		<outputs orderby="1,2">
+			<output seqno="1" column="farmer_code"  	          coldesc="Farmer ID"	          textalign="left" />
+			<output seqno="2" column="farmer_name"  	          coldesc="Farmer Name"	          textalign="left" />
+			<output seqno="3" column="sur_name"  	              coldesc="Sur Name"	          textalign="left" />
+			<output seqno="4" column="VillageName"  			  coldesc="Farmer Village"	      textalign="left" />
+			<output seqno="5" column="PanchayatName"  	      coldesc="Panchayat"	          textalign="left" />
+			<output seqno="6" column="DistrictName"  	          coldesc="District"	          textalign="left" />
+			<output seqno="7" column="reg_mobile_no"  	          coldesc="Mobile Number"	      textalign="left" />
+			<output seqno="8" column="farmer_pincode"  	          coldesc="Pincode"	              textalign="left" />
+      <output seqno="4" column="farmer_village"  			  coldesc="Farmer Village"	      textalign="left" />
+      <output seqno="5" column="farmer_panchayat"  	      coldesc="Panchayat"	          textalign="left" />
+      <output seqno="6" column="farmer_dist"  	          coldesc="District"	          textalign="left" />
+		</outputs>
+	</search>
+  <search id="S32" description="Member - Search"  multiple_select="NO" colname ='Invoiceno'>
+    <inputs table="FL_farmer_vw">
+      <input seqno="1" column="farmer_code"	                coldesc="Farmer Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="1" column="farmer_name"	                coldesc="Farmer Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="2" column="sur_name"	                coldesc="Sur Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="3" column="TalukName"	            coldesc="Taluk"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="4" column="PanchayatName"	            coldesc="Panchayat"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="5" column="VillageName"	            coldesc="Village"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/> 
+      <input seqno="6" column="reg_mobile_no"	            coldesc="Reg Mobile_no"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1,2">
+      <output seqno="1" column="farmer_code"  	          coldesc="Farmer ID"	          textalign="left" />
+      <output seqno="2" column="farmer_name"  	          coldesc="Farmer Name"	          textalign="left" />
+      <output seqno="3" column="sur_name"  	              coldesc="Sur Name"	          textalign="left" />
+      <output seqno="4" column="VillageName"  			  coldesc="Farmer Village"	      textalign="left" />
+      <output seqno="5" column="PanchayatName"  	      coldesc="Panchayat"	          textalign="left" />
+      <output seqno="6" column="DistrictName"  	          coldesc="District"	          textalign="left" />
+      <output seqno="7" column="reg_mobile_no"  	          coldesc="Mobile Number"	      textalign="left" />
+      <output seqno="8" column="farmer_pincode"  	          coldesc="Pincode"	              textalign="left" />
+      <output seqno="4" column="farmer_village"  			  coldesc="Farmer Village"	      textalign="left" />
+      <output seqno="5" column="farmer_panchayat"  	      coldesc="Panchayat"	          textalign="left" />
+      <output seqno="6" column="farmer_dist"  	          coldesc="District"	          textalign="left" />
+    </outputs>
+  </search>
+  <search id="PC01" description="Crop Class Search ">
+    <inputs table="CropClass_list_vw">
+      <input seqno="1" column="CROPCLASS"	            coldesc="Crop Class"	            datatype="A"    entflg="Y" defval="" textalign="left" 	defcondt="like"/>
+      <input seqno="2" column="CROPTYPE_Desc"	          coldesc="Crop Type"    	      datatype="A"    entflg="Y" defval="" textalign="left" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1,2,3">     
+      <output seqno="1" column="CROPCLASS"	          coldesc="Crop Class"	            textalign="left" />
+      <output seqno="2" column="CROPTYPE_Desc"  	      coldesc="Crop Type"	          textalign="left" />
+      <output seqno="3" column="CROPCLASS_Mst"	          coldesc="Crop Class Code"	            textalign="left" />
+      <output seqno="4" column="CROPTYPE_Mst"  	      coldesc="Crop Type Code"	          textalign="left" />         
+    </outputs>
+  </search>
+   <search id="PC02" description="Crop Name Search ">
+    <inputs table="CropName_list_vw">
+      <input seqno="1" column="CROPTYPE"	            coldesc="Crop Type"	            datatype="A"    entflg="Y" defval="" textalign="left" 	defcondt="like"/>
+      <input seqno="2" column="CROPNAME_Desc"	          coldesc="Crop Name"    	      datatype="A"    entflg="Y" defval="" textalign="left" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1,2,3">     
+      <output seqno="1" column="CROPTYPE"	          coldesc="Crop Type"	            textalign="left" />
+      <output seqno="2" column="CROPNAME_Desc"  	      coldesc="Crop Name"	          textalign="left" />
+      <output seqno="3" column="CROPTYPE_Mst"	          coldesc="Crop Type Code"	            textalign="left" />
+      <output seqno="4" column="CROPName_Mst"  	      coldesc="Crop Name Code"	          textalign="left" />         
+    </outputs>
+  </search>
+    <search id="PC03" description="Crop Variety Search ">
+    <inputs table="CropVariety_list_vw">
+      <input seqno="1" column="CROPNAME"	            coldesc="Crop Name"	            datatype="A"    entflg="Y" defval="" textalign="left" 	defcondt="like"/>
+      <input seqno="2" column="CROPVARIETY_Desc"	          coldesc="Crop Variety"    	      datatype="A"    entflg="Y" defval="" textalign="left" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1,2,3">     
+      <output seqno="1" column="CROPNAME"	          coldesc="Crop Name"	            textalign="left" />
+      <output seqno="2" column="CROPVARIETY_Desc"  	      coldesc="Crop Variety"	          textalign="left" />
+      <output seqno="3" column="CROPName_Mst"	          coldesc="Crop Name Code"	            textalign="left" />
+      <output seqno="4" column="CROPVariety_Mst"  	      coldesc="Crop Variety Code"	          textalign="left" />         
+    </outputs>
+  </search>
+
+<search id="S34" description="Product Category Search ">
+    <inputs table="ProductMasterlist_vw">
+      <input seqno="1" column="product_category"	            coldesc="Product Category"	            datatype="A"    entflg="Y" defval="" textalign="left" 	defcondt="like"/>
+      <input seqno="2" column="product_sub_category"	          coldesc="Product Sub Category"    	      datatype="A"    entflg="Y" defval="" textalign="left" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1,2,3">     
+      <output seqno="1" column="product_category"	          coldesc="Product Category"	            textalign="left" />
+      <output seqno="2" column="product_sub_category"  	      coldesc="Product Sub Category"	          textalign="left" />
+      <output seqno="3" column="productcategory"	          coldesc="Product Category Code"	            textalign="left" />
+      <output seqno="4" column="productsubcategory"  	      coldesc="Product Sub Category Code"	          textalign="left" />         
+    </outputs>
+  </search>
+
+<search id="S35" description="HSN Code Search"  multiple_select="NO" colname ='Invoiceno'>
+		<inputs table="Product_HSN_list_vw">
+      <input seqno="1" column="HSN_master"	            coldesc="HSN Master"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="2" column="HSN_code"	            coldesc="HSN Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="3" column="hsn_description"	      coldesc="HSN Description"	    datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+		</inputs>
+		<outputs orderby="1,2,3">
+
+			<output seqno="1" column="HSN_master"	    coldesc="HSN Master"	      textalign="left" />
+			<output seqno="2" column="HSN_code"  	coldesc="HSN Code"	  textalign="left" />
+			<output seqno="3" column="hsn_description"	          coldesc="HSN Description"	            textalign="left" />
+		</outputs>
+	</search>
+<search id="S36" description="ProductCategory Search"  multiple_select="NO" colname ='Invoiceno'>
+    <inputs table="AdjustmentTypeProduct_vw">
+   
+      <input seqno="1" column="ic_code"	                    coldesc="Input Center Code"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+      <input seqno="2" column="ProductName"	          coldesc="Product Name"    	      datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="1" column="ProductCode"	            coldesc="Product Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+     <input seqno="4" column="ProductCategory"	          coldesc="Product Category"    	      datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="5" column="ProductSubCategory"	            coldesc="Product SubCategory"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1,2,3">
+      <output seqno="1" column="ProductCode"  	      coldesc="Product Code"	          textalign="left" />
+      <output seqno="2" column="ProductName"  	      coldesc="Product Name"	          textalign="left" />
+      <output seqno="6" column="uom_desc"  	      coldesc="Uom Type"	          textalign="left" />
+      <output seqno="3" column="qty"  	      coldesc="Inward Outward Qty"	          textalign="left" />
+      <output seqno="5" column="ProductCategory"	          coldesc="Product Category"	            textalign="left" />
+      <output seqno="7" column="ProductSubCategory"  	      coldesc="Product Sub Category"	          textalign="left" />
+     <!-- <output seqno="4" column="product_catg_code"	          coldesc="Product Category Code"	            textalign="left" />     
+      <output seqno="6" column="product_subcatg_code"  	      coldesc="Product Sub Category Code"	          textalign="left" /> -->
+  
+    
+     
+    </outputs>
+  </search>
+<search id="S50" description="Equipment List"  multiple_select="NO" colname ='esp_code'>
+		<inputs table="FL_equipment_Vw">
+			<input seqno="1" column="esp_code"	            coldesc="ESP Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="2" column="equipment_code"	      coldesc="Equipment Code"	    datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="2" column="process_status"	      coldesc="Status"	    datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<!--<input seqno="3" column="equipment_name"	      coldesc="Equipment Name"	    datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="4" column="imei_no"	      coldesc="IMEI No"	    datatype="A"    entflg="Y" defval="" 	defcondt="like"/>-->
+		</inputs>
+		<outputs orderby="1,2,3,4">
+			<output seqno="1" column="esp_code"	    coldesc="ESP Code"	      textalign="left" />
+			<output seqno="2" column="equipment_code"  	coldesc="Equipment Code"	  textalign="left" />
+			<output seqno="3" column="equipment_name"	          coldesc="Equipment Name"	            textalign="left" />
+			<output seqno="4" column="imei_no"	          coldesc="IMEI No"	            textalign="left" />
+			<output seqno="4" column="process_status"	          coldesc="Status"	            textalign="left" />
+		</outputs>
+	</search>
+<search id="S101" description="ProductCategory Search"  multiple_select="NO" colname ='Invoiceno'>
+    <inputs table="AdjustmentTypeProduct_vw">
+      <input seqno="1" column="receipt_ref_doc_no"	            coldesc="GRN NO"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+      <input seqno="1" column="adjustment_type"	            coldesc="Adjustment Type"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+      <input seqno="2" column="ProductName"	          coldesc="Product Name"    	      datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="1" column="ProductCode"	            coldesc="Product Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1,2,3">
+      <output seqno="1" column="ProductCode"  	      coldesc="Product Code"	          textalign="left" />
+      <output seqno="2" column="ProductName"  	      coldesc="Product Name"	          textalign="left" />
+      <output seqno="6" column="uom_desc"  	      coldesc="Uom Type"	          textalign="left" />
+      <output seqno="3" column="qty"  	      coldesc="Inward Outward Qty"	          textalign="left" />
+      <output seqno="5" column="ProductCategory"	          coldesc="Product Category"	            textalign="left" />
+      <output seqno="7" column="ProductSubCategory"  	      coldesc="Product Sub Category"	          textalign="left" />
+      <output seqno="4" column="product_catg_code"	          coldesc="Product Category Code"	            textalign="left" />     
+      <output seqno="6" column="product_subcatg_code"  	      coldesc="Product Sub Category Code"	          textalign="left" />
+  
+
+    </outputs>
+  </search>
+
+	<search id="M01" description="Qty Search"  multiple_select="NO" colname ='Invoiceno'>
+		<inputs table="New_PAWHS_Quality_Vw">
+
+			<input seqno="1" column="maize_code"	                    coldesc="Quality Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+			<input seqno="2" column="maize_name"	          coldesc="Quality Name"    	      datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			
+		</inputs>
+		<outputs orderby="1,2,3">
+			<output seqno="1" column="maize_code"  	      coldesc="Quality code"	          textalign="left" />
+			<output seqno="2" column="maize_name"  	      coldesc="Quality Name"	          textalign="left" />
+			<output seqno="6" column="maize_range"  	      coldesc="Quality Range"	          textalign="left" />
+			<output seqno="3" column="maize_interval"  	      coldesc="Interval"	          textalign="left" />
+			<output seqno="5" column="maize_unit"	          coldesc="Unit"	            textalign="left" />
+			<output seqno="7" column="min_value"  	      coldesc="Temp Min Value"	          textalign="right" />
+			<output seqno="7" column="max_value"  	      coldesc="Temp Max Value"	          textalign="right" />
+			<!-- <output seqno="4" column="product_catg_code"	          coldesc="Product Category Code"	            textalign="left" />
+			<output seqno="6" column="product_subcatg_code"  	      coldesc="Product SubCategory Code"	          textalign="left" />-->
+		</outputs>
+	</search>
+	
+<search id="S56" description="ProductCategory Search"  multiple_select="NO" colname ='Invoiceno'>
+		<inputs table="AdjustmentTypeOpeningBalance_vw">
+
+			<input seqno="1" column="ic_code"	                    coldesc="Input Center Code"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+			<input seqno="2" column="ProductName"	          coldesc="Product Name"    	      datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="3" column="ProductCode"	            coldesc="Product Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+            <input seqno="4" column="ProductCategory"	          coldesc="Product Category"    	      datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="5" column="ProductSubCategory"	            coldesc="Product SubCategory"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+		</inputs>
+		<outputs orderby="1,2,3">
+			<output seqno="1" column="ProductCode"  	      coldesc="Product code"	          textalign="left" />
+			<output seqno="2" column="ProductName"  	      coldesc="Product Name"	          textalign="left" />
+			<output seqno="6" column="uom_desc"  	      coldesc="Uom Type"	          textalign="left" />
+			<output seqno="3" column="qty"  	      coldesc="Inward Outward Qty"	          textalign="left" />
+			<output seqno="5" column="ProductCategory"	          coldesc="Product Category"	            textalign="left" />
+			<output seqno="7" column="ProductSubCategory"  	      coldesc="Product Sub Category"	          textalign="left" />
+			<!-- <output seqno="4" column="product_catg_code"	          coldesc="Product Category Code"	            textalign="left" />
+			<output seqno="6" column="product_subcatg_code"  	      coldesc="Product SubCategory Code"	          textalign="left" />-->
+		</outputs>
+	</search>
+	<search id="S57" description="ProductCategory Search"  multiple_select="NO" colname ='Invoiceno'>
+		<inputs table="AdjustmentTypeOther_vw">
+
+			<input seqno="1" column="ic_code"	                    coldesc="Input Center Code"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+			<input seqno="2" column="ProductName"	          coldesc="Product Name"    	      datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="1" column="ProductCode"	            coldesc="Product Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    <input seqno="4" column="ProductCategory"	          coldesc="Product Category"    	      datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="5" column="ProductSubCategory"	            coldesc="Product SubCategory"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+		</inputs>
+		<outputs orderby="1,2,3">
+			<output seqno="1" column="ProductCode"  	      coldesc="Product Code"	          textalign="left" />
+			<output seqno="2" column="ProductName"  	      coldesc="Product Name"	          textalign="left" />
+			<output seqno="6" column="uom_desc"  	      coldesc="Uom Type"	          textalign="left" />
+			<output seqno="3" column="qty"  	      coldesc="Inward Outward Qty"	          textalign="left" />
+			<output seqno="5" column="ProductCategory"	          coldesc="Product Category"	            textalign="left" />
+			<output seqno="7" column="ProductSubCategory"  	      coldesc="Product Sub Category"	          textalign="left" />
+			<output seqno="4" column="product_catg_code"	          coldesc="Product Category Code"	            textalign="left" />
+			<output seqno="6" column="product_subcatg_code"  	      coldesc="Product Sub Category Code"	          textalign="left" />
+		</outputs>
+	</search>
+  <search id="P58" description="ProductCategory Search"  multiple_select="NO" colname ='Invoiceno'>
+    <inputs table="new_pawhs_adjustmentpurchase_vw">
+      <input seqno="1" column="In_receipt_ref_doc_no"	            coldesc="GRN NO"	            datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <input seqno="1" column="adjustment_type"	            coldesc="Adjustment Type"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+      <input seqno="2" column="ProductName"	          coldesc="Product Name"    	      datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="1" column="ProductCode"	            coldesc="Product Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="4" column="ProductCategory"	          coldesc="Product Category"    	      datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="5" column="ProductSubCategory"	            coldesc="Product SubCategory"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1,2,3">
+      <output seqno="1" column="ProductCode"  	      coldesc="Product Code"	          textalign="left" />
+      <output seqno="2" column="ProductName"  	      coldesc="Product Name"	          textalign="left" />
+      <output seqno="6" column="uom_desc"  	      coldesc="Uom Type"	          textalign="left" />
+      <output seqno="8" column="qty"  	      coldesc="Inward Outward Qty"	          textalign="left" />
+      <output seqno="5" column="ProductCategory"	          coldesc="Product Category"	            textalign="left" />
+      <output seqno="7" column="ProductSubCategory"  	      coldesc="Product Sub Category"	          textalign="left" />
+      <!-- <output seqno="4" column="product_catg_code"	          coldesc="Product Category Code"	            textalign="left" />
+			<output seqno="6" column="product_subcatg_code"  	      coldesc="Product Sub Category Code"	          textalign="left" />-->
+      <output seqno="9" column="current_qty" coldesc="Current Qty" textalign="left"/>
+    </outputs>
+  </search>
+  <search id="P59" description="ProductCategory Search"  multiple_select="NO" colname ='Invoiceno'>
+    <inputs table="New_PAWHS_AdjustmentSaleReturn_Vw">
+      <input seqno="1" column="In_receipt_ref_doc_no"	            coldesc="GRN NO"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+      <input seqno="1" column="adjustment_type"	            coldesc="Adjustment Type"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+      <input seqno="2" column="ProductName"	          coldesc="Product Name"    	      datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="1" column="ProductCode"	            coldesc="Product Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="4" column="ProductCategory"	          coldesc="Product Category"    	      datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="5" column="ProductSubCategory"	            coldesc="Product SubCategory"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1,2,3">
+      <output seqno="1" column="ProductCode"  	      coldesc="Product Code"	          textalign="left" />
+      <output seqno="2" column="ProductName"  	      coldesc="Product Name"	          textalign="left" />
+      <output seqno="6" column="uom_desc"  	      coldesc="Uom Type"	          textalign="left" />
+      <output seqno="3" column="qty"  	      coldesc="Inward Outward Qty"	          textalign="left" />
+      <output seqno="5" column="ProductCategory"	          coldesc="Product Category"	            textalign="left" />
+      <output seqno="7" column="ProductSubCategory"  	      coldesc="Product Sub Category"	          textalign="left" />
+      <!--<output seqno="4" column="product_catg_code"	          coldesc="Product Category Code"	            textalign="left" />
+			<output seqno="6" column="product_subcatg_code"  	      coldesc="Product Sub Category Code"	          textalign="left" />-->
+
+
+    </outputs>
+  </search>
+	<search id="58" description="ProductCategory Search"  multiple_select="NO" colname ='Invoiceno'>
+		<inputs table="AdjustmentTypePurchaseReturn_vw">
+			<input seqno="1" column="In_receipt_ref_doc_no"	            coldesc="GRN NO"	            datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+			<input seqno="1" column="adjustment_type"	            coldesc="Adjustment Type"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+			<input seqno="2" column="ProductName"	          coldesc="Product Name"    	      datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="1" column="ProductCode"	            coldesc="Product Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="4" column="ProductCategory"	          coldesc="Product Category"    	      datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="5" column="ProductSubCategory"	            coldesc="Product SubCategory"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+		</inputs>
+		<outputs orderby="1,2,3">
+			<output seqno="1" column="ProductCode"  	      coldesc="Product Code"	          textalign="left" />
+			<output seqno="2" column="ProductName"  	      coldesc="Product Name"	          textalign="left" />
+			<output seqno="6" column="uom_desc"  	      coldesc="Uom Type"	          textalign="left" />
+			<output seqno="8" column="qty"  	      coldesc="Inward Outward Qty"	          textalign="left" />
+			<output seqno="5" column="ProductCategory"	          coldesc="Product Category"	            textalign="left" />
+			<output seqno="7" column="ProductSubCategory"  	      coldesc="Product Sub Category"	          textalign="left" />
+			<!-- <output seqno="4" column="product_catg_code"	          coldesc="Product Category Code"	            textalign="left" />
+			<output seqno="6" column="product_subcatg_code"  	      coldesc="Product Sub Category Code"	          textalign="left" />-->
+			<output seqno="9" column="current_qty" coldesc="Current Qty" textalign="left"/>
+		</outputs>
+	</search>
+
+	<search id="59" description="ProductCategory Search"  multiple_select="NO" colname ='Invoiceno'>
+		<inputs table="AdjustmentTypeSaleReturn_vw">
+			<input seqno="1" column="In_receipt_ref_doc_no"	            coldesc="GRN NO"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+			<input seqno="1" column="adjustment_type"	            coldesc="Adjustment Type"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+			<input seqno="2" column="ProductName"	          coldesc="Product Name"    	      datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="1" column="ProductCode"	            coldesc="Product Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+             <input seqno="4" column="ProductCategory"	          coldesc="Product Category"    	      datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="5" column="ProductSubCategory"	            coldesc="Product SubCategory"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+		</inputs>
+		<outputs orderby="1,2,3">
+			<output seqno="1" column="ProductCode"  	      coldesc="Product Code"	          textalign="left" />
+			<output seqno="2" column="ProductName"  	      coldesc="Product Name"	          textalign="left" />
+			<output seqno="6" column="uom_desc"  	      coldesc="Uom Type"	          textalign="left" />
+			<output seqno="3" column="qty"  	      coldesc="Inward Outward Qty"	          textalign="left" />
+			<output seqno="5" column="ProductCategory"	          coldesc="Product Category"	            textalign="left" />
+			<output seqno="7" column="ProductSubCategory"  	      coldesc="Product Sub Category"	          textalign="left" />
+			<!--<output seqno="4" column="product_catg_code"	          coldesc="Product Category Code"	            textalign="left" />
+			<output seqno="6" column="product_subcatg_code"  	      coldesc="Product Sub Category Code"	          textalign="left" />-->
+
+
+		</outputs>
+	</search>
+ <search id="D101" description="Credit Issue Search"  multiple_select="NO" colname ='Invoiceno'>
+    <inputs table="ICD_farmer_vw_test">
+      <input seqno="1" column="ic_code"	                coldesc="Input Center Code"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+      <input seqno="1" column="farmer_name"	                coldesc="Farmer Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      
+    </inputs>
+    <outputs orderby="1,2">
+     
+      <output seqno="1" column="farmer_name"  	          coldesc="Farmer Name"	          textalign="left" /> 
+       <output seqno="2" column="farmer_code"  	          coldesc="Farmer Code"	          textalign="left" /> 
+    
+    
+    </outputs>
+  </search>
+  <search id="D102" description="Product Code Search"  multiple_select="NO" colname ='Invoiceno'>
+    <inputs table="AdjustmentTypeOther_vw">
+      <input seqno="1" column="ic_code"	                coldesc="Input Center Code"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+      <input seqno="2" column="ProductName"	                coldesc="Product Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+
+    </inputs>
+    <outputs orderby="1,2">
+     
+      <output seqno="2" column="ProductName"  	          coldesc="Product Name"	          textalign="left" />
+      <output seqno="1" column="ProductCode"  	          coldesc="Product Code"	          textalign="left" />
+      
+
+    </outputs>
+  </search>
+ <search id="S116" description="Product Search"  multiple_select="NO" colname ='product_catg_desc'>
+    <inputs table="TransactionProduct_Taxlist_vw">
+      <input seqno="1" column="ic_code"	                    coldesc="Input Center Code"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+      <input seqno="1" column="Provider_Location"	                    coldesc="Provider Location"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+      <input seqno="2" column="productcategory_desc"	            coldesc="Product Category"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="3" column="productsubcategory_desc"	          coldesc="Product Sub Category"    	      datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="1" column="product_code"	                  coldesc="Product Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1,2,3">
+
+      <output seqno="1" column="productcategory_desc"	          coldesc="Product Category"	            textalign="left" />
+
+      <output seqno="2" column="productsubcategory_desc"  	      coldesc="Product Sub Category"	          textalign="left" />
+      <output seqno="3" column="product_name"  	      coldesc="Product Name"	          textalign="left" />
+      <output seqno="4" column="product_code"  	      coldesc="Product Code"	          textalign="left" />
+
+      <output seqno="5" column="uomtype_code_desc"  	      coldesc="UOM Type Description"	    textalign="left" />
+      <!--<output seqno="6" column="hsn_code"  	      coldesc="HSN Master Code"	          textalign="left" />-->
+      <output seqno="7" column="hsn_code"  	      coldesc="HSN Code Desc"	          textalign="left" />
+      <output seqno="8" column="hsn_desc"  	      coldesc="HSN Master Desc"	          textalign="left" />
+      <output seqno="9" column="cgst_rate"  	      coldesc="CGST RATE"	          textalign="left" />
+      <output seqno="10" column="sgst_rate"  	      coldesc="SGST RATE"	          textalign="left" />
+      <output seqno="11" column="igst_rate"  	      coldesc="IGST RATE"	          textalign="left" />
+      <output seqno="12" column="ugst_rate"  	      coldesc="UGST RATE"	          textalign="left" />
+      <output seqno="13" column="tax_rate"  	      coldesc="TAX RATE"	          textalign="left" />
+      <output seqno="14" column="sugst_rate"  	      coldesc="SGST OR UGST RATE"	          textalign="left" />
+      <output seqno="15" column="productcategory"	          coldesc="Product Category Code"	            textalign="left" />
+
+      <output seqno="16" column="uomtype_code"  	      coldesc="UOM Type"	          textalign="left" />
+      <output seqno="17" column="productsubcategory"  	      coldesc="Product Sub Category Code"	          textalign="left" />
+    </outputs>
+  </search>
+
+	<!--Added By SheebaSebasthian-->
+	<search id="S117" description="Share Member Details Search">
+		<inputs table="FISFPOMemberSearchVw">
+			<input seqno="1" column="fpoorgn_code"	              coldesc="Org Code"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+			<input seqno="2" column="fpomember_code"	              coldesc="Member ID"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="3" column="farmer_code"	              coldesc="Farmer Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="4" column="member_name"	              coldesc="Member Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="5" column="member_village"	              coldesc="Member Village"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+		</inputs>
+		<outputs orderby="1,2,3">
+			<output seqno="1" column="farmer_code"  	          coldesc="Receiving Farmer ID"	          textalign="left" />
+			<output seqno="2" column="fpomember_code"  	      coldesc="Receiving Member ID"	          textalign="left" />
+			<output seqno="3" column="member_name"  	          coldesc="Receiving Farmer Given Name"	    textalign="left" />
+			<output seqno="4" column="member_sur_name"  	          coldesc="Receiving Farmer Surname"	    textalign="left" />
+			<output seqno="4" column="member_village"  	          coldesc="Member Village"	    textalign="left" />
+		</outputs>
+	</search>
+  <!--Added By Prema-->
+  <!--<search id="S118" description="Village Search"  multiple_select="NO" colname ='fpoorgn_code'>
+    <inputs table="[FPOFarmer_VillageListVw]">
+      --><!--<input seqno="1" column="fpoorgn_code"	              coldesc="Org Code"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>--><!--
+      <input seqno="2" column="orgn_village_desc"	            coldesc="Village"	datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1,2">
+      <output seqno="1" column="orgn_village_desc"	           coldesc="Village"	           textalign="left" />
+      <output seqno="2" column="orgn_village"  	               coldesc="Village Code"	          textalign="left" />
+    </outputs>
+  </search>-->
+	<!--End Of Added-->
+  
+     <!--Added By uthaya-->
+  <search id="S118" description="Village Search"  multiple_select="NO" colname ='fpoorgn_code'>
+    <inputs table="FPOFarmer_FigVillageListVw">
+      <!--<input seqno="1" column="orgn_code"	              coldesc="Org Code"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>-->
+      <input seqno="1" column="member_village"	            coldesc="Village"	datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="2" column="fig_name"	            coldesc="Fig Name"	datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+     <!--<input seqno="2" column="orgn_village_desc"	            coldesc="Fig"	datatype="A"    entflg="Y" defval="" 	defcondt="like"/>-->
+    </inputs>
+    <outputs orderby="1,2">
+      <output seqno="1" column="member_village"	           coldesc="Village"	           textalign="left" />
+      <output seqno="2" column="fig_village_covered"  	               coldesc="Village Code"	          textalign="left" />
+    </outputs>
+  </search>
+	<!--End Of Added-->
+
+	<search id="L001" description="Share Member Details Search">
+		<inputs table="FISFPOMemberSearchVw">
+			<input seqno="1" column="fpoorgn_code"	              coldesc="Org Code"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+			<input seqno="2" column="fpomember_code"	              coldesc="Member ID"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="3" column="farmer_code"	              coldesc="Farmer Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="4" column="member_name"	              coldesc="Member Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="5" column="member_village"	              coldesc="Member Village"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+		</inputs>
+		<outputs orderby="1,2,3">
+			<output seqno="1" column="farmer_code"  	          coldesc="Receiving Farmer ID"	          textalign="left" />
+			<output seqno="2" column="fpomember_code"  	      coldesc="Receiving Member ID"	          textalign="left" />
+			<output seqno="3" column="member_name"  	          coldesc="Receiving Farmer Given Name"	    textalign="left" />
+			<output seqno="4" column="member_sur_name"  	          coldesc="Receiving Farmer Surname"	    textalign="left" />
+			<output seqno="4" column="member_village"  	          coldesc="Member Village"	    textalign="left" />
+			<output seqno="5" column="farmer_signature"  	          coldesc="Farmer Sign"	    textalign="left" />
+		</outputs>
+	</search>
+	<!--Added BY Mohan-->
+	<search id="S120" description="Address Details Search" multiple_select="NO" colname ='orgn_state' >
+		<inputs table="village_list_View">
+
+			<input seqno="1" column="orgn_state_desc"	            coldesc="State"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+			<input seqno="2" column="orgn_dist_desc"	            coldesc="Dist"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="3" column="orgn_taluk_desc"	            coldesc="Taluk"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="4" column="orgn_village_desc"	          coldesc="Village"	          datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="5" column="orgn_grampan_desc"	          coldesc="Gram Pan"	          datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="6" column="orgn_hamlet_desc"                coldesc="Hamlet"           datatype="A"    entflg="Y" defval=""     defcondt="like"/>
+		</inputs>
+		<outputs orderby="1,2,3,4,5,6,7,8,9">
+			<output seqno="1" column="orgn_village_desc"	           coldesc="Village"	              textalign="left" />
+			<output seqno="2" column="orgn_hamlet_desc"                coldesc="Hamlet"               textalign="left" />
+			<output seqno="3" column="orgn_dist_desc"	               coldesc="Dist"	                  textalign="left" />
+			<output seqno="4" column="orgn_taluk_desc"	             coldesc="Taluk"	                textalign="left" />
+			<output seqno="5" column="orgn_grampan_desc"  	         coldesc="Gram Panchayat"	        textalign="left" />
+			<output seqno="6" column="orgn_state_desc"	             coldesc="State"	                textalign="left" />
+			<output seqno="7" column="orgn_village"  	               coldesc="Village Code"	          textalign="left" />
+			<output seqno="8" column="orgn_hamlet"                 coldesc="Hamlet Code"                 textalign="left" />
+			<output seqno="9" column="orgn_dist"	                   coldesc="Dist Code"	            textalign="left" />
+			<output seqno="10" column="orgn_taluk"	                   coldesc="Taluk Code"	            textalign="left" />
+			<output seqno="11" column="orgn_grampan"	                 coldesc="Gram Panchayat Code"    textalign="left" />
+			<output seqno="12" column="village_ll_desc"  	           coldesc="Village OD"	            textalign="left" />
+			<output seqno="12" column="hamlet_ll_desc"  	           coldesc="Hamlet OD"	            textalign="left" />
+			<output seqno="13" column="dist_ll_desc"	               coldesc="Dist OD"	              textalign="left" />
+			<output seqno="14" column="taluk_ll_desc"	               coldesc="Taluk OD"	              textalign="left" />
+			<output seqno="15" column="grampan_ll_desc"	             coldesc="Gram Panchayat OD"	    textalign="left" />
+			<output seqno="16" column="orgn_state"  	               coldesc="State Code"	            textalign="left" />
+			<output seqno="17" column="state_ll_desc"  	             coldesc="State OD"	              textalign="left" />
+
+		</outputs>
+	</search>
+
+	<!--End Of Added-->
+	<!--Added BY Mohan-->
+	<search id="S121" description="Address Details Search" multiple_select="NO" colname ='orgn_state' >
+		<inputs table="village_list_View">
+
+			<input seqno="1" column="orgn_state_desc"	            coldesc="State"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+			<input seqno="2" column="orgn_dist_desc"	            coldesc="Dist"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="3" column="orgn_taluk_desc"	            coldesc="Taluk"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="4" column="orgn_village_desc"	          coldesc="Village"	          datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="4" column="orgn_grampan_desc"	          coldesc="Gram Pan"	          datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+		</inputs>
+		<outputs orderby="1,2,3,4,5,6,7,8,9">
+			<output seqno="1" column="orgn_village_desc"	           coldesc="Village"	              textalign="left" />
+			<output seqno="2" column="orgn_dist_desc"	               coldesc="Dist"	                  textalign="left" />
+			<output seqno="3" column="orgn_taluk_desc"	             coldesc="Taluk"	                textalign="left" />
+			<output seqno="4" column="orgn_grampan_desc"  	         coldesc="Gram Panchayat"	        textalign="left" />
+			<output seqno="13" column="orgn_state_desc"	             coldesc="State"	                textalign="left" />
+			<output seqno="5" column="orgn_village"  	               coldesc="Village Code"	          textalign="left" />
+			<output seqno="6" column="orgn_dist"	                   coldesc="Dist Code"	            textalign="left" />
+			<output seqno="7" column="orgn_taluk"	                   coldesc="Taluk Code"	            textalign="left" />
+			<output seqno="8" column="orgn_grampan"	                 coldesc="Gram Panchayat Code"    textalign="left" />
+			<output seqno="9" column="village_ll_desc"  	           coldesc="Village TN"	            textalign="left" />
+			<output seqno="10" column="dist_ll_desc"	               coldesc="Dist TN"	              textalign="left" />
+			<output seqno="11" column="taluk_ll_desc"	               coldesc="Taluk TN"	              textalign="left" />
+			<output seqno="12" column="grampan_ll_desc"	             coldesc="Gram Panchayat TN"	    textalign="left" />
+			<output seqno="14" column="orgn_state"  	               coldesc="State Code"	            textalign="left" />
+			<output seqno="15" column="state_ll_desc"  	             coldesc="State TN"	              textalign="left" />
+
+
+		</outputs>
+	</search>
+	<!--End Of Added-->
+<!--Added by SheebaSebasthian-->
+	<search id="S38" description="Item Category Search"  multiple_select="NO" colname ='Invoiceno'>
+		<inputs table="PAWHS_itemsearch">
+			<input seqno="1" column="agg_code"                     coldesc="Agg Code"               datatype="A"    entflg="N" defval=""     defcondt="equal to"/>
+			<input seqno="1" column="item_code"             coldesc="Item Code"   datatype="A"    entflg="Y" defval=""       defcondt="equal to"/>
+			<input seqno="2" column="item_name"             coldesc="Item name"   datatype="A"    entflg="Y" defval=""       defcondt="equal to"/>
+		</inputs>
+		<outputs orderby="1,2">
+			<output seqno="1" column="item_code"                     coldesc="Item Code"           textalign="left" />
+			<output seqno="2" column="item_name"                 coldesc="Item name"               textalign="left" />
+			<output seqno="2" column="item_type"                 coldesc="Item type"               textalign="left" />
+		</outputs>
+	</search>
+	<search id="S114" description="ProductCategory Search"  multiple_select="NO" colname ='Invoiceno'>
+		<inputs table="PAWHS_ProductHSNVw">
+			<input seqno="1" column="hsn_code_desc"	            coldesc="HSN Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="2" column="hsn_desc"	      coldesc="HSN Description"	    datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+		</inputs>
+		<outputs orderby="1,2">
+			<!--<output seqno="1" column="taxrate_rowid"	          coldesc="Taxrate RowID"	            textalign="left" />-->
+			<output seqno="1" column="hsn_code_desc"	    coldesc="HSN Code"	      textalign="left" />
+			<output seqno="2" column="hsn_desc"  	coldesc="HSN Description"	  textalign="left" />
+			<output seqno="3" column="hsn_code"	    coldesc="HSN Code"	      textalign="left" />
+		</outputs>
+	</search>
+<!--ENd OF Added-->
+  
+  <!--Added by prema PAWHS ISSUES Fixing-->
+	<search id="PW01" description="Farmer Details Search"  multiple_select="NO" colname ='farmer_code'>
+		<inputs table="PAWHS_FarmerVw">
+			<input seqno="1" column="farmer_code"	                coldesc="Farmer Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="2" column="farmer_name"	                coldesc="Farmer Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="3" column="sur_name"	                coldesc="Sur Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="4" column="taluk"	            coldesc="Taluk"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="5" column="Panchayat"	            coldesc="Panchayat"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="6" column="Village"	            coldesc="Village"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="7" column="reg_mobile_no"	            coldesc="Reg Mobile_no"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="7" column="country"	            coldesc="country"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="8" column="state"	            coldesc="state"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="9" column="District"	            coldesc="District"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+		</inputs>
+		<outputs orderby="1,2">
+			<output seqno="1" column="farmer_code"  	          coldesc="Farmer ID"	            textalign="left" />
+			<output seqno="2" column="farmer_name"  	          coldesc="Farmer Name"	          textalign="left" />
+			<output seqno="3" column="sur_name"  	              coldesc="Sur Name"	            textalign="left" />
+			<output seqno="4" column="Village"  			          coldesc="Village"	      textalign="left" />
+			<output seqno="5" column="Panchayat"  	            coldesc="Panchayat"	            textalign="left" />
+			<output seqno="6" column="District"  	              coldesc="District"	            textalign="left" />
+			<output seqno="7" column="reg_mobile_no"  	        coldesc="Mobile Number"	        textalign="left" />
+			<output seqno="8" column="farmer_pincode"  	        coldesc="Pincode"	              textalign="left" />
+			<output seqno="9" column="farmer_village"  			    coldesc="farmer Village"	      textalign="left" />
+			<output seqno="10" column="farmer_panchayat"  	    coldesc="farmer Panchayat"	            textalign="left" />
+			<output seqno="11" column="farmer_dist"  	          coldesc="farmer District"	            textalign="left" />
+			<output seqno="12" column="farmer_addr1"  	        coldesc="address1"	            textalign="left" />
+			<output seqno="13" column="farmer_addr2"  	        coldesc="address2"	            textalign="left" />
+			<output seqno="14" column="farmer_taluk"  	        coldesc="farmer taluk"	                textalign="left" />
+			<output seqno="15" column="taluk"  	                coldesc="taluk"	                textalign="left" />
+			<output seqno="16" column="farmer_state"  	        coldesc="farmer state"	                textalign="left" />
+			<output seqno="18" column="state"  	                coldesc="state"	                textalign="left" />
+			<output seqno="19" column="farmer_country"  	      coldesc="farmer country"	              textalign="left" />
+			<output seqno="20" column="country"  	              coldesc="country"	              textalign="left" />
+		</outputs>
+	</search>
+	<search id="PW02" description="Farmer Details Search"  multiple_select="NO" colname ='farmer_code'>
+		<inputs table="[PAWHS_FPOVw]">
+			<input seqno="1" column="orgn_code"	                coldesc="Orgn Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="2" column="orgn_name"	                coldesc="Orgn Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="3" column="taluk"	            coldesc="Taluk"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="4" column="Panchayat"	            coldesc="Panchayat"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="5" column="Village"	            coldesc="Village"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="6" column="country"	            coldesc="country"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="7" column="state"	            coldesc="state"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="8" column="District"	            coldesc="District"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+		</inputs>
+		<outputs orderby="1,2">
+			<output seqno="1" column="orgn_code"  	          coldesc="Orgn Code"	            textalign="left" />
+			<output seqno="2" column="orgn_name"  	          coldesc="Orgn Name"	          textalign="left" />
+			<output seqno="3" column="village"  			          coldesc="Village"	      textalign="left" />
+			<output seqno="4" column="panchayat"  	            coldesc="Panchayat"	            textalign="left" />
+			<output seqno="5" column="district"  	              coldesc="District"	            textalign="left" />
+			<output seqno="6" column="orgn_pincode"  	        coldesc="Pincode"	              textalign="left" />
+			<output seqno="7" column="orgn_village"  			    coldesc="Orgn Village"	      textalign="left" />
+			<output seqno="8" column="orgn_panchayat"  	    coldesc="Orgn Panchayat"	            textalign="left" />
+			<output seqno="9" column="orgn_dist"  	          coldesc="Orgn District"	            textalign="left" />
+			<output seqno="10" column="orgn_addr1"  	        coldesc="address1"	            textalign="left" />
+			<output seqno="11" column="orgn_addr2"  	        coldesc="address2"	            textalign="left" />
+			<output seqno="12" column="orgn_taluk"  	        coldesc="Orgn taluk"	                textalign="left" />
+			<output seqno="13" column="taluk"  	                coldesc="taluk"	                textalign="left" />
+			<output seqno="14" column="orgn_state"  	        coldesc="Orgn state"	                textalign="left" />
+			<output seqno="15" column="state"  	                coldesc="state"	                textalign="left" />
+			<output seqno="16" column="orgn_country"  	      coldesc="Orgn country"	              textalign="left" />
+			<output seqno="17" column="country"  	              coldesc="country"	              textalign="left" />
+		</outputs>
+	</search>
+  <search id="PW03" description="Item Catogory Search"  multiple_select="NO" colname ='item_catogory_desc'>
+    <inputs table="PAWHS_ItemCatogoryVw">
+      <input seqno="1" column="item_catogory_desc"	                coldesc="Item Catogory"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="2" column="item_subcatogory_desc"	                coldesc="Item SubCatogory"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1,2">
+      <output seqno="1" column="item_catogory_desc"  			          coldesc="Item Catogory"	      textalign="left" />
+      <output seqno="2" column="item_subcatogory_desc"  	            coldesc="Item SubCatogory"	            textalign="left" />
+      <output seqno="3" column="item_catogory"  	              coldesc="Item Catogory Code"	            textalign="left" />
+      <output seqno="4" column="item_subcatogory"  	                coldesc="Item SubCatogory Code"	                textalign="left" />
+    </outputs>
+  </search>
+  <search id="PW04" description="Address Details Search"  multiple_select="NO" colname ='item_desc'>
+    <inputs table="PAWHS_ItemMasterVw">
+      <input seqno="1" column="agg_code"	                    coldesc="Agg Code"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+      <input seqno="2" column="item_code"	                coldesc="Item Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="3" column="item_name"	                coldesc="Item Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="4" column="uom"	                coldesc="UOM Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1,2,3">
+      <output seqno="1" column="item_code"  	          coldesc="item code"	          textalign="left" />
+      <output seqno="2" column="item_name"  	          coldesc="item name"	          textalign="left" />
+      <output seqno="3" column="item_type"	           coldesc="Item type"	           textalign="left" />
+      <output seqno="4" column="uom_code"  	          coldesc="UOM Code"	          textalign="left" />
+      <output seqno="5" column="uom_desc"  	          coldesc="UOM Desc"	          textalign="left" />
+    </outputs>
+  </search>
+  <search id="PW05" description="Vehicle Details Search"  multiple_select="NO" colname ='vehicle_code'>
+    <inputs table="PAWHS_VehcileMasterVw">
+      <input seqno="1" column="agg_code"	                    coldesc="Agg Code"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+      <input seqno="2" column="vehicle_code"	                coldesc="Vehicle Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="3" column="vehicle_regno"	                coldesc="Vehicle Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1,2,3,4,5,6,7">
+      <output seqno="1" column="vehicle_code"  	          coldesc="Vehicle Code"	          textalign="left" />
+      <output seqno="2" column="vehicle_regno"  	          coldesc="Vehicle Name"	          textalign="left" />
+      <output seqno="3" column="vehicle_manf_name"  	          coldesc="Vehicle Manufacturer Name"	          textalign="left" />
+      <output seqno="4" column="max_carrry_weight"  	          coldesc="Max Carry Wight"	          textalign="left" />
+      <output seqno="5" column="loadspace_height"  	          coldesc="Loadspace Height"	          textalign="left" />
+      <output seqno="6" column="loadspace_width"  	          coldesc="Loadspace Width"	          textalign="left" />
+      <output seqno="7" column="loadspace_length"  	          coldesc="Loadspce Length"	          textalign="left" />
+    </outputs>
+  </search>
+  <search id="PW06" description="Warehouse Details Search"  multiple_select="NO" colname ='whs_code'>
+    <inputs table="PAWHS_WarehouseMasterVw">
+      <!--<input seqno="1" column="agg_code"	                    coldesc="Agg Code"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>-->
+      <input seqno="2" column="whs_code"	                coldesc="Warhouse Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="3" column="whs_name"	                coldesc="Warhouse Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1,2">
+      <output seqno="1" column="whs_code"  	          coldesc="Warhouse code"	          textalign="left" />
+      <output seqno="2" column="whs_name"  	          coldesc="Warhouse name"	          textalign="left" />
+    </outputs>
+  </search>
+  <search id="PW07" description="Item Catogory Search"  multiple_select="NO" colname ='item_catogory_desc'>
+    <inputs table="PAWHS_CustomerMasterVw">
+      <input seqno="1" column="farmer_code"	                coldesc="Customer Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="2" column="farmer_name"	                coldesc="Customer Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="1" column="Village"	                coldesc="village"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="2" column="Panchayat"	                coldesc="Panchayat"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="1" column="taluk"	                coldesc="taluk"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="2" column="District"	                coldesc="District"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1,2">
+      <output seqno="1" column="farmer_code"  	          coldesc="Customer Code"	            textalign="left" />
+      <output seqno="2" column="farmer_name"  	          coldesc="Customer Name"	          textalign="left" />
+      <output seqno="4" column="Village"  			          coldesc="Village"	      textalign="left" />
+      <output seqno="5" column="Panchayat"  	            coldesc="Panchayat"	            textalign="left" />
+      <output seqno="6" column="District"  	              coldesc="District"	            textalign="left" />
+      <output seqno="8" column="farmer_pincode"  	        coldesc="Pincode"	              textalign="left" />
+      <output seqno="9" column="farmer_village"  			    coldesc="farmer Village"	      textalign="left" />
+      <output seqno="10" column="farmer_panchayat"  	    coldesc="farmer Panchayat"	            textalign="left" />
+      <output seqno="11" column="farmer_dist"  	          coldesc="farmer District"	            textalign="left" />
+      <output seqno="14" column="farmer_taluk"  	        coldesc="farmer taluk"	                textalign="left" />
+      <output seqno="15" column="taluk"  	                coldesc="taluk"	                textalign="left" />
+      <output seqno="16" column="farmer_state"  	        coldesc="farmer state"	                textalign="left" />
+      <output seqno="18" column="state"  	                coldesc="state"	                textalign="left" />
+
+    </outputs>
+  </search>
+  <search id="PW08" description="Address Details Search"  multiple_select="NO" colname ='item_desc'>
+    <inputs table="PAWHS_FGSEARCH">
+      <input seqno="1" column="agg_code"	                    coldesc="Agg Code"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+      <input seqno="2" column="fg_code"	                coldesc="FG Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="2" column="fg_name"	                coldesc="FG Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1,2,3">
+      <output seqno="1" column="fg_code"  	          coldesc="FG code"	          textalign="left" />
+      <output seqno="2" column="fg_name"  	          coldesc="FG name"	          textalign="left" />
+      <output seqno="2" column="agg_code"  	          coldesc="Aggregator Code"	          textalign="left" />
+    </outputs>
+  </search>
+  <search id="PW09" description="Stock Adjusment Search"  multiple_select="NO" colname ='item_code'>
+    <inputs table="PAWHS_Stock_Adjusment_Vw">
+      <input seqno="1" column="agg_code"	                    coldesc="Agg Code"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+      <!--<input seqno="2" column="grn_invoice_no"	            coldesc="Grn invoic No"	datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>-->
+      <input seqno="3" column="item_code"	            coldesc="Item Code"	datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <input seqno="4" column="item_name"	            coldesc="Item name"	datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <input seqno="5" column="uom_code"	                coldesc="UOM Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+
+    </inputs>
+    <outputs orderby="1,2,3">
+      <!--<output seqno="1" column="grn_invoice_no"  	               coldesc="Grn invoic No"	          textalign="left" />-->
+      <output seqno="2" column="item_code"  	               coldesc="Item Code"	          textalign="left" />
+      <output seqno="3" column="item_name"	           coldesc="Item name"	           textalign="left" />
+      <output seqno="4" column="uom"  	          coldesc="UOM"	          textalign="left" />
+      <output seqno="4" column="uom_code"  	          coldesc="uom code"	          textalign="left" />
+      <!--<output seqno="5" column="agg_code"  	          coldesc="agg code"	          textalign="left" />-->
+
+    </outputs>
+  </search>
+  <search id="PW10" description="Service Receipt Search"  multiple_select="NO" colname ='grn_invoice_no'>
+    <inputs table="PAWHS_ServiceReceiptListVw">
+      <input seqno="1" column="agg_code"	                    coldesc="Agg Code"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+      <input seqno="2" column="service_receipt_no"	            coldesc="Service Receipt No"	datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <input seqno="3" column="whs_name"			       coldesc="Warehouse Name"	datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <input seqno="3" column="farmer_name"			       coldesc="Farmer Name"	datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+    </inputs>
+    <outputs orderby="1,2,3,4,5">
+      <output seqno="1" column="agg_code"  	               coldesc="Aggregator Code"	          textalign="left" />
+      <output seqno="2" column="whs_name"  	               coldesc="Warehouse Name"	          textalign="left" />
+      <output seqno="3" column="service_receipt_no"  	               coldesc="Service Receipt No"	          textalign="left" />
+      <output seqno="4" column="farmer_name"  	               coldesc="Farmer Name"	          textalign="left" />
+      <output seqno="5" column="service_type"  	               coldesc="Service Type"	          textalign="left" />
+      <output seqno="5" column="item_name"  	               coldesc="Output Item"	          textalign="left" />
+      <output seqno="6" column="output_item_code"  	               coldesc="Output Item Code"	          textalign="left" />
+      <output seqno="7" column="whs_code"  	               coldesc="Warehouse Code"	          textalign="left" />
+      <output seqno="8" column="pickup_request_id"  	               coldesc="Pickup Request ID"	          textalign="left" />
+    </outputs>
+  </search>
+  <search id="PW11" description="Service Receipt Search"  multiple_select="NO" colname ='grn_invoice_no'>
+    <inputs table="PAWHS_ServiceInvoiceVw">
+      <input seqno="1" column="agg_code"	                    coldesc="Agg Code"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+      <input seqno="2" column="farmer_code"	            coldesc="Farmer Code"	datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <input seqno="3" column="farmer_name"	            coldesc="Farmer Name"	datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <input seqno="4" column="service_receipt_no"	            coldesc="Service Receipt No"	datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+
+    </inputs>
+    <outputs orderby="1,2">
+      <output seqno="1" column="farmer_code"	            coldesc="Farmer Code"	datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <output seqno="2" column="farmer_name"	            coldesc="Farmer Name"	datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <output seqno="3" column="item_name"	            coldesc="Item name"	datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <output seqno="4" column="out_qty"	            coldesc="Ouput Qty"	datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <output seqno="5" column="service_type"	            coldesc="Service Type"	datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <output seqno="6" column="service_receipt_no"	            coldesc="Service Receipt No"	datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <output seqno="7" column="uom"	            coldesc="Uom"	datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <output seqno="8" column="hsn_code"	            coldesc="Hsn code"	datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <output seqno="9" column="hsn_desc"	            coldesc="Hsn desc"	datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <output seqno="10" column="cgst_rate"	            coldesc="cgst"	datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <output seqno="11" column="igst_rate"	            coldesc="Igst"	datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <output seqno="12" column="sgst_rate"	            coldesc="sgst"	datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <output seqno="13" column="ugst_rate"	            coldesc="ugst"	datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <output seqno="14" column="service_code"	            coldesc="Service code"	datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <output seqno="15" column="sugst_rate"	            coldesc="sugst"	datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <output seqno="16" column="tax_rate"	            coldesc="tax rate"	datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <output seqno="17" column="provider_location"	            coldesc="provider location"	datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <output seqno="18" column="reciver_location"	            coldesc="reciver location"	datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <output seqno="18" column="uom_code"	            coldesc="uom code"	datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+    </outputs>
+  </search>
+  <search id="PW12" description="Service Code Search"  multiple_select="NO" colname ='grn_invoice_no'>
+    <inputs table="PAWHS_ServiceMasterVw">
+      <input seqno="1" column="agg_code"	                    coldesc="Agg Code"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+      <input seqno="2" column="service_code"	            coldesc="Service Code"	datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <input seqno="3" column="service_name"	            coldesc="Service Name"	datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+    </inputs>
+    <outputs orderby="1,2">
+      <output seqno="1" column="service_name"  	               coldesc="Service Name"	          textalign="left" />
+      <output seqno="2" column="service_code"  	               coldesc="Service Code"	          textalign="left" />
+    </outputs>
+  </search>
+  <search id="PW13" description="Member - Search"  multiple_select="NO" colname ='Invoiceno'>
+    <inputs table="PAWHS_WHSFarmerVw">
+      <input seqno="1" column="farmer_code"	                coldesc="Farmer Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="1" column="farmer_name"	                coldesc="Farmer Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="2" column="sur_name"	                coldesc="Sur Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="3" column="TalukName"	            coldesc="Taluk"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="4" column="PanchayatName"	            coldesc="Panchayat"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="5" column="VillageName"	            coldesc="Village"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="6" column="reg_mobile_no"	            coldesc="Reg Mobile_no"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="7" column="agg_code"	                    coldesc="Agg Code"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+
+    </inputs>
+    <outputs orderby="1,2">
+      <output seqno="1" column="farmer_code"  	          coldesc="Farmer ID"	          textalign="left" />
+      <output seqno="2" column="farmer_name"  	          coldesc="Farmer Name"	          textalign="left" />
+      <output seqno="3" column="sur_name"  	              coldesc="Sur Name"	          textalign="left" />
+      <output seqno="4" column="VillageName"  			  coldesc="Farmer Village"	      textalign="left" />
+      <output seqno="5" column="PanchayatName"  	      coldesc="Panchayat"	          textalign="left" />
+      <output seqno="6" column="DistrictName"  	          coldesc="District"	          textalign="left" />
+      <output seqno="7" column="reg_mobile_no"  	          coldesc="Mobile Number"	      textalign="left" />
+      <output seqno="8" column="farmer_pincode"  	          coldesc="Pincode"	              textalign="left" />
+      <output seqno="4" column="farmer_village"  			  coldesc="Farmer Village"	      textalign="left" />
+      <output seqno="5" column="farmer_panchayat"  	      coldesc="Panchayat"	          textalign="left" />
+      <output seqno="6" column="farmer_dist"  	          coldesc="District"	          textalign="left" />
+    </outputs>
+  </search>
+  <search id="S102" description="Address Details Search"  multiple_select="NO" colname ='item_desc'>
+    <inputs table="PAWHS_ItemMasterVw">
+      <input seqno="1" column="agg_code"	                    coldesc="Agg Code"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+      <input seqno="2" column="item_code"	                coldesc="Item Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="3" column="item_name"	                coldesc="Item Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="4" column="uom"	                coldesc="UOM Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1,2,3">
+      <output seqno="1" column="item_code"  	          coldesc="item code"	          textalign="left" />
+      <output seqno="2" column="item_name"  	          coldesc="item name"	          textalign="left" />
+      <output seqno="3" column="item_type"	           coldesc="Item type"	           textalign="left" />
+      <output seqno="4" column="uom_code"  	          coldesc="UOM Code"	          textalign="left" />
+      <output seqno="5" column="uom_desc"  	          coldesc="UOM Desc"	          textalign="left" />
+    </outputs>
+  </search>
+  <search id="PW20" description="Equipment List"  multiple_select="NO" colname ='esp_code'>
+    <inputs table="pawhs_vehicle_Vw">
+      <input seqno="1" column="agg_code"	            coldesc="Agg Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="2" column="vehicle_manf_name"	      coldesc="Vehicle Name"	    datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <!--<input seqno="2" column="process_status"	      coldesc="Status"	    datatype="A"    entflg="Y" defval="" 	defcondt="like"/>-->
+      <!--<input seqno="3" column="equipment_name"	      coldesc="Equipment Name"	    datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="4" column="imei_no"	      coldesc="IMEI No"	    datatype="A"    entflg="Y" defval="" 	defcondt="like"/>-->
+    </inputs>
+    <outputs orderby="1,2,3,4">
+      <output seqno="1" column="agg_code"	    coldesc="Agg Code"	      textalign="left" />
+      <output seqno="2" column="vehicle_code"  	coldesc="Vehicle Code"	  textalign="left" />
+      <output seqno="3" column="vehicle_manf_name"	          coldesc="Vehicle Name"	            textalign="left" />
+      <output seqno="3" column="vehicle_regno"	          coldesc="Vehicle Regno"	            textalign="left" />
+      <output seqno="4" column="imei_no"	          coldesc="IMEI No"	            textalign="left" />
+      <output seqno="4" column="request_status"	          coldesc="Status"	            textalign="left" />
+    </outputs>
+  </search>
+	<search id="S37" description="Village Search"  multiple_select="NO" colname ='Invoiceno'>
+		<inputs table="village_list_vw">
+			<input seqno="1" column="orgn_village_desc"	            coldesc="Village"	datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+		</inputs>
+		<outputs orderby="1,2">
+			<output seqno="1" column="orgn_village"  	               coldesc="Village Code"	          textalign="left" />
+			<output seqno="2" column="orgn_village_desc"	           coldesc="Village"	           textalign="left" />
+
+		</outputs>
+	</search>
+	<search id="S106" description="Village Search"  multiple_select="NO" colname ='Village'>
+		<inputs table="PAWHS_VillageVw">
+			<input seqno="1" column="taluk"	            coldesc="Taluk"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="2" column="Panchayat"	            coldesc="Panchayat"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="3" column="Village"	            coldesc="Village"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<!--<input seqno="4" column="reg_mobile_no"	            coldesc="Reg Mobile_no"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>-->
+			<input seqno="4" column="country"	            coldesc="country"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="5" column="state"	            coldesc="state"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+			<input seqno="6" column="District"	            coldesc="District"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+
+		</inputs>
+		<outputs orderby="1,2">
+			<output seqno="1" column="Village"  			          coldesc="Village"	      textalign="left" />
+			<output seqno="2" column="Panchayat"  	            coldesc="Panchayat"	            textalign="left" />
+			<output seqno="3" column="District"  	              coldesc="District"	            textalign="left" />
+			<output seqno="4" column="taluk"  	                coldesc="taluk"	                textalign="left" />
+			<output seqno="5" column="state"  	                coldesc="state"	                textalign="left" />
+			<output seqno="6" column="country"  	              coldesc="country"	              textalign="left" />
+			<output seqno="7" column="farmer_village"  			    coldesc="farmer Village"	      textalign="left" />
+			<output seqno="8" column="farmer_panchayat"  	    coldesc="farmer Panchayat"	            textalign="left" />
+			<output seqno="9" column="farmer_dist"  	          coldesc="farmer District"	            textalign="left" />
+			<output seqno="10" column="farmer_taluk"  	        coldesc="farmer taluk"	                textalign="left" />
+			<output seqno="11" column="farmer_state"  	        coldesc="farmer state"	                textalign="left" />
+			<output seqno="12" column="farmer_country"  	      coldesc="farmer country"	              textalign="left" />
+
+		</outputs>
+	</search>
+	<search id="P01" description="Item Category Search"  multiple_select="NO" colname ='Invoiceno'>
+		<inputs table="pawhs_itemsearch">
+			<input seqno="1" column="agg_code"	                    coldesc="Agg Code"	            datatype="A"    entflg="N" defval="" 	defcondt="equal to"/>
+			<input seqno="1" column="item_code"	            coldesc="Item Code"	datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+			<input seqno="2" column="item_name"	            coldesc="Item name"	datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+
+		</inputs>
+		<outputs orderby="1,2">
+			<output seqno="1" column="item_code"  	               coldesc="Item Code"	          textalign="left" />
+			<output seqno="2" column="item_name"	           coldesc="Item name"	           textalign="left" />
+			<output seqno="2" column="item_type"	           coldesc="Item type"	           textalign="left" />
+		</outputs>
+	</search>
+<!-- Prema Added for Inward Screen-->
+<search id="INW01" description="Supplier Search"  multiple_select="NO" colname ='Invoiceno'>
+		<inputs table="Supplier_view">
+				<input seqno="1" column="Supplier_code"	            coldesc="Supplier code"	             datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+			<input seqno="2" column="Supplier_name"	                    coldesc="Supplier Name"	            datatype="A"    entflg="N" defval="" 	defcondt="like"/>
+			<input seqno="3" column="Suplier_location"	            coldesc="Suplier Location"	        datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+		
+
+		</inputs>
+		<outputs orderby="1,2,3">
+			<output seqno="1" column="Supplier_name"  	               coldesc="Supplier name"	          textalign="left" />
+			<output seqno="2" column="Suplier_location"	           coldesc="Suplier Location"	           textalign="left" />
+			<output seqno="3" column="Suplier_state"	              coldesc="Suplier state"	             textalign="left" />
+		</outputs>
+	</search>
+  
+	<search id="S103" description="invoicefarmername/ Search"  multiple_select="NO" colname ='Invoiceno'>
+    <inputs table="ICD_farmername_vw">
+      <input seqno="1" column="farmer_name"	                coldesc="Farmer Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1">
+      <output seqno="1" column="farmer_name"  	          coldesc=" Farmer ID"	          textalign="left" />
+    </outputs>
+  </search>
+  <search id="S104" description="invoiceproductcode/ Search"  multiple_select="NO" colname ='Invoiceno'>
+    <inputs table="ICD_Productcode_vw">
+      <input seqno="1" column="product_code"	                coldesc="Product Code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1">
+      <output seqno="1" column="product_code"  	          coldesc="Product Code"	          textalign="left" />
+    </outputs>
+  </search>
+  <search id="S105" description="invoiceproductname/ Search"  multiple_select="NO" colname ='Invoiceno'>
+    <inputs table="ICD_Productname_vw">
+      <input seqno="1" column="product_name"	                coldesc="Product Name"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1">
+      <output seqno="1" column="product_name"  	          coldesc="Product Name"	          textalign="left" />
+    </outputs>
+  </search>
+  <search id="PAWHSBUYER" description="PAWHS BUYER Search"  multiple_select="NO" colname ='bank_code'>
+    <inputs table="PAWHS_NEW_Buyer_Search">
+      <input seqno="1" column="orgn_code"	            coldesc="orgn code"	            datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <input seqno="2" column="buyer_code"	          coldesc="buyer code"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+      <input seqno="3" column="buyer_name"	            coldesc="buyer name"	            datatype="A"    entflg="Y" defval="" 	defcondt="like"/>
+    </inputs>
+    <outputs orderby="1,2,3">
+      <output seqno="1" column="orgn_code"  	             coldesc="orgn codee"	          textalign="left" />
+      <output seqno="2" column="buyer_code"	             coldesc="buyer code"	           textalign="left" />
+      <output seqno="3" column="buyer_name"  	             coldesc="buyer name"	          textalign="left" />
+
+    </outputs>
+  </search>
+  <search id="PWNEWPOSearch" description="PAWHS BUYER Search"  multiple_select="NO" colname ='bank_code'>
+    <inputs table="PAWHS_NEW_Buyer_SearchPO">
+      <input seqno="1" column="orgn_code"	            coldesc="orgn code"	            datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <input seqno="2" column="buyer_code"	          coldesc="buyer code"	            datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+      <input seqno="3" column="buyer_name"	            coldesc="buyer name"	            datatype="A"    entflg="Y" defval="" 	defcondt="equal to"/>
+    </inputs>
+    <outputs orderby="1,2,3">
+      <output seqno="1" column="orgn_code"  	             coldesc="orgn codee"	          textalign="left" />
+      <output seqno="2" column="buyer_code"	             coldesc="buyer code"	           textalign="left" />
+      <output seqno="3" column="buyer_name"  	             coldesc="buyer name"	          textalign="left" />
+      <output seqno="4" column="buyer_state"  	             coldesc="buyer state"	          textalign="left" />
+
+    </outputs>
+  </search>
+  <!--End of Added-->
+
+	<condition>
+    <condt>equal to</condt>
+    <condt>like</condt>
+    <condt>greater than</condt>
+    <condt>not equal to</condt>
+    <condt>not like</condt>
+  </condition>
+
+</root>
+

@@ -1,0 +1,1154 @@
+﻿@{
+    ViewBag.Form = "Bank Details Change";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+<link href="~/CSS/AccordianPan.css" rel="stylesheet" />
+<script src="~/CommonScripts/HelpFile.js"></script>
+<form id="ServiceBankForm" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="box-body" style="padding-top:6px;padding-bottom:2px;border-color:black;">
+            <div class="row" style="padding-top:10px; padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtmember_id" class="col-sm-4 control-label required ">Member ID</label>
+                        <div class="col-sm-5" style="width:200px;">
+                            <input type="text" id="txtmember_id" name="In_fpomember_code" class="form-control" maxlength="50" readonly onchange="fetch_Bank()">
+
+                        </div>
+                        <div id="pay_help">
+                            <a class="HelpWindow fa fa-search fa-lg" role="button" id="pay_help1" data-toggle="modal" href="/HelpFilter/HelpFilter" hdrtitle="FPO Member" searchid="L001" data-target="#HelpModal" onclick=transfer(this,"form","","form_control"); title="Search" style="font-size: 19px; margin-left: 0px; margin-top: 10px;"></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" id="sign">
+                    <label for="txtRoleDesc" class="col-sm-4 control-label ">Signature</label>
+
+                    <img id="former_sign" src="~/images/1.JPG" style="margin-left: -233px;" class="col-sm-4 img-bordered-sm profileImg" alt="User Image" height="40" width="100" />
+                    <div class="form-group">
+                        <div>
+                            <input type="hidden" id="farmer_img" name="signature_farmer" />
+                            <input id="txtaggrorgn_code" name="fpoorgn_code" type="hidden" />
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtfarmer_id" class="col-sm-4 control-label required">Farmer ID</label>
+                        <div class=" col-sm-7">
+                            <input type="text" id="txtfarmer_id" name="In_farmer_code" class="form-control" maxlength="50" readonly>
+                            <input type="hidden" id="request_type" name="request_type" value="QCD_FPOSERVICE_BANKCHNG">
+                            <input type="hidden" id="servicereq_rowid" name="IOU_servicereq_rowid" />
+                            <input type="hidden" id="chklist_status_flag" name="In_chklist_status_flag" />
+                            <input type="hidden" id="process_status" name="process_status" />
+                            <input type="hidden" id="Approval_date" name="Approval_date" />
+                            <input type="hidden" id="current_bank_acc_type" name="In_current_bank_acc_type" />
+                            <input id="txtaggrorgn_code" name="fpoorgn_code" type="hidden" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="txtMode" class="col-sm-5 control-label">Mode</label>
+                        <div class="col-sm-7">
+                            <input id="txtMode" name="In_mode_flag" type="text" class="form-control" data-toggle="tooltip" data-placement="bottom" value="I">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtfarmer_name" class="col-sm-5 control-label">Farmer Given Name</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtfarmer_name" name="member_name" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtfarmer_sur_name" class="col-sm-5 control-label ">Farmer Surname</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtfarmer_sur_name" name="member_sur_name" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="box-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-top:10px;padding-bottom:15px">
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="txtbank_details" class="col-sm-5" style="font-size:15px">Current Bank Details</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtaccount_no" class="col-sm-3 control-label">Account No</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtaccount_no" name="In_current_bank_acc_no" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="txtaccount_type" class="col-sm-3 control-label">Account Type</label>
+                        <div class="col-sm-7">
+                            <input id="txtaccount_type" name="In_current_bank_acc_type" data-role="filtercombo" style="width:100%" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtbank" class="col-sm-3 control-label">Bank</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtbank" name="In_current_bank_code" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="cmb_branch" class="col-sm-3 control-label">Branch</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_branch"  name="In_current_branch_name" style="width:100%" readonly onchange=" speical_char(event)" >
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtifsc" class="col-sm-3 control-label">IFSC Code</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtifsc" name="In_current_ifsc_code" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="txtbank_details" class="col-sm-5" style="font-size:15px">Change Bank Details To</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtaccount_no01" class="col-sm-5 control-label required">Account No</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtaccount_no01" name="In_change_bank_acc_no" class="form-control"  minlength="9"  maxlength="18">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="cmb_account_type" class="col-sm-5 control-label required">Account Type</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_account_type" data-role="filtercombo" name="In_change_bank_acc_type" style="width:100%">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="cmb_bank" class="col-sm-5 control-label required">Bank</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_bank" data-role="filtercombo" name="In_change_bank_code" style="width:100%">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cmb_branch1" class="col-sm-5 control-label required">Branch</label>
+                        <div class="col-sm-5" style="width:315px;">
+
+                            <input type="text" id="cmb_branch1" name="In_change_branch_name" class="form-control" maxlength="50" readonly onchange=" speical_char(event)">
+                        </div>
+                        <div id="pay_help2">
+                            <a class="HelpWindow fa fa-search fa-lg" data-toggle="modal" href="/HelpFilter/HelpFilter" hdrtitle="Bank Details" searchid="S08" data-target="#HelpModal" onclick=transfer(this,"form","","form_control"); title="Search" style="font-size: 19px; margin-left: 0px; margin-top: 10px;"></a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtifsc1" class="col-sm-5 control-label required">IFSC Code</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtifsc1" name="In_change_ifsc_code" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            <div class="col-sm-12" id="default-example">
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="headingone">
+                        <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseone" aria-expanded="true" aria-controls="collapseone">
+                                <i class="more-less glyphicon glyphicon-plus"></i>
+                                Share Certificates Held
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseone" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingone">
+                        <div class="panel-body">
+                            <div class="col-sm-12">
+                                <div id="grid_share_cert"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12" id="default-example">
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="headingTwo">
+                        <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" class="collapsed">
+                                <i class="more-less glyphicon glyphicon-plus"></i>
+                                Service Request History
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                        <div class="panel-body">
+                            <div class="col-sm-12">
+                                <div id="grid_req_history"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <label> Comments</label>
+            <textarea id="txtComments" rows="4" cols="20" name="sr_comments" style="width:100%" class="form-control" ></textarea>
+        </div>
+    </div>
+</form>
+
+<script src="~/API_Scripts/Service_Request_retrieveServiceRequestDetail_APIClient.js"></script>
+<script src="~/API_Scripts/Service_Request_retrieveSRMemberDetail_APIClient.js"></script>
+<script src="~/API_Scripts/Service_Request_retrieveServiceRequestList_APIClient.js"></script>
+<script src="~/API_Scripts/Service_Request_retrieveServiceRequestBank_APIClient.js"></script>
+<script src="~/API_Scripts/Service_Request_saveServiceRequestBank_APIClient.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/API_Scripts/retrieveServiceRequestBank_Model.js"></script>
+<script src="~/API_Scripts/retrieveServiceRequestList_Model.js"></script>
+<script src="~/API_Scripts/retrieveSRMemberDetail_Model.js"></script>
+<script src="~/API_Scripts/saveServiceRequestBank_Model.js"></script>
+<script src="~/API_Scripts/Service_Request_saveservicerequestUpdate_APIClient.js"></script>
+<script src="~/API_Scripts/Service_Request_retrieveServiceRequestUpdate_APIClient.js"></script>
+<script src="~/API_Scripts/saveservicerequestUpdate_Model.js"></script>
+<script src="~/Scripts/AccordianPan.js"></script>
+<script src="~/API_Scripts/ServiceReqBank.js"></script>
+
+
+
+<script>
+    click_act_name = "ServiceBankList";
+    click_ctrl_name = "ServiceBank";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+
+<script>
+    var permission = "";
+    $(document).ready(function () {
+        $("#lblForm_menuid").text("SRVBANK");
+        kendodate_format();
+        //master_service();
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#ServiceBankForm");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        //var elements = document.getElementsByClassName('file_attach');
+        //while (elements.length > 1) {
+        //    elements[0].parentNode.removeChild(elements[0]);
+        //    elements[1].parentNode.removeChild(elements[1]);
+        //}
+        $(document).on('click', '#btnSave', function (e) {
+
+            var Account_no = $('#txtaccount_no01').val();
+            var Account_type = $('#cmb_account_type').val();
+            var Bank = $('#cmb_bank').val();
+            var Branch = $('#cmb_branch1').val();
+            var IFSC = $('#txtifsc1').val();
+
+            if (Account_no != "" && Account_no != null && Account_type != "" &&
+                Account_type != null && Bank != "" && Bank != null && Branch != "" && Branch != null && IFSC != "" && IFSC != null) {
+                $('#divCreate #btnSave').prop('disabled', true);
+                $('#divCreate #review').prop('disabled', false);
+            }
+            else {
+                $('#divCreate #btnSave').prop('disabled', false);
+                $('#divCreate #review').prop('disabled', true);
+            }
+        });
+        $(document).on('click', '#btnSaveEd', function (e) {
+
+            var Account_no = $('#txtaccount_no01').val();
+            var Account_type = $('#cmb_account_type').val();
+            var Bank = $('#cmb_bank').val();
+            var Branch = $('#cmb_branch1').val();
+            var IFSC = $('#txtifsc1').val();
+
+            if (Account_no != "" && Account_no != null && Account_type != "" &&
+                Account_type != null && Bank != "" && Bank != null && Branch != "" && Branch != null && IFSC != "" && IFSC != null) {
+                $('#divEdit #btnSaveEd').prop('disabled', true);
+                $('#divEdit #reviewEd').prop('disabled', false);
+            }
+            else {
+                $('#divEdit #btnSaveEd').prop('disabled', false);
+                $('#divEdit #reviewEd').prop('disabled', false);
+            }
+        });
+        $(document).on('click', '#btnApprove', function (e) {
+            $('#divEdit #btnApprove').prop('disabled', true);
+            $('#divEdit #btnReject').prop('disabled', true);
+        });
+        $(document).on('click', '#btnReject', function (e) {
+            var cmt = $('#txtComments').val();
+            if (cmt != "" && cmt != null) {
+
+                $('#divEdit #btnApprove').prop('disabled', true);
+                $('#divEdit #btnReject').prop('disabled', true);
+            }
+        });
+        $(document).on('click', '#reviewEd', function (e) {
+            master_review();
+            $('#divEdit #reviewEd').prop('disabled', true);
+        });
+        $(document).on('click', '#review', function (e) {
+           master_review();
+            $('#divCreate #review').prop('disabled', true);
+        });
+
+        Screen_Id = "SRVBANK";
+        permission = sec_Permission(Screen_Id);
+        grid_share_cert();
+        grid_req_history();
+        $("#common_id").text("Service Request No");
+
+
+        load_master_code();
+
+        var map_in = "";
+        $("#cmb_branch").empty();
+        map_in = grid_comboScreen_mastercodes("BRANCH");
+        filter_combobox("cmb_branch", map_in);
+
+        var Acctype = "";
+        $("#cmb_account_type").empty();
+        Acctype = grid_comboScreen_mastercodes("QCD_BANKACCTYPE");
+        filter_combobox("cmb_account_type", Acctype);
+
+
+        var CurrentAcctype = "";
+        $("#txtaccount_type").empty();
+        CurrentAcctype = grid_comboScreen_mastercodes("QCD_BANKACCTYPE");
+        filter_combobox("txtaccount_type", CurrentAcctype);
+
+        var CBank = "";
+        $("#cmb_bank").empty();
+        CBank = grid_comboScreen_mastercodes("BANK");
+        filter_combobox("cmb_bank", CBank);
+
+        var org = getlocalStorage('org_id');
+        $('#txtaggrorgn_code').val(org);
+
+
+        $(".file_attach").attr("hdrtitle", "Service Bank Request Change");
+        $(".notes").attr("hdrtitle", "Service Bank Request Change");
+
+
+        if (getlocalStorage('btn_clk_val') == "Create") {
+            $('#divCreate #review').hide();
+            $("#txtMode").val("I");
+            $("#bottom_menus").hide();
+            $('#divCreate #review').show();
+            $('#divCreate #review').prop('disabled', true);
+            //$("#status_code").val("A");
+            $("#DocStat").val("New");
+
+        }
+        else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
+            debugger;
+            field_enable();
+            $('#sign').hide();
+            $("#divEdit #reviewEd").prop("disabled", false);
+            $("#bottom_menus").show();
+            var elements = document.getElementsByClassName('file_attach');
+            while (elements.length > 1) {
+                elements[0].parentNode.removeChild(elements[0]);
+                elements[1].parentNode.removeChild(elements[1]);
+            }
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("ServiceBankForm");
+                var obj_val = JSON.parse(formval);
+                if (data != undefined) {
+                    obj_val.IOU_fpomember_code = data.Out_fpomember_code;
+                    obj_val.IOU_request_type = data.Out_request_type;
+                    obj_val.IOU_servicereq_rowid = data.Out_servicereq_rowid;
+                    obj_val.IOU_servicereq_no = data.Out_servicereq_no;
+                    var org_id = getlocalStorage('org_id');
+                    obj_val.fpoorgn_code = org_id;
+                    var data = {};
+                    data.context = WebAPIProxy.getContext();
+                    data.context.Header = obj_val;
+                    var Context = data.context;
+                    Singleretrieve_SerReqBank_details(Context);
+                    SingleHistory_SerReqBankdetail_details(Context);
+                    //retrieve_SerReqBank_details(data);
+                    //retrieve_SerReqBankdetail_details(data);
+                   $("#txtMode").val("U");
+                    setlocalStorage('doc_no', $("#txtcommon_id").val());
+                    setlocalStorage('doc_row_id', $("#servicereq_rowid").val());
+                }
+            }
+        }
+
+        function field_enable() {
+            if (permission.auth == true || getlocalStorage('btn_clk_val') == "View") {
+                $("#ServiceBankForm :input").attr("readonly", "");
+                $("#pay_help1").hide();
+                $("#txtComments").removeAttr("readonly");
+                $("#farmerfile").removeAttr("readonly");
+                $("#farmerfile").prop("disabled", true);
+            }
+        }
+
+        $('#HelpModal').on('hide.bs.modal', function (e) {
+            if ($("#txtmember_id").val() != undefined || $("#txtmember_id").val() != "") {
+                if ($("#txtaccount_no").val() == "") {
+                    fetch_Bank();
+                }               
+            }
+        });
+       
+    });
+
+    //function get_SerReqBank_details(res) {
+    //    try
+    //    {
+    //        var formval = form_Serialize("ServiceBankForm");
+    //        var obj_val = JSON.parse(formval);
+    //        if (obj_val != undefined) {
+    //            obj_val.fpomember_code = $("#txtmember_id").val();
+    //            obj_val.request_type = "QCD_FPOSERVICE_BANKCHNG";
+    //            obj_val.servicereq_rowid = res.servicereq_rowid;
+    //            obj_val.servicereq_no = res.servicereq_no;
+    //            var data_res = {};
+    //            data_res.context = WebAPIProxy.getContext();
+    //            data_res.context.Header = obj_val;
+    //            retrieve_SerReqBank_details(data_res);
+    //            retrieve_SerReqBankdetail_details(data_res);
+
+
+    //        }
+    //    }
+    //    catch (err) {
+    //        javascript_log4j_root(arguments.callee.name, err);
+    //    }
+    //}
+</script>
+<script>
+    function Singleretrieve_SerReqBank_details(Context) {
+
+        debugger;
+        try {
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ orgnId: Context.orgnId, locnId: Context.locnId, userId: Context.userId, localeId: Context.localeId, Header: Context.Header }),
+                url: "/ServiceBank/SingleServiceList",
+               // url: "/ServiceBank/SingleServiceBankDetails",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    if (response.context != null) {
+                        generate_SerReqBank_header(response.context.Header)
+
+                    }
+                    if (response.ApplicationException != null ) {
+                        kendoAlert(response.ApplicationException.errorDescription);
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+
+    }
+    function SingleHistory_SerReqBankdetail_details(Context) {
+        debugger;
+        try {
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ orgnId: Context.orgnId, locnId: Context.locnId, userId: Context.userId, localeId: Context.localeId, Header: Context.Header }),
+                url: "/ServiceBank/SingleServiceBankDetails",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    if (response.context.Header != null) {
+                        generate_SerReqBank_Header(response.context.Header)
+
+                    }
+                    if (response.context.Share_certificate != null) {
+                        generate_SerReqBank_share_certificate(response.context.Share_certificate)
+                    }
+                    if (response.context.Request_history != null) {
+                        generate_SerReqBank_request_history(response.context.Request_history)
+                    }
+                    if (response.ApplicationException != null ) {
+                        kendoAlert(response.ApplicationException.errorDescription);
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+
+    }
+    function grid_share_cert(data) {
+        try {
+            $("#grid_share_cert").kendoGrid(
+                    {
+                        dataSource: {
+                            data: data,
+                        },
+                        height: 200,
+                        sortable: true,
+                        selectable: true,
+                        selectable: "singl",   //  Grid Row Selection
+                        navigatable: true,
+                        groupable: false,
+
+                        columns: [
+
+                               {
+                                field: "In_certificatedist_rowid",
+                                   title: "certificatedist_rowid",
+                                   hidden: true
+                               },
+                               {
+                                   field: "In_certificate_no",
+                                   title: "Share Certificate No",
+                                   width: 200,
+                                   filterable: {
+                                       cell: {
+                                           operator: "contains",
+                                           inputWidth: 1500
+                                       }
+                                   }
+                               },
+                             {
+                                 field: "In_dist_from",
+                                 title: "Distinct From",
+                                 width: 200,
+                                 filterable: {
+                                     cell: {
+                                         operator: "contains",
+                                         inputWidth: 1500
+                                     }
+                                 }
+                             },
+                              {
+                                  field: "In_dist_to",
+                                  title: "Distinct to",
+                                  width: 200,
+                                  filterable: {
+                                      cell: {
+                                          operator: "contains",
+                                          inputWidth: 1500
+                                      }
+                                  }
+                              },
+                              {
+                                  field: "In_issued_date",
+                                  title: "Issued Date",
+                                  width: 200,
+                                  filterable: {
+                                      cell: {
+                                          operator: "contains",
+                                          inputWidth: 1500
+                                      }
+                                  }
+                              },
+                              {
+                                  field: "In_status_code",
+                                  title: "status_code",
+                                  hidden: true
+                              },
+                            {
+                                field: "In_status_desc",
+                                title: "Status",
+                                width: 200,
+                                filterable: {
+                                    cell: {
+                                        operator: "contains",
+                                        inputWidth: 1500
+                                    }
+                                }
+                            },
+
+                        ]
+
+                    });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    var gridRowID = -1;
+    function sel_checkbox() {
+        try {
+            gridRowID++;
+            return '<input id="chk_sel_' + gridRowID + '" class="checkbox" type="checkbox" />';
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<script>
+    function grid_req_history(data) {
+        try {
+            $("#grid_req_history").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                In_servicereq_rowid: { type: "string", editable: false },
+                                In_certificate_no: { type: "string", editable: false },
+                                In_issued_date: { type: "string" },
+                                In_servicereq_no: { type: "string" },
+                                In_request_date: { type: "string" },
+                                In_request_type: { type: "string" },
+                                In_request_type_desc: { type: "string" },
+                                In_requestsub_type: { type: "string" },
+                                In_requestsub_type_desc: { type: "string" },
+                                In_status_code: { type: "string" },
+                                In_status_desc: { type: "string" }
+
+                            }
+                        }
+                    },
+                },
+
+                height: 200,
+                groupable: false,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                     {
+                        field: "In_servicereq_rowid",
+                         title: "servicereq_rowid",
+                         hidden: true
+                     },
+                    {
+                        field: "In_certificate_no",
+                        title: "Certificate No",
+                        width: 200
+                    },
+                    {
+                        field: "In_issued_date",
+                        title: "Issued Date",
+                        width: 200
+                    },
+                {
+                    field: "In_servicereq_no",
+                    title: "Service Request No",
+                    width: 200
+                },
+                {
+                    field: "In_request_date",
+                    title: "Request Date",
+                    width: 200
+                },
+                 {
+                     field: "In_request_type",
+                     title: "Request Type",
+                     hidden: true
+                 },
+                 {
+                     field: "In_request_type_desc",
+                     title: "Request Type",
+                     width: 200
+                 },
+                 {
+                     field: "In_requestsub_type",
+                     title: "Request Subtype",
+                     hidden: true
+                 },
+                 {
+                     field: "In_requestsub_type_desc",
+                     title: "Request Subtype",
+                     width: 200
+                 },
+                 {
+                     field: "In_status_code",
+                     title: "status_code",
+                     hidden: true
+                 },
+                 {
+                     field: "In_status_desc",
+                     title: "Status",
+                     width: 200,
+                     filterable: {
+                         cell: {
+                             operator: "contains",
+                             inputWidth: 1500
+                         }
+                     }
+                 },
+
+                ]
+            });
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+
+    }
+</script>
+
+<script src="~/Scripts/json2.js"></script>
+<script src="~/Scripts/jquery.collapse.js"></script>
+<script src="~/Scripts/jquery.collapse_storage.js"></script>
+<script src="~/Scripts/jquery.collapse_cookie_storage.js"></script>
+
+<script language="javascript" type="text/javascript">
+    function popitup(url) {
+        generate_SerReqBank_Header
+        newwindow = window.open(url, 'name', 'height=650,width=850');
+        if (window.focus) { newwindow.focus() }
+        return false;
+
+    }
+</script>
+
+<script>
+    function save() {
+        debugger;
+        try {
+
+            if ($("#txtmember_id").val() == undefined || $("#txtmember_id").val() == "") {
+                kendoAlert("FPO member Details needs to be Selected");
+                return false;
+            }
+
+            if ($("#txtMode").val() == "S") {
+                $("#txtMode").val('U');
+
+            }
+            var formval = form_Serialize("ServiceBankForm");
+            var obj_val = JSON.parse(formval);
+            if (obj_val.In_current_bank_acc_type == "Savings") {
+                obj_val.In_current_bank_acc_type = "QCD_ACC_SAVINGS";
+            }
+            else {
+
+                obj_val.In_current_bank_acc_type = "QCD_ACC_CURRENT";
+            }
+
+            if ($("#servicereq_rowid").val() == undefined || $("#servicereq_rowid").val() == "") {
+                obj_val.IOU_servicereq_rowid = 0;
+            }
+            else {
+                obj_val.IOU_servicereq_rowid = $("#servicereq_rowid").val();
+            }
+            if ($("#txtcommon_id").val() == undefined || $("#txtcommon_id").val() == "") {
+                obj_val.IOU_servicereq_no = "0";
+            }
+            else {
+                obj_val.IOU_servicereq_no = $("#txtcommon_id").val();
+            }
+            if (obj_val.In_status_code == undefined) {
+                obj_val.In_status_code = "A";
+            }
+            if (obj_val.In_row_timestamp == undefined) {
+                obj_val.In_row_timestamp = "0";
+            }
+            if ($("#chklist_status_flag").val() == undefined) {
+                obj_val.In_chklist_status_flag = 0;
+            }
+            else {
+                obj_val.In_chklist_status_flag = $("#chklist_status_flag").val();
+            }
+            if (obj_val.In_row_timestamp == undefined) {
+                obj_val.In_row_timestamp = "0";
+            }
+
+            if (getlocalStorage('org_id') == undefined) {
+                obj_val.fpoorgn_code = "0";
+            }
+            else {
+                obj_val.fpoorgn_code = getlocalStorage('org_id');
+            }
+            if ($("#txtComments").val() == undefined || $("#txtComments").val() == "") {
+                obj_val.In_sr_comments = "";
+            }
+            else {
+                obj_val.In_sr_comments = $("#txtComments").val();
+            }
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_val;
+            var Context = data.context;
+
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ orgnId: Context.orgnId, locnId: Context.locnId, userId: Context.userId, localeId: Context.localeId, Header: Context.Header }),
+                url: "/ServiceBank/SaveReqBank",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    var Res = response;
+                    if (Res != null) {
+                        debugger;
+                        var mode = $("#txtMode").val();
+                        if (mode == "I") {
+                            kendoAlert("Bank Detail Changes saved successfully");
+                            get_SerReqBank_details(Res.context.Header);
+                            $('#divCreate #btnSave').prop('disabled', true);
+                           $('#divCreate #review').prop('disabled', false);
+                        }
+                        else if (mode == "D") {
+                            kendoAlert("Bank Detail Changes inactivate successfully");
+                            get_SerReqBank_details(Res.context.Header);
+                            $('#divCreate #btnSave').prop('disabled', true);
+                            $('#divCreate #review').prop('disabled', false);
+                        }
+                        else if (mode == "R") {
+                            kendoAlert("Bank Detail Changes Request Send For Review");
+                            get_SerReqBank_details(Res.context.Header);
+                            $('#divCreate #btnSave').prop('disabled', true);
+                            $('#divCreate #review').prop('disabled', true);
+                        }
+                        else if (mode == "J") {
+                            kendoAlert("Bank Detail Changes Rejected successfully");
+                            get_SerReqBank_details(Res.context.Header);
+                        }
+                        else if (mode == "A") {
+                            kendoAlert("Bank Detail Changes Approved Successfully");
+                            get_SerReqBank_details(Res.context.Header);
+                            $('#divCreate #btnSave').prop('disabled', true);
+                            $('#divCreate #review').prop('disabled', false);
+                        }
+                        else {
+                            kendoAlert("Bank Detail Changes  saved successfully");
+                            get_SerReqBank_details(Res.context.Header);
+                            $('#divCreate #btnSave').prop('disabled', true);
+                            $('#divCreate #review').prop('disabled', false);
+                        }
+                    }
+                        else {
+                            kendoAlert(Res.ApplicationException.errorDescription);
+                        }
+
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+            //save_SerReqBank_details(data);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    
+    function fetch_Bank() {
+        debugger;
+        try {
+            var formval = form_Serialize("ServiceBankForm");
+            var obj_val = JSON.parse(formval);
+            if (obj_val != undefined) {
+                obj_val.IOU_fpomember_code = $("#txtmember_id").val();
+                obj_val.IOU_servicereq_rowid = "0";
+                obj_val.IOU_servicereq_no = "0";
+                var org_id = getlocalStorage('org_id');
+                obj_val.fpoorgn_code = org_id;
+                var data_fetch = {};
+                data_fetch.context = WebAPIProxy.getContext();
+                data_fetch.context.Header = obj_val;
+               // GetChangeBankDetail(data_fetch);
+                var Context = data_fetch.context;
+
+                Singleretrieve_SerReqBank_details(Context);
+                SingleHistory_SerReqBankdetail_details(Context);
+
+                //retrieve_SerReqBank_details(data_fetch);
+                //retrieve_SerReqBankdetail_details(data_fetch);
+                
+                var profiledata = $("#farmer_img").val()
+                //console.log($("#farmer_img").val());
+                if (profiledata != "")
+                    document.getElementById("former_sign").src = "data:image/png;base64," + profiledata;
+                else
+                    document.getElementById("former_sign").src = "/images/noimage.png";
+
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function GetChangeBankDetail(res) {
+        debugger;
+        try {
+            if (res != null) {
+                $("#txtaccount_no01").val(res.context.Header.In_change_bank_acc_no);
+                $('#cmb_account_type').data("kendoComboBox").value(res.context.Header.In_change_bank_acc_type);
+                $('#cmb_bank').data("kendoComboBox").value(res.context.Header.In_change_bank_code);
+                $('#cmb_branch1').val(res.context.Header.In_change_branch_name);
+                $("#txtifsc1").val(res.context.Header.In_change_ifsc_code);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function generate_SerReqBank_share_certificate(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                grid_share_cert(data);
+            }
+            else {
+                grid_share_cert([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_SerReqBank_request_history(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                grid_req_history(data);
+            }
+            else {
+                grid_req_history([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function generate_SerReqBank_Header(res) {
+        debugger;
+        try {
+            if (res != null && getlocalStorage('btn_clk_val') != "Create") {
+
+                $("#txtfarmer_id").val(res.In_farmer_code);
+                $("#txtfarmer_name").val(res.In_farmer_name);
+                $("#txtfarmer_sur_name").val(res.In_sur_name);
+                $("#txtgiven_name").val(res.In_farmer_name);
+                $("#txtsurname").val(res.In_sur_name);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function generate_SerReqBank_header(res) {
+        try {
+
+            if (res != null) {
+
+                $("#txtmember_id").val(res.IOU_fpomember_code);
+                $("#txt_cur_given_name").val(res.cur_farmer_name);
+                $("#txt_cur_surname").val(res.cur_sur_name);
+                $("#txtaccount_no").val(res.In_current_bank_acc_no);
+                $('#txtaccount_type').data("kendoComboBox").value(res.In_current_bank_acc_type_desc);
+                $("#txtbank").val(res.In_current_bank_code);
+                $('#cmb_branch').data("kendoComboBox").value(res.In_current_branch_name)
+                $("#txtifsc").val(res.In_current_ifsc_code);
+                $("#servicereq_rowid").val(res.IOU_servicereq_rowid);
+                $("#DocStat").val(res.In_status_desc);
+                $("#txtaccount_no01").val(res.In_change_bank_acc_no);
+                $('#cmb_account_type').data("kendoComboBox").value(res.In_change_bank_acc_type_desc);
+                $('#cmb_bank').data("kendoComboBox").value(res.In_change_bank_code);
+                $('#cmb_branch1').val(res.In_change_branch_name);
+                $("#txtifsc1").val(res.In_change_ifsc_code);
+                $("#txtComments").val(res.In_sr_comments);
+                localStorage.docno = res.IOU_servicereq_rowid;
+                //if ($("#txtMode").val() != 'U') Pandiaraj 05-08-2020
+                    $("#txtcommon_id").val(res.IOU_servicereq_no);
+
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function get_SerReqBank_details(res) {
+        try {
+            var formval = form_Serialize("ServiceBankForm");
+            var obj_val = JSON.parse(formval);
+            if (obj_val != undefined) {
+                obj_val.IOU_fpomember_code = $("#txtmember_id").val();
+                obj_val.IOU_request_type = "QCD_FPOSERVICE_BANKCHNG";
+                obj_val.IOU_servicereq_rowid = res.IOU_servicereq_rowid;
+                obj_val.IOU_servicereq_no = res.IOU_servicereq_no;
+                
+                var data_res = {};
+                data_res.context = WebAPIProxy.getContext();
+                data_res.context.Header = obj_val;
+                var Context = data_res.context;
+                $("#txtcommon_id").val(res.IOU_servicereq_no);
+               // Singleretrieve_SerReqBank_details(Context);
+                SingleHistory_SerReqBankdetail_details(Context);
+                ////var mode = obj_val.mode_flag;
+                ////if (mode == "I") {
+
+                ////    kendoAlert("Bank Detail  Changes saved successfully");
+
+                ////}
+                ////else if (mode == "D") {
+                ////    kendoAlert("Bank Detail  Changes inactivate successfully");
+
+                ////}
+                ////else if (mode == "A") {
+                ////    kendoAlert("Application Approved");
+                ////}
+                //////else {
+                //////    kendoAlert("Bank Detail  Changes saved successfully");
+                //////}
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+
+<script>
+    function grid_control() {
+        try {
+            var control_Name = [
+
+            ];
+            return control_Name;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function form_control() {
+        try {
+            var control_Name = [
+                { "dataCol": "fpomember_code", "controlId": "txtmember_id", "type": "Text" },
+                { "dataCol": "farmer_code", "controlId": "txtfarmer_id", "type": "Text" },
+                { "dataCol": "member_name", "controlId": "txtfarmer_name", "type": "Text" },
+                 { "dataCol": "member_sur_name", "controlId": "txtfarmer_sur_name", "type": "Text" },
+
+                  { "dataCol": "branch_name", "controlId": "cmb_branch1", "type": "Text" },
+                 { "dataCol": "ifsc_code", "controlId": "txtifsc1", "type": "Text" },
+
+                  { "dataCol": "bank_code", "controlId": "cmb_bank", "type": "Text" },
+              { "dataCol": "farmer_signature", "controlId": "farmer_img", "type": "Text" }
+            ];
+            return control_Name;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+
+    }
+
+    function trans_input_data() {
+        try {
+            var trans_coll = [
+                { "trasfer": "Yes", "dataCol": "fpofarmer_code", "controlId": "", "grid_id": "", "grid_row_col": "" },
+               { "trasfer": "Yes", "dataCol": "fpoorgn_code", "controlId": "txtaggrorgn_code", "grid_id": "", "grid_row_col": "" },
+                { "trasfer": "Yes", "dataCol": "bank_code", "controlId": "cmb_bank", "grid_id": "", "grid_row_col": "" },
+                 { "trasfer": "Yes", "dataCol": "farmer_signature", "controlId": "farmer_img", "grid_id": "", "grid_row_col": "" }
+            ];
+            return trans_coll;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<script>
+    function load_master_code() {
+        try {
+            var data = {};
+            data.screen_Id = "SRVBANK";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function review() {
+        try {
+            $("#txtMode").val('R');
+            save();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function approve() {
+        try {
+            $("#txtMode").val('A');
+            save();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function reject() {
+        try {
+            console.log($("#txtComments").val());
+            if ($("#txtComments").val() == "") {
+                kendoAlert("Please provide rejection reason for rejecting a request");
+            }
+            else {
+                $("#txtMode").val('J');
+                save();
+                $("#btnReject").prop('disabled', false);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>

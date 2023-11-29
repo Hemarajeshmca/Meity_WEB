@@ -1,0 +1,756 @@
+﻿@{
+    ViewBag.Form = "Produce Calendar";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+
+<form id="Produce_Calendar" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row">
+
+                <div class="col-sm-4">
+                    <div class=" form-group" style="display:none;">
+                        <label for="txt_producecal_rowid" class=" col-sm-5 control-label">Produce rowid</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_producecal_rowid" name="IOU_producecal_rowid" class="form-control" />
+                        </div>
+                    </div>
+                    <div class=" form-group">
+                        <label for="txt_pac_no" class=" col-sm-5 control-label">PAC No</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_pac_no" name="IOU_pac_no" class="form-control" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txt_pac_date" class="col-sm-5 control-label required">PAC Date</label>
+                        <div class="col-sm-6">
+                            <input class="cusDate" data-role='datepicker' id="txt_pac_date" data-checkdate-msg="Enter Valid Date" name="In_pac_date" style="width:100%" onkeypress="return date_validate(event)" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                            @*<input class="cusDate" type="date" data-role='datepicker' name="pac_date"
+                                       id="txt_pac_date" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" style="width:100%" />
+                                <span data-for='valid' class='k-invalid-msg'></span>*@
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txt_pac_year" class=" col-sm-5 control-label required">PAC Year</label>
+                        <div class=" col-sm-6">
+                            <input id="txt_pac_year" class="form-control" name="In_pac_year" data-role="filtercombo" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txt_farmer_code" class=" col-sm-5 control-label required">Farmer Code</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_farmer_code" name="In_farmer_code" class="form-control" />
+                        </div>
+                        <div id="pay_help1">
+                            <a class="HelpWindow fa fa-search fa-lg" role="button" id="pay_help2" data-toggle="modal" href="/HelpFilter/HelpFilter" hdrtitle="FPO" searchid="S32" data-target="#HelpModal" onclick=transfer(this,"form","","form_control"); title="Search" style="font-size: 19px; "></a>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txt_farmer_name" class=" col-sm-5 control-label required">Farmer Name</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_farmer_name" name="In_farmer_name" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4" style="display:none">
+                    <div class="form-group">
+                        <label for="txt_agg_code" class="col-sm-5 control-label ">Agg Code</label>
+                        <div class=" col-sm-6">
+                            <input type="text" name="In_agg_code" onkeypress="return isNumberKey(event)" id="txt_agg_code" class="form-control" maxlength="50" style="text-align:right" value="AGG">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group" style="display:none;">
+                        <label for="txt_status_code" class="col-sm-5 control-label">Status_code</label>
+                        <div class="col-sm-4">
+                            <input type="text" value="A" id="txt_status_code" name="In_status_code" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group" style="display:none;">
+                        <label for="txt_status_desc" class="col-sm-5 control-label">Status_code</label>
+                        <div class="col-sm-4">
+                            <input type="text" value="Active" id="txt_status_desc" name="In_status_desc" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group" style="display:none;">
+                        <label for="txtMode" class="col-sm-5 control-label">Mode</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtMode" name="In_mode_flag" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group" style="display:none;">
+                        <label for="row_timestamp" class="col-sm-5 control-label">Timestamp:</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txt_row_timestamp" name="In_row_timestamp" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12" style="padding-bottom:25px">
+                    <div id="pro_cal"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="~/API_Scripts/PAWHS_getProduceCalendar_Model.js"></script>
+<script src="~/API_Scripts/PAWHS_getProduceCalendarList_Model.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/API_Scripts/PAWHS_saveProduceCalendar_Model.js"></script>
+<script src="~/API_Scripts/ProduceCalendar.js"></script>
+<script src="~/API_Scripts/Produce_Calendar_PAWHS_getProduceCalendar_APIClient.js"></script>
+<script src="~/API_Scripts/Produce_Calendar_PAWHS_saveProduceCalendar_APIClient.js"></script>
+<script src="~/API_Scripts/Produce_Calendar_PAWHS_getProduceCalendarList_APIClient.js"></script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+<script>
+    click_act_name = "PAWHSProduceCalendarList";
+    click_ctrl_name = "PAWHSProduceCalendar";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+
+<script>
+    $(document).ready(function () {
+        kendodate_format();
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#Produce_Calendar");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+
+        CALPRODUCE();
+        load_master_code();
+        $("#hide_div").hide();
+        Screen_Id = "PWPRODCAL";
+        permission = sec_Permission(Screen_Id);
+
+        var INTER_TYPE = "";
+        $("#txt_pac_year").empty();
+        INTER_TYPE = grid_comboScreen_mastercodes("QCD_PAWHS_year");
+        filter_combobox("txt_pac_year", INTER_TYPE);
+
+        $("#txt_pac_date").kendoDatePicker({
+            max: new Date(),// sets max date
+            //format: "dd/MM/yyyy",
+            value: new Date(),
+        });
+
+
+        if (getlocalStorage('btn_clk_val') == "Create") {
+
+            $('#divCreate #review').hide();
+            $("#txtMode").val("I");
+            $("#bottom_menus").hide();
+            $("#DocStat").val("New");
+        }
+        else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
+            debugger;
+            $('#divEdit #reviewEd').hide();
+            $('#divEdit #deactivate').hide();
+            $("#bottom_menus li:nth-child(1)").hide();
+            $("#bottom_menus li:nth-child(3)").hide();
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("Produce_Calendar");
+                var obj_val = JSON.parse(formval);
+                obj_val.producecal_rowid = data.Out_producecal_rowid;
+                obj_val.pac_no = data.Out_pac_no;
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, producecal_rowid: Context.Header.producecal_rowid, pac_no: Context.Header.pac_no }),
+                    url: "/PAWHSProduceCalendar/PAWHSProduceCalendarfetch",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        debugger;
+                        if (response.context != null) {
+                            generate_ProduceCalendar_header(response.context.Header);
+                            generate_ProduceCal(response.context.List);
+                        }
+                        else { }
+                    },
+                    error: function (er) {
+                        alert(er)
+                        console.log(er)
+                    }
+                });
+               // retrieve_produce_CalendarScreen(data);
+                $("#txtMode").val("U");
+            }
+        }
+
+
+
+    });
+
+</script>
+<script>
+    function load_master_code() {
+        try {
+            debugger;
+            var data = {};
+            var context = WebAPIProxy.getContext();
+            data.userId = context.userId
+            data.orgnId = context.orgnId
+            data.locnId = context.locnId
+            data.localeId = context.localeId
+            data.screen_Id = "PWPRODCAL";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>
+    var data = [];
+    function CALPRODUCE(data) {
+        try {
+            $("#pro_cal").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+
+                                In_item_rowid: { type: "string" },
+                                In_item_code: { type: "string" },
+                                In_item_desc: { type: "string" },
+                                In_uom: { type: "string" },
+                                In_jan: { type: "int" },
+                                In_feb: { type: "int" },
+                                In_mar: { type: "int" },
+                                In_apr: { type: "int" },
+                                In_may: { type: "int" },
+                                In_jun: { type: "int" },
+                                In_jul: { type: "int" },
+                                In_aug: { type: "int" },
+                                In_sep: { type: "int" },
+                                In_oct: { type: "int" },
+                                In_nov: { type: "int" },
+                                In_dec: { type: "int" },
+                                In_status_code: { type: "string" },
+                                In_status_desc: { type: "string" },
+                                In_mode_flag: { type: "string" }
+
+                            }
+                        }
+                    }
+                },
+                toolbar: "<a  class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 350,
+                groupable: false,
+
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [{
+
+                    command: [
+                     {
+                         name: "Delete",
+                         id: "Delete",
+                         imageClass: "fa fa-close",
+                         click: function (e) {
+                             var grid = $("#pro_cal").data("kendoGrid");
+                             var dataItem = $("#pro_cal").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                             DeleteWindowEvent(e, dataItem, grid);
+                             e.stopImmediatePropagation()
+                         }
+                     },
+                    ], title: "Action", width: "25px",
+                },
+
+
+                {
+                    field: "In_item_rowid",
+                    title: "itemrowid",
+                    width: 15,
+                    hidden: true,
+
+                },
+                {
+                    field: "In_item_code",
+                    title: "Item Code",
+                    hidden: true,
+                    width: 50,
+                },
+                  {
+                      field: "In_item_desc",
+                      title: "Item Name",
+                      editor: '<div class="input-group input-group-sm"><input type="text" readonly name="item_desc" maxlength="50" style="width:150px;color:black"  onkeypress="return speical_char(event)" data-bind="value:item_desc"/><span class="input-group-btn" style="padding-right: 200px;"><a class="HelpWindow fa fa-search fa-lg" data-toggle="modal" href="/HelpFilter/HelpFilter" hdrtitle="Item Details Search" searchid="PW04" data-target="#HelpModal" onclick=transfer(this,"grid","pro_cal","CALPRODUCE") title="Search" style="font-size: 15px; padding-left: 10px;"></a> </span> </div>',
+                      width: 50,
+                  },
+                 {
+                     field: "In_uom",
+                     title: "UOM",
+                     width: 50,
+
+                 },
+                 {
+                     field: "In_jan",
+                     title: "Jan",
+                     width: 15,
+                     attributes: { style: "text-align:right;" },
+                     editor: function (container, options) {
+                         numeric_editor(container, options.field, '50', '0');
+                     }
+                 },
+                 {
+                     field: "In_feb",
+                     title: "Feb",
+                     width: 15,
+                     attributes: { style: "text-align:right;" },
+                     editor: function (container, options) {
+                         numeric_editor(container, options.field, '50', '0');
+                     }
+                 },
+                 {
+                     field: "In_mar",
+                     title: "Mar",
+                     width: 15,
+                     attributes: { style: "text-align:right;" },
+                     editor: function (container, options) {
+                         numeric_editor(container, options.field, '50', '0');
+                     }
+                 },
+                 {
+                     field: "In_apr",
+                     title: "Apr",
+                     width: 15,
+                     attributes: { style: "text-align:right;" },
+                     editor: function (container, options) {
+                         numeric_editor(container, options.field, '50', '0');
+                     }
+                 },
+                 {
+                     field: "In_may",
+                     title: "May",
+                     width: 15,
+                     attributes: { style: "text-align:right;" },
+                     editor: function (container, options) {
+                         numeric_editor(container, options.field, '50', '0');
+                     }
+                 },
+                 {
+                     field: "In_jun",
+                     title: "Jun",
+                     width: 15,
+                     attributes: { style: "text-align:right;" },
+                     editor: function (container, options) {
+                         numeric_editor(container, options.field, '50', '0');
+                     }
+                 },
+                 {
+                     field: "In_jul",
+                     title: "Jul",
+                     width: 15,
+                     attributes: { style: "text-align:right;" },
+                     editor: function (container, options) {
+                         numeric_editor(container, options.field, '50', '0');
+                     }
+                 },
+                 {
+                     field: "In_aug",
+                     title: "Aug",
+                     width: 15,
+                     attributes: { style: "text-align:right;" },
+                     editor: function (container, options) {
+                         numeric_editor(container, options.field, '50', '0');
+                     }
+                 },
+                 {
+                     field: "In_sep",
+                     title: "Sep",
+                     width: 15,
+                     attributes: { style: "text-align:right;" },
+                     editor: function (container, options) {
+                         numeric_editor(container, options.field, '50', '0');
+                     }
+                 },
+                 {
+                     field: "In_oct",
+                     title: "Oct",
+                     width: 15,
+                     attributes: { style: "text-align:right;" },
+                     editor: function (container, options) {
+                         numeric_editor(container, options.field, '50', '0');
+                     }
+                 },
+                 {
+                     field: "In_nov",
+                     title: "Nov",
+                     width: 15,
+                     attributes: { style: "text-align:right;" },
+                     editor: function (container, options) {
+                         numeric_editor(container, options.field, '50', '0');
+                     }
+                 },
+                 {
+                     field: "In_dec",
+                     title: "Dec",
+                     width: 15,
+                     attributes: { style: "text-align:right;" },
+                     editor: function (container, options) {
+                         numeric_editor(container, options.field, '50', '0');
+                     }
+                 },
+                 {
+                     field: "In_status_code",
+                     title: "status_code",
+                     hidden: true,
+                     width: 50,
+                 },
+                 {
+                     field: "In_status_desc",
+                     title: "Status",
+                     hidden: true,
+                     width: 50,
+                 },
+                 {
+                     field: "In_mode_flag",
+                     title: "Mode",
+                     hidden: true
+                 }
+                ],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+        load_master_code();
+        function DeleteDetails() {
+            try {
+                $("#txtMode").val('D');
+                save();
+            }
+            catch (err) {
+                javascript_log4j_root(arguments.callee.name, err);
+            }
+        }
+    }
+</script>
+<script>
+    function grid_control() {
+        debugger;
+        try {
+            var control_Name = [
+                { "dataCol": "item_code", "grid_row_col": "In_item_code" },
+                { "dataCol": "item_name", "grid_row_col": "In_item_desc" },
+                { "dataCol": "uom_desc", "grid_row_col": "In_uom" },
+                { "dataCol": "", "grid_row_col": "In_jan" },
+                { "dataCol": "", "grid_row_col": "In_feb" },
+                { "dataCol": "", "grid_row_col": "In_mar" },
+                { "dataCol": "", "grid_row_col": "In_apr" },
+                { "dataCol": "", "grid_row_col": "In_may" },
+                { "dataCol": "", "grid_row_col": "In_jun" },
+                { "dataCol": "", "grid_row_col": "In_jul" },
+                { "dataCol": "", "grid_row_col": "In_aug" },
+                { "dataCol": "", "grid_row_col": "In_sep" },
+                { "dataCol": "", "grid_row_col": "In_oct" },
+                { "dataCol": "", "grid_row_col": "In_nov" },
+                { "dataCol": "", "grid_row_col": "In_dec" },
+                { "dataCol": "", "grid_row_col": "In_status_code" },
+                { "dataCol": "", "grid_row_col": "In_status_desc" },
+                { "dataCol": "", "grid_row_col": "In_mode_flag" },
+                { "dataCol": "", "grid_row_col": "In_item_rowid" },
+                { "dataCol": "", "grid_row_col": "uid" }
+            ];
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+        return control_Name;
+    }
+
+    function form_control() {
+        var control_Name = [
+            { "dataCol": "farmer_code", "controlId": "txt_farmer_code", "type": "Text" },
+            { "dataCol": "farmer_name", "controlId": "txt_farmer_name", "type": "Text" },
+        ];
+        return control_Name;
+    }
+
+    function trans_input_data() {
+        var trans_coll = [
+            { "trasfer": "Yes", "dataCol": "farmer_code", "controlId": "txt_farmer_code", "grid_id": "", "grid_row_col": "farmer_code" },
+            { "trasfer": "No", "dataCol": "farmer_name", "controlId": "txt_farmer_name", "grid_id": "", "grid_row_col": "farmer_name" },
+             { "trasfer": "Yes", "dataCol": "item_code", "controlId": "", "grid_id": "pro_cal", "grid_row_col": "" },
+               { "trasfer": "Yes", "dataCol": "item_name", "controlId": "", "grid_id": "pro_cal", "grid_row_col": "" },
+                { "trasfer": "Yes", "dataCol": "uom_desc", "controlId": "", "grid_id": "pro_cal", "grid_row_col": "" },
+        ];
+        return trans_coll;
+    }
+</script>
+
+<script>
+    function Get_ProduceCalendar_details(res) {
+        debugger;
+        try {
+            var formval = form_Serialize("Produce_Calendar");
+            var obj_val = JSON.parse(formval);
+            $("#txt_pac_no").val(res.pac_no);
+            obj_val.producecal_rowid = res.IOU_producecal_rowid;
+            obj_val.pac_no = res.IOU_pac_no;
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_val;
+            var Context = data.context;
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, producecal_rowid: Context.Header.producecal_rowid, pac_no: Context.Header.pac_no }),
+                url: "/PAWHSProduceCalendar/PAWHSProduceCalendarfetch",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    if (response.context != null) {
+                        generate_ProduceCalendar_header(response.context.Header);
+                        generate_ProduceCal(response.context.List);
+                    }
+                    else { }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+            });
+           // retrieve_produce_CalendarScreen(data);
+            $("#txtMode").val("U");
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function save() {
+        debugger;
+        try {
+
+            $("#txt_farmer_code").removeAttr("readonly");
+            $("#txt_farmer_name").removeAttr("readonly");
+            $("#txt_pac_no").removeAttr("readonly");
+            $("#txt_pac_date").removeAttr("readonly");
+            $("#txt_pac_year").removeAttr("readonly");
+
+            if ($("#txt_producecal_rowid").val() == "") {
+                $("#txt_producecal_rowid").val('0');
+            }
+            if ($("#txtMode").val() == "") {
+                $("#txtMode").val('I');
+            }
+            if ($("#txtMode").val() == "S") {
+                $("#txtMode").val('U');
+            }
+            var formval = form_Serialize("Produce_Calendar");
+            var obj_val = JSON.parse(formval);
+            var grid_val = JSON.stringify($("#pro_cal").data().kendoGrid._data);
+            var Bind = {};
+            Bind = grid_val;
+            var result = JSON.parse(Bind);
+            $.each(result, function (index, value) {
+                var row_id = value.In_item_rowid;
+                if (row_id == undefined || row_id == '') {
+                    result[index].In_item_rowid = 0;
+                }
+                var jan = value.In_jan;
+                if (jan == undefined || jan == '') {
+                    result[index].In_jan = 0;
+                }
+                var feb = value.In_feb;
+                if (feb == undefined || feb == '') {
+                    result[index].In_feb = 0;
+                }
+                var mar = value.In_mar;
+                if (mar == undefined || mar == '') {
+                    result[index].In_mar = 0;
+                }
+                var apr = value.In_apr;
+                if (apr == undefined || apr == '') {
+                    result[index].In_apr = 0;
+                }
+                var may = value.In_may;
+                if (may == undefined || may == '') {
+                    result[index].In_may = 0;
+                }
+                var jun = value.In_jun;
+                if (jun == undefined || jun == '') {
+                    result[index].In_jun = 0;
+                }
+                var jul = value.In_jul;
+                if (jul == undefined || jul == '') {
+                    result[index].In_jul = 0;
+                }
+                var aug = value.In_aug;
+                if (aug == undefined || aug == '') {
+                    result[index].In_aug = 0;
+                }
+                var sep = value.In_sep;
+                if (sep == undefined || sep == '') {
+                    result[index].In_sep = 0;
+                }
+                var oct = value.In_oct;
+                if (oct == undefined || oct == '') {
+                    result[index].In_oct = 0;
+                }
+                var nov = value.In_nov;
+                if (nov == undefined || nov == '') {
+                    result[index].In_nov = 0;
+                }
+                var dec = value.In_dec;
+                if (dec == undefined || dec == '') {
+                    result[index].In_dec = 0;
+                }
+                var status_code = value.In_status_code;
+                if (status_code == undefined || status_code == '') {
+                    result[index].In_status_code = "A";
+                }
+                var status_desc = value.In_status_desc;
+                if (status_desc == undefined || status_desc == '') {
+                    result[index].In_status_desc = "Active";
+                }
+                var mode_flag = value.In_mode_flag;
+                if (mode_flag == undefined || mode_flag == '') {
+                    result[index].In_mode_flag = "I";
+                }
+                else if (mode_flag == undefined || mode_flag == 'S') {
+                    result[index].In_mode_flag = "U";
+                }
+                //var item_code = value.item_code;
+                //if (item_code == undefined || item_code == '') {
+                //    result[index].item_code = "";
+                //}
+                //var item_desc = value.item_desc;
+                //if (item_desc == undefined || item_desc == '') {
+                //    result[index].item_desc = "";
+                //}
+            });
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            var obj_grid_val = result;
+            data.context.Header = obj_val;
+            data.context.List = obj_grid_val;
+            var Context = data.context;
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, Header: Context.Header,List:Context.List }),
+                url: "/PAWHSProduceCalendar/PAWHSProduceCalendarSave",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    console.log(response)
+                    var Res = response;
+                    if (Res.context != null) {
+                        var mode = $("#txtMode").val();
+                        if (mode == "I") {
+                            kendoAlert("Produce Calendar Inserted Successfully");
+                            Get_ProduceCalendar_details(Res.context.Header);
+                            //get_attribute_group_details(responseJSON.context.Header.entitygrp_rowid);
+                        }
+                        else if (mode == "U") {
+                            kendoAlert("Produce Calendar Updated Successfully");
+                            Get_ProduceCalendar_details(Res.context.Header);
+                        }
+                    }
+                    else {
+                        kendoAlert(Res.ApplicationException.errorDescription);
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+           // SaveProduceCalendar_details(data);
+            $("#txt_pac_no").attr("readonly", true);
+            $("#txt_pac_date").attr("readonly", true);
+            $("#txt_pac_year").attr("readonly", true);
+
+            $("#txt_farmer_code").attr("readonly", true);
+            $("#txt_farmer_name").attr("readonly", true);
+            $("#txtMode").val("U");
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function generate_ProduceCalendar_header(res) {
+        try {
+
+            $("#txt_pac_no").val(res.IOU_pac_no);
+            $("#txt_pac_date").val(res.In_pac_date);
+            $('#txt_pac_year').data("kendoComboBox").value(res.In_pac_year);
+
+            // $("#txt_pac_year").val(res.pac_year);
+            $("#txt_farmer_code").val(res.In_farmer_code);
+            $("#txt_farmer_name").val(res.In_farmer_name);
+            $("#txt_agg_code").val(res.In_agg_code);
+            $("#txt_producecal_rowid").val(res.In_producecal_rowid);
+            $("#txt_status_code").val(res.In_status_code);
+            $("#txt_status_desc").val(res.In_status_desc);
+            $("#txtMode").val(res.In_mode_flag);
+            $("#txt_row_timestamp").val(res.In_row_timestamp);
+            $("#txtMode").val("U");
+            $("#DocStat").val("Active");
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function generate_ProduceCal(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                $("#pro_cal").empty();
+                CALPRODUCE(data);
+            }
+            else {
+                CALPRODUCE([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>

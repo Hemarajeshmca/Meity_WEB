@@ -1,0 +1,87 @@
+﻿@{
+    ViewBag.Form = "Localization for menus";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+<form id="Master_form" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-12">
+                    <div class="col-sm-5">
+                        <div class="form-group">
+                            <label for="cmb_Active" class="col-sm-4 control-label required">Organization Level</label>
+                            <div class="col-sm-8">
+                                <input id="cmb_Active" name="Active_id" data-role="filtercombo" style="width:100%" placeholder="Factilitator org Level"  disabled/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div id="grid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+</form>
+
+<script>
+    click_act_name = "home";
+    click_ctrl_name = "home";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        master_corelocal();
+        grid([]);
+
+     
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+       
+        var combo_data = [
+             { code: 1, desc: "Platform Level" }, { code: 1, desc: "Factilitator org Level" }, { code: 1, desc: "FPO Level" }, { code: 1, desc: "Aggregator Org Level" }];
+       
+        filter_combobox("cmb_Active", combo_data);
+     
+
+        $(".file_attach").attr("hdrtitle", "Localization For Menus");
+        $(".notes").attr("hdrtitle", "Localization For Menus");
+        $("#lblForm_menuid").text("LOCAL_DEF");
+
+    });
+
+    function grid(data) {
+        $("#grid").kendoGrid({
+            dataSource: {
+                data: data,
+                schema: {
+                    model: {
+                        fields: {
+                            control_id: { editable: false },
+                            des_eng: { editable: false },
+                            des_loc_lang: { editable: false },
+
+                        }
+                    }
+                },
+            },
+            height: 325,
+            sortable: true,
+            columns: [
+               {
+                    field: "menu_code",
+                    title: "Menu Code"
+                }, {
+                    field: "des_eng",
+                    title: "Description in English"
+                },
+            {
+                field: "des_loc_lang",
+                title: "Description in Local Language"
+            }]
+        });
+
+    }
+    </script>

@@ -1,0 +1,1647 @@
+﻿@{
+    ViewBag.Form = "Milk Collection Correction";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+
+<form id="MapMilk_DNew" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="cmb_collection" class="col-sm-4 control-label">Session ID</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_collection" name="milkcorrection_code" style="width: 100%" data-role="filtercombo">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txtCorrectionDate" class=" col-sm-4 control-label">Correction Date</label>
+                        <div class=" col-sm-7">
+                            <input class="cusDate" type="date" data-role='' id="txtCorrectionDate" data-checkdate-msg="Enter Valid Date" name="correction_date" style="width:100%" onkeypress="return date_validate(event)" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="cmb_purpose" class="col-sm-4 control-label">Purpose</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_purpose" name="correction_purpose_code" style="width: 100%" data-role="filtercombo">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <section class="col-md-12">
+                        <div id="tab_list" class="col-md-12">
+                            <ul class="nav nav-tabs">
+                                <li class="active">
+                                    <a href="#Collections" role="tab" data-toggle="tab">
+                                        Collections
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#Transfers" id="" role="tab" data-toggle="tab">
+                                        Transfers
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#Retails" id="" role="tab" data-toggle="tab">
+                                        Retails
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#Summary" id="" role="tab" data-toggle="tab">
+                                        Summary
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+
+                                <div class="tab-pane fade active in" id="Collections">
+                                    <div class="panel panel-default">
+                                        <div class="panel-body">
+                                            <div id="MilkCollection_grid">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="Transfers">
+                                    <div class="panel panel-default">
+                                        <div class="panel-body">
+                                            <div id="grid_transfer"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="Retails">
+                                    <div class="panel panel-default">
+                                        <div class="panel-body">
+                                            <div id="grid_Retail"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade " onclick="Summary()" id="Summary">
+                                    <div class="panel panel-default">
+                                        <div class="panel-body">
+                                            <div class="col-xs-12">
+                                                <label>Collection Milk Summary</label>
+                                                <div id="Summarycollection_grid">
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-6">
+                                                <label>Transferred Milk Summary</label>
+                                                <div id="Summarygrid_transfer">
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-6">
+                                                <label>Retailed  Milk Summary</label>
+                                                <div id="Summarygrid_Retailed">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6" style="padding-top:10px; padding-bottom:10px">
+                                                <div class="form-group">
+                                                    <label for="txtmilkacc" class="col-sm-5 control-label ">Total Milk Collection (Lts.)</label>
+                                                    <div class=" col-sm-4">
+                                                        <input type="text" id="txtmilkacc" class="form-control" maxlength="50" name="sum_milk_accept" readonly>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="col-sm-6" style="padding-top:10px; padding-bottom:10px">
+                                                <div class="form-group">
+                                                    <label for="txtmilkrec" class="col-sm-5 control-label ">Total Corrected Milk Collection (Lts.)</label>
+                                                    <div class=" col-sm-4">
+                                                        <input type="text" id="txtmilkrec" class="form-control" maxlength="50" name="sum_milk_retail" readonly>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-sm-6" style="padding-top:10px; padding-bottom:10px">
+                                                <div class="form-group">
+                                                    <label for="txtmilkacc" class="col-sm-5 control-label ">Total Milk Transfers (Lts.)</label>
+                                                    <div class=" col-sm-4">
+                                                        <input type="text" id="txtmilkacc" class="form-control" maxlength="50" name="sum_milk_accept" readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="txtmilkrej" class="col-sm-5 control-label ">Total Milk Retailed (Lts.)</label>
+                                                    <div class=" col-sm-4">
+                                                        <input type="text" id="txtmilkrej" class="form-control" maxlength="50" name="sum_amount_accept" readonly>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6" style="padding-top:10px; padding-bottom:10px">
+                                                <div class="form-group">
+                                                    <label for="txtmilkrec" class="col-sm-5 control-label ">Total Corrected Transfers (Lts.)</label>
+                                                    <div class=" col-sm-4">
+                                                        <input type="text" id="txtmilkrec" class="form-control" maxlength="50" name="sum_milk_retail" readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="txtmilktotal" class="col-sm-5 control-label ">Total Corrected Milk Retailed (Lts.)</label>
+                                                    <div class=" col-sm-4">
+                                                        <input type="text" id="txtmilktotal" class="form-control" maxlength="50" name="sum_amount_retail" readonly>
+                                                        <input type="hidden" id="milkcorrection_rowid" name="milkcorrection_rowid">
+                                                        <input type="hidden" id="cc_aggrloc_code" name="cc_aggrloc_code">
+                                                        <input type="hidden" id="process_status_code" name="process_status_code">
+                                                        <input type="hidden" id="status_code" name="status_code">
+                                                        <input type="hidden" id="mode_flag" name="mode_flag">
+                                                        <input type="hidden" id="row_timestamp" name="row_timestamp">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                @*<div class="col-xs-12">
+                        <label>Summary</label>
+                        <div id="Summary_grid">
+                        </div>
+                    </div>*@
+            </div>
+        </div>
+    </div>
+
+</form>
+<script src="~/API_Scripts/Milkcollection_correction.js"></script>
+<script src="~/API_Scripts/MilkCollection_Correction_reteieveMilkCollectionCorrection_APIClient.js"></script>
+<script src="~/API_Scripts/MilkCollection_Correction_saveMilkCollectionCorrection_APIClient.js"></script>
+<script src="~/API_Scripts/retrieveCorrection_Model.js"></script>
+<script src="~/API_Scripts/saveCorrection_Model.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script>
+    $(document).ready(function () {
+        //master_Artibute();
+        //$("#frmlayerdiv").hide();
+        //$("#FDR").show();
+        //$("#farmer_id").text("Correction ID")
+
+        //kendodate_format();
+        //$(".file_attach").attr("hdrtitle", "Bill Entries");
+        //$(".notes").attr("hdrtitle", "Bill Entries");
+        //$("#lblForm_menuid").text("BILL_ENTRIES");
+        ////var data = [{ session_id: "1", fcode: "BABUX /00002437", farmer_name: "BABU C", milk_from: "CHENGAN", milk_depatched: "MMID/000000035", fat: "Cow", snf: "4.0", awm: "4.2" }]
+        //gridmilk_collection([]);
+        //Summarygridmilk_collection([])
+        ////var data1=[{session_id:"1",date:"AAVIN Chilling Plant 008",milk_from:"cow",milk_retailed:"132",retailed_to:"135"}]
+        //grid([]);
+        ////var data2=[{transfer_to_cp:"1",milk_from:"cow",milk_from1:"Ls",retailed_to:"4",total_milk:"5",total_amount:"10"}]
+        //gridTransfer([]);
+        //SummarygridTransfer([]);
+        //Summarygrid([]);
+        //gridRetailed([]);
+        ////$("div#Summary").show();
+        //var combo_data1 = [{ code: 1, desc: "13/06/2017/AM/CC001" },
+        //   { code: 1, desc: "13/06/2017/PM/CC001" }];
+        //filter_combobox("cmb_collection", combo_data1);
+        var combo_data2 = [{ code: 1, desc: "Collection Changes" },
+          { code: 1, desc: "Transfer Changes" }, { code: 1, desc: "Retail Changes" }];
+        filter_combobox("cmb_purpose", combo_data2);
+
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#MapMilk_DNew");
+        kendo.init(container);
+        container.kendoValidator({
+            rules: {
+                checkdate: function (input) {
+                    if (input.attr("data-role") == "datepicker") {
+                        var res = isDate(input.val());
+                        return res;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+            }
+        });
+
+
+        $(".file_attach").attr("hdrtitle", "Milk Collection Correction");
+        $(".notes").attr("hdrtitle", "Milk Collection Correction");
+        $("#lblForm_menuid").text("MILK_CORRECTION");
+
+        Screen_Id = "MLKCOLL";
+        permission = sec_Permission(Screen_Id);
+
+        kendodate_format();
+        gridmilk_collection([]);
+        grid_Retail([])
+        gridTransfer([]);
+        Summarycollectiongrid([]);
+        SummarygridTransfer([]);
+        SummarygridRetailed([]);
+        //billgrid();
+        //$("#common_id").text("Bill ID")
+        load_master_code();
+
+        //collection center
+        //var CC = "";
+        //$("#cmb_cc").empty();
+        //CC = grid_comboScreen_mastercodes("CC");
+        //filter_combobox("cmb_cc", CC);
+        var CC = "";
+        $("#cmb_collection").empty();
+        CC = grid_comboScreen_mastercodes("Milksession_Code");
+        filter_combobox("cmb_collection", CC);
+
+        master_Artibute();
+        $("#frmlayerdiv").hide();
+        $("#FDR").show();
+        $("#farmer_id").text("Correction ID")
+        //$("div#Summary").hide();
+        if (getlocalStorage('btn_clk_val') == "Create") {
+            $('#divCreate #review').hide();
+            $("#bottom_menus").hide();
+            $("#status_code").val("A");
+            $("#DocStat").val("New");
+            $("#mode_flag").val('I');
+            //load_master_code();
+        }
+        else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
+            $('#divEdit #reviewEd').hide();
+            $('#btnFetch').hide();
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("MapMilk_DNew");
+                var obj_val = JSON.parse(formval);
+                if (data != undefined) {
+                    obj_val.milkcorrection_rowid = data.milkcorrection_rowid;
+                    obj_val.milkcorrection_code = data.milkcorrection_code;
+                    //$("#txtcommon_id").val(data.milkcorrection_code);
+
+                    var data = {};
+                    data.context = WebAPIProxy.getContext();;
+                    data.context.Header = obj_val;
+                    retrieve_milkcollection_correction_details(data);
+
+                    //$('#cmb_cc').data("kendoComboBox").enable(false);
+                    $("#mode_flag").val("U");
+                    setlocalStorage('doc_no', $("#txtcommon_id").val());
+                    setlocalStorage('doc_row_id', $("#milkcorrection_rowid").val());
+                }
+            }
+        }
+        //$("#txtCorrectionDate").kendoDatePicker({
+        //    max: new Date(),// sets max date
+        //    format: "dd/MM/yyyy"
+        //});
+
+        var ddltxt = "";
+        var ddlval = "";
+        $("#cmb_collection").change(function () {
+            var c = $('#cmb_collection');
+            ddltxt = c.data('kendoComboBox').text();
+            ddlval = c.data('kendoComboBox').value();
+            if (ddlval != "" && ddlval != undefined) {
+                setlocalStorage("ls_List", '');
+                var formval = form_Serialize("MapMilk_DNew");
+                var obj_val = JSON.parse(formval);
+                //if (data != undefined) {
+                obj_val.milkcorrection_code = ddltxt;
+                if (getlocalStorage('btn_clk_val') == "Create") {
+                    obj_val.milkcorrection_rowid = 0;
+                }
+                else {
+                    obj_val.milkcorrection_rowid = ddlval;
+                }
+                //$("#txtcommon_id").val(data.milkcorrection_code);
+
+                var data = {};
+                data.context = WebAPIProxy.getContext();;
+                data.context.Header = obj_val;
+                retrieve_milkcollection_correction_details(data);
+
+                //}
+            }
+            //else {
+            //    MilkMap_grid_details([]);
+            //    MilkMapCC_grid_details([]);
+            //    $("#lblvillage").val('');
+            //}
+        });
+
+        function mandatory() {
+            try {
+                var mandatory_check = true;
+
+                var grid_validate_msg = "";
+
+                if ($('#cmb_cc').data("kendoComboBox").value() == "") {
+                    grid_validate_msg += "Collection Center cannot be blank <br>";
+                    mandatory_check = false;
+                }
+                if ($("#txtValidity").val() == "") {
+                    grid_validate_msg += "Milk Supplied From cannot be blank <br>";
+                    mandatory_check = false;
+                }
+                if ($("#txtValidity1").val() == "") {
+                    grid_validate_msg += "Milk Supplied To cannot be blank <br>";
+                    mandatory_check = false;
+                }
+
+                if (mandatory_check == false) {
+                    kendoAlert(grid_validate_msg);
+                    return false;
+                }
+                else {
+                    return listLoad();
+                }
+            }
+            catch (err) {
+                javascript_log4j_root(arguments.callee.name, err);
+            }
+        }
+    });
+</script>
+<script>
+    click_act_name = "MilkCollectionList";
+    click_ctrl_name = "MilkCollection";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+<script>
+    //var data = [];
+    function gridmilk_collection(data) {
+        try {
+            $("#MilkCollection_grid").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                milkmansessiondtlold_rowid: { type: "string", editable: false },
+                                milksession_code: { type: "string", editable: false },
+                                //farmer_code: { type: "string" },
+                                farmer_name: { type: "string", editable: false },
+                                milkman_code: { type: "string", editable: false },
+                                milkman_name: { type: "string", editable: false },
+                                milk_from: { type: "string" },
+                                corrected_qty: { type: "string" },
+                                fat_percent: { type: "string" },
+                                snf_percent: { type: "string" },
+                                awm_percent: { type: "string" },
+                                received_qty: { type: "string", editable: false },
+                                mobile_app_ref_no: { type: "string" },
+                                mode_flag: { type: "string", defaultValue: "I" },
+                                status_code: { type: "string", defaultValue: "A" },
+                                status_desc: { type: "string" },
+                            }
+                        }
+                    }
+                },
+
+                toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 400,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#MilkCollection_grid').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                change: function (e) {
+                    $("#MilkCollection_grid tbody .k-state-selected").css({
+                        "background-color": "lightgreen"
+                    });
+                },
+                //edit: function( e )
+                //{
+                //    //Add password attribute to input field.
+                //    e.container.find( ".k-edit-field:eq(5) > input").attr( 'type', 'password' );
+                //},
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [{
+                    command: [
+            {
+                name: "Delete",
+                id: "Delete",
+                imageClass: "fa fa-close",
+                click: function (e) {
+                    // e.preventDefault();
+                    var grid = $("#Summarycollection_grid").data("kendoGrid");
+                    var dataItem = $("#MilkCollection_grid").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                    DeleteWindowEvent(e, dataItem, grid);
+                    e.stopImmediatePropagation()
+                }
+            },
+                    ], title: "Action", width: "50px",
+                },
+                {
+                    field: "milkmansessiondtlold_rowid",
+                    title: "milkmansessiondtlold_rowid",
+                    hidden: true
+                },
+                {
+                    field: "milksession_code",
+                    title: "Milk Session Code",
+                    width: 100
+                },
+                {
+                    field: "farmer_code",
+                    title: "Farmer Code",
+                    editor: '<div class="input-group input-group-sm"><input type="text" readonly name="farmer_code" maxlength="10" style="width:100px;color:black"  onkeypress="return speical_char(event)" data-bind="value:farmer_code"/><span class="input-group-btn" style="padding-right: 150px;"><a class="HelpWindow fa fa-search fa-lg" data-toggle="modal" href="/HelpFilter/HelpFilter" hdrtitle="Details" searchid="S07" data-target="#HelpModal" onclick=transfer(this,"grid","MilkCollection_grid","gridmilk_collection") title="Search" style="font-size: 15px; padding-left: 10px;"></a> </span> </div>',
+                    width: 100
+                },
+                {
+                    field: "farmer_name",
+                    title: "Farmer Name",
+                    width: 100
+                },
+                {
+                    field: "milkman_code",
+                    title: "Milkman Code",
+                    width: 100,
+                },
+                {
+                    field: "milkman_name",
+                    title: "Milkman Name",
+                    width: 100
+                },
+                {
+                    field: "milk_from",
+                    title: "Milk From",
+                    width: 100
+                },
+                {
+                    field: "fat_percent",
+                    title: "FAT %",
+                    width: 100
+                },
+                {
+                    field: "snf_percent",
+                    title: "SNF %",
+                    width: 100
+                },
+                {
+                    field: "awm_percent",
+                    title: "AWM %",
+                    width: 100
+                },
+                {
+                    field: "received_qty",
+                    title: "Milk Qty(Lts)",
+                    width: 100
+                },
+                {
+                    field: "corrected_qty",
+                    title: "Corrected Qty (Lts)",
+                    width: 100
+                },
+                {
+                    field: "mobile_app_ref_no",
+                    title: "mobile_app_ref_no",
+                    hidden: true
+                },
+                {
+                    field: "status_desc",
+                    title: "Status",
+                    width: 100
+                },
+                {
+                    field: "mode_flag",
+                    title: "mode_flag",
+                    hidden: true
+                },
+                ],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+        //function passwordEditor(container, options) {
+        //    $('<input type="text" required data-bind="value:' + options.field + '"/>').appendTo(container);
+        //};
+        //function formatValue(dataValue, maskFormat) {
+        //    $('#maskedTextbox').kendoMaskedTextBox({ mask: maskFormat, value: dataValue });
+        //    var maskedTextBox = $("#maskedTextbox").data("kendoMaskedTextBox");
+        //    var returnValue = maskedTextBox.value();
+        //    return returnValue;
+        //}
+    }
+</script>
+<script>
+    //var data = [];
+    function grid_Retail(data) {
+        try {
+            $("#grid_Retail").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                milkretailsaledtlold_rowid: { type: "string", editable: false },
+                                milksession_code: { type: "string", editable: false },
+                                cust_name: { type: "string" },
+                                milk_from: { type: "string" },
+                                fat_percent: { type: "string" },
+                                snf_percent: { type: "string" },
+                                awm_percent: { type: "string" },
+                                retailsale_qty: { type: "string", editable: false },
+                                corrected_qty: { type: "string" },
+                                milk_rate: { type: "string", editable: false },
+                                corrected_retail_rate: { type: "string" },
+                                milk_amount: { type: "string", editable: false },
+                                retailsale_remark: { type: "string" },
+                                status_code: { type: "string", editable: false },
+                                status_desc: { type: "string", editable: false },
+                                mobile_app_ref_no: { type: "string", editable: false },
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+
+                //toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 400,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_Retail').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [{
+                    command: [
+            {
+                name: "Delete",
+                id: "Delete",
+                imageClass: "fa fa-close",
+                click: function (e) {
+                    // e.preventDefault();
+                    var grid = $("#grid_Retail").data("kendoGrid");
+                    var dataItem = $("#grid_Retail").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                    DeleteWindowEvent(e, dataItem, grid);
+                    e.stopImmediatePropagation()
+                }
+            },
+                    ], title: "Action", width: "50px",
+                },
+                {
+                    field: "milkretailsaledtlold_rowid",
+                    title: "milkretailsaledtlold_rowid",
+                    hidden: true
+                },
+                {
+                    field: "milksession_code",
+                    title: "Milk Session Code",
+                    width: 100
+                },
+                {
+                    field: "cust_name",
+                    title: "Transferred to ",
+                    editor: function (container, options) {
+                        combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "", "grid_Retail")
+                    },
+                    width: 140
+                },
+                {
+                    field: "milk_from",
+                    title: "Sourced from",
+                    editor: function (container, options) {
+                        combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "", "grid_Retail")
+                    },
+                    width: 100
+                },
+                {
+                    field: "fat_percent",
+                    title: "FAT %",
+                    width: 100
+                },
+                {
+                    field: "snf_percent",
+                    title: "SNF %",
+                    width: 100
+                },
+                {
+                    field: "awm_percent",
+                    title: "AWM %",
+                    width: 100
+                },
+                {
+                    field: "retailsale_qty",
+                    title: "Milk Qty(Lts)",
+                    width: 100
+                },
+                {
+                    field: "corrected_qty",
+                    title: "Corrected Qty (Lts)",
+                    width: 100
+                },
+                {
+                    field: "milk_rate",
+                    title: "Milk Rate(Rs)",
+                    width: 100
+                },
+                {
+                    field: "corrected_retail_rate",
+                    title: "Corrected Rate(Rs)",
+                    width: 100
+                },
+                {
+                    field: "milk_amount",
+                    title: "Milk Amount(Rs)",
+                    width: 100
+                },
+                {
+                    field: "retailsale_remark",
+                    title: "Retailsale Remark",
+                    width: 100
+                },
+                {
+                    field: "mobile_app_ref_no",
+                    title: "mobile_app_ref_no",
+                    hidden: true
+                },
+                {
+                    field: "status_desc",
+                    title: "Status",
+                    width: 100
+                },
+                {
+                    field: "mode_flag",
+                    title: "mode_flag",
+                    hidden: true
+                },
+                ],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+
+    var grid_addr_type = [{ code: 1, description: "AAVIN Chilling Plant 008" }, { code: 2, description: "AAVIN Chilling Plant 009" }];
+
+    date_list = getGridComboList(grid_addr_type);
+    var grid_milk_from = [{ code: 1, description: "cow" }, { code: 2, description: "buffalo" }];
+
+    milk_from_list = getGridComboList(grid_milk_from);
+</script>
+<script>
+    //var data = [];
+    function gridTransfer(data) {
+        try {
+            $("#grid_transfer").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                milksesssiondtlold_rowid: { type: "string", editable: false },
+                                milksession_code: { type: "string", editable: false },
+                                cp_aggrloc_code: { type: "string", editable: false },
+                                cp_aggrloc_desc: { type: "string", editable: false },
+                                //farmer_code: { type: "string", editable: false },
+                                milk_from: { type: "string", editable: false },
+                                milk_rate: { type: "string", editable: false },
+                                corrected_qty: { type: "string" },
+                                fat_percent: { type: "string", editable: false },
+                                snf_percent: { type: "string", editable: false },
+                                awm_percent: { type: "string" },
+                                //received_qty: { type: "string", editable: false },
+                                cp_transferred_qty: { type: "string", editable: false },
+                                //cp_received_qty: { type: "string", editable: false },
+                                //cp_accepted_qty: { type: "string", editable: false },
+                                //farmer_name: { type: "string", editable: false },
+                                milk_amount: { type: "string", editable: false },
+                                despatch_vehicle: { type: "string", editable: false },
+                                despatch_remark: { type: "string", editable: false },
+                                process_status_code: { type: "string", editable: false },
+                                process_status_desc: { type: "string", editable: false },
+                                status_code: { type: "string", editable: false },
+                                status_desc: { type: "string", editable: false },
+                                mobile_app_ref_no: { type: "string", editable: false },
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+
+                //toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 400,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_transfer').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                change: function (e) {
+                    $("#grid_transfer tbody .k-state-selected").css({
+                        "background-color": "lightgreen"
+                    });
+                },
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [{
+                    command: [
+            {
+                name: "Delete",
+                id: "Delete",
+                imageClass: "fa fa-close",
+                click: function (e) {
+                    // e.preventDefault();
+                    var grid = $("#grid").data("kendoGrid");
+                    var dataItem = $("#MilkCollection_grid").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                    DeleteWindowEvent(e, dataItem, grid);
+                    e.stopImmediatePropagation()
+                }
+            },
+                    ], title: "Action", width: "50px",
+                },
+                {
+                    field: "milksesssiondtlold_rowid",
+                    title: "milkmansessiondtlold_rowid",
+                    hidden: true
+                },
+                {
+                    field: "milksession_code",
+                    title: "Milk Session Code",
+                    width: 100
+                },
+                {
+                    field: "cp_aggrloc_code",
+                    title: "cp_aggrloc_code",
+                    hidden: true
+                },
+                {
+                    field: "cp_aggrloc_desc",
+                    title: "Chilling Plant Name",
+                    width: 100
+                },
+                {
+                    field: "farmer_code",
+                    title: "Farmer Code",
+                    editor: '<div class="input-group input-group-sm"><input type="text" readonly name="fcode" maxlength="10" style="width:100px;color:black"  onkeypress="return speical_char(event)" data-bind="value:fcode"/><span class="input-group-btn" style="padding-right: 150px;"><a class="HelpWindow fa fa-search fa-lg" data-toggle="modal" href="/HelpFilter/HelpFilter" hdrtitle="Details" searchid="S07" data-target="#HelpModal" onclick=transfer(this,"grid","MilkCollection_grid","gridmilk_collection") title="Search" style="font-size: 15px; padding-left: 10px;"></a> </span> </div>',
+                    width: 100
+                },
+                {
+                    field: "milk_from",
+                    title: "Milk From",
+                    width: 100
+                },
+                {
+                    field: "fat_percent",
+                    title: "FAT %",
+                    width: 100
+                },
+                {
+                    field: "snf_percent",
+                    title: "SNF %",
+                    width: 100
+                },
+                {
+                    field: "awm_percent",
+                    title: "AWM %",
+                    width: 100
+                },
+                {
+                    field: "milk_rate",
+                    title: "Milk Rate(Rs)",
+                    width: 100
+                },
+                {
+                    field: "cp_transferred_qty",
+                    title: "Milk Transfered Qty(Lts)",
+                    width: 100
+                },
+                {
+                    field: "corrected_qty",
+                    title: "Corrected Qty (Lts)",
+                    width: 100
+                },
+                {
+                    field: "mobile_app_ref_no",
+                    title: "mobile_app_ref_no",
+                    hidden: true
+                },
+                {
+                    field: "status_code",
+                    title: "status_code",
+                    hidden: true
+                },
+                {
+                    field: "status_desc",
+                    title: "Status",
+                    width: 100
+                },
+                {
+                    field: "mode_flag",
+                    title: "mode_flag",
+                    hidden: true
+                },
+                ],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+</script>
+<script>
+
+    function Summarycollectiongrid(data) {
+        try {
+            $("#Summarycollection_grid").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                milkmansessiondtlold_rowid: { type: "string", editable: false },
+                                milksession_code: { type: "string", editable: false },
+                                farmer_code: { type: "string", editable: false },
+                                milk_from: { type: "string", editable: false },
+                                corrected_qty: { type: "string" },
+                                fat_percent: { type: "string", editable: false },
+                                snf_percent: { type: "string", editable: false },
+                                awm_percent: { type: "string" },
+                                received_qty: { type: "string", editable: false },
+                                farmer_name: { type: "string", editable: false },
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+                height: 400,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#Summarycollection_grid').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                change: function (e) {
+                    $("#Summarycollection_grid tbody .k-state-selected").css({
+                        "background-color": "lightgreen"
+                    });
+                },
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [{
+                    command: [
+            {
+                name: "Delete",
+                id: "Delete",
+                imageClass: "fa fa-close",
+                click: function (e) {
+                    // e.preventDefault();
+                    var grid = $("#Summarycollection_grid").data("kendoGrid");
+                    var dataItem = $("#Summarycollection_grid").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                    DeleteWindowEvent(e, dataItem, grid);
+                    e.stopImmediatePropagation()
+                }
+            },
+                    ], title: "Action", width: "50px",
+                },
+                {
+                    field: "milkmansessiondtlold_rowid",
+                    title: "milkmansessiondtlold_rowid",
+                    hidden: true
+                },
+                {
+                    field: "milksession_code",
+                    title: "Milk Session Code",
+                    width: 100
+                },
+                {
+                    field: "farmer_code",
+                    title: "Farmer Code",
+                    width: 100
+                },
+                {
+                    field: "farmer_name",
+                    title: "Farmer Name",
+                    width: 100
+                },
+                {
+                    field: "milkman_code",
+                    title: "Milkman Code",
+                    width: 100
+                },
+                {
+                    field: "milkman_name",
+                    title: "Milkman Name",
+                    width: 100
+                },
+                {
+                    field: "milk_from",
+                    title: "Milk From",
+                    width: 100
+                },
+                {
+                    field: "fat_percent",
+                    title: "FAT %",
+                    width: 100
+                },
+                {
+                    field: "snf_percent",
+                    title: "SNF %",
+                    width: 100
+                },
+                {
+                    field: "awm_percent",
+                    title: "AWM %",
+                    width: 100
+                },
+                {
+                    field: "received_qty",
+                    title: "Milk Qty(Lts)",
+                    width: 100
+                },
+                {
+                    field: "corrected_qty",
+                    title: "Corrected Qty (Lts)",
+                    width: 100
+                },
+                {
+                    field: "mobile_app_ref_no",
+                    title: "mobile_app_ref_no",
+                    hidden: true
+                },
+                {
+                    field: "status_desc",
+                    title: "Status",
+                    width: 100
+                },
+                {
+                    field: "mode_flag",
+                    title: "mode_flag",
+                    hidden: true
+                },
+                ],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+
+    function grid_control() {
+        try {
+            var control_Name = [
+                { "dataCol": "", "grid_row_col": "product_category" },
+                { "dataCol": "", "grid_row_col": "product_sub_category" },
+                { "dataCol": "", "grid_row_col": "product_code" }
+
+            ];
+            return control_Name
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function controlName() {
+        try {
+            var control_Name = [
+            ];
+            return control_Name
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function trans_input_data() {
+        try {
+            var trans_coll = [
+                { "trasfer": "NO", "dataCol": "", "controlId": "", "grid_id": "", "grid_row_col": "" },
+                { "trasfer": "Yes", "dataCol": "farmer_code", "controlId": "", "grid_id": "MilkCollection_grid", "grid_row_col": "" }
+            ];
+            return trans_coll;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+@*<script>
+        //var data = [];
+        function Summarygridmilk(data) {
+            try {
+                $("#Sum_MilkMap_grid").kendoGrid({
+                    dataSource: {
+                        data: data,
+                        schema: {
+                            model: {
+                                fields: {
+
+                                    session_id: { type: "string", editable: false },
+                                    fcode: { type: "string", editable: false },
+                                    milk_from: { type: "string", editable: false },
+                                    milk_depatched: { type: "string", editable: false },
+                                    fat: { type: "string", editable: false },
+                                    snf: { type: "string", editable: false },
+                                    awm: { type: "string", editable: false },
+                                    milk_accepted: { type: "string", editable: false },
+                                    rate: { type: "string", editable: false },
+                                    farmer_name: { type: "string", editable: false },
+                                    mode_flag: { type: "string", defaultValue: "I" }
+                                }
+                            }
+                        }
+                    },
+
+
+                    height: 200,
+                    groupable: false,
+                    dataBinding: setDefaultValues,
+
+                    dataBound: function (e) {
+                        resultData = e.sender._data;
+                        var rows = $('#Sum_MilkMap_grid').data('kendoGrid').tbody.children();
+                        setColor(rows, resultData);
+                    },
+                    change: function (e) {
+                        $("#Sum_MilkMap_grid tbody .k-state-selected").css({
+                            "background-color": "lightgreen"
+                        });
+                    },
+                    sortable: true,
+                    selectable: true,
+                    navigatable: true,
+                    columns: [{
+                        field: "session_id",
+                        title: "Serial No",
+                        width: 100
+                    },
+                     {
+                         field: "fcode",
+                         title: "Farmer Code",
+                         width: 100
+                     },
+                    {
+                        field: "farmer_name",
+                        title: "Farmer Name",
+                        width: 100
+                    },
+                    {
+                        field: "milk_from",
+                        title: "Farmer Sur Name",
+                        width: 100
+                    },
+                     {
+                         field: "milk_depatched",
+                         title: "Milkman Code",
+                         width: 100
+                     },
+                      {
+                          field: "fat",
+                          title: "Sourced from",
+                          width: 100
+                      },
+                       {
+                           field: "snf",
+                           title: "Milk Qty(Lts)",
+                           width: 100
+                       },
+                        {
+                            field: "awm",
+                            title: "Corrected Qty (Lts)",
+                            width: 100
+                        },
+                    ],
+                    editable: true
+                });
+            }
+            catch (err) {
+                alert(err);
+            }
+        }
+    </script>*@
+
+
+<script>
+    //var data = [];
+    function SummarygridTransfer(data) {
+        try {
+            $("#Summarygrid_transfer").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                milksession_code: { type: "string", editable: false },
+                                cp_aggrloc_code: { type: "string", editable: false },
+                                milk_from: { type: "string", editable: false },
+                                corrected_qty: { type: "string" },
+                                received_qty: { type: "string", editable: false },
+                                milk_amount: { type: "string", editable: false },
+                                corrected_amount: { type: "string", editable: false }
+                            }
+                        }
+                    }
+                },
+
+                height: 150,
+                groupable: false,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [{
+                    field: "cp_aggrloc_code",
+                    title: "Transferred To CP",
+                    headerAttributes: {
+                        "class": "table-header-cell",
+                        "style": "overflow: visible; white-space: normal "
+                    },
+                    width: 60
+
+                },
+                {
+                    field: "milk_from",
+                    title: "Milk From",
+                    headerAttributes: {
+                        "class": "table-header-cell",
+                        "style": "overflow: visible; white-space: normal "
+                    },
+                    width: 60
+                },
+                 {
+                     field: "received_qty",
+                     title: "Total Milk Accepted (Lts.)",
+                     headerAttributes: {
+                         "class": "table-header-cell",
+                         "style": "overflow: visible; white-space: normal "
+                     },
+                     width: 80
+                 },
+                  {
+                      field: "corrected_qty",
+                      title: "Corrected Qty (Lts)",
+                      headerAttributes: {
+                          "class": "table-header-cell",
+                          "style": "overflow: visible; white-space: normal "
+                      },
+                      width: 60
+                  },
+                 {
+                     field: "milk_amount",
+                     title: "Total Amount (Rs.pp)",
+                     headerAttributes: {
+                         "class": "table-header-cell",
+                         "style": "overflow: visible; white-space: normal "
+                     },
+                     width: 60
+                 },
+                 {
+                     field: "corrected_amount",
+                     title: "Corrected Total (Rs.pp)",
+                     headerAttributes: {
+                         "class": "table-header-cell",
+                         "style": "overflow: visible; white-space: normal "
+                     },
+                     width: 60
+                 }
+                ],
+                editable: true
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+
+        }
+    }
+</script>
+<script>
+    //var data = [];
+    function SummarygridRetailed(data) {
+        try {
+            $("#Summarygrid_Retailed").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                milksession_code: { type: "string", editable: false },
+                                cust_name: { type: "string" },
+                                milk_from: { type: "string" },
+                                retailsale_qty: { type: "string", editable: false },
+                                corrected_qty: { type: "string" },
+                                milk_rate: { type: "string", editable: false },
+                                corrected_retail_rate: { type: "string" },
+                                milk_amount: { type: "string", editable: false },
+                                retailsale_remark: { type: "string" },
+                                status_code: { type: "string", editable: false },
+                                status_desc: { type: "string", editable: false },
+                                mobile_app_ref_no: { type: "string", editable: false },
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+                height: 150,
+                groupable: false,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [{
+                    field: "retailed_to",
+                    title: "Retailed To",
+                    headerAttributes: {
+                        "class": "table-header-cell",
+                        "style": "overflow: visible; white-space: normal "
+                    },
+                    width: 60
+                },
+                {
+                    field: "milkretailsaledtlold_rowid",
+                    title: "milkretailsaledtlold_rowid",
+                    hidden: true
+                },
+                {
+                    field: "milksession_code",
+                    title: "Milk Session Code",
+                    width: 100
+                },
+                {
+                    field: "cust_name",
+                    title: "Transferred to ",
+                    editor: function (container, options) {
+                        combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "", "grid_Retail")
+                    },
+                    width: 140
+                },
+                {
+                    field: "milk_from",
+                    title: "Sourced from",
+                    editor: function (container, options) {
+                        combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "", "grid_Retail")
+                    },
+                    width: 100
+                },
+                {
+                    field: "fat_percent",
+                    title: "FAT %",
+                    width: 100
+                },
+                {
+                    field: "snf_percent",
+                    title: "SNF %",
+                    width: 100
+                },
+                {
+                    field: "awm_percent",
+                    title: "AWM %",
+                    width: 100
+                },
+                {
+                    field: "retailsale_qty",
+                    title: "Milk Qty(Lts)",
+                    width: 100
+                },
+                {
+                    field: "corrected_qty",
+                    title: "Corrected Qty (Lts)",
+                    width: 100
+                },
+                {
+                    field: "milk_rate",
+                    title: "Milk Rate(Rs)",
+                    width: 100
+                },
+                {
+                    field: "corrected_retail_rate",
+                    title: "Corrected Rate(Rs)",
+                    width: 100
+                },
+                {
+                    field: "milk_amount",
+                    title: "Milk Amount(Rs)",
+                    width: 100
+                },
+                {
+                    field: "retailsale_remark",
+                    title: "Retailsale Remark",
+                    width: 100
+                },
+                {
+                    field: "mobile_app_ref_no",
+                    title: "mobile_app_ref_no",
+                    hidden: true
+                },
+                {
+                    field: "status_desc",
+                    title: "Status",
+                    width: 100
+                },
+                ],
+                editable: true
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+
+        }
+    }
+</script>
+
+<script>
+    function save() {
+
+        try {
+
+            $('#txtValidity').data('kendoDatePicker').enable(true);
+            $('#txtValidity1').data('kendoDatePicker').enable(true);
+            if ($("#ccbilldtl_rowid").val() == "") {
+                $("#ccbilldtl_rowid").val('1');
+            }
+            if ($("#ccbillsessiondtl_rowid").val() == "") {
+                $("#ccbillsessiondtl_rowid").val('1');
+            }
+            $('#cmb_cc').data("kendoComboBox").enable(true);
+            var formval = form_Serialize("MapMilk_DNew");
+            var obj_val = JSON.parse(formval);
+            if ($("#ccbill_rowid").val() == undefined || $("#ccbill_rowid").val() == "") {
+                obj_val.ccbill_rowid = "0";
+            }
+            else {
+                obj_val.ccbill_rowid = $("#ccbill_rowid").val();
+            }
+            if ($("#txtcommon_id").val() == undefined || $("#txtcommon_id").val() == "") {
+                obj_val.ccbill_no = "0";
+            }
+            else {
+                obj_val.ccbill_no = $("#txtcommon_id").val();
+            }
+            if (obj_val.process_status == undefined) {
+                obj_val.process_status = "0";
+            }
+            if (obj_val.status_code == undefined) {
+                obj_val.status_code = "A";
+            }
+            if (obj_val.row_timestamp == undefined) {
+                obj_val.row_timestamp = "0";
+            }
+            //if (getlocalStorage('btn_clk_val') == "Create") {
+            //    obj_val.mode_flag = "I";
+            //}
+            //else if (getlocalStorage('btn_clk_val') == "Edit") {
+            //    obj_val.mode_flag = "U";
+            //}
+            if (obj_val.hasOwnProperty('period_from')) {
+                if (obj_val.period_from != '')
+                    obj_val.period_from = getFormated_StringDate(obj_val.period_from);
+            }
+            if (obj_val.hasOwnProperty('period_to')) {
+                if (obj_val.period_to != '')
+                    obj_val.period_to = getFormated_StringDate(obj_val.period_to);
+            }
+            var c = $('#cmb_cc');
+            obj_val.cc_aggrloc_code = c.data('kendoComboBox').value();
+            var grid_val = JSON.stringify($("#bill_grid").data().kendoGrid._data);
+            var Bind = {};
+            Bind = grid_val;
+            var result = JSON.parse(Bind);
+            $.each(result, function (index, value) {
+                var ccbilldtlrowid = value.ccbilldtl_rowid;
+                if (ccbilldtlrowid == undefined) {
+                    result[index].ccbilldtl_rowid = "0";
+                }
+                var mmode = result[index].mode_flag;
+                if (mmode == "S") {
+                    result[index].mode_flag = "U";
+                }
+
+            });
+            var obj_grid_val = result;
+
+            var grid_val1 = JSON.stringify($("#MilkMap_grid").data().kendoGrid._data);
+            var Bind1 = {};
+            Bind1 = grid_val1;
+            var result1 = JSON.parse(Bind1);
+            $.each(result1, function (index, value) {
+                var ccbillsessiondtlrowid = value.ccbillsessiondtl_rowid;
+                if (ccbillsessiondtlrowid == undefined) {
+                    result1[index].ccbillsessiondtl_rowid = "0";
+                }
+                var cp_aggrloc_code = result1[index].transferred_to_cp;
+                if (cp_aggrloc_code == undefined) {
+                    result1[index].cp_aggrloc_code = "0";
+                }
+                else {
+                    result1[index].cp_aggrloc_code = cp_aggrloc_code;
+                }
+                var mmode = result1[index].mode_flag;
+                if (mmode == "S") {
+                    result1[index].mode_flag = "U";
+                }
+            });
+
+            var grid = $("#bill_grid").data("kendoGrid");
+            grid.dataSource.read();
+            var count = grid.dataSource.total();
+            var grid2 = $("#MilkMap_grid").data("kendoGrid");
+            grid2.dataSource.read();
+            var count2 = grid2.dataSource.total();
+            if (count == 0 || count2 == 0) {
+                kendoAlert("No session details for given dates");
+                return false;
+            }
+            var obj_grid_val1 = result1;
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Header = obj_val;
+            //data.context.TransferredMilk = obj_grid_val;
+            //data.context.RetailedMilk = obj_grid_val1;
+            data.context.BillDtl = obj_grid_val;
+            data.context.BillSession = obj_grid_val1;
+
+            save_billentry_details(data);
+            $('#txtValidity').data('kendoDatePicker').enable(false);
+            $('#txtValidity1').data('kendoDatePicker').enable(false);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function DeleteDetails() {
+        try {
+            $("#mode_flag").val("D");
+            save();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+<script>
+    function load_master_code() {
+        try {
+            debugger;
+            var data = {};
+            var context = WebAPIProxy.getContext();
+            data.userId = context.userId
+            data.orgnId = context.orgnId
+            data.locnId = context.locnId
+            data.localeId = context.localeId
+            data.screen_Id = "MLKCOLL";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function listLoad() {
+        try {
+            var formval = form_Serialize("MapMilk_DNew");
+            var obj_val = JSON.parse(formval);
+            obj_val.ccbill_rowid = "0";
+            obj_val.ccbill_no = "0";
+            //var c = $('#cmb_cc');
+            //obj_val.cc_aggrloc_code = c.data('kendoComboBox').value();
+            obj_val.milkcorrection_rowid = $("#milkcorrection_rowid").val();
+            obj_val.milkcorrection_code = $("#milkcorrection_code").val();
+
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Header = obj_val;
+            retrieve_milkcollection_correction_details(data);
+
+            var grid2 = $("#MilkCollection_grid").data("kendoGrid");
+            grid2.dataSource.read();
+            var count2 = grid2.dataSource.total();
+            if (count2 == 0) {
+                kendoAlert("No milk collection details available for given dates, please try after changing the dates...");
+            }
+            return false;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    //----------Header
+    function generate_milkcollection_correction_header(res) {
+        try {
+            if (res != null && getlocalStorage('btn_clk_val') != "Create") {
+                $("#txtcommon_id").val(res.milkcorrection_code);
+                $('#cmb_collection').data("kendoComboBox").value(res.milksession_code);
+                var fromDate = res.correction_date.split('/').reverse().join('/');
+                $("#txtCorrectionDate").val(fromDate);
+                $("#milkcorrection_rowid").val(res.milkcorrection_rowid);
+                $("#DocStat").val(res.status_desc);
+                //$("#process_status").val(res.process_status);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function generate_milkcollection_correction_Collection(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                gridmilk_collection(data);
+            }
+            else {
+
+                gridmilk_collection([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    //Tranfered Milk
+    function generate_milkcollection_correction_Transfer(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                gridTransfer(data);
+            }
+            else {
+
+                gridTransfer([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    //Related Milk Sumary
+    function generate_milkcollection_correction_RetailSales(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                grid_Retail(data);
+            }
+            else {
+
+                grid_Retail([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>
+<script>
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode != 46 && charCode > 31
+          && (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+</script>
+
+@*<script>
+        function Summary() {
+            //try {
+                $("div#Summary").toggleClass('tab-pane fade active in');
+                $("div#Summary").show();
+                $("div#Collections").hide();
+                $("div#Transfers").hide();
+                $("div#Retails").hide();
+            //}
+        }
+    </script>*@
+<script src="~/CommonScripts/HelpFile.js"></script>
+<script src="~/CommonScripts/common.js"></script>
+

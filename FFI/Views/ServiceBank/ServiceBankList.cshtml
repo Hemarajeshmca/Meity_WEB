@@ -1,0 +1,490 @@
+﻿
+@{
+    ViewBag.List = "Bank Details Change";
+    Layout = "~/Views/Shared/ListViewLayout.cshtml";
+}
+
+<form id="frm_BankList" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="row">
+        <div id="gd_serBank">
+            <div class="col-xs-12">
+                <div id="ServiceBank_grid"></div>
+            </div>
+        </div>
+    </div>
+</form> 
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/Scripts/AccordianPan.js"></script>
+<script src="~/API_Scripts/ServiceReqBank.js"></script>
+<script>
+    click_act_name = "frm_BankList";
+    click_ctrl_name = "ServiceBank";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+
+
+
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+        $(".adv_filter").attr("hdrtitle", "Bank Details List Record");
+        $(".adv_filter").attr("fltid", "ServiceDetail");
+        $(".Export").attr("hdrtitle", "Sevice Request List");
+        $(".Export").attr("SubTreeId", "SRVBANK");
+         
+        Screen_Id = "SRVBANK";
+        permission = sec_Permission(Screen_Id);
+        //page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+        $("#RI").hide();
+        $("#FPO").hide();
+        listpageloadfetch();
+    });
+</script>
+
+
+
+<script>
+
+    function listpageloadfetch() {
+        try {
+            var formval = form_Serialize("frm_BankList");
+            var obj_val = JSON.parse(formval); 
+            obj_val.FilterBy_Option= "QCD_FPOSERVICE_BANKCHNG";           
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_Fromvalue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_Fromvalue = ".";
+            }
+            obj_val.FilterBy_Tovalue = ".";
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Filter = obj_val;
+            var Context = data.context;
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, Filter: Context.Filter }),
+                url: "/ServiceBank/ServiceList",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    if (response.context != null) {
+                        generate_SerReqBank_list(response.context.List)
+                        //listgrid(response.context.List);
+                        //SetPager(response.context.Filter.out_record_count)
+                    }
+                    else {
+                        SerBankgrid([]);
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+            //retrieve_ServiceReqBank_list(data);           
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    var status_Priority = [];
+    
+    function SerBankgrid(data) {
+        try {
+            $.each(data, function (index, value) {
+                var flag = false;
+                $.each(status_Priority, function (sindex, svalue) {
+                    if (svalue == value.status_desc) {
+                        flag = true;
+                    }
+                });
+                if (flag == false) {
+                    status_Priority.push(value.status_desc);
+                }
+            });
+            
+            $("#ServiceBank_grid").kendoGrid({
+                    dataSource: {
+                        data: data,
+                        pageSize: 20,
+                        change: function (e) {
+                            setTimeout(function () {
+                                var gd = $("#ServiceBank_grid").data("kendoGrid");
+                                filter_row(gd);
+                                $('.k-i-close').css('display', 'none');
+                                $('button.k-button-icon').css('display', 'none');
+                                $('#ServiceBank_grid .k-input').prop('disabled', false);
+                                $('#ServiceBank_grid .k-input').prop('readonly', true);
+                            }, 1);
+                        },
+                    },
+                    toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                    excelExport: function (e) {
+                        var gd = $("#ServiceBank_grid").data("kendoGrid");
+                        var len = gd.dataSource._data.length;
+                        var chkall = $('#chkall').is(':checked');
+                        var chkfilter = $('#chkfilter').is(':checked');
+                        var chktemp = $('#chktemp').is(':checked');
+                        var twokendobox = true;
+                        gd.dataSource.pageSize(len);
+                        if (e.sender.dataSource._data.length == len) {
+                            twokendobox = false;
+                            exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                        }
+                        else {
+                            exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                        }
+                        gd.dataSource.pageSize('10');
+                        return false;
+                    },
+                    //filterable: {
+                    //    enabled: true,
+                    //    delay: 1500,
+                    //    mode: "menu, row",
+                    //    height: 200,
+                    //    click: function (e) {
+                    //        var gd = $("#ServiceBank_grid").data("kendoGrid");
+                    //        filter_row(gd);
+                    //    }
+                    //},
+                filterable: true,
+                    resizable:true,
+                    filterMenuInit: function (e) {
+                        var gd = $("#ServiceBank_grid").data("kendoGrid");
+                        filter_row(gd);
+                    },
+                    change: selectRow,
+                    height: 450,
+                    sortable: true,
+                    selectable: true,
+                    selectable: "singl",   //  Grid Row Selection
+                    pageable: {
+                        refresh: false,
+                        pageSizes: true,
+                        buttonCount: 5
+                    },
+                    navigatable: true,
+                    groupable: false,
+                columns: [
+                    {
+                        field: "Out_servicereq_rowid",
+                        title: "servicereq_rowid",
+                        hidden:true
+                    },
+                    {
+                        field: "Out_servicereq_no",
+                        title: "Service Request No",
+                        width: 150,
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        }
+
+                    },
+                    {
+                        field: "Out_request_date",
+                        title: "Request Date",
+                        width: 150,
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        }
+
+                    },
+               {
+                   field: "Out_farmer_code",
+                   title: "Farmer ID",
+                   width: 150,
+                   filterable: {
+                       extra: false,
+                       operators: {
+                           string: {
+                               contains: "Contains"
+                           }
+                       }
+                   }
+
+               },
+               {
+                   field: "Out_fpomember_code",
+                   title: "Member ID",
+                   width: 150,
+                   filterable: {
+                       extra: false,
+                       operators: {
+                           string: {
+                               contains: "Contains"
+                           }
+                       }
+                   }
+
+               },
+               {
+                   field: "Out_farmer_name",
+                   title: "Farmer Given Name",
+                   width: 150,
+                   filterable: {
+                       extra: false,
+                       operators: {
+                           string: {
+                               contains: "Contains"
+                           }
+                       }
+                   }
+
+               },
+               {
+                   field: "Out_sur_name",
+                   title: "Surname",
+                   width: 150,
+                   filterable: {
+                       extra: false,
+                       operators: {
+                           string: {
+                               contains: "Contains"
+                           }
+                       }
+                   }
+               },
+               {
+                   field: "Out_certificate_no",
+                   title: "Certificate No",
+                   width: 150,
+                   attributes: { style: "text-align:right;" },
+                   filterable: {
+                       extra: false,
+                       operators: {
+                           string: {
+                               contains: "Contains"
+                           }
+                       }
+                   }
+               },
+               {
+                   field: "Out_issued_date",
+                   title: "Issued Date",
+                   width: 150,
+                   filterable: {
+                       extra: false,
+                       operators: {
+                           string: {
+                               contains: "Contains"
+                           }
+                       }
+                   } 
+               },
+
+                  {
+                      field: "Out_dist_from",
+                      title: "Distinct From",
+                      attributes: { style: "text-align:right;" },
+                      width: 150,
+                      filterable: {
+                          extra: false,
+                          operators: {
+                              string: {
+                                  contains: "Contains"
+                              }
+                          }
+                      } 
+                  },
+                   {
+                       field: "Out_dist_to",
+                       title: "Distinct To",
+                       width: 150,
+                       attributes: { style: "text-align:right;" },
+                       filterable: {
+                           extra: false,
+                           operators: {
+                               string: {
+                                   contains: "Contains"
+                               }
+                           }
+                       } 
+                   },
+                  
+                   {
+                       field: "Out_request_type",
+                       title: "Request Type",
+                       hidden: true
+
+                   },
+                    {
+                        field: "Out_request_type_desc",
+                        title: "Request Type",
+                        width: 150,
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        }
+                    },
+
+                   {
+                       field: "Out_requestsub_type",
+                       title: "Request Sub Type",
+                       width: 150, 
+                       hidden: true
+
+                   },
+                    {
+                        field: "Out_requestsub_type_desc",
+                        title: "requestsub_type_desc",
+                        hidden: true
+                    },
+                     {
+                         field: "Out_chklist_status_flag",
+                         title: "chklist_status_flag",
+                         hidden: true
+                     },
+                      {
+                          field: "Out_sr_comments",
+                          title: "sr_comments",
+                          hidden: true
+                      },
+                   {
+                       field: "Out_status_desc",
+                       title: "Status",
+                       width: 150,
+                       filterable: {
+                           extra: false,
+                           operators: {
+                               string: {
+                                   contains: "Contains"
+                               }
+                           }
+                       } 
+                   },
+
+
+               {
+                   field: "Out_status_code",
+                   title: "status_code",
+                   hidden: true
+               }],             
+
+            });
+            $(".k-dropdown-operator").css('display', 'none');
+            $("#name_grid .k-input").attr('disabled', 'false');
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+        }
+
+    function statusFilter(element) {    // Dropdown list functionality
+        try {
+            element.kendoDropDownList({
+                dataSource: status_Priority,
+                optionLabel: "--Select Value--"
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+        }
+
+    function selectRow()
+       {
+        try{
+            var grid = $("#ServiceBank_grid").data("kendoGrid");
+            var selectedItem = grid.dataItem(grid.select());
+            setlocalStorage("ls_pageList", selectedItem);
+        }
+        catch (err)
+        {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+        }
+   
+</script>
+
+<script>
+    $("#btn_Edit").bind("click", function () {
+        getSerializedSelectedRows('edit');
+    });
+
+    $("#btn_View").bind("click", function () {
+        getSerializedSelectedRows('view');
+    });
+
+    $("#btn_new").bind("click", function () {
+        btn_onClick('Create');
+        location.href = "../ServiceBank/ServiceBankForm";
+    });
+
+    function getSerializedSelectedRows(mode) {
+        try {
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var items = getlocalStorage("ls_pageList");
+                if (items.length == 0) {
+                    kendoAlert("Please select records");
+                }
+                else {
+                    if (mode == "edit") {
+                        btn_onClick('Edit');
+                        location.href = "../ServiceBank/ServiceBankForm";
+                    }
+                    else if (mode == "view") {
+                        btn_onClick('View');
+                        location.href = "../ServiceBank/ServiceBankForm";
+                    }
+                }
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+
+        }
+    }
+</script>
+<script>
+    function generate_SerReqBank_list(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                $("#gd_serBank").empty();
+                $("#gd_serBank").append("<div id='ServiceBank_grid'></div>");
+                SerBankgrid(data);
+            }
+            else {
+                SerBankgrid([]);
+            }
+        }
+    catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+
+        }
+
+    }
+
+    function listRefresh() {
+        try{
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+
+        }
+
+    }
+</script>

@@ -1,0 +1,680 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListFilter>
+  <filters>
+    <filter id='farMst' description='Farmer List Record' table='mandate' datefield=''>
+      <item seqno='1' 	colname='farmer_code' coldesc=' Farmer Code'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='2' 	colname='farmer_name' 	 coldesc='Name' 	 datatype='S' defval=''   defcondt='like' mstcode=''/>
+      <item seqno='3' 	colname='reg_note' 	 coldesc='Reg Notes' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+      <!--<item seqno='4' 	colname='gender_flag' 	   coldesc='Gender' 	 datatype='S'  defval=''   defcondt='like' mstcode=''/>-->
+      <item seqno='4' 	colname='reg_mobile_no' 	 coldesc='Contact No' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+      <item seqno='5' 	colname='farmer_dist' 	 coldesc='District' 	 datatype='Q' defval=''  	  defcondt='=' mstcode='QCD_UN_DIST'/>
+      <item seqno='6' 	colname='farmer_taluk' 	 coldesc='Taluk' 	 datatype='Q' defval=''  	  defcondt='=' mstcode='QCD_UN_TALUK'/>
+      <item seqno='7' 	colname='status_code' 	 coldesc='Status' 	 datatype='Q' defval=''  	  defcondt='=' mstcode='STATUS'/>
+    </filter>
+
+    <filter id='AttrG' description='Attributes Group List Record' table='mandate' datefield=''>
+      <item seqno='1' 	colname='a.entitygrp_code' coldesc='Attribute Group Code'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='2' 	colname='b.entitygrp_name' 	 coldesc='Attribute Group Code Name' 	 datatype='S' defval=''   defcondt='like' mstcode=''/>
+      <item seqno='3' 	colname='a.multiline_flag' 	 coldesc='Attribute Group Type' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+      <item seqno='4' 	colname='a.status_code' 	 coldesc='Status' 	 datatype='Q' defval=''  	  defcondt='=' mstcode='STATUS'/>
+    </filter>
+
+    <filter id='MILKPAY' description='Milk Payment Advise Details' table='mandate' datefield=''>
+      <item seqno='1' 	colname='payment_no' coldesc='Payment Advice Id'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='2' 	colname='ccbill_no' 	 coldesc='Bill Id' 	 datatype='S' defval=''   defcondt='like' mstcode=''/>
+      <item seqno='3' 	colname='status_code' 	 coldesc='Status' 	 datatype='Q' defval=''  	  defcondt='=' mstcode='STATUS'/>
+    </filter>
+
+    <filter id='BONUSPAY' description='Bonus Payment Advise Details' table='mandate' datefield=''>
+      <item seqno='1' 	colname='bonus_no' coldesc='Bonus Payment ID'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <!--<item seqno='2' 	colname='bonus_date' 	 coldesc='Bonus Payment Date' 	 datatype='S' defval=''   defcondt='like' mstcode=''/>-->
+      <item seqno='2' 	colname='finyear_code' 	 coldesc='Financial year' 	 datatype='Q' defval=''  	  defcondt='=' mstcode='FY'/>
+      <item seqno='3' 	colname='status_code' 	 coldesc='Status' 	 datatype='Q' defval=''  	  defcondt='=' mstcode='STATUS'/>
+    </filter>
+
+    <filter id='Transferregister' description='Transfer Register' table='mandate' datefield=''>
+      <item seqno='1' 	colname='register_no' coldesc='Report ID'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='2' 	colname='register_type_code' 	 coldesc='Report Type' 	 datatype='Q' defval=''  	  defcondt='=' mstcode='FY'/>
+      <item seqno='3' 	colname='status_code' 	 coldesc='Status' 	 datatype='Q' defval=''  	  defcondt='=' mstcode='STATUS'/>
+    </filter>
+
+    <filter id='Bank_fltr' description='Bank Details' table='mandate' datefield=''>
+      <item seqno='1' 	colname='bank_code' coldesc='Bank Code'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='2' 	colname='bank_name' 	 coldesc='Bank Name' 	 datatype='S' defval=''   defcondt='like' mstcode=''/>
+      <item seqno='3' 	colname='status_code' 	 coldesc='Status' 	datatype='Q' defval=''  	  defcondt='=' mstcode='STATUS'/>
+    </filter>
+    <filter id='register' description='Allotment Register' table='mandate' datefield=''>
+      <item seqno='1' 	colname='register_no' coldesc='Report ID'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='2' 	colname='register_type' coldesc='Report Name'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <!--<item seqno='3' 	colname='register_date' coldesc='Report Date'  datatype='S'  defval=''   defcondt='like' mstcode=''/>-->
+      <item seqno='4' 	colname='status_code' 	 coldesc='Status' 	 datatype='Q' defval=''  	  defcondt='=' mstcode='STATUS'/>
+    </filter>
+    <!--FARMER REGISTRATION-->
+    <filter id='FDRREG' description='Farmer Registration Record' table='mandate' datefield=''>
+      <item seqno='1' 	colname='farmer_code' coldesc='Farmer Code'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='2' 	colname='farmer_name' coldesc='Farmer Name'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='3' 	colname='sur_name' coldesc='Sur Name'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='4' 	colname='fhw_name' coldesc='Father/Husband/Wife Name'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='5' 	colname='farmer_dob' coldesc='DOB'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='6' 	colname='farmer_addr1' coldesc='Permanent Address 1'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='7' 	colname='farmer_addr2' coldesc='Permanent Address 2'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='8' 	colname='farmer_country' coldesc='Country'  datatype='Q'  defval=''   defcondt='=' mstcode='QCD_COUNTRY'/>
+      <item seqno='9' 	colname='farmer_state' coldesc='State'  datatype='Q'  defval=''   defcondt='=' mstcode='QCD_UN_STATE'/>
+      <item seqno='10' 	colname='farmer_dist' coldesc='District'  datatype='Q'  defval=''   defcondt='=' mstcode='QCD_UN_DIST'/>
+      <item seqno='11' 	colname='farmer_taluk' coldesc='Taluk'  datatype='Q'  defval=''   defcondt='=' mstcode='QCD_UN_TALUK'/>
+      <item seqno='12' 	colname='farmer_panchayat' coldesc='Gram Panchayat'  datatype='Q'  defval=''   defcondt='=' mstcode='QCD_UN_GRAMPAN'/>
+      <item seqno='13' 	colname='farmer_village' coldesc='Village'  datatype='Q'  defval=''   defcondt='=' mstcode='QCD_UN_VILLAGE'/>
+      <item seqno='14' 	colname='farmer_pincode' coldesc='Pincode'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='15' 	colname='marital_status' coldesc='Marital'  datatype='Q'  defval=''   defcondt='=' mstcode='QCD_MARITAL'/>
+      <item seqno='16' 	colname='gender_flag' coldesc='Gender'  datatype='Q'  defval=''   defcondt='=' mstcode='QCD_GENDER'/>
+      <item seqno='17' 	colname='reg_mobile_no' coldesc='Regis. Number'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='18' 	colname='reg_note' coldesc='Reg.Note'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='19' 	colname='status_code' coldesc='Status'  datatype='Q'  defval=''   defcondt='=' mstcode='FARMER_STATUS'/>
+    </filter>
+    <!--CP-CC-User-->
+    <filter id='CpccMap' description='CP CC Mapping List Record' table='mandate' datefield=''>
+      <item seqno='1' 	colname='aggrorgn_type' coldesc='Aggregator Org Type'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='2' 	colname='aggrorgn_code' 	 coldesc='Aggregator Org. Code' 	 datatype='S' defval=''   defcondt='like' mstcode=''/>
+      <item seqno='3' 	colname='aggrorgn_type_desc' 	 coldesc='Aggregator Org. Name' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+      <item seqno='4' 	colname='status_desc' 	 coldesc='Status' 	 datatype='Q' defval=''  	  defcondt='=' mstcode='STATUS'/>
+    </filter>
+    <!--Aggregator_orgs-->
+    <filter id='Aggregator' description='Aggregator List Record' table='mandate' datefield=''>
+      <item seqno='1' 	colname='orgn_type' coldesc='Aggregator Org.Type'  datatype='Q'  defval=''   defcondt='like' mstcode='AGGR_ORG_TYPE'/>
+      <item seqno='2' 	colname='orgn_subtype' 	 coldesc='Int. Aggregator Type' 	 datatype='Q' defval=''   defcondt='like' mstcode='AGGR_INTER_TYPE'/>
+      <item seqno='3' 	colname='orgn_name' 	 coldesc='Aggregator Org.Name' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+      <item seqno='4' 	colname='parent_code' 	 coldesc='Facilitator Org' 	 datatype='Q' defval=''  	  defcondt='like' mstcode='ORGFO'/>
+      <item seqno='5' 	colname='status_desc' 	 coldesc='Status' 	 datatype='Q' defval=''  	  defcondt='=' mstcode='STATUS'/>
+    </filter>
+    <!--Attributes Group Mapping-->
+    <filter id='AttrGmap' description='Attributes Group Mapping List Record' table='mandate' datefield=''>
+      <!--<item seqno='1' 	colname='activity_desc' coldesc='Activity/Screen Name'  datatype='S'  defval=''   defcondt='like' mstcode=''/>-->
+      <item seqno='2' 	colname='b.entitygrp_name' 	 coldesc='Mapped Attribute Group(s)' 	 datatype='S' defval=''   defcondt='like' mstcode=''/>
+    </filter>
+    <!--Rate Card-->
+    <filter id='RateCard' description='Farmer Registration Record' table='mandate' datefield=''>
+      <item seqno='1' 	colname='ratecard_code' coldesc='Rate Card ID'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='2' 	colname='aggrorgn_type' coldesc='Aggregator Org.Name'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='3' 	colname='aggrorgn_code' coldesc='Aggregator Org.Type'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='4' 	colname='buy_sell_flag' coldesc='Buying/Selling'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='5' 	colname='buy_from' coldesc='Buying From'  datatype='Q'  defval=''   defcondt='like' mstcode='INT_MILKMAN'/>
+      <item seqno='6' 	colname='sell_to' coldesc='Selling To'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='7' 	colname='sell_orgn_code' coldesc='Selling To (Name)'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='8' 	colname='period_from' coldesc='Effective From'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='9' 	colname='period_to' coldesc='Effective To'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='10' 	colname='status_code' coldesc='Status'  datatype='Q'  defval=''   defcondt='=' mstcode='STATUS'/>
+    </filter>
+    <!--Document Numbering-->
+    <filter id='DocNumber' description='Document Numbering List Record' table='mandate' datefield=''>
+      <item seqno='1' 	colname='activity_code' coldesc='Activity Code'  datatype='Q'  defval=''    defcondt='=' mstcode='ACTIVITY'/>
+      <item seqno='2' 	colname='finyear_code' 	 coldesc='Financial Year' 	 datatype='Q' defval=''   defcondt='=' mstcode='FY'/>
+      <item seqno='3' 	colname='docnum_preview' 	 coldesc='Doc Number Preview' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+      <item seqno='4' 	colname='status_code' 	 coldesc='Status' 	 datatype='Q' defval=''  	  defcondt='=' mstcode='STATUS'/>
+    </filter>
+    <!--Fpo registration-->
+    <filter id='fporeg' description='FPO Registration List Record' table='mandate' datefield=''>
+      <item seqno='1' 	colname='orgn_type' coldesc='FPO Type'  datatype='Q'  defval=''    defcondt='=' mstcode='QCD_FPO_TYPE'/>
+      <item seqno='2' 	colname='parent_code' 	 coldesc='Facilitator Org' 	 datatype='Q' defval=''   defcondt='=' mstcode='ORGFO'/>
+      <item seqno='3' 	colname='orgn_code' 	 coldesc='FPO Code' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+      <item seqno='4' 	colname='orgn_name' 	 coldesc='FPO Name' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+      <item seqno='5' 	colname='orgn_level' 	 coldesc='Address' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+      <item seqno='4' 	colname='status_code' 	 coldesc='Status' 	 datatype='Q' defval=''  	  defcondt='=' mstcode='STATUS'/>
+    </filter>
+    <!--Bill Entries-->
+    <filter id='BillEntries' description='Bill Entries List Record' table='mandate' datefield=''>
+      <item seqno='1' 	colname='a.ccbill_no' coldesc='Bill ID'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='2' 	colname='a.cc_aggrloc_desc' 	 coldesc='CC Code' 	 datatype='S' defval=''   defcondt='like' mstcode=''/>
+      <item seqno='3' 	colname='a.period_from' 	 coldesc='Milk Supplied From' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+      <item seqno='4' 	colname='a.period_to' 	 coldesc='Milk Supplied To' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+      <item seqno='5' 	colname='a.status_code' 	 coldesc='Status' 	 datatype='Q' defval=''  	  defcondt='=' mstcode='STATUS'/>
+    </filter>
+    <!--Expenses Details-->
+    <filter id='Expenses_fltr' description='Expenses Details' table='mandate' datefield=''>
+      <item seqno='1' 	colname='a.cc_aggrloc_code' coldesc='Collection Center Name'  datatype='Q'  defval=''   defcondt='like' mstcode='CC'/>
+      <item seqno='2' 	colname='a.finyear_code' 	 coldesc='Financial Year' 	 datatype='Q' defval=''   defcondt='like' mstcode='FY'/>
+      <item seqno='3' 	colname='a.status_code' 	 coldesc='Status' 	 datatype='Q' defval=''  	  defcondt='=' mstcode='STATUS'/>
+    </filter>
+    <!--Reports configuration -->
+    <filter id="ReportConfig" description="Reports configuration Details" table="mandate" datefield="">
+      <item seqno="1" colname="A.module_id" coldesc="Module"  datatype='Q'  defval=''   defcondt='like' mstcode="MODULE" />
+      <item seqno="2" colname="A.report_code" coldesc="Report Code" datatype="S" defval="" defcondt="like" mstcode="" />
+      <item seqno="3" colname="A.report_name" coldesc="Report Name" datatype="S" defval="" defcondt="=" mstcode="" />
+      <item seqno="1" colname="A.report_source" coldesc="Report Filename" datatype="S" defval="" defcondt="like" mstcode="" />
+      <item seqno="3" colname="A.status_code" coldesc="Status" datatype="Q" defval="" defcondt="=" mstcode="STATUS" />
+    </filter>
+    <!-- Service Detail Changes-->
+
+    <filter id='ServiceDetail' description='Service Detail Changes' table='mandate' datefield=''>
+      <item seqno='1' 	colname='a.farmer_code' coldesc='Farmer ID'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='2' 	colname='a.fpomember_code' 	 coldesc='Member ID' 	 datatype='S' defval=''   defcondt='like' mstcode=''/>
+      <item seqno='3' 	colname='b.member_name' 	 coldesc='Farmer Name' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+      <item seqno='4' 	colname='b.member_sur_name' coldesc='Sur Name'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='5' 	colname='a.certificate_sno' 	 coldesc='Certificate No' 	 datatype='S' defval=''   defcondt='like' mstcode=''/>
+      <item seqno='6' 	colname='a.despatch_date' 	 coldesc='Issued Date' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+      <item seqno='7' 	colname='dist_from' coldesc='Dist From'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='8' 	colname='dist_to' 	 coldesc='Dist To' 	 datatype='S' defval=''   defcondt='like' mstcode=''/>
+      <item seqno='9' 	colname='a.servicereq_no' 	 coldesc='Service Request No' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+      <item seqno='10' 	colname='a.request_date' 	 coldesc='Request Date' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+      <item seqno='11' 	colname='a.request_type' coldesc='Request Type'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='12' 	colname='requestsub_type' 	 coldesc='Request Sub Type' 	 datatype='S' defval=''   defcondt='like' mstcode=''/>
+      <item seqno='13' 	colname='a.status_code' 	 coldesc='Status' 	 datatype='Q' defval=''  	  defcondt='=' mstcode='STATUS'/>
+    </filter>
+
+    <!--Dividened Register-->
+    <filter id='DivReg' description='Dividend Register List Record' table='mandate' datefield=''>
+      <item seqno='1' 	colname='a.register_no' coldesc='Register No'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='2' 	colname='a.register_type' 	 coldesc='Register Name' 	 datatype='S' defval=''   defcondt='like' mstcode=''/>
+      <!--<item seqno='3' 	colname='b.report_date' 	 coldesc='Register Date' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>-->
+      <!--<item seqno='4' 	colname='status_code' 	 coldesc='Status' 	 datatype='Q' defval=''  	  defcondt='=' mstcode='STATUS'/>-->
+    </filter>
+
+    <!--Dividened Structure-->
+    <!--
+    <filter id='DivStruct' description='Dividend Structure List Record' table='mandate' datefield=''>
+      <item seqno='1' 	colname='a.report_date' coldesc='Record Date'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='2' 	colname='a.finyear_desc' 	 coldesc='Financial Year' 	 datatype='S' defval=''   defcondt='like' mstcode=''/>
+      <item seqno='3' 	colname='a.period_from' 	 coldesc='Period From' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+      <item seqno='4' 	colname='a.period_to' 	 coldesc='Period To' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+      <item seqno='5' 	colname='a.dividend_type_desc' 	 coldesc='Dividend Type' 	 datatype='S' defval=''   defcondt='like' mstcode=''/>
+      <item seqno='6' 	colname='a.dividend_percent' 	 coldesc='Dividend %' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+      <item seqno='7' 	colname='a.status_code' 	 coldesc='Status' 	 datatype='Q' defval=''  	  defcondt='=' mstcode='STATUS'/>
+    </filter>-->
+
+    <!--Dividened Structure-->
+    <filter id='DivStruct' description='Dividend Structure List Record' table='mandate' datefield=''>
+      <item seqno='1' colname='a.report_date' coldesc='Record Date'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='2' colname='a.finyear_code' coldesc='Financial Year' datatype='S' defval=''   defcondt='like' mstcode=''/>
+      <item seqno='3' colname='a.period_from' coldesc='Period From' datatype='S' defval=''    defcondt='like' mstcode=''/>
+      <item seqno='4' colname='a.period_to' coldesc='Period To' datatype='S' defval=''    defcondt='like' mstcode=''/>
+      <item seqno='5' colname='a.dividend_type' coldesc='Dividend Type' datatype='Q' defval=''   defcondt='like' mstcode='QCD_SHA_DIV_TYPE'/>
+      <item seqno='6' colname='a.dividend_percent' coldesc='Dividend %' datatype='S' defval=''    defcondt='like' mstcode=''/>
+    </filter>
+
+    <!--Apply for Share-->
+    <filter id='shareapp_fltr' description='Share Application Details Search' table='mandate' datefield=''>
+      <item seqno='1' 	colname='a.farmer_code' coldesc='Farmer ID'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='2' 	colname='a.fpomember_code' 	 coldesc='Member ID' 	 datatype='S' defval=''   defcondt='like' mstcode=''/>
+      <item seqno='3' 	colname='b.member_name' 	 coldesc='Farmer_name' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+      <item seqno='4' 	colname='b.member_sur_name' 	 coldesc='surname' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+      <item seqno='5' 	colname='a.shareapp_no' 	 	 coldesc='Application No' 	 datatype='S' defval=''   defcondt='like' mstcode=''/>
+      <!--<item seqno='6' 	colname='a.shareapp_no' 	 coldesc='Dividend %' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>-->
+      <item seqno='7' 	colname='a.payment_status' 	 coldesc='Payment Status %' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+      <item seqno='8' 	colname='a.payment_mode' 	 coldesc='Payment Method%' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+      <item seqno='9' 	colname='a.status_code' 	 coldesc='Status' 	 datatype='Q' defval=''  	  defcondt='=' mstcode='STATUS'/>
+    </filter>
+
+    <filter id='GenerateShareCertificate' description='Generate ShareCertificate' table='mandate' datefield=''>
+      <item seqno='1' 	colname='register_no' coldesc='Report ID'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='2' 	colname='register_type' coldesc='Report Name'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <!--<item seqno='3' 	colname='register_date' coldesc='Report Date'  datatype='S'  defval=''   defcondt='like' mstcode=''/>-->
+      <item seqno='4' 	colname='status_code' 	 coldesc='Status' 	 datatype='Q' defval=''  	  defcondt='=' mstcode='STATUS'/>
+    </filter>
+
+    <!--Templates-->
+    <filter id='TmplStp' description='Template List Record' table='template' datefield='m.menu_name'>
+      <item seqno='1' 	colname='m.menu_name' 	 coldesc='Menu Name'  datatype='S'  defval=''   	 defcondt='like' mstcode=''/>
+      <item seqno='2' 	colname='t.template_name' 	 coldesc='Template Name'  datatype='S'  defval=''   defcondt='like' 	mstcode=''/>
+      <item seqno='3' 	colname='t.note' 	 coldesc='Note'  datatype='S'  defval='Q'   defcondt='like' 	mstcode=''/>
+      <item seqno='4' 	colname='t.type_code' 	 coldesc='Template Type'  datatype='Q'  defval=''   	 defcondt='=' mstcode='TEMPLATE'/>
+    </filter>
+    <!--fpoloan-->
+    <filter id='Fpoloan' description='Fpoloan Changes' table='mandate' datefield=''>
+      <item seqno='1' 	colname='fpoloan_no' coldesc='FPO Loan Account No.'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='2' 	colname='institution_type' 	 coldesc='Institiution Type' 	 datatype='Q' defval=''   defcondt='like' mstcode='QCD_FL_INSTYPE'/>
+      <item seqno='3' 	colname='sanctioned_amount' 	 coldesc='Sanctioned Amount' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+      <item seqno='4' 	colname='interest_rate' coldesc='Interest Rate'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='5' 	colname='repayment_in_yrs' 	 coldesc='Repayment Tenure (Years)' 	 datatype='S' defval=''   defcondt='like' mstcode=''/>
+      <item seqno='6' 	colname='repayment_freq' 	 coldesc='Repayment Frequency' 	 datatype='Q' defval=''  	  defcondt='like' mstcode='QCD_REPAY'/>
+      <item seqno='7' 	colname='dist_from' coldesc='Instalment Nos'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='8' 	colname='collateral_type' 	 coldesc='Collateral Type' 	 datatype='Q' defval=''   defcondt='like' mstcode='QCD_COLASEC'/>
+      <item seqno='9' 	colname='collateral_amount' 	 coldesc='Collateral Amount' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+      <item seqno='10' 	colname='refund_received' 	 coldesc='Total Amount Received' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+      <item seqno='11' 	colname='principle_paid' coldesc='Princ. Amount Repaid'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='12' 	colname='interest_paid' 	 coldesc='Int. Amount Repaid' 	 datatype='S' defval=''   defcondt='like' mstcode=''/>
+      <item seqno='13' 	colname='status_code' 	 coldesc='FPO Loan Status' 	 datatype='Q' defval=''  	  defcondt='=' mstcode='QCD_LOANSTATUS'/>
+    </filter>
+    <!--FARMER LOAN SCHEME-->
+    <filter id='LRSSCHEME' description='Farmer Loan Scheme' table='mandate' datefield=''>
+      <item seqno='1' 	colname='loanscheme_code' coldesc='Loan Scheme Name'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='2' 	colname='loan_type' coldesc='Loan Type'  datatype='Q'  defval=''   defcondt='like' mstcode='QCD_LOANTYPE'/>
+      <item seqno='3' 	colname='fpoloan_no' coldesc='FPO Loan No'  datatype='Q'  defval=''   defcondt='like' mstcode='FPOLOAN'/>
+      <item seqno='4' 	colname='creation_date' coldesc='Created Date'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='5' 	colname='effective_from' coldesc='Effective From'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='6' 	colname='effective_to' coldesc='Effective To'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='7' 	colname='base_rate' coldesc='Base Rate'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='8' 	colname='fpo_margin_rate' coldesc='FPO Margin Rate'  datatype='S'  defval=''   defcondt='=' mstcode=''/>
+      <item seqno='9' 	colname='fig_margin_rate' coldesc='FIG Margin Rate'  datatype='S'  defval=''   defcondt='=' mstcode=''/>
+      <item seqno='10' 	colname='interest_rate' coldesc='Intrest Date'  datatype='S'  defval=''   defcondt='=' mstcode=''/>
+      <item seqno='11' 	colname='repayment_freq' coldesc='Repqyment Frequancy'  datatype='Q'  defval=''   defcondt='=' mstcode='QCD_REPAY'/>
+      <item seqno='12' 	colname='repayment_in_yrs' coldesc='Repayment Tenure In Years'  datatype='S'  defval=''   defcondt='=' mstcode=''/>
+      <item seqno='13' 	colname='repayment_in_months' coldesc='Repayment Tenure In Months'  datatype='S'  defval=''   defcondt='=' mstcode=''/>
+      <item seqno='14' 	colname='principle_interest_holiday_period' coldesc='Int and Principal Holiday Period'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='15' 	colname='min_loan_amount' coldesc='Min Amount'  datatype='S'  defval=''   defcondt='=' mstcode=''/>
+      <item seqno='16' 	colname='max_loan_amount' coldesc='Max Amount'  datatype='S'  defval=''   defcondt='=' mstcode=''/>
+      <item seqno='17' 	colname='allotted_amount' coldesc='TPB Allowed'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='18' 	colname='received_amount' coldesc='Received Amount'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='19' 	colname='lend_amount' coldesc='Lend Amount'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='20' 	colname='lend_balance_amount' coldesc='Lend Balance Amount'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='21' 	colname='interest_amount' coldesc='Intrest Amount'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='22' 	colname='subvention_amount' coldesc='Subvention Amount'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='23' 	colname='refund_amount' coldesc='Refund Amount'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='24' 	colname='emi_start_month' coldesc='EMI Start Month'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='25' 	colname='tp_beneficiary_flag' coldesc='Beneficiary Type'  datatype='Q'  defval=''   defcondt='like' mstcode='QCD_YESNO'/>
+      <item seqno='26' 	colname='status_code' coldesc='Status'  datatype='Q'  defval=''   defcondt='=' mstcode='STATUS'/>
+    </filter>
+    <!--FARMER LOAN APPLICATION-->
+    <filter id='LRSLOANAPP' description='Farmer Loan Scheme' table='mandate' datefield=''>
+      <item seqno='1' 	colname='a.fpomember_code' 	 coldesc='Member ID' 	 datatype='S' defval=''   defcondt='like' mstcode=''/>
+      <item seqno='2' 	colname='a.farmer_code' coldesc='Farmer ID'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='3' 	colname='b.member_name' 	 coldesc='Farmer_name' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+      <item seqno='4' 	colname='b.member_sur_name' 	 coldesc='surname' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+      <item seqno='5' 	colname='a.loanapp_no' coldesc='Loan Application No'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <!--<item seqno='6' 	colname='app_date' coldesc='Application Date'  datatype='S'  defval=''   defcondt='like' mstcode=''/>-->
+      <item seqno='7' 	colname='a.loanscheme_code' coldesc='Loan Scheme Code'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='8' 	colname='c.interest_rate' coldesc='Intrest Date'  datatype='S'  defval=''   defcondt='=' mstcode=''/>
+      <item seqno='9' 	colname='c.repayment_in_yrs' coldesc='Repayment Tenure In Years'  datatype='S'  defval=''   defcondt='=' mstcode=''/>
+      <!--<item seqno='10' 	colname='interest_rate' coldesc='Intrest Date'  datatype='S'  defval=''   defcondt='=' mstcode=''/>-->
+      <item seqno='11' 	colname='a.loan_amount' coldesc='Loan Amount'  datatype='S'  defval=''   defcondt='=' mstcode=''/>
+      <item seqno='12' 	colname='a.beneficiary_type' coldesc='Beneficiary Type'  datatype='Q'  defval=''   defcondt='=' mstcode='QCD_FL_BENETYPE'/>
+      <item seqno='13' 	colname='a.beneficiary_name' coldesc='Beneficiary Name'  datatype='S'  defval=''   defcondt='=' mstcode=''/>
+      <item seqno='14' 	colname='a.bank_acc_type_desc' coldesc='Bank Account Type'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='15' 	colname='a.bank_acc_no' coldesc='Bank Account No'  datatype='S'  defval=''   defcondt='=' mstcode=''/>
+      <item seqno='16' 	colname='a.bank_code' coldesc='Bank Code'  datatype='S'  defval=''   defcondt='=' mstcode=''/>
+      <item seqno='17' 	colname='a.bank_ifsc_code' coldesc='Bank IFSC Code'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <!--<item seqno='18' 	colname='sanctioned_date' coldesc='Sanctioned Date'  datatype='S'  defval=''   defcondt='like' mstcode=''/>-->
+      <item seqno='19' 	colname='a.status_code' coldesc='Status'  datatype='Q'  defval=''   defcondt='=' mstcode='STATUS'/>
+    </filter>
+
+    <!--FARMER LOAN DISBURSEMENT-->
+    <filter id='FLDisbursementList' description='Farmer disbursement list' table='mandate' datefield=''>
+      <item seqno='1' 	colname='LA.loanapp_no' coldesc='ARN'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='2' 	colname='LA.farmer_code' coldesc='Farmer ID'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='3' 	colname='LA.fpomember_code' 	 coldesc='Member ID' 	 datatype='S' defval=''   defcondt='like' mstcode=''/>
+      <item seqno='4' 	colname='LA.member_name' 	 coldesc='Farmer Name' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+      <item seqno='5' 	colname='LA.member_sur_name' 	 coldesc='Farmer SurName' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+      <item seqno='6' 	colname='LA.loanscheme_code' coldesc='FL Scheme'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='7' 	colname='LA.beneficiary_type' coldesc='Beneficiary Type'  datatype='Q'  defval=''   defcondt='=' mstcode='QCD_FL_BENETYPE'/>
+      <item seqno='8' 	colname='LA.beneficiary_name' coldesc='Beneficiary Name'  datatype='S'  defval=''   defcondt='=' mstcode=''/>
+      <item seqno='9' 	colname='LA.bank_acc_type_desc' coldesc='Bank Account Type'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='10' 	colname='LA.bank_acc_no' coldesc='Bank Account No'  datatype='S'  defval=''   defcondt='=' mstcode=''/>
+      <item seqno='11' 	colname='LA.bank_code' coldesc='Bank Code'  datatype='S'  defval=''   defcondt='=' mstcode=''/>
+      <item seqno='12' 	colname='LA.bank_ifsc_code' coldesc='Bank IFSC Code'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='13' 	colname='LA.sanctioned_date' coldesc='Sanctioned Date'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='14' 	colname='L.status_code' coldesc='Status'  datatype='Q'  defval=''   defcondt='=' mstcode='STATUS'/>
+    </filter>
+
+    <!--foreclosure-->
+    <filter id='ForeClosure' description='ForeClosure list' table='mandate' datefield=''>
+      <item seqno='1' 	colname='a.loan_no' coldesc='Loan Account No.'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='2' 	colname='a.fpomember_code' coldesc='Member ID'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='3' 	colname='a.farmer_code' 	 coldesc='Farmer ID' 	 datatype='S' defval=''   defcondt='like' mstcode=''/>
+      <item seqno='4' 	colname='b.member_name' 	 coldesc='Farmer Name' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+      <item seqno='5' 	colname='b.member_sur_name' 	 coldesc='Farmer SurName' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+      <item seqno='6' 	colname='d.loanscheme_code' coldesc='FL Scheme'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='7' 	colname='a.loan_amount' coldesc='Loan Amount'  datatype='S'  defval=''   defcondt='=' mstcode=''/>
+      <!--<item seqno='8' 	colname='LA.beneficiary_name' coldesc='Loan Outstanding Amount'  datatype='S'  defval=''   defcondt='=' mstcode=''/>-->
+      <item seqno='9' 	colname='a.disb_bank_ref_no' coldesc='Bank Ref. No.'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='10' 	colname='a.status_code' coldesc='Loan Account No. Status'  datatype='Q'  defval=''   defcondt='=' mstcode='STATUS'/>
+    </filter>
+
+    <!--Subvention list-->
+    <filter id='SubventionList' description='Subvention list' table='mandate' datefield=''>
+      <item seqno='1' 	colname='a.subvention_name' coldesc='Scheme'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='2' 	colname='a.subvention_rate' coldesc='Interest %'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='3' 	colname='a.Threshold' 	 coldesc='Thershold' 	 datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='4' 	colname='a.Ref_Circular_No' 	 coldesc='Ref. Circular. No.'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='5' 	colname='c.loan_type' 	 coldesc='Loan Type'  datatype='Q'  defval=''   defcondt='=' mstcode='QCD_LOANTYPE'/>
+    </filter>
+
+    <!--Evalution list-->
+    <filter id='EvalutionList' description='Evalution list' table='mandate' datefield=''>
+      <item seqno='1' 	colname='loan_type' coldesc='Loan Type'  datatype='Q'  defval=''   defcondt='=' mstcode='QCD_LOANTYPE'/>
+      <item seqno='2' 	colname='questionnaire' coldesc='Category'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='3' 	colname='a.status_code' coldesc='Status'  datatype='Q'  defval=''   defcondt='=' mstcode='STATUS'/>
+    </filter>
+
+    <!--Input center list-->
+    <filter id='ic' description='Input center list' table='mandate' datefield=''>
+      <item seqno='1' 	colname='a.orgn_code' coldesc='Input Center Code'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='2' 	colname='a.orgn_name' coldesc='Input Center Name'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='3' 	colname='a.orgn_type' 	 coldesc='Input Center Type' 	 datatype='Q'  defval=''   defcondt='like' mstcode='QCD_IC_TYPE'/>
+      <item seqno='5' 	colname='a.orgn_name' 	 coldesc='Fpo Name' 	 datatype='S'  defval=''   defcondt='like' mstcode=''/>
+      <item seqno='6' 	colname='a.status_code' coldesc='Status'  datatype='Q'  defval=''   defcondt='=' mstcode='STATUS'/>
+    </filter>
+  </filters>
+  <!--Input center list-->
+  <filter id='GSTList' description='GST List' table='mandate' datefield=''>
+    <item seqno='3' 	colname='a.provider_location' 	 coldesc='State From' 	 datatype='Q'  defval=''   defcondt='like' mstcode='QCD_UN_STATE'/>
+    <item seqno='3' 	colname='a.reciver_location' 	 coldesc='State To' 	 datatype='Q'  defval=''   defcondt='like' mstcode='QCD_UN_STATE'/>
+    <item seqno='6' 	colname='a.status_code' coldesc='Status'  datatype='Q'  defval=''   defcondt='=' mstcode='STATUS'/>
+  </filter>
+  <!--Stock inward list-->
+  <filter id='Inward' description='Stock inward list' table='mandate' datefield=''>
+    <!--<item seqno='1' 	colname='ic_code' coldesc='Input Centre Name'  datatype='S'  defval=''   defcondt='like' mstcode=''/>-->
+    <item seqno='2' 	colname='grn_no' coldesc='GRN NO'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='3' 	colname='supplier_name' 	 coldesc='Suplier Name' 	 datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='4' 	colname='supplier_location' 	 coldesc='Suplier Location' 	 datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='5' 	colname='from_state' 	 coldesc='From State' 	 datatype='Q'  defval=''   defcondt='like' mstcode='QCD_UN_STATE'/>
+  </filter>
+
+
+  <filter id='prdlist' description='Product Master list' table='mandate' datefield=''>
+    <item seqno='1' colname='product_catg_code' coldesc='Product Category'  datatype='S'  defval=''   defcondt='like' mstcode='QCD_UN_PRDCAT'/>
+    <item seqno='2' colname='product_subcatg_code' coldesc='Product Sub-Category'  datatype='S'  defval=''   defcondt='like' mstcode='QCD_UN_SUBCAT'/>
+    <item seqno='3' colname='product_name' coldesc='Product Name'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+  </filter>
+
+  <!--stock Adjectment list-->
+  <filter id='StockAdjustment' description='Stock Adjustment list' table='mandate' datefield=''>
+    <!--<item seqno='1' 	colname='orgn_name' coldesc='Input Center Name'  datatype='S'  defval=''   defcondt='like' mstcode=''/>-->
+    <item seqno='2' 	colname='adjustment_no' coldesc='Adjustment No'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='3' 	colname='CONVERT(VARCHAR(11),CAST(adjustment_date as datetime),101)' coldesc='Adjustment Date'  datatype='D'  defval=''   defcondt='like' mstcode=''/>
+  </filter>
+
+  <!--Invoice list-->
+  <filter id='invoice' description='Invoice list' table='mandate' datefield=''>
+    <item seqno='1' 	colname='ic_code' coldesc='Input Centre Name'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='invoice_no' coldesc='Invoice No'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='3' 	colname='customer_type' 	 coldesc='Customer Type' 	 datatype='Q'  defval=''   defcondt='like' mstcode='QCD_CUS_TYPE'/>
+    <item seqno='4' 	colname='customer_name' 	 coldesc='Customer Name' 	 datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='5' 	colname='reciver_location' 	 coldesc='Receiver Location' 	 datatype='Q'  defval=''   defcondt='like' mstcode='QCD_UN_STATE'/>
+  </filter>
+
+  <!--Credit Issue list-->
+  <filter id='Credit_Issue' description='Credit Issue list' table='mandate' datefield=''>
+    <item seqno='1' 	colname='ic_code' coldesc='Input Centre Name'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='creditissue_no' coldesc='Credit Issue No'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='3' 	colname='customer_type' 	 coldesc='Customer Type' 	 datatype='Q'  defval=''   defcondt='like' mstcode='QCD_CUS_TYPE'/>
+    <item seqno='4' 	colname='farmer_name' 	 coldesc='Farmer Name' 	 datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='5' 	colname='reciver_location' 	 coldesc='Receiver Location' 	 datatype='Q'  defval=''   defcondt='like' mstcode='QCD_UN_STATE'/>
+  </filter>
+  <!--Milk Collection Correction list-->
+  <filter id='MilkCollectionCorrection' description='Milk Collection Correction list' table='mandate' datefield=''>
+    <item seqno='1' 	colname='a.milkcorrection_code' coldesc='Correction ID'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='a.correction_date' coldesc='Correction Date'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='3' 	colname='a.milksession_code' 	 coldesc='Session ID' 	 datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='4' 	colname='a.status_code' coldesc='Status'  datatype='Q'  defval=''   defcondt='=' mstcode='STATUS'/>
+  </filter>
+
+  <!--ESP registration-->
+  <filter id='espreg' description='FPO Registration List Record' table='mandate' datefield=''>
+    <item seqno='3' 	colname='orgn_code' 	 coldesc='ESP Code' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='parent_code' 	 coldesc='Facilitator Org' 	 datatype='S' defval=''   defcondt='like' mstcode=''/>
+    <item seqno='4' 	colname='orgn_name' 	 coldesc='ESP Name' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+    <item seqno='1' 	colname='orgn_type' coldesc='ESP Type'  datatype='S'  defval=''    defcondt='like' mstcode=''/>
+    <item seqno='5' 	colname='fpo_logo' 	 coldesc='FPO/Largefarmer' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+    <item seqno='4' 	colname='status_code' 	 coldesc='Status' 	 datatype='Q' defval=''  	  defcondt='=' mstcode='STATUS'/>
+  </filter>
+
+  <!--customer REg-->
+  <filter id='Customer' description='Customer Register list' table='mandate' datefield=''>
+    <item seqno='1' 	colname='user_code' coldesc='User ID'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='user_name' coldesc='User Name'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='3' 	colname='a.status_code' coldesc='Status'  datatype='Q'  defval=''   defcondt='=' mstcode='STATUS'/>
+  </filter>
+
+  <!--Equipment setup-->
+  <filter id='eqpsetup' description='ESP Equipment List Record' table='mandate' datefield=''>
+    <item seqno='1' 	colname='esp_code' 	 coldesc='ESP Code' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='equipment_type' 	 coldesc='Equipment Type' 	 datatype='Q' defval=''   defcondt='like' mstcode=''/>
+    <item seqno='3' 	colname='equipment_name' 	 coldesc='Equipment Name' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+    <item seqno='4' 	colname='manfaturer_name' coldesc='Manfaturer Type'  datatype='S'  defval=''    defcondt='like' mstcode=''/>
+    <item seqno='5' 	colname='serial_no' 	 coldesc='Serial No' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+    <item seqno='6' 	colname='chasis_no' coldesc='Chasis no'  datatype='S'  defval=''    defcondt='like' mstcode=''/>
+    <item seqno='7' 	colname='gps_id' 	 coldesc='GPS id' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+    <item seqno='8' 	colname='sim_no' 	 coldesc='Sim no' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+    <item seqno='9' 	colname='status_code' 	 coldesc='Status' 	 datatype='Q' defval=''  	  defcondt='=' mstcode='STATUS'/>
+  </filter>
+
+  <!--My Booking-->
+  <filter id='MYBOOKING' description='ESP Equipment List Record' table='mandate' datefield=''>
+    <item seqno='1' 	colname='d.user_code' 	 coldesc='Customer Code' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='d.user_name' 	 coldesc='Customer Name' 	 datatype='Q' defval=''   defcondt='like' mstcode=''/>
+    <item seqno='3' 	colname='a.booking_no' 	 coldesc='Booking ID' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+    <item seqno='4' 	colname='c.equipment_name' coldesc='Equipment name'  datatype='S'  defval=''    defcondt='like' mstcode=''/>
+    <item seqno='5' 	colname='e.equipment_no' 	 coldesc='Equipment No' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+    <item seqno='6' 	colname='b.process_status' coldesc='Booking Status'   datatype='Q' defval=''  	  defcondt='=' mstcode='QCD_FL_BKGSTAUS'/>
+  </filter>
+
+  <filter id='CMQuery' description='CM Query List Record' table='mandate' datefield=''>
+    <item seqno='1' 	colname='a.user_code' 	 coldesc='Customer Code' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='b.user_name' 	 coldesc='Customer Name' 	 datatype='S' defval=''   defcondt='like' mstcode=''/>
+    <item seqno='3' 	colname='a.user_query' 	 coldesc='Query' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+    <!--<item seqno='4' 	colname='date_of_query' coldesc='Query Date'  datatype='S'  defval=''    defcondt='like' mstcode=''/>-->
+    <item seqno='4' 	colname='a.status_code' 	 coldesc='Status' 	 datatype='Q' defval=''  	  defcondt='=' mstcode='STATUS'/>
+  </filter>
+  /*Added By SheebaSebasthian*/
+  <filter id='AggReg' description='Aggregator FarmerMap List' table='mandate' datefield=''>
+    <item seqno='1' 	colname='aggregate_code' coldesc='Aggregator Code'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='aggregate_name' 	 coldesc='Aggregator Name' 	 datatype='S' defval=''   defcondt='like' mstcode=''/>
+    <item seqno='3' 	colname='aggregate_type'  coldesc='Aggregator Type' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='4' 	colname='status'  coldesc='Status' datatype='Q' defval='' defcondt='like' mstcode='STATUS'/>
+  </filter>
+
+  <filter id='VEHMAS' description='Vehicle Master List' table='mandate' datefield=''>
+    <item seqno='1' 	colname='vehicle_code' 	 coldesc='Vehicle Code' 	 datatype='S' defval=''   defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='vehicle_manf_name'  coldesc='Manufacturer Name' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='3' 	colname='vehicle_regno'  coldesc='Vehicle Reg. No' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='4' 	colname='max_carrry_weight'  coldesc='Max. Carry Weight' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='5' 	colname='loadspace_length'  coldesc='Loadfloor Length' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='6' 	colname='loadspace_width'  coldesc='LoadFloor Width' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='7' 	colname='loadspace_height'  coldesc='LoadFloor Height' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='7' 	colname='gps_id'  coldesc='GPS Tracking ID' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='8' 	colname='imei_no'  coldesc='IMEI No' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='9' 	colname='sim_no'  coldesc='SIM NO' datatype='S' defval='' defcondt='like' mstcode=''/>
+  </filter>
+  /*End*/
+  <filter id='PAYUPDATE' description='payment updation list' table='mandate' datefield=''>
+    <item seqno='1' 	colname='Customer_code' 	 coldesc='Customer Code' 	 datatype='S' defval=''   defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='Customer_name'  coldesc='Customer Name' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='3' 	colname='Booking_id' 	 coldesc='Booking id' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+    <item seqno='4' 	colname='Equipment' coldesc='Equipment'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='5' 	colname='Date_of_booking' 	 coldesc='Date of booking' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+    <item seqno='6' 	colname='period_from' coldesc='Payment From'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='7' 	colname='period_to' coldesc='Payment To'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='8' 	colname='Payment_status'  coldesc='Status' datatype='Q' defval='' defcondt='like' mstcode=''/>
+  </filter>
+  /*Added By SheebaSebasthian*/
+  <!--modify by Mohan-->
+  <filter id='Cus_Mas' description='Customer Master List' table='mandate' datefield=''>
+    <item seqno='1' 	colname='customer_code' 	 coldesc='Customer Code' 	 datatype='S' defval=''   defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='customer_type'  coldesc='Customer Type' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='3' 	colname='customer_name'  coldesc='Customer Name' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='4' 	colname='customer_addr1'  coldesc='Customer addr1' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='5' 	colname='customer_addr2'  coldesc='Customer addr2' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='6' 	colname='customer_country'  coldesc='Customer country' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='7' 	colname='customer_state'  coldesc='Customer state' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='8' 	colname='customer_dist'  coldesc='Customer dist' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='9' 	colname='customer_taluk'  coldesc='Customer taluk' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='10' 	colname='customer_panchayat'  coldesc='Customer panchayat' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='11' 	colname='customer_village'  coldesc='Customer village' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='12' 	colname='customer_pincode'  coldesc='Customer pincode' datatype='S' defval='' defcondt='like' mstcode=''/>
+
+  </filter>
+  <filter id='Whs_Master' description='Warehouse List' table='mandate' datefield=''>
+    <item seqno='1' 	colname='whs_code' 	 coldesc='Warehouse Code' 	 datatype='S' defval=''   defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='whs_name'  coldesc='Warehouse Name' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='3' 	colname='agg_code'  coldesc='Aggregator Name' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='4' 	colname='whs_village'  coldesc='Village' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='5' 	colname='whs_panchayat'  coldesc='Gram Panchayat' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='6' 	colname='whs_taluk'  coldesc='Taluk' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='7' 	colname='whs_dist'  coldesc='District' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='8' 	colname='sqrf_area'  coldesc='Sq. Feet Area' datatype='S' defval='' defcondt='like' mstcode=''/>
+  </filter>
+  <filter id='StockAjdst' description='Stock Adjust List' table='mandate' datefield=''>
+    <item seqno='1' 	colname='adjust_number' 	 coldesc='Adjustment No' 	 datatype='S' defval=''   defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='adjust_date'  coldesc='Adjustment Date' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='3' 	colname='status'  coldesc='Status' datatype='Q' defval='' defcondt='like' mstcode='STATUS'/>
+  </filter>
+  <!--modify by Mohan-->
+  <filter id='prodCal' description='Produce Calendar' table='mandate' datefield=''>
+    <item seqno='1' 	colname='pac_no' 	 coldesc='PAC No.' 	 datatype='S' defval=''   defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='tfar.farmer_code'  coldesc='Farmer Code' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='3' 	colname='tfar.farmer_code'  coldesc='Farmer Name' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='4' 	colname='pac_year'  coldesc='Year' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='5' 	colname='item_code'  coldesc='Item' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='6' 	colname='jan'  coldesc='Total Quantity' datatype='S' defval='' defcondt='like' mstcode=''/>
+  </filter>
+  <filter id='WhsRecpt' description='Warehouse Receipts List' table='mandate' datefield=''>
+    <item seqno='1' 	colname='WR.grn_invoice_no' coldesc='GRN'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='RP.farmer_code'  coldesc='Farmer Code' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='3' 	colname='TF.farmer_name'  coldesc='Farmer Name' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='4' 	colname='WR.pickup_request_id'  coldesc='Request ID' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='5' 	colname='pickup_date'  coldesc='Pick_up Date' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='6' 	colname='pickup_slot'  coldesc='Pick_up Slot' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='7' 	colname='RP.tran_type'  coldesc='Procurement Service' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='8' 	colname='request_status'  coldesc='Status' datatype='Q' defval='' defcondt='like' mstcode='PAWHS_PICKUP_STATUS'/>
+  </filter>
+
+  <filter id='ItemMas' description='Item Master List' table='mandate' datefield=''>
+    <item seqno='1' 	colname='item_code'  coldesc='Item Code' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='item_name'  coldesc='Item Name' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='3' 	colname='item_type'  coldesc='Item Type' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='4' 	colname='uom_code'  coldesc='Standard UOM' datatype='S' defval='' defcondt='like' mstcode=''/>
+
+  </filter>
+  <filter id='Produc_Stage' description='Production Stage List' table='mandate' datefield=''>
+    <item seqno='1' 	colname='PR.agg_code'  coldesc='Aggregator Code' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='fg_code'  coldesc='FG Code' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='3' 	colname='no_of_stage'  coldesc='No of Stages' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='4' 	colname='ITEM.item_name'  coldesc='Final Output' datatype='S' defval='' defcondt='like' mstcode=''/>
+  </filter>
+
+  <filter id='ReadyPickup' description='Ready For Pickup List' table='mandate' datefield=''>
+    <item seqno='1' 	colname='b.farmer_code' coldesc='Farmer Code'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='b.farmer_name'  coldesc='Farmer Name' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='3' 	colname='pickup_request_id'  coldesc='Pick_up Request ID' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='4' 	colname='pickup_date'  coldesc='Pick_up Date' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='5' 	colname='a.request_status'  coldesc='Status' datatype='Q' defval='' defcondt='like' mstcode='PAWHS_PICKUP_STATUS'/>
+    <!--<item seqno='5' 	colname='status'  coldesc='Status' datatype='Q' defval='' defcondt='like' mstcode='PAWHS_PICKUP_STATUS'/>-->
+  </filter>
+  <filter id='ProductTrans' description='Production Transaction List' table='mandate' datefield=''>
+    <item seqno='1' 	colname='fg_code' coldesc='FG Code'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='stage_description'  coldesc='Stage Description' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='3' 	colname='status'  coldesc='Status' datatype='S' defval='' defcondt='like' mstcode=''/>
+  </filter>
+  <filter id='ProductTransaction' description='Production Transaction List' table='mandate' datefield=''>
+    <item seqno='1' 	colname='tran_type' coldesc='Transaction Type'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='CONVERT(VARCHAR(11),CAST(stage_start_datetime as datetime),101)'  coldesc='Stage Start Time' datatype='D' defval='' defcondt='like' mstcode=''/>
+    <item seqno='3' 	colname='CONVERT(VARCHAR(11),CAST(stage_end_datetime as datetime),101) '  coldesc='Stage End Time' datatype='D' defval='' defcondt='like' mstcode=''/>
+    <item seqno='3' 	colname='stage_document_id'  coldesc='Stage Document Id' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='3' 	colname='b.stage_code'  coldesc='Stage Description' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='3' 	colname='a.fg_code'  coldesc='FG Code' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='3' 	colname='p.uom_code'  coldesc='FG Name' datatype='S' defval='' defcondt='like' mstcode=''/>
+  </filter>
+  <filter id='SerRecpt' description='Service Receipts List' table='mandate' datefield=''>
+    <item seqno='1' 	colname='service_recpt_no' coldesc='Service Receipt No'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='warehouse_name'  coldesc='Warehouse Name' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='3' 	colname='service_recpt_date'  coldesc='Service Receipt Date' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='4' 	colname='farmer_code'  coldesc='Farmer Code' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='5' 	colname='farmer_name'  coldesc='Farmer Name' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='6' 	colname='status'  coldesc='Status' datatype='S' defval='' defcondt='like' mstcode=''/>
+  </filter>
+  <filter id='RaiseInvoice' description='Raise Invoice List' table='mandate' datefield=''>
+    <item seqno='1' 	colname='invoice_no' coldesc='Invoice No'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='invoice_date'  coldesc='Invoice Date' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='3' 	colname='customer_name'  coldesc='Customer Name' datatype='S' defval='' defcondt='like' mstcode=''/>
+  </filter>
+  <filter id='ServiceInvoice' description='Raise Invoice List' table='mandate' datefield=''>
+    <item seqno='1' 	colname='service_invoice_no' coldesc='Service Invoice No'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='servce_invoice_date'  coldesc='Service Invoice Date' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='3' 	colname='customer_name'  coldesc='Customer Name' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='4' 	colname='status'  coldesc='Status' datatype='S' defval='' defcondt='like' mstcode=''/>
+  </filter>
+  <!--Aggregator_REGISTRATION-->
+  <filter id='AggregatorREG' description='Aggregator Registration List Record' table='mandate' datefield=''>
+    <item seqno='1' 	colname='orgn_type' coldesc='Aggregator Org.Type'  datatype='S'  defval=''   defcondt='like' mstcode='AGGR_ORG_TYPE'/>
+    <item seqno='2' 	colname='orgn_subtype' 	 coldesc='Int. Aggregator Type' 	 datatype='S' defval=''   defcondt='like' mstcode='AGGR_INTER_TYPE'/>
+    <item seqno='3' 	colname='orgn_name' 	 coldesc='Aggregator Org.Name' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+    <item seqno='4' 	colname='parent_code' 	 coldesc='Facilitator Org' 	 datatype='S' defval=''  	  defcondt='like' mstcode='ORGFO'/>
+    <item seqno='5' 	colname='status_desc' 	 coldesc='Status' 	 datatype='Q' defval=''  	  defcondt='=' mstcode='STATUS'/>
+  </filter>
+  <!--Service Master-->  ADDED By Mohan
+  <filter id='ServiceMas' description='Service Master List Record' table='mandate' datefield=''>
+    <item seqno='1' 	colname='service_code' coldesc='service code'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='service_name' 	 coldesc='service name' 	 datatype='S' defval=''   defcondt='like' mstcode=''/>
+    <item seqno='3' 	colname='rate' 	 coldesc='rate' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+    <item seqno='4' 	colname='hsn_code' 	 coldesc='hsn code' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+    <!--<item seqno='5' 	colname='hsn_description' 	 coldesc='hsn description' 	 datatype='Q' defval=''  	  defcondt='=' mstcode=''/>-->
+  </filter>
+  <filter id='ServiceRecpt' description='Service Receipt Record' table='mandate' datefield=''>
+    <item seqno='1' 	colname='RP.farmer_code' 	 coldesc='Farmer Code' 	 datatype='S' defval=''   defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='TF.farmer_name' 	 coldesc='Farmer Name' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+    <item seqno='3' 	colname='RP.pickup_request_id' 	 coldesc='PickUp Request ID' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+    <item seqno='4' 	colname='pickup_date' 	 coldesc='Receipt Date' 	 datatype='S' defval=''  	  defcondt='=' mstcode=''/>
+    <item seqno='8' 	colname='RP.request_status'  coldesc='Status' datatype='Q' defval='' defcondt='like' mstcode='PAWHS_PICKUP_STATUS'/>
+  </filter>
+  <filter id='Revenue' description='Revenue' table='rem_trn_revenue' datefield=''>
+    <item seqno='1' 	colname='revenue_id' 	 coldesc='Revenue ID' 	 datatype='S' defval=''   defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='finyear_code' 	 coldesc='Finanical Year' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+    <item seqno='3' 	colname='business_desc' 	 coldesc='Business Type' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+    <item seqno='4' 	colname='status_code' 	 coldesc='Status' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+  </filter>
+  <filter id='Expense' description='Expense' table='fetch_expense_list' datefield=''>
+    <item seqno='1' 	colname='expense_id' 	 coldesc='Expense ID' 	 datatype='S' defval=''   defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='financial_year' 	 coldesc='Finanical Year' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+    <item seqno='3' 	colname='business_desc' 	 coldesc='Business Type' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+    <item seqno='4' 	colname='status_code' 	 coldesc='Status' 	 datatype='S' defval=''  	  defcondt='like' mstcode=''/>
+  </filter>
+
+  <!--Pandiaraj for PAWHS New Actual procurement on 28-08-2020-->
+  <filter id='Actualproc' description='PAWHS New Actual Procurement List' table='New_PAWHS_trn_Actual_Procurment' datefield=''>
+    <item seqno='1' 	colname='agg_code' coldesc='AGG Code'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='lotno'  coldesc='Lot No' datatype='S' defval='' defcondt='like' mstcode=''/>
+  </filter>
+  <!--Batch Creation--> --Added by Prema
+  <filter id='batchcreation' description='Batch Creation List Record' table='New_PAWHS_trn_batchcreation' datefield=''>
+    <item seqno='1' 	colname='agg_code' coldesc='AGG Code'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='batch_no' coldesc='Batch No'  datatype='S'  defval=''    defcondt='=' mstcode=''/>
+  </filter>
+  <!--Lot Identification--> --Added by Prema
+  <filter id='LotID' description='Lot Identification List Record' table='new_PAWHS_mst_Estimated_Procurment' datefield=''>
+    <item seqno='1' 	colname='agg_code' coldesc='AGG Code'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='Lot_no' coldesc='Lot No'  datatype='S'  defval=''    defcondt='=' mstcode=''/>
+    <item seqno='3' 	colname='Farmer_Code' coldesc='Farmer Code'  datatype='S'  defval=''   defcondt='=' mstcode=''/>
+    <item seqno='4' 	colname='Farmer_Name' coldesc='Farmer Name'  datatype='S'  defval=''   defcondt='=' mstcode=''/>
+    <item seqno='5' 	 colname='Estimated_PickDate' coldesc='Estimated Pick Date'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+  </filter>
+  <filter id='Approveproc' description='PAWHS New Actual Procurement List' table='New_PAWHS_trn_Actual_Procurment' datefield=''>
+    <item seqno='1' 	colname='agg_code' coldesc='AGG Code'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='lotno'  coldesc='Lot No' datatype='S' defval='' defcondt='like' mstcode=''/>
+  </filter>
+  <!--Stock Master list-->
+  <filter id='SupplierMasterlist' description='Supplier Master list' table='mandate' datefield=''>
+    <item seqno='1' colname='a.supplier_code' coldesc='Supplier Code' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='2' colname='a.supplier_name' coldesc='Suplier Name' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='3' colname='a.pan_no' coldesc='PAN No' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <!--<item seqno='4' colname='A.status_code' coldesc='Status' datatype='Q' defval='' defcondt='like' mstcode='STATUS'/>-->
+  </filter>
+  <filter id='NPPAYADV' description='PAWHS New Payment Advice List' table='new_PAWHS_trn_PaymentAdvice' datefield=''>
+    <item seqno='1' 	colname='agg_code' coldesc='AGG Code'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='payment_advice_no'  coldesc='Payment Id' datatype='S' defval='' defcondt='like' mstcode=''/>
+  </filter>
+  <!--Purchase Order list-->
+  <filter id='PurchaseOrder' description='Purchase Order list' table='mandate' datefield=''>
+    <item seqno='1' 	colname='agg_code' coldesc='Input Centre Name'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='po_no' coldesc='PO No'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='4' 	colname='buyer_name' 	 coldesc='Customer Name' 	 datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <!--<item seqno='5' 	colname='buyer_location' 	 coldesc='Buyer Location' 	 datatype='Q'  defval=''   defcondt='like' mstcode='QCD_UN_STATE'/>-->
+  </filter>
+  <!--Book Invoice list-->
+  <filter id='BookInvoice' description='Book Invoice list' table='mandate' datefield=''>
+    <item seqno='1' 	colname='agg_code' coldesc='Input Centre Name'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='invoice_no' coldesc='Invoice No'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='4' 	colname='buyer_name' 	 coldesc='Buyer Name' 	 datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <!--<item seqno='5' 	colname='buyer_location' 	 coldesc='Buyer Location' 	 datatype='Q'  defval=''   defc-->ondt='like' mstcode='QCD_UN_STATE'/>
+    <item seqno='6' 	colname='Po_ID' 	 coldesc='PO Id' 	 datatype='S'  defval=''   defcondt='like' mstcode=''/>
+  </filter>
+  <filter id='WareHousePro' description='PAWHS New Wahehouse Procurement List' table='new_PAWHS_trn_whsreceipting' datefield=''>
+    <item seqno='1' 	colname='agg_code' coldesc='AGG Code'  datatype='S'  defval=''   defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='whs_code'  coldesc='Warehouse Code' datatype='S' defval='' defcondt='like' mstcode=''/>
+    <item seqno='2' 	colname='lotno'  coldesc='Lot No' datatype='S' defval='' defcondt='like' mstcode=''/>
+  </filter>
+  <condition>
+    <condt>equal to</condt>
+    <condt>like</condt>
+    <condt>greater than</condt>
+    <condt>not equal to</condt>
+    <condt>not like</condt>
+  </condition>
+</ListFilter>

@@ -1,0 +1,986 @@
+﻿@{
+    ViewBag.Form = "Transfer Request";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+<link href="~/CSS/AccordianPan.css" rel="stylesheet" />
+<form id="servicetransfer" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="box-body" style="padding-top:6px;padding-bottom:2px;border-color:black;">
+            <div class="row" style="padding-top:10px; padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtmember_id" class="col-sm-5 control-label required">Member ID</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtmember_id" name="In_fpomember_code" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div id="pay_help">
+                            <a class="HelpWindow fa fa-search fa-lg" role="button" id="pay_help1" data-toggle="modal" href="/HelpFilter/HelpFilter" hdrtitle="FPO Member" searchid="L001" data-target="#HelpModal" onclick=transfer(this,"form","","form_control"); title="Search" style="font-size: 19px; margin-left: 0px; margin-top: 10px;"></a>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="form-group" id="sign">
+                    <label for="txtRoleDesc" class="col-sm-4 control-label ">Signature</label>
+
+                    <img id="former_sign" src="~/images/1.JPG" style="margin-left: -233px;" class="col-sm-4 img-bordered-sm profileImg" alt="User Image" height="40" width="100" />
+                    <div class="form-group">
+                        <div>
+                            <input type="hidden" id="farmer_img" name="signature_farmer" />
+                            <input id="txtaggrorgn_code" name="fpoorgn_code" type="hidden" />
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtfarmer_id" class=" col-sm-5 control-label required">Farmer ID</label>
+                        <div class=" col-sm-7">
+                            <input type="text" id="txtfarmer_id" name="In_farmer_code" class="form-control" maxlength="50" readonly>
+                            <input type="hidden" id="request_type" name="request_type" value="QCD_FPOSERVICE_CERTTRAN">
+                        </div>
+                        <input type="hidden" id="mode_flag" name="In_mode_flag" />
+                        <input type="hidden" id="servicereq_rowid" name="IOU_servicereq_rowid" />
+                        <input type="hidden" id="chklst_status_flag" name="In_chklist_status_flag" />
+                        <input type="hidden" id="txtMode" name="In_mode_flag" value="I">
+                        <input type="hidden" id="txtlookup" value="false">
+                        <input id="txtaggrorgn_code" name="fpoorgn_code" type="hidden" />
+                    </div>
+                </div>
+
+
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtfarmer_name" class="col-sm-5 control-label required">Farmer Given Name</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtfarmer_name" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtRoleId" class="col-sm-5 control-label ">Farmer Surname</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtRoleId" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="box-body" style="padding-top:6px;padding-bottom:2px">
+
+            <div class="row" style="padding-top:10px; padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtmember1_id" class="col-sm-5 control-label required"> Receiving Member ID</label>
+                        <div class="col-sm-5" style="width:200px;">
+                            <input type="text" id="txtmember1_id" name="In_tran_member_code" class="form-control" maxlength="50" readonly onchange="fetch_member()">
+
+                        </div>
+                        <div id="pay_help">
+                            <a class="HelpWindow fa fa-search fa-lg" role="button" id="pay_help2" data-toggle="modal" href="/HelpFilter/HelpFilter" hdrtitle="Member Details" searchid="S06" data-target="#HelpModal" onclick=transfer(this,"form","","form_control1"); title="Search" style="font-size: 19px; margin-left: 0px; margin-top: 10px;"></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtrecfar_Id" class="col-sm-5 control-label required">Receiving Farmer ID</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtrecfar_Id" name="In_tran_farmer_code" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-top:10px; padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="Profile_img" class="col-sm-5 control-label ">Receiving Farmer's Signature</label>
+                        <div class="col-sm-7">
+                            <img id="Profile_img" src="~/images/1.JPG" class="col-sm-12 img-bordered-sm profileImg" alt="User Image" height="40" width="100" />
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="col-sm-5">
+                            <input type="file" name="In_tran_member_sign" id="farmerfile" src="~/images/noimage.png" style="width: 120px;" class=" col-sm-4 control-label" accept="image/x-png, image/gif, image/jpeg" />
+                            <input type="hidden" id="txtImageHidden" name="In_tran_member_sign" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-top:10px; padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtrecfar_name" class="col-sm-5 control-label required">Receiving Farmer Given Name</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtrecfar_name" name="In_tran_farmer_name" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtrecfar_surname" class="col-sm-5 control-label required">Receiving Farmer Surname</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtrecfar_surname" name="In_tran_sur_name" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-top:10px; padding-bottom:15px">
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="TextArea1" class=" col-sm-5 control-label ">Reason For Transfer</label>
+                        <div class=" col-sm-7">
+                            <textarea id="TextArea1" name="In_tran_reason" rows="2" cols="2" style="width:941px;height:33px;" class="form-control" readonly></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="row">
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            <div class="col-sm-12" id="default-example">
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="headingone">
+                        <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseone" aria-expanded="true" aria-controls="collapseone">
+                                <i class="more-less glyphicon glyphicon-plus"></i>
+                                Share Certificates Held
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseone" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingone">
+                        <div class="panel-body">
+                            <div class="col-sm-12">
+                                <div id="grid_share_cert"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12" id="default-example">
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="headingTwo">
+                        <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" class="collapsed">
+                                <i class="more-less glyphicon glyphicon-plus"></i>
+                                Service Request History
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                        <div class="panel-body">
+                            <div class="col-sm-12">
+                                <div id="grid_req_history"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <label> Comments</label>
+            <textarea id="txtComments" rows="4" cols="20" name="In_sr_comments" style="width:100%" class="form-control" readonly></textarea>
+        </div>
+    </div>
+</form>
+<script>
+    click_act_name = "ServiceTransferList";
+    click_ctrl_name = "ServiceTransfer";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+
+<script src="~/Scripts/AccordianPan.js"></script>
+
+
+<script>
+    $(document).ready(function () {
+        kendodate_format();
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#servicetransfer");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        $('#divCreate #review').prop('disabled', true);
+        $("#divEdit #deactivate").hide();
+        $('#divEdit #reviewEd').prop('disabled', true);
+
+        //$('#divCreate #review').prop('disabled', true);
+
+        //var elements = document.getElementsByClassName('file_attach');
+        //while (elements.length > 1) {
+        //    elements[0].parentNode.removeChild(elements[0]);
+        //    elements[1].parentNode.removeChild(elements[1]);
+        //}
+        $(document).on('click', '#btnSave', function (e) {
+            var mem_id = $('#txtmember_id').val();
+            var Given_name = $('#txtmember1_id').val();
+            var sur_name = $('#txtfarmer_id').val();
+            if (Given_name != "" && Given_name != null && sur_name != "" && sur_name != null && mem_id != "" && mem_id != null && $("#TextArea1").val() != "" && $("#TextArea1").val() != null) {
+                $('#divCreate #btnSave').prop('disabled', true);
+                $('#divCreate #review').prop('disabled', false);
+            }
+            else {
+                $('#divCreate #review').prop('disabled', true);
+                $('#divCreate #btnSave').prop('disabled', false);
+
+            }
+        });
+        $(document).on('click', '#btnSaveEd', function (e) {
+            var mem_id = $('#txtmember_id').val();
+            var Given_name = $('#txtmember1_id').val();
+            var sur_name = $('#txtfarmer_id').val();
+            if (Given_name != "" && Given_name != null && sur_name != "" && sur_name != null && mem_id != "" && mem_id != null && $("#TextArea1").val() != "" && $("#TextArea1").val() != null) {
+                $('#divEdit #btnSaveEd').prop('disabled', true);
+                $('#divEdit #reviewEd').prop('disabled', false);
+            }
+            else {
+                $('#divEdit #btnSaveEd').prop('disabled', false);
+                $('#divEdit #reviewEd').prop('disabled', true);
+
+            }
+        });
+        $(document).on('click', '#btnApprove', function (e) {
+            $('#divEdit #btnReject').prop('disabled', true);
+            $('#divEdit #btnApprove').prop('disabled', true);
+        });
+        $(document).on('click', '#btnReject', function (e) {
+            var cmt = $('#txtComments').val();
+            if (cmt != "" && cmt != null) {
+
+                $('#divEdit #btnApprove').prop('disabled', true);
+                $('#divEdit #btnReject').prop('disabled', true);
+            }
+        });
+        $(document).on('click', '#reviewEd', function (e) {
+            master_review();
+             $('#divEdit #reviewEd').prop('disabled', true);
+        });
+        $(document).on('click', '#review', function (e) {
+            debugger;
+            master_review();
+            $('#divCreate #review').prop('disabled', true);
+        });
+        Screen_Id = "SRVTRAN";
+        permission = sec_Permission(Screen_Id);
+        //var data = [];
+        grid_share_cert();
+        grid_req_history();
+        $("#common_id").text("Service Request No");
+
+        var org = getlocalStorage('org_id');
+        $('#txtaggrorgn_code').val(org);
+
+        $(".file_attach").attr("hdrtitle", "Service Request-Name Change");
+        $(".notes").attr("hdrtitle", "Service Request-Name Change");
+        $("#lblForm_menuid").text("SRVTRAN");
+
+        if (getlocalStorage('btn_clk_val') == "Create") {
+            $('#TextArea1').removeAttr("readonly");
+            // $('#divCreate #review').hide();
+            $("#divEdit #deactivate").hide();
+            $("#txtmode").val("I");
+            $('#divCreate #review').show();
+            $('#divCreate #review').prop('disabled', true);
+            $("#bottom_menus").hide();
+            $("#status_code").val("N");
+            $("#DocStat").val("New");
+        }
+        else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
+            field_enable();
+            $('#sign').hide();
+            $("#bottom_menus").show();
+            $("#divEdit #deactivate").hide();
+            $('#divCreate #reviewEd').prop('disabled', true);
+            var elements = document.getElementsByClassName('file_attach');
+            while (elements.length > 1) {
+                elements[0].parentNode.removeChild(elements[0]);
+                elements[1].parentNode.removeChild(elements[1]);
+            }
+            //$("#divEdit #reviewEd").prop("disabled", false);
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("servicetransfer");
+                var obj_val = JSON.parse(formval);
+                if (obj_val != undefined) {
+                    obj_val.IOU_fpomember_code = data.Out_fpomember_code;
+                    obj_val.IOU_request_type = data.Out_request_type;
+                    obj_val.IOU_servicereq_rowid = data.Out_servicereq_rowid;
+                    obj_val.IOU_servicereq_no = data.Out_servicereq_no;
+                    var data = {};
+                    data.context = getContext();
+                    data.context.Header = obj_val;
+                    var Context = data.context;
+                    Singleretrieve_SerReqTransfer_details(Context);
+                    SingleHistory_SerReqTransferdetail_details(Context);
+                    //retrieve_SerReqtrans_details(data);
+                    //retrieve_SerReqTransdetail_details(data);
+                    $("#txtMode").val("U");
+                    $("#txtcommon_id").val(obj_val.Out_servicereq_no);
+                    setlocalStorage('doc_no', $("#txtcommon_id").val());
+                    setlocalStorage('doc_row_id', $("#txtservicereq_rowid").val())
+                }
+            }
+        }
+
+        function field_enable() {
+            if (permission.auth == true || getlocalStorage('btn_clk_val') == "View") {
+                $("#service_req_name :input").attr("readonly", "");
+                $("#pay_help1").hide();
+                $("#txtComments").removeAttr("readonly");
+                $("#farmerfile").removeAttr("readonly");
+                $("#farmerfile").prop("disabled", true);
+                $('#pay_help2').hide();
+            }
+            else {
+                $('#TextArea1').removeAttr("readonly");
+            }
+        }
+        $('#HelpModal').on('hide.bs.modal', function (e) {
+            if ($("#txtmember_id").val() != undefined && $("#txtmember_id").val() != "") {
+                fetch_member();
+            }
+        });
+
+    });
+
+</script>
+<script>
+    $("#farmerfile").change(function () {
+        readURL(this);
+    });
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#Profile_img').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+<script>
+    function grid_share_cert(data) {
+        $("#grid_share_cert").kendoGrid(
+            {
+                dataSource: {
+                    data: data,
+                },
+                height: 200,
+                sortable: true,
+                selectable: true,
+                selectable: "singl",   //  Grid Row Selection
+                navigatable: true,
+                groupable: false,
+                columns: [
+                    {
+                        field: "In_certificatedist_rowid",
+                        title: "certificatedist_rowid",
+                        hidden: true
+                    },
+                    {
+                        field: "In_certificate_no",
+                        title: "Share Certificate No",
+                        width: 200,
+                        filterable: {
+                            cell: {
+                                operator: "contains",
+                                inputWidth: 1500
+                            }
+                        }
+                    },
+                    {
+                        field: "In_dist_from",
+                        title: "Distinct From",
+                        width: 200,
+                        filterable: {
+                            cell: {
+                                operator: "contains",
+                                inputWidth: 1500
+                            }
+                        }
+                    },
+                    {
+                        field: "In_dist_to",
+                        title: "Distinct to",
+                        width: 200,
+                        filterable: {
+                            cell: {
+                                operator: "contains",
+                                inputWidth: 1500
+                            }
+                        }
+                    },
+                    {
+                        field: "In_issued_date",
+                        title: "Issued Date",
+                        width: 200,
+                        filterable: {
+                            cell: {
+                                operator: "contains",
+                                inputWidth: 1500
+                            }
+                        }
+                    },
+                    {
+                        field: "In_status_code",
+                        title: "status_code",
+                        hidden: true
+                    },
+                    {
+                        field: "In_status_desc",
+                        title: "Status",
+                        width: 200,
+                        filterable: {
+                            cell: {
+                                operator: "contains",
+                                inputWidth: 1500
+                            }
+                        }
+                    },
+                ]
+            });
+    }
+</script>
+
+<script>
+    function grid_req_history(data) {
+        $("#grid_req_history").kendoGrid({
+            dataSource: {
+                data: data,
+                schema: {
+                    model: {
+                        fields: {
+                            print_ref: { editable: false },
+                            certificate: { editable: false },
+                            print_date: { editable: false },
+                            certificates_print: { editable: false },
+
+                        }
+                    }
+                },
+            },
+            height: 200,
+            sortable: true,
+            columns: [
+                {
+                    field: "In_servicereq_rowid",
+                    title: "servicereq_rowid",
+                    hidden: true
+                },
+                {
+                    field: "In_certificate_no",
+                    title: "Certificate No",
+                    width: 200
+                },
+                {
+                    field: "In_issued_date",
+                    title: "Issued Date",
+                    width: 200
+                },
+                {
+                    field: "In_servicereq_no",
+                    title: "Service Request No",
+                    width: 200
+                },
+                {
+                    field: "In_request_date",
+                    title: "Request Date",
+                    width: 200
+                },
+                {
+                    field: "In_request_type",
+                    title: "Request Type",
+                    hidden: true
+                },
+                {
+                    field: "In_request_type_desc",
+                    title: "Request Type",
+                    width: 200
+                },
+                {
+                    field: "In_requestsub_type",
+                    title: "Request Subtype",
+                    hidden: true
+                },
+                {
+                    field: "In_requestsub_type_desc",
+                    title: "Request Subtype",
+                    width: 200
+                },
+                {
+                    field: "In_status_code",
+                    title: "status_code",
+                    hidden: true
+                },
+                {
+                    field: "In_status_desc",
+                    title: "Status",
+                    width: 200,
+                    filterable: {
+                        cell: {
+                            operator: "contains",
+                            inputWidth: 1500
+                        }
+                    }
+                },
+
+            ]
+        });
+
+    }
+</script>
+
+
+<script>
+    function save() {
+        debugger;
+        var memid = $("#txtmember_id").val();
+        var memid_1 = $("#txtmember1_id").val();
+
+        if (memid != "" && memid != null && memid_1 != "" && memid_1 != null) {
+            if ($("#txtmember_id").val() == $("#txtmember1_id").val()) {
+
+                kendoAlert("Can't create transfer certificate request for same FPO member");
+                //$('#divEdit #btnSaveEd').prop('disabled', false);
+                $('#divCreate #review').prop('disabled', true);
+                $('#divCreate #btnSave').prop('disabled', false);
+                return false;
+            }
+        }
+        if (memid != "" && memid != null && memid_1 != "" && memid_1 != null) {
+            save_Image();
+
+        }
+
+
+    }
+    function save_Image() {
+        var xhr = new XMLHttpRequest();
+        var fd = new FormData();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                var value = JSON.parse(xhr.responseText);
+                if (value.result != undefined) {
+                    $("#txtImageHidden").val(value.result);
+                }
+                save_trans();
+            }
+        };
+
+        fd.append("file", document.getElementById('farmerfile').files[0]);
+        fd.append("userID", $('#txtUserId').val());
+        xhr.open("POST", "/UserDefinition/User/", true);
+        xhr.send(fd);
+        xhr.addEventListener("load", function (event) {
+        }, false);
+    }
+
+    function Singleretrieve_SerReqTransfer_details(Context) {
+
+        debugger;
+        try {
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ orgnId: Context.orgnId, locnId: Context.locnId, userId: Context.userId, localeId: Context.localeId, Header: Context.Header }),
+                url: "/ServiceTransfer/SingleServiceList",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    if (response.context != null) {
+                        generate_SerReqTran_header(response.context.Header)
+
+                    }
+                    if (response.ApplicationException != null) {
+                        kendoAlert(response.ApplicationException.errorDescription);
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+
+    }
+    function SingleHistory_SerReqTransferdetail_details(Context) {
+        debugger;
+        try {
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ orgnId: Context.orgnId, locnId: Context.locnId, userId: Context.userId, localeId: Context.localeId, Header: Context.Header }),
+                url: "/ServiceTransfer/SingleServiceBankDetails",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    if (response.context.Header != null) {
+                        generate_SerReqTran_Header(response.context.Header)
+
+                    }
+                    if (response.context.Share_certificate != null) {
+                        generate_SerReqTran_share_certificate(response.context.Share_certificate)
+                    }
+                    if (response.context.Request_history != null) {
+                        generate_SerReqTran_request_history(response.context.Request_history)
+                    }
+                    if (response.ApplicationException != null) {
+                        kendoAlert(response.ApplicationException.errorDescription);
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+
+    }
+    function save_trans() {
+        $("#txtlookup").val("false");
+        if ($("#txtMode").val() == "S") {
+            $("#txtMode").val('U');
+
+        }
+        var formval = form_Serialize("servicetransfer");
+        var obj_val = JSON.parse(formval);
+        if ($("#TextArea1").val() == "" || $("#TextArea1").val() == null) {
+            kendoAlert("Reason For Transfer Can't be blank");
+            return;
+        }
+        if ($("#servicereq_rowid").val() == undefined || $("#servicereq_rowid").val() == "") {
+            obj_val.IOU_servicereq_rowid = 0;
+        }
+        else {
+            obj_val.IOU_servicereq_rowid = $("#servicereq_rowid").val();
+        }
+        if ($("#txtcommon_id").val() == undefined || $("#txtcommon_id").val() == "") {
+            obj_val.IOU_servicereq_no = "0";
+        }
+        else {
+            obj_val.IOU_servicereq_no = $("#txtcommon_id").val();
+        }
+        if (obj_val.In_status_code == undefined) {
+            obj_val.In_status_code = "A";
+        }
+        if (obj_val.In_row_timestamp == undefined) {
+            obj_val.In_row_timestamp = "0";
+        }
+        if ($("#chklst_status_flag").val() == undefined) {
+            obj_val.In_chklist_status_flag = 0;
+        }
+        else {
+            obj_val.In_chklist_status_flag = $("#chklst_status_flag").val();
+        }
+        if (obj_val.In_row_timestamp == undefined) {
+            obj_val.In_row_timestamp = "0";
+        }
+        if ($("#txtComments").val() == undefined || $("#txtComments").val() == "") {
+            obj_val.In_sr_comments = "";
+        }
+        else {
+            obj_val.In_sr_comments = $("#txtComments").val();
+        }
+
+        var data_save = {};
+        data_save.context = getContext();
+        data_save.context.Header = obj_val;
+        var Context = data_save.context;
+
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({ orgnId: Context.orgnId, locnId: Context.locnId, userId: Context.userId, localeId: Context.localeId, Header: Context.Header }),
+            url: "/ServiceTransfer/SaveReqTransfer",
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                debugger;
+                var Res = response;
+                if (Res.context != null) {
+                    var msg = Res.ApplicationException;
+                    var mode = $("#txtMode").val();
+                    //retrive_SingleFetch_Details(Res.context);
+                    if (Res != null) {
+                        if (mode == "I") {
+                            kendoAlert("Transfer Request Details Saved Successfully");
+                            get_SerReqTran_details(Res.context.Header);
+                        }
+                        else if (mode == "R") {
+                            kendoAlert("Transfer Request Details Send For Review");
+                            get_SerReqTran_details(Res.context.Header);
+                        }
+                        else if (mode == "A") {
+                            kendoAlert("Transfer Request Details Approved Successfully");
+                            get_SerReqTran_details(Res.context.Header);
+                        }
+                        else if (mode == "J") {
+                            kendoAlert("Transfer Request Details Rejected Successfully");
+                            get_SerReqTran_details(Res.context.Header);
+                        }
+                        else  {
+                            kendoAlert("Transfer Request Details Saved Successfully");
+                            get_SerReqTran_details(Res.context.Header);
+                        }
+                    }
+                    else {
+                        kendoAlert(Res.ApplicationException.errorDescription);
+                    }
+
+
+                }
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+
+        });
+        //save_SerReqTrans_details(data_save);
+
+    }
+    
+    function DeleteDetails() {
+        try {
+            $("#txtMode").val('D');
+            save();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function fetch_member() {
+
+        var formval = form_Serialize("servicetransfer");
+        var obj_val = JSON.parse(formval);
+
+        if (obj_val != undefined) {
+            obj_val.IOU_fpomember_code = $("#txtmember_id").val();
+            obj_val.IOU_request_type = "QCD_FPOSERVICE_CERTTRAN";
+            obj_val.IOU_servicereq_rowid = "0";
+            obj_val.IOU_servicereq_no = "0";
+            var data_fetch = {};
+            data_fetch.context = getContext();
+            data_fetch.context.Header = obj_val;
+            var Context = data_fetch.context;
+            Singleretrieve_SerReqTransfer_details(Context);
+            SingleHistory_SerReqTransferdetail_details(Context);
+            //retrieve_SerReqtrans_details(data_fetch);
+            //retrieve_SerReqTransdetail_details(data_fetch);
+            var profiledata = $("#farmer_img").val()
+            console.log($("#farmer_img").val());
+            if (profiledata != "")
+                document.getElementById("former_sign").src = "data:image/png;base64," + profiledata;
+            else
+                document.getElementById("former_sign").src = "/images/noimage.png";
+        }
+    }
+
+
+    function generate_SerReqTran_Header(res) {
+        if (res != null && getlocalStorage('btn_clk_val') != "Create") {
+
+
+            $("#txtfarmer_id").val(res.In_farmer_code);
+            $("#txtfarmer_name").val(res.In_farmer_name);
+            $("#txtRoleId").val(res.In_sur_name);
+            //$("#txtmember_id").prop("disabled", true);
+            //$("#txtgiven_name").val(res.farmer_name);
+            //$("#txtsurname").val(res.sur_name);
+
+        }
+    }
+    function generate_SerReqTran_share_certificate(res) {
+        if (res != null) {
+            var data = changedataType(res);
+            grid_share_cert(data);
+        }
+        else {
+            grid_share_cert([]);
+        }
+    }
+    function generate_SerReqTran_request_history(res) {
+        if (res != null) {
+            var data = changedataType(res);
+            grid_req_history(data);
+        }
+        else {
+            grid_req_history([]);
+        }
+    }
+
+    function generate_SerReqTran_header(res) {
+        if (res != null) {
+
+
+            if ($("#txtlookup").val() == "false") {
+                $("#txtcommon_id").val(res.IOU_servicereq_no);
+                $("#txtmember_id").val(res.IOU_fpomember_code);
+                $("#txtmember1_id").val(res.In_tran_member_code);
+                $("#txtrecfar_Id").val(res.In_tran_farmer_code);
+                $("#txtrecfar_name").val(res.In_tran_farmer_name);
+                $("#txtrecfar_surname").val(res.In_tran_sur_name);
+                $("#servicereq_rowid").val(res.IOU_servicereq_rowid);
+                $("#txtImageHidden").val(res.In_tran_member_sign);
+                //$("#Profile_img").val(res.In_tran_member_sign);
+                $("#mode_flag").val(res.In_mode_flag);
+                $("#DocStat").val(res.In_status_desc);
+                $("#TextArea1").val(res.In_tran_reason);
+                $("#txtComments").val(res.In_sr_comments);
+                localStorage.docno = res.IOU_servicereq_rowid;
+                var profiledata = res.In_tran_member_sign;
+                if (profiledata != "")
+                    document.getElementById("Profile_img").src = "data:image/png;base64," + profiledata;
+                else
+                    document.getElementById("Profile_img").src = "/images/noimage.png";
+
+            }
+            if (res.In_status_code == 'A') {
+
+                $("#divEdit #deactivate").removeAttr("disabled");
+                $("#divEdit #deactivate").prop("disabled", false);
+            }
+            else {
+                $("#divEdit #deactivate").attr("disabled");
+                $("#divEdit #deactivate").prop("disabled", true);
+            }
+        }
+    }
+
+    function get_SerReqTran_details(res) {
+        var formval = form_Serialize("servicetransfer");
+        var obj_val = JSON.parse(formval);
+        if (obj_val != undefined) {
+            obj_val.IOU_fpomember_code = $("#txtmember_id").val();
+            obj_val.IOU_request_type = "QCD_FPOSERVICE_CERTTRAN";
+            obj_val.IOU_servicereq_rowid = res.IOU_servicereq_rowid;
+            obj_val.IOU_servicereq_no = res.IOU_servicereq_no;
+            var data_res = {};
+            data_res.context = getContext();
+            data_res.context.Header = obj_val;
+            var Context = data_res.context;
+            Singleretrieve_SerReqTransfer_details(Context);
+            SingleHistory_SerReqTransferdetail_details(Context);
+            //retrieve_SerReqtrans_details(data_res);
+            //retrieve_SerReqTransdetail_details(data_res);
+
+        }
+    }
+
+</script>
+
+
+
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>
+
+<script>
+    function grid_control() {
+        var control_Name = [
+
+        ];
+        return control_Name;
+    }
+    function form_control() {
+        var control_Name = [
+            { "dataCol": "fpomember_code", "controlId": "txtmember_id", "type": "Text" },
+            { "dataCol": "farmer_code", "controlId": "txtfarmer_id", "type": "Text" },
+            { "dataCol": "member_name", "controlId": "txtfarmer_name", "type": "Text" },
+            { "dataCol": "member_sur_name", "controlId": "txtRoleId", "type": "Text" },
+            { "dataCol": "farmer_signature", "controlId": "farmer_img", "type": "Text" }
+
+        ];
+        return control_Name;
+
+    }
+    function form_control1() {
+        $("#txtlookup").val("true");
+        var control_Name = [
+            { "dataCol": "fpomember_code", "controlId": "txtmember1_id", "type": "Text" },
+            { "dataCol": "farmer_code", "controlId": "txtrecfar_Id", "type": "Text" },
+            { "dataCol": "member_name", "controlId": "txtrecfar_name", "type": "Text" },
+            { "dataCol": "member_sur_name", "controlId": "txtrecfar_surname", "type": "Text" },
+            { "dataCol": "farmer_signature", "controlId": "farmer_img", "type": "Text" }
+        ];
+        return control_Name;
+
+    }
+
+    function trans_input_data() {
+        var trans_coll = [
+            { "trasfer": "Yes", "dataCol": "fpofarmer_code", "controlId": "", "grid_id": "", "grid_row_col": "" },
+            { "trasfer": "Yes", "dataCol": "fpoorgn_code", "controlId": "txtaggrorgn_code", "grid_id": "", "grid_row_col": "" },
+            { "trasfer": "Yes", "dataCol": "farmer_signature", "controlId": "farmer_img", "grid_id": "", "grid_row_col": "" }
+        ];
+
+        return trans_coll;
+    }
+    function review() {
+        debugger;
+        $("#txtMode").val('R');
+        save_trans();
+
+    }
+
+    function approve() {
+        $("#txtMode").val('A');
+        save_trans();
+    }
+
+    function reject() {
+        try {
+            console.log($("#txtComments").val());
+            if ($("#txtComments").val() == "") {
+                kendoAlert("Please provide rejection reason for rejecting a request");
+            }
+            else {
+                $("#txtMode").val('J');
+                save_trans();
+                $("#btnReject").prop('disabled', false);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script src="~/CommonScripts/HelpFile.js"></script>

@@ -1,0 +1,333 @@
+﻿@{
+    ViewBag.Form = "Closure Letter & NDC";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+<form id="ClosureLetter" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-12">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="cmb_ClosureLetter" class="col-sm-4 control-label required">Select List</label>
+                            <div class="col-sm-6">
+                                <input id="cmb_ClosureLetter" name="select_option" data-role="filtercombo" style="width:100%" />
+                            </div>
+                            <button title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button" data-original-title="Refresh" onclick="fetchClosureLetterList()">
+                                <span class="glyphicon glyphicon-refresh"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div id="closure_grid"></div>
+                            <input type="hidden" id="fpoorgn_code" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="~/API_Scripts/FLClosureLetterNDC_retrieveFLClosure_Letter_NDC_APIClient.js"></script>
+<script src="~/API_Scripts/FLClosureLetterNDC_saveFLClosure_Letter_NDC_APIClient.js"></script>
+<script src="~/API_Scripts/retrieveFLClosure_Letter_NDC_Model.js"></script>
+<script src="~/API_Scripts/saveFLClosure_Letter_NDC_Model.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/API_Scripts/ClosureLetterNDC.js"></script>
+<script src="~/CommonScripts/report.js"></script>
+
+<script>
+    var permission = "";
+    var selectitem = false;
+    $(document).ready(function () {
+     
+        kendodate_format()
+        var data = [];
+        gridClosureListDisp(data);
+
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#ClosureLetter");
+        container.kendoValidator({
+        });
+        load_master_code();
+        master_applysubvention();
+        $("#divUserRole16 #btnnew").hide();
+        $("#divUserRole16 #btnReport").hide();
+        $("#divUserRole16 #btnview").hide();
+        var share_dis = "";
+        $("#cmb_ClosureLetter").empty();
+        share_dis = grid_comboScreen_mastercodes("QCD_FL_CLNDC");
+        filter_combobox("cmb_ClosureLetter", share_dis);
+
+        Screen_Id = "FLCLOLET";
+        permission = sec_Master_Permission(Screen_Id);
+      
+       
+    });
+
+</script>
+
+<script>
+    function load_master_code() {
+        debugger;
+        var data = {};
+        var context = WebAPIProxy.getContext();
+        data.userId = context.userId
+        data.orgnId = context.orgnId
+        data.locnId = context.locnId
+        data.localeId = context.localeId
+        data.screen_Id = "FLCLOLET";
+        var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+    }
+</script>
+
+<script>
+    function gridClosureListDisp(data) {
+        
+        try {
+            $("#closure_grid").kendoGrid(
+                    {
+                        selectable: "multiple, row",
+                        dataSource: {
+                            data: data,
+                            schema: {
+                                model: {
+                                    fields: {
+                                        loan_rowid: { type: "string", editable: false },
+                                        fpomember_code: { type: "string", editable: false },
+                                        farmer_name: { type: "string", editable: false },
+                                        loanscheme_code: { type: "string", editable: false },
+                                        loanscheme_desc: { type: "string", editable: false },
+                                        loan_no: { type: "string", editable: false },
+                                        loan_amount: { type: "string", editable: false },
+                                        loan_status: { type: "string", editable: false },
+                                        loan_status_desc: { type: "string", editable: false }
+                                    }
+                                }
+                            }
+
+                        },
+
+                        height: 400,
+                        //edit: OnEdit,
+                        dataBound: onDataBound,
+                        groupable: false,
+                        sortable: true,
+                        selectable: true,
+                        navigatable: true,
+                        change: function (e) {
+                            $('tr').find('[type=checkbox]').prop('checked', false);
+                            $('tr.k-state-selected').find('[type=checkbox]').prop('checked', true);
+                        },
+                        
+                        columns: [                             
+                             {
+                                 field: "loan_rowid",
+                                 title: "Selected",
+                                 template: "<input type='checkbox' name='Id' class='checkbox' />",
+                                 width: 60,                               
+                             },
+
+                             {
+                                 field: "fpomember_code",
+                                 title: "Member ID",
+                                 width: 200,
+
+                             },
+                              {
+                                  field: "farmer_name",
+                                  title: "Farmer Name",
+                                  width: 200,
+                              },
+
+                              {
+                                  field: "loanscheme_code",
+                                  title: "FL Scheme",
+                                  hidden: true
+                              },
+                              {
+                                  field: "loanscheme_desc",
+                                  title: "FL Scheme",
+                                  width: 200,
+                              },
+                              {
+                                  field: "loan_no",
+                                  title: "Loan No",
+                                  width: 200,
+                              },
+                            {
+                                field: "loan_amount",
+                                title: "Loan Amount",
+                                width: 200,
+                            },
+                              {
+                                  field: "loan_status",
+                                  title: "loanscheme_desc",
+                                  hidden: true
+                              },
+
+                            {
+                                field: "loan_status_desc",
+                                title: "Loan Status",
+                                width: 200,
+                            },
+                        ],
+                        columnHide: function (e) {
+                            console.log("loan_rowid"); // displays the field of the hidden column
+                        }
+
+
+                    });  
+          
+            function onDataBound(e) {               
+
+                $(".checkbox").bind("change", function (e) {
+                    $(e.target).closest("tr").toggleClass("k-state-selected");
+                });              
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    
+</script>
+<script>
+
+    function fetchClosureLetterList() {
+
+        try {
+
+            var mandatory_check = true;
+
+            var grid_validate_msg = "";
+          
+            if ($('#cmb_ClosureLetter').data("kendoComboBox").value() == "") {
+                grid_validate_msg += "Select List cannot be blank <br>";
+                mandatory_check = false;
+            }
+          
+            if ($('#cmb_ClosureLetter').data("kendoComboBox").value()=="QCD_FL_NDCGEN")
+            {
+                $("#divUserRole16 #btnnew").show();
+                $("#divUserRole16 #btnReport").hide();
+                selectitem=false;
+            }
+            else {
+                $("#divUserRole16 #btnnew").hide();
+                $("#divUserRole16 #btnReport").show();               
+            }
+            if (mandatory_check == false) {
+                kendoAlert(grid_validate_msg);
+                return false;
+            }
+            var formval = form_Serialize("ClosureLetter");
+            var obj_val = JSON.parse(formval);
+            var org_id = getlocalStorage('org_id');
+            obj_val.fpoorgn_code = org_id;
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_val;
+            retrieve_ClosureLetter_details(data);
+            var colCount = $("#closure_grid").find('.k-grid-header colgroup > col').length;
+
+            //If There are no results place an indicator row
+            if ($("#closure_grid").data("kendoGrid").dataSource._view.length == 0) {
+                $("#closure_grid").find('.k-grid-content tbody')
+                    .append('<tr class="kendo-data-row"><td colspan="' +
+                        colCount +
+                   '" style="text-align:center; padding-top:10px;background-color:#AFE4FA"><b> No Matching Records Found . </b></td></tr>');
+            }
+
+            return false;
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+
+    function generate_ClosureLetter_detail(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                gridClosureListDisp(data);
+            }
+            else {
+                gridClosureListDisp([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+
+    }
+
+</script>
+<script>
+    function save() {
+
+        try {           
+            var formval = form_Serialize("ClosureLetter");
+            var obj_val = JSON.parse(formval);
+            var obj_val1 = JSON.parse(formval);
+            var org_id = getlocalStorage('org_id');
+            obj_val1.fpoorgn_code = org_id;
+            obj_val1.status_option = "1";
+            var Bind = [];
+            var grid = $("#closure_grid").data("kendoGrid");
+            var gridList = grid.select();
+            gridList.each(function (index, gridList) {
+                Bind[index] = grid.dataItem(gridList);
+            })          
+            
+            var result = Bind;            
+            if (result.length == 0) {
+                kendoAlert("Atleast one record needs to be entered");           
+                return false;
+            }
+
+            $.each(result, function (index, value) {
+     
+                var loan_rowid = value.loan_rowid;
+                if (loan_rowid == undefined) {
+                    result[index].loan_rowid = "0";
+                }
+                
+                var mmode = result[index].mode_flag;
+                if (mmode == "S") {
+                    result[index].mode_flag = "U";
+                }
+
+            });
+            var obj_grid_val = result;
+            var data_save = {};
+            data_save.context = WebAPIProxy.getContext();
+            data_save.context.Header = obj_val;         
+            data_save.context.Detail = obj_grid_val;
+            save_ClosureLetter_details(data_save);             
+           
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function get_ClosureLetter_details() {
+        fetchClosureLetterList();
+    }
+
+</script>
+
+
+
+
+
+
+
+

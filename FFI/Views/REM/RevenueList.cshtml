@@ -1,0 +1,333 @@
+﻿@{
+    ViewBag.List = "Revenue";
+    Layout = "~/Views/Shared/ListViewLayout.cshtml";
+}
+<form id="revenue" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="row">
+        <div class="col-xs-12">
+            @*<div id="grd_revenue">*@
+            <div id="grid_revenuelist"></div>
+            @*</div>*@
+        </div>
+    </div>
+</form>
+<script src="~/API_Scripts/revenue.js"></script>
+<script src="~/API_Scripts/Revenue_Master_getRevenue_APIClient.js"></script>
+<script src="~/API_Scripts/Revenue_Master_getRevenueList_APIClient.js"></script>
+<script src="~/API_Scripts/Revenue_Master_saveRevenue_APIClient.js"></script>
+<script src="~/API_Scripts/saveRevenue_Model.js"></script>
+<script src="~/API_Scripts/getRevenue_Model.js"></script>
+<script src="~/API_Scripts/getRevenueList_Model.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script>
+    $(document).ready(function () { 
+        $('#btn_View').hide();
+        $(".adv_filter").attr("hdrtitle", "Revenue List");
+        $(".adv_filter").attr("fltid", "Revenue");
+        $(".Export").attr("hdrtitle", "Revenue List");
+        $(".Export").attr("SubTreeId", "REVENUE");
+        //list_grid_id = "grid_revenuelist";
+        ReveueGrid();
+        listpageloadfetch();
+
+        Screen_Id = "REVENUE";
+        //permission = sec_Permission(Screen_Id);
+        //page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+        //filterhover();
+    });
+</script>
+
+<script>
+
+    function listpageloadfetch() { 
+        try {
+            var formval = form_Serialize("revenue");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_FromValue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_FromValue = ".";
+            }
+            obj_val.FilterBy_ToValue = ".";
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Filter = obj_val;
+            var Context = data.context;
+            $.ajax({
+                type: "POST",
+                url: '/REM/RevenueListfetch',
+                dataType: 'json',
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, FilterBy_Option: Context.Filter.FilterBy_Option, FilterBy_Code: Context.Filter.FilterBy_Code, FilterBy_FromValue: Context.Filter.FilterBy_FromValue, FilterBy_ToValue: Context.Filter.FilterBy_Tovalue }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    //var list = JSON.parse(response);
+                    if (response.context != null) {
+                        generate_Revenue_list(response.context.List);
+                    }
+                    else {
+                        ReveueGrid([]);
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });    
+           // retrieve_Revenue_list(data);
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function ReveueGrid(data) {
+        try {
+            $("#grid_revenuelist").kendoGrid(
+             {
+                 dataSource: {
+                     data: data,
+                     pageSize: 20,
+                     change: function (e) {
+                         setTimeout(function () {
+                             var gd = $("#grid_revenuelist").data("kendoGrid");
+                             filter_row(gd);
+                             $('.k-i-close').css('display', 'none');
+                             $('button.k-button-icon').css('display', 'none');
+                             $('#grid_revenuelist .k-input').prop('disabled', false);
+                             $('#grid_revenuelist .k-input').prop('readonly', true);
+
+                         }, 1);
+                     },
+                 },
+                 toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                 excelExport: function (e) {
+                     var gd = $("#grid_revenuelist").data("kendoGrid");
+                     var len = gd.dataSource._data.length;
+                     var chkall = $('#chkall').is(':checked');
+                     var chkfilter = $('#chkfilter').is(':checked');
+                     var chktemp = $('#chktemp').is(':checked');
+                     var twokendobox = true;
+                     gd.dataSource.pageSize(len);
+                     if (e.sender.dataSource._data.length == len) {
+                         twokendobox = false;
+                         exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                     }
+                     else {
+                         exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                     }
+                     gd.dataSource.pageSize('10');
+                     return false;
+                 },
+                 filterable: {
+                     enabled: true,
+                     delay: 1500,
+                     mode: "menu, row",
+                     height: 200,
+                     click: function (e) {
+                         var gd = $("#grid_revenuelist").data("kendoGrid");
+                         filter_row(gd);
+                     }
+                 },
+                 filterMenuInit: function (e) {
+                     var gd = $("#grid_revenuelist").data("kendoGrid");
+                     filter_row(gd);
+                 },
+
+                 height: 450,
+                 sortable: true,
+                 selectable: true,
+                 change: selectRow,
+                 selectable: "singl",   //  Grid Row Selection
+                 pageable: {
+                     refresh: false,
+                     pageSizes: true,
+                     buttonCount: 5
+                 },
+                 navigatable: true,
+                 groupable: false,
+                 columns: [
+                     {
+                         field: "Out_revenue_rowid",
+                         title: "revenue_rowid",
+                         width: 1,
+                         hidden: true,
+                     },
+
+                      {
+                          field: "Out_revenue_id",
+                          title: "Revenue ID",
+                          filterable: {
+                              cell: {
+                                  operator: "contains",
+                                  inputWidth: 1500
+                              }
+                          }
+                      },
+                      {
+                          field: "Out_financial_year",
+                          title: "finyear_code",
+                          width: 1,
+                          hidden: true,
+                      },
+                      {
+                          field: "Out_financial_year",
+                          title: "Financial Year",
+                          filterable: {
+                              cell: {
+                                  operator: "contains",
+                                  inputWidth: 1500
+                              }
+                          }
+                      },
+                     
+                      {
+                          field: "Out_business_code",
+                          title: "Business",
+                          hidden:true,
+                          filterable: {
+                              cell: {
+                                  operator: "contains",
+                                  inputWidth: 1500
+                              }
+                          }
+                      },
+                      {
+                          field: "Out_business_desc",
+                          title: "Business",
+                          filterable: {
+                              cell: {
+                                  operator: "contains",
+                                  inputWidth: 1500
+                              }
+                          }
+                      },
+                      {
+                          field: "Out_status_code",
+                          title: "status_code",
+                          width: 1,
+                          hidden: true,
+                      },
+                 {
+                     field: "Out_status_desc",
+                     title: "Status",
+                     filterable: {
+                         cell: {
+                             operator: "contains",
+                             inputWidth: 1500
+                         }
+                     }
+                 },
+                 ]
+
+             });
+
+            $(".k-dropdown-operator").css('display', 'none');
+            $("#grid_revenuelist .k-input").attr('disabled', 'false');
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function statusFilter(element) {    // Dropdown list functionality
+        element.kendoDropDownList({
+            dataSource: status_Priority,
+            optionLabel: "--Select Value--"
+        });
+    }
+
+    function selectRow() {
+        try {
+            var grid = $("#grid_revenuelist").data("kendoGrid");
+            var selectedItem = grid.dataItem(grid.select());
+            setlocalStorage("ls_pageList", selectedItem);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<script>
+    $("#btn_Edit").bind("click", function () {
+        getSerializedSelectedRows('edit');
+    });
+
+    $("#btn_View").bind("click", function () {
+        getSerializedSelectedRows('view');
+    });
+
+    $("#btn_new").bind("click", function () {
+        btn_onClick('Create');
+        location.href = "../REM/RevenueForm";
+    });
+
+    function getSerializedSelectedRows(mode) {
+        debugger;
+        try {
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var items = getlocalStorage("ls_pageList");
+                if (items.length == 0) {
+                    kendoAlert("Please select records");
+                }
+
+                else {
+                    if (mode == "edit") {
+                        btn_onClick('Edit');
+                        location.href = "../REM/RevenueForm";
+                    }
+                    else if (mode == "view") {
+                        btn_onClick('View');
+                        location.href = "../REM/RevenueForm";
+                    }
+                }
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<script>
+    function generate_Revenue_list(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                $("#grd_revenue").empty();
+                $("#grd_revenue").append("<div id='grid_revenuelist'></div>");
+                ReveueGrid(data);
+            }
+            else {
+                ReveueGrid([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function listRefresh() {
+        try {
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+
+
+
+
+
+
+

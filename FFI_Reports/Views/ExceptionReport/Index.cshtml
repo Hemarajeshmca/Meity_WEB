@@ -1,0 +1,249 @@
+﻿@{
+    ViewBag.Form = "Production Exceptional Report";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+<style>
+    .loading {
+        background-image: url('http://www.fotos-lienzo.es/media/aw_searchautocomplete/default/loading.gif');
+        background-repeat: no-repeat;
+    }
+
+        .loading:after {
+            content: "In Progress....Wait for few Miniutes";
+            text-align: right;
+            color: red;
+            padding-left: 25px;
+        }
+
+    .k-grid .k-grid-header .k-header {
+        white-space: normal;
+    }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.min.js"></script>
+
+<form id="frmExceptinReport" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px;padding-top:12px;">
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="cmb_startyear" class="col-sm-4 control-label required">Start Year</label>
+                                <input id="cmb_start" name="cmb_start" style="width:50%" data-role="filtercombo">
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="cmb_endyear" class="col-sm-4 control-label required">End Year</label>
+                                <input id="cmb_end" name="cmb_end" style="width:50%" data-role="filtercombo">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="cmb_cropname" class="col-sm-4 control-label required">
+                                    Crop Name
+                                </label>
+                                <input id="cmb_cropname" name="cmb_cropname" style="width:50%" data-role="filtercombo">
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <button id="btnExpRept" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button"
+                                        data-original-title="Refresh" onclick="GetExceptionReport()" style="margin-left:16px;">
+                                    Generate Report
+                                </button> 
+                                <label id="lblprog" style="color:red;display:none"> In Progress..Please Wait </label>
+                                <a id="downloadpath" download href=""></a>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+
+                        </div>
+                        <div class="col-sm-4">
+                            
+                            @*<div style="float:right;"><button id="clear" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button" onclick="listclear()">Clear</button>*@
+                            @*<button id="btnExport" title="" data-placement="top" data-toggle="tooltip" data-original-title="Export" class="btn btn-info" type="button" style="background-color: #00c0ef; border-color: #00acd6;"><span class="fa fa-file-excel-o fa-2x" style="background-color: #00c0ef; border-color: #00acd6;"></span></button></div>*@
+
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            @*<div class="row">
+                <div class="col-xs-12">
+                    <div id="gd_sowing">
+                        <div id="Sowingdetails_grid"></div>
+                    </div>
+                </div>
+            </div>*@
+        </div>
+    </div>
+</form>
+
+<script src="~/CommonScripts/Common_func.js"></script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+<script src="~/CommonScripts/ExportExcel.js"></script> 
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script> 
+
+<script>
+
+
+    $(document).ready(function () {
+
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#frmExceptinReport");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        $("#Topsubheader").show();
+        $("#bottomFooter").show();
+        $("#bottom_menus").hide();
+        $("#btndiv").show();
+        $("#frmlayerdiv").hide();
+        $("#divCreate").hide();
+        $("#divEdit").hide();
+        $("#divView").show();
+        $("#DocStat").show();
+        $(".edtviw_item").show();
+        $(".create_item").hide(); 
+        Screen_Id = "EXCEPRPT";
+        permission = sec_Permission(Screen_Id);
+        setlocalStorage("ls_pageList", "");
+        Alldropdownload();
+        $("#RIform").hide();
+        $("#FPOform").hide();
+    });
+
+
+    function Alldropdownload() {
+        load_master_code();
+
+        // STARTYEAR Dropdown Load
+        var Startlist = "";
+        $("#cmb_start").empty();
+        Startlist = grid_comboScreen_mastercodes("QCD_CROP_year");
+        filter_combobox("cmb_start", Startlist);
+        // ENDYEAR Dropdown Load
+        var Endlist = "";
+        $("#cmb_end").empty();
+        Endlist = grid_comboScreen_mastercodes("QCD_CROP_year");
+        filter_combobox("cmb_end", Endlist);
+        // CROP NAME Dropdown Load
+        var cropnamelist = "";
+        $("#cmb_cropname").empty();
+        cropnamelist = grid_comboScreen_mastercodes("QCD_SOW_CROPNAME");
+        filter_combobox("cmb_cropname", cropnamelist);
+    } 
+
+
+    function Validation() {
+        if ($("#cmb_start").val() != "") {
+            isvalid = true;
+        }
+        else {
+            isvalid = false;
+            kendoAlert("Please Select the Start Year");
+            return;
+        }
+        if ($("#cmb_end").val() != "") {
+            isvalid = true;
+        }
+        else {
+            isvalid = false;
+            kendoAlert("Please Select the End Year");
+            return;
+        }
+        if ($("#cmb_cropname").val() != "") {
+            isvalid = true;
+        }
+        else {
+            isvalid = false;
+            kendoAlert("Please Select the Crop Name");
+            return;
+        }
+
+    }
+
+    function GetExceptionReport() {
+        if ($("#cmb_start").val() != "" || $("#cmb_end").val() != "" || $("#cmb_cropname").val() != "") {
+
+            Validation();
+
+            var cmb_start_year = $("#cmb_start").val();
+            var cmb_end_year = $("#cmb_end").val();
+            if (cmb_start_year != "QCD_CROPTYPE_ALL" && cmb_end_year != "QCD_CROPTYPE_ALL") {
+                cmb_start_year = cmb_start_year.substring(9);
+                cmb_end_year = cmb_end_year.substring(9); 
+            }
+            if (cmb_end_year >= cmb_start_year) {
+                $('#btnExpRept').hide();
+                $('#lblprog').show();
+                var cmb_start = $("#cmb_start").val();
+                var cmb_end = $("#cmb_end").val();
+                var cmb_cropname = $("#cmb_cropname").val();
+                console.log("Report SP :  Pr_Get_ProdCapExceptionalRept");
+            }
+            else {
+                kendoAlert('Please Select Valid year');
+                return false;
+            }
+
+        var ReptName = "EXP_RPT";
+        var param_value = "";
+        var data = {};
+        data.context = WebAPIProxy.getContext();
+        var Context = data.context;
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            data: '{startyear: "' + cmb_start + '",endyear:"' + cmb_end + '",cropname:"' + cmb_cropname + '",userid:"' + Context.userId + '",orgnId: "' + Context.orgnId +'"}',
+            url: "/ExceptionReport/GetExceptionReport",
+            contentType: "application/json; charset-utf-8;",
+            success: function (response) {
+                if (response != null) {
+                    debugger;
+                    $('#btnExpRept').show();
+                    $('#lblprog').hide();
+                    var url_path = (response);
+                    $("#downloadpath").attr("href", url_path.path);
+                    document.getElementById("downloadpath").click();
+                }
+            },
+        });
+        }
+        else {
+            kendoAlert('Please Select Any One Field');
+        }
+            }  
+        function load_master_code() {
+                try {
+                    var data = {};
+                    data.screen_Id = "EXCEPRPT";
+                    var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+                }
+                catch (err) {
+                    debugger;
+                    javascript_log4j_root(arguments.callee.name, err);
+                }
+         }
+
+    function listclear() {
+               debugger;
+        try {
+            $("#cmb_start").empty();
+            $("#cmb_end").val("");
+            $("#cmb_cropname").val("");
+        }
+                catch (err) {
+                    javascript_log4j_root(arguments.callee.name, err);
+                }
+            }
+             
+
+</script>

@@ -1,0 +1,385 @@
+﻿@{
+    ViewBag.Form = "Disbursement Status Update";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+<form id="frm_disbursementstatus" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-12">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="cmb_sanction" class="col-sm-4 control-label required">Select List</label>
+                            <div class="col-sm-6">
+                                <input id="cmb_sanction" name="Active_id" data-role="filtercombo" style="width:100%" />
+                            </div>
+                            <button title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button"
+                                    data-original-title="Refresh" onclick="listLoad()">
+                                <span class="glyphicon glyphicon-refresh"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div id="Disbursement_grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="~/API_Scripts/Loan_Disbursement_retrieveFLDisbursementStatusUpdate_APIClient.js"></script>
+<script src="~/API_Scripts/retrieveFLDisbursementStatusUpdate_Model.js"></script>
+<script src="~/API_Scripts/Loan_Disbursement_saveFLDisbursementStatusUpdate_APIClient.js"></script>
+<script src="~/API_Scripts/saveFLDisbursementStatusUpdate_Model.js"></script>
+<script src="~/API_Scripts/Disbursement_StatusUpdate.js"></script>
+<script src="~/CommonScripts/Common_func.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+
+
+<script>
+    $(document).ready(function () {
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#frm_disbursementstatus");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        var org_id = getlocalStorage('org_id');
+        $('#aggrorgn_code').val(org_id);
+        Screen_Id = "FLDISSUPD";
+        master_userRoleNew2();
+        load_master_code();
+
+        var dtmap_status = "";
+        $("#cmb_sanction").empty();
+        dtmap_status = grid_comboScreen_mastercodes("QCD_FL_DisbUpdate");
+        filter_combobox("cmb_sanction", dtmap_status);
+        var data = [];
+        gridFilter(data);
+    });
+</script>
+
+
+<script>
+    function load_master_code() {
+        try {
+            debugger;
+            var data = {};
+            var context = WebAPIProxy.getContext();
+            data.userId = context.userId
+            data.orgnId = context.orgnId
+            data.locnId = context.locnId
+            data.localeId = context.localeId
+            data.screen_Id = "FLDISSUPD";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+
+
+<script>
+    function gridFilter(data) {
+
+
+        try {
+            $("#Disbursement_grid").kendoGrid(
+                    {
+                        dataSource: {
+                            data: data,
+                            schema: {
+                                model: {
+                                    fields: {
+
+                                        fpomember_code: { type: "string", editable: false },
+                                        farmer_name: { type: "string", editable: false },
+                                        app_date: { type: "string", editable: false },
+                                        loanapp_no: { type: "string", editable: false },
+                                        loanscheme_desc: { type: "string", editable: false },
+                                        loan_no: { type: "string", editable: false },
+                                        loan_amount: { type: "string", editable: false },
+                                        disb_advice_no: { type: "string", editable: false },
+                                        disbursement_date: { type: "date" },
+                                        disb_bank_ref_no: { type: "string" },
+                                        status_of_client: { type: "string" },
+                                        mode_flag: { type: "string", defaultValue: "I" }
+                                    }
+                                }
+                            }
+                        },
+
+
+                        height: 450,
+                        sortable: true,
+                        selectable: true,
+                        edit: OnEdit,
+                        selectable: "singl",   //  Grid Row Selection
+
+                        navigatable: true,
+                        groupable: false,
+
+                        columns: [
+                               {
+                                   title: "Select", width: 40,
+                                   template: '#=sel_checkbox()#'
+                               },
+
+                               {
+                                   field: "loanapp_rowid",
+                                   title: "loanapp_rowid",
+                                   width: 1,
+                                   hidden: true,
+                              },
+                              {
+                                field: "fpoorgn_code",
+                                title: "loanapp_rowid",
+                                width: 1,
+                                hidden: true,
+                              },
+
+                              {
+                                 field: "fpomember_code",
+                                 title: "Member ID",
+                                 width: 200,
+                             },
+                             {
+                                  field: "farmer_name",
+                                  title: "Farmer Name",
+                                  width: 200,
+                             },
+                             {
+                                  field: "app_date",
+                                  title: "Application Date",
+                                  width: 200,
+                             },
+                             {
+                                field: "loanapp_no",
+                                title: "Application Ref No",
+                                width: 200,
+
+                             },
+                             {
+                                  field: "loanscheme_desc",
+                                  title: "FL Scheme",
+                                  width: 200,
+                             },
+                             {
+                                field: "loan_no",
+                                title: "Loan Account No.",
+                                width: 200,
+                            },
+                            {
+                                field: "loan_amount",
+                                title: "LOAN Amount",
+                                width: 200,
+                            },
+                            {
+                                field: "disb_advice_no",
+                                title: "Disb.Advice No",
+                                width: 200,
+
+                            },
+
+                            {
+                                field: "disbursement_date",
+                                title: "Disb. Date",
+                                width: 100,
+                                format: "{0:dd/MM/yyyy}"
+
+                            },
+
+                            {
+                                field: "bank_ref_no",
+                                title: "Bank. Ref. No.",
+                                width: 200,
+                            },
+                             {
+                                 field: "status_of_client",
+                                 title: "status_of_client",
+                                 width: 1,
+                                 hidden: true,
+                             },
+                             {
+                                 field: "payment_mode",
+                                 title: "payment_mode",
+                                 width: 1,
+                                 hidden: true,
+                             },                            
+                             {
+                                  field: "status_of_client",
+                                  title: "status_of_client",
+                                  width: 1,
+                                  hidden: true,
+                             },
+                             {
+                                  field: "status_of_client_desc",
+                                  title: "Disb.Status",
+                                  editor: function (container, options) {
+                                      combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "status_of_client", "Disbursement_grid")
+                             },
+                                  width: 100
+
+                             },
+
+                            {
+                                 field: "mode_flag",
+                                 title: "Mode",
+                                 hidden: true
+                            }],
+                        editable: true
+                    });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    } function check(acc, tf) {
+        if (acc >= tf) {
+            acc = "";
+        }
+    }
+
+    load_master_code();
+    status_of_client_desc_list = grid_comboScreen_mastercodes("QCD_FL_DisbStatus");
+    var gridRowID = -1;
+    function sel_checkbox() {
+        gridRowID++;
+        return '<input id="chk_sel_' + gridRowID + '" class="checkbox" type="checkbox" />';
+    }
+    function OnEdit(e) {
+        setDefaultValues(e);
+
+
+        e.container.find("input[name='disb_date']").kendoDatePicker({
+            max: new Date(), // sets max date to Jan 1st, 2013
+            format: "dd/MM/yyyy"
+        });
+    }
+</script>
+<script>
+
+    function listLoad() {        
+        try {           
+            var formval = form_Serialize("frm_disbursementstatus");
+            var obj_val = JSON.parse(formval);
+            var c = $('#cmb_sanction');
+            if (c.data('kendoComboBox').value() != "" && c.data('kendoComboBox').value() != undefined) {
+                obj_val.status_option = c.data('kendoComboBox').value();
+            }
+            else {
+                obj_val.status_option = "0";
+            }
+            obj_val.fpoorgn_code = getlocalStorage('org_id');
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Filter = obj_val;
+            retrieve_FLDisbursementStatusUpdate_List(data);
+            var colCount = $("#Disbursement_grid").find('.k-grid-header colgroup > col').length;
+
+            //If There are no results place an indicator row
+            if ($("#Disbursement_grid").data("kendoGrid").dataSource._view.length == 0) {
+                $("#Disbursement_grid").find('.k-grid-content tbody')
+                    .append('<tr class="kendo-data-row"><td colspan="' +
+                        colCount +
+                   '" style="text-align:center; padding-top:10px;background-color:#AFE4FA"><b>No pending records available for the selected status; please try later!!!</b></td></tr>');
+                return false;
+            }
+            return false;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_FLDisbursementStatusUpdate_list(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                gridFilter(data);
+            }
+            else {
+                gridFilter([]);
+            }
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>
+    function save() {
+        try {
+            var formval = form_Serialize("frm_disbursementstatus");
+            var obj_formval = JSON.parse(formval);
+            var c = $('#cmb_sanction');
+            if (c.data('kendoComboBox').value() != "" && c.data('kendoComboBox').value() != undefined) {
+                obj_formval.status_option = c.data('kendoComboBox').value();
+            }
+            else {
+                obj_formval.status_option = "0";
+            }
+            obj_formval.fpoorgn_code = getlocalStorage('org_id');
+
+            var grid_val = JSON.stringify($("#Disbursement_grid").data().kendoGrid._data);
+            var Bind = {};
+            Bind = grid_val;
+            var result = JSON.parse(Bind);
+            $.each(result, function (index, value) {
+              
+
+                if ((result[index].disbursement_date == null) || (result[index].disbursement_date == "")) {
+                    var d1 = new Date();
+                    var date1 = kendo.parseDate(d1);
+                    value = kendo.toString(date1, "MM/dd/yyyy");
+                    result[index].disbursement_date = value
+                }
+                else {
+                    var d = value.disbursement_date;
+                    var date = kendo.parseDate(d);
+                    value = kendo.toString(date, "MM/dd/yyyy");
+                    result[index].disbursement_date = value;
+                }
+               
+                var mmode = result[index].mode_flag;
+                if (mmode == "S") {
+                    result[index].mode_flag = "U";
+                }
+            });
+            var obj_val = result;
+            var data_save = {};
+            data_save.context = WebAPIProxy.getContext();
+            data_save.context.Filter = obj_formval;
+            data_save.context.List = obj_val;
+            save_FLDisbursementStatusUpdate_details(data_save);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function get_FLDisbursementStatusUpdate_details() {
+        try {         
+            var formval = form_Serialize("frm_disbursementstatus");
+            var obj_val = JSON.parse(formval);
+            var c = $('#cmb_sanction');
+            if (c.data('kendoComboBox').value() != "" && c.data('kendoComboBox').value() != undefined) {
+                obj_val.status_option = c.data('kendoComboBox').value();
+            }
+            else {
+                obj_val.status_option = "0";
+            }
+            obj_val.fpoorgn_code = getlocalStorage('org_id');
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Filter = obj_val;
+            retrieve_FLDisbursementStatusUpdate_List(data);
+            return false;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>

@@ -1,0 +1,670 @@
+﻿@{
+    ViewBag.Form = "FPO Farmer Map";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+<form id="FPOMap_DNew" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtorgn_code_desc" class="col-sm-4 control-label">FPO Code:</label>
+                        <div class="col-sm-6">
+                            <input id="txtorgn_code_desc" type="text" class="form-control" name="fpoorgn_code" style="width: 100%" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="txtorgn_type_desc" class="col-sm-2 control-label">FPO Name:</label>
+                        <div class="col-sm-8">
+                            <input id="txtorgn_type_desc" type="text" class="form-control" style="width: 100%" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtRoleDesc" class="col-sm-4 control-label"></label>
+                        <div class="col-sm-8">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row" style="padding-top:10px; padding-bottom:15px;display:none">
+                <label for="" class="col-sm-5 ">Farmers not Mapped </label>
+                <div class="col-xs-12">
+                    <div id="FPOGridMap">
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-top:10px; padding-bottom:15px;display:none">
+                <div class="col-xs-12">
+                    <button type="button" class="btn btn-info" onclick="map()">
+                        <span class="fa fa-arrow-circle-down">Map</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="row" style="padding-top:10px; padding-bottom:15px">
+                <label for="" class="col-sm-5">Farmer Members </label>
+                <div class="col-xs-12">
+                    <div id="gd_fpomap_list">
+                        <div id="FPOGrid">
+                        </div>
+                    </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script src="~/API_Scripts/FPOFarmersMap_retrieveFpoFarmerlist_APIClient.js"></script>
+<script src="~/API_Scripts/FPOFarmersMap_retrieveFpoFarmerMap_APIClient.js"></script>
+<script src="~/API_Scripts/FPOFarmersMap_saveFPOFarmerMap_APIClient.js"></script>
+<script src="~/API_Scripts/FPOMapping.js"></script>
+<script src="~/API_Scripts/retrieveFpoFarmerMap_Model.js"></script>
+<script src="~/API_Scripts/retrieveFpoFarmerlist_Model.js"></script>
+<script src="~/API_Scripts/saveFPOFarmerMap_Model.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+        master_Fpomap();
+        FPOGrid_details([]);
+        FPOGrid_map_details([]);
+        $(".file_attach").attr("hdrtitle", "FPO Farmer Map");
+        $(".notes").attr("hdrtitle", "FPO Farmer Map");
+        $("#lblForm_menuid").text("FPO_MAP");
+
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#FPOMap_DNew");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+
+        Screen_Id = "FPOFMAP";
+        permission = sec_Permission(Screen_Id);
+        $("#hide_div").hide();
+      
+        var org_id = getlocalStorage('org_id');
+        var org_type = getlocalStorage('org_type');
+        var orgtname = getlocalStorage('orgtname');
+        var org = getlocalStorage('org');
+        $('#txtorgn_code_desc').val(org_id);
+        $('#txtorgn_type_desc').val(org);
+      
+
+
+
+        page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+        setlocalStorage("status", "Active");
+
+        var formval = form_Serialize("FPOMap_DNew");
+        var obj_val = JSON.parse(formval);
+        var data = {};
+        data.context = WebAPIProxy.getContext();
+        data.context.Header = obj_val;
+        retrieve_FpoMap_details(data);
+    });
+</script>
+
+<script>
+    var status_Priority = [];
+    function FPOGrid_map_details(data) {
+        try {
+            $.each(data, function (index, value) {
+                var flag = false;
+                $.each(status_Priority, function (sindex, svalue) {
+                    if (svalue == value.status_desc) {
+                        flag = true;
+                    }
+                });
+                if (flag == false) {
+                    status_Priority.push(value.status_desc);
+                }
+            });
+            gridRowID = -1;
+            data = addRandomNum(data);
+            $("#FPOGridMap").kendoGrid({
+                dataSource: {
+                    data: data
+                },
+
+                height: 400,
+                groupable: false,
+                sortable: true,
+                selectable: true,
+                selectable: "singl",   //  Grid Row Selection
+                change: selectRow,
+                navigatable: true,
+                columns: [
+                    {
+                        field: "fpomember_rowid",
+                        title: "milkman_rowid",
+                        hidden: true,
+                    },
+
+
+                       {
+                           field: "farmer_code",
+                           title: "Farmer ID",
+
+                       },
+                       //{
+                       //    field: "fpomember_code",
+                       //    title: "Member ID",
+                       //    hidden: true
+                       //},
+                        {
+                            field: "farmer_name",
+                            title: "Given Name",
+
+                        },
+
+                         {
+                             field: "sur_name",
+                             title: "Surname",
+
+                         },
+                         {
+                             field: "farmer_dob",
+                             title: "DOB",
+
+                         },
+                          {
+                              field: "gender_flag",
+                              title: "gender_flag",
+                              hidden: true,
+                          },
+
+                   {
+                       field: "gender_flag_desc",
+                       title: "Gender",
+
+                   },
+
+
+                   {
+                       field: "fig_name",
+                       title: "FIG Name",
+                       hidden: true
+                   },
+
+                   {
+                       field: "reg_mobile_no",
+                       title: "Regd Mobile No",
+
+                   },
+                   {
+                       field: "status_code",
+                       title: "Status",
+                       hidden: true,
+                   },
+               {
+                   field: "status_desc",
+                   title: "Status",
+
+               }
+                ]
+
+            });
+            $("#pager").kendoPager({
+                autoBind: false,
+                dataSource: data,
+                pageSizes: true
+            });
+            $(".k-dropdown-operator").css('display', 'none');
+            $("#FPOGridMap .k-input").attr('disabled', 'false');
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function selectRow() {
+        try {
+            var grid = $("#FPOGridMap").data("kendoGrid");
+            var selectedItem = grid.dataItem(grid.select());
+            setlocalStorage("ls_List", selectedItem);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+</script>
+
+<script>
+    function listpageloadfetch() {
+        try {
+            var formval = form_Serialize("FPOMap_DNew");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_Fromvalue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_Fromvalue = ".";
+            }
+            obj_val.FilterBy_Tovalue = ".";
+
+            var data_list = {};
+            data_list.context = WebAPIProxy.getContext();
+            data_list.context.Filter = obj_val;
+            retrieve_FpoMap_list(data_list);
+            setlocalStorage('flt_condition', "");
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+</script>
+
+
+<script>
+
+    function FPOGrid_details(data) {
+        try {
+            $("#FPOGrid").kendoGrid({
+                dataSource: {
+                data: data,
+                pageSize: 20,
+                change: function (e) {
+                    setTimeout(function () {
+                        var gd = $("#FPOGrid").data("kendoGrid");
+                        filter_row(gd);
+                        $('.k-i-close').css('display', 'none');
+                        $('button.k-button-icon').css('display', 'none');
+                        $('#FPOGrid .k-input').prop('disabled', false);
+                        $('#FPOGrid .k-input').prop('readonly', true);
+                    }, 1);
+                },
+                },
+            toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+            excelExport: function (e) {
+                var gd = $("#FPOGrid").data("kendoGrid");
+                var len = gd.dataSource._data.length;
+                var chkall = $('#chkall').is(':checked');
+                var chkfilter = $('#chkfilter').is(':checked');
+                var chktemp = $('#chktemp').is(':checked');
+                var twokendobox = true;
+                gd.dataSource.pageSize(len);
+                if (e.sender.dataSource._data.length == len) {
+                    twokendobox = false;
+                    exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                }
+                else {
+                    exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                }
+                gd.dataSource.pageSize('10');
+                return false;
+            },
+            filterable: {
+                    enabled: true,
+                    delay: 1500,
+                    mode: "menu, row",
+                    height: 200,
+                    click: function (e) {
+                        var gd = $("#FPOGrid").data("kendoGrid");
+                        filter_row(gd);
+                    }
+            },
+            filterMenuInit: function (e) {
+                var gd = $("#FPOGrid").data("kendoGrid");
+                filter_row(gd);
+            },
+            change: selectRow,
+            height: 450,
+            sortable: true,
+            selectable: true,
+            selectable: "singl",   //  Grid Row Selection
+            pageable: {
+                refresh: false,
+                pageSizes: true,
+                buttonCount: 5
+            },
+            navigatable: false,
+            groupable: false,         
+            columns: [{
+                command: [
+        {
+            name: "Delete",
+            id: "Delete",
+            imageClass: "fa fa-close",
+            click: function (e) {
+                var grid = $("#FPOGrid").data("kendoGrid");
+                var dataItem = $("#FPOGrid").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                DeleteWindowEvent(e, dataItem, grid);
+                e.stopImmediatePropagation();
+            }
+        },
+                ], title: "Action", width: "55px",
+            },
+                        {
+                            field: "fpomember_rowid",
+                            title: "milkman_rowid",
+                            hidden: true,
+                        },
+                        {
+                            field: "farmer_code",
+                            title: "Farmer ID",
+                            filterable: {
+                cell: {
+                        operator: "contains",
+                        inputWidth: 1500
+                }
+            }
+                        },
+                        {
+                            field: "fpomember_code",
+                            title: "Member ID",
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                        {
+                            field: "member_name",
+                            title: "Given Name",
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                        {
+                            field: "member_sur_name",
+                            title: "Surname",
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                        {
+                            field: "member_dob",
+                            title: "DOB",
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                        {
+                            field: "member_gender_flag",
+                            title: "member_gender_flag",
+                            hidden: true
+                        },
+                        {
+                            field: "member_gender_flag_desc",
+                            title: "Gender",
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                        {
+                            field: "fig_name",
+                            title: "FIG Name",
+                            hidden: true
+                        },
+                        {
+                            field: "member_reg_mob_no",
+                            title: "Regd Mobile No",
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                        {
+                            field: "status_code",
+                            title: "Status",
+                            hidden: true,
+                        },
+                        {
+                            field: "status_desc",
+                            title: "Status",
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                        {
+                            field: "row_timestamp",
+                            title: "row_timestamp",
+                            hidden: true,
+                        },
+                        {
+                            field: "mode_flag",
+                            title: "mode_flag",
+                            hidden: true,
+                        },
+                   ]
+               });
+
+            $(".k-dropdown-operator").css('display', 'none');
+            $("#FPOGrid .k-input").attr('disabled', 'false');
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+</script>
+<script language="javascript" type="text/javascript">
+    function popitup(url) {
+        newwindow = window.open(url, 'name', 'height=650,width=850');
+        if (window.focus) { newwindow.focus() }
+        return false;
+
+    }
+</script>
+
+<script>
+    function map() {
+        try {
+            var items = getlocalStorage("ls_List");
+            if (items == undefined || items == '') {
+                kendoAlert("Please select records");
+            }
+            else {
+                PopulateItemGrid();
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function PopulateItemGrid() {
+        try {
+            var productBookGrid = $("#FPOGridMap").data("kendoGrid");
+            var itemGrid = $("#FPOGrid").data("kendoGrid");
+            //For check Dupliacte
+            var data = getlocalStorage("ls_List");
+            var currentFarmerName = data.farmer_name;
+            var currentFarmerCode = data.farmer_code;
+            var griddata = itemGrid.dataSource.data();
+            for (item in griddata) {
+                if (griddata[item].farmer_code == currentFarmerCode &&
+                   griddata[item].member_name == currentFarmerName) {
+                    kendoAlert("Already exists in Farmer Members");
+                    return false;
+                }
+            }
+
+            //End
+            productBookGrid.select().each(function () {
+                var dataItem = productBookGrid.dataItem($(this));
+                var ds = { farmer_code: dataItem.farmer_code, member_name: dataItem.farmer_name, member_sur_name: dataItem.sur_name, member_dob: dataItem.farmer_dob, member_gender_flag: dataItem.gender_flag, member_gender_flag_desc: dataItem.gender_flag_desc, member_reg_mob_no: dataItem.reg_mobile_no, status_code: dataItem.status_code, status_desc: dataItem.status_desc, mode_flag: 'I' };
+                itemGrid.dataSource.add(ds);
+            });
+            itemGrid.refresh();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+   
+</script>
+
+<script>
+    function save() {
+        try {
+            var formval = form_Serialize("FPOMap_DNew");
+            var obj_val = JSON.parse(formval);           
+            var grid_val1 = JSON.stringify($("#FPOGrid").data("kendoGrid").dataSource._data);
+            var Bind1 = {};
+            Bind1 = grid_val1;
+            var result1 = JSON.parse(Bind1);
+            $.each(result1, function (index, value) {
+                var fpomember_rowid = value.fpomember_rowid;
+                if (fpomember_rowid == undefined) {
+                    result1[index].fpomember_rowid = "0";
+                }
+                var mode = result1[index].mode_flag;
+                if (mode == "S") {
+                    result1[index].mode_flag = "U";
+                }
+                if (mode == "" || mode == undefined) {
+                    result1[index].mode_flag = "I";
+                }
+                var fpomember_code = result1[index].fpomember_code;
+                if (fpomember_code == "" || fpomember_code == undefined) {
+                    result1[index].fpomember_code = "0";
+                }
+
+                var rowstamp = result1[index].row_timestamp;
+                if (rowstamp == "" || rowstamp == undefined) {
+                    result1[index].row_timestamp = " ";
+                }
+            });
+            var obj_grid_val1 = result1;
+            var data_save = {};
+            data_save.context = WebAPIProxy.getContext();
+            data_save.context.Header = obj_val;
+            data_save.context.Map = obj_grid_val1;
+            save_FpoMap_details(data_save);
+            clear();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function clear() {
+        try {
+            setlocalStorage("ls_List", '');
+            $('#cmb_cc').data("kendoComboBox").value('');
+            MilkMap_grid_details([]);
+            FPOGrid_details([]);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function generate_FpoMap_header(res) {
+        try {
+            $("#lblvillage").val(res.village_covered);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function generate_FpoMap_Map(res) {
+        try {
+
+            if (res != null) {
+                var data = changedataType(res);
+                $("#gd_fpomap_list").empty();
+                $("#gd_fpomap_list").append("<div id='FPOGrid'></div>");
+                FPOGrid_details(data);
+            }
+            else {
+
+                FPOGrid_details([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function generate_FPOMap_list(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+               
+                FPOGrid_map_details(data);
+            }
+            else {
+
+                FPOGrid_map_details([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function get_FpoMap_details() {
+        try {
+            listpageloadfetch();
+            var formval = form_Serialize("FPOMap_DNew");
+            var obj_val = JSON.parse(formval);
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_val;
+            retrieve_FpoMap_details(data);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+</script>
+
+
+
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>

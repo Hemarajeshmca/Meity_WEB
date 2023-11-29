@@ -1,0 +1,799 @@
+﻿@{
+    ViewBag.Form = "Dividend Structure Definition";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+
+<form id="Dividend_Structure" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="row" style="padding-top:6px;padding-bottom:2px">
+            <section class="col-md-12">
+                <div id="tab_list" class="col-md-12">
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a href="#Structuredetalis" id="" role="tab" data-toggle="tab">
+                                Dividend Structure
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade active in" id="Structuredetalis">
+                            <div class="panel panel-default">
+                                <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+                                    <div class="row" style="padding-top:5px; padding-bottom:5px">
+                                        <div class="col-sm-4">
+                                            <div class=" form-group">
+                                                <label for="txtapplied_on" class=" col-sm-5 control-label required">Record Date</label>
+                                                <div class=" col-sm-6">
+                                                    <input class="cusDate" data-role='datepicker' id="txtapplied_on" name="report_date" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="valid_until" style="width:100%" />
+                                                    <span data-for='valid' class='k-invalid-msg'></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="padding-top:5px; padding-bottom:5px">
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="cmb_fy" class="col-sm-5 control-label required">Financial year</label>
+                                                <div class="col-sm-6">
+                                                    <input id="cmb_fy" name="finyear_code" style="width: 100%" data-role="filtercombo">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="padding-top:5px; padding-bottom:5px">
+                                        <div class="col-sm-4">
+                                            <div class=" form-group">
+                                                <label for="txtFrom" class="  col-sm-5 control-label required">Period From</label>
+                                                <div class=" col-sm-6">
+                                                    <input class="cusDate" data-role='datepicker' id="txtFrom" name="period_from" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" style="width:100%" />
+                                                    <span data-for='valid' class='k-invalid-msg'></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="padding-top:5px; padding-bottom:5px">
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="txtTo" class="col-sm-5 control-label required">Period To</label>
+                                                <div class="col-sm-6">
+                                                    <input class="cusDate" data-role='datepicker' id="txtTo" name="period_to" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" style="width:100%" />
+                                                    <span data-for='valid' class='k-invalid-msg'></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="padding-top:5px; padding-bottom:5px">
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="cmb_divident" class="col-sm-5 control-label required">Dividend Type</label>
+                                                <div class="col-sm-6">
+                                                    <input id="cmb_divident" name="dividend_type" style="width: 100%" data-role="filtercombo">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="padding-top:5px; padding-bottom:5px">
+                                        <div class="col-sm-4">
+                                            <div class=" form-group">
+                                                <label for="txtDividentPercent" class=" col-sm-5 control-label required">Dividend %</label>
+                                                <div class=" col-sm-6">
+                                                    <input id="txtDividentPercent" name="dividend_percent" type="text" class="form-control" data-toggle="tooltip" data-placement="bottom" value="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="padding-top:5px; padding-bottom:5px">
+                                        <div class="col-xs-12">
+                                            <div id="Bankgrid"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-group" style="display:none;">
+                                            <button title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button" data-original-title="Refresh"> <span class="glyphicon glyphicon-refresh"></span></button>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <input type="hidden" name="declared_date" id="declared_date" value="">
+                                        <input type="hidden" name="payor_bank_code" id="payor_bank_code" value="">
+                                        <input type="hidden" id="dividendstru_rowid" name="dividendstru_rowid" />
+                                        <input type="hidden" id="payor_bank_acc_type" name="payor_bank_acc_type" />
+                                        <input type="hidden" name="payor_bank_acc_no" id="payor_bank_acc_no" value="">
+                                        <input type="hidden" name="payor_ifsc_code" id="payor_ifsc_code" value="">
+                                        <input type="hidden" name="status_code" id="status_code" value="">
+                                        <input type="hidden" name="status_desc" id="status_desc" value="">
+                                        <input type="hidden" name="row_timestamp" id="row_timestamp" value="">
+                                        <input type="hidden" name="fpoorgn_code" id="fpoorgn_code" value="">
+                                        <input type="hidden" name="mode_flag" id="mode_flag" value="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+</form>
+
+
+<script src="~/API_Scripts/Dividend_Management_retrieveDividendStructure_APIClient.js"></script>
+<script src="~/API_Scripts/Dividend_Management_retrieveDividendStructureList_APIClient.js"></script>
+<script src="~/API_Scripts/Dividend_Management_saveDividendStructure_APIClient.js"></script>
+<script src="~/API_Scripts/retrieveDividendStructure_Model.js"></script>
+<script src="~/API_Scripts/retrieveDividendStructureList_Model.js"></script>
+<script src="~/API_Scripts/saveDividendStructure_Model.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/API_Scripts/DividendStructure.js"></script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+
+<script>
+    click_act_name = "DividendStructureDefinition";
+    click_ctrl_name = "DividendStructureDefinition";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+<script>
+    $(document).ready(function () {
+        debugger;
+        kendodate_format();
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#Dividend_Structure");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        Screen_Id = "SETUPDIV";
+        permission = sec_Permission(Screen_Id);
+        $('bottom_menus').hide();
+        $('#divUserRole #btnRnew').hide();
+        $("#frmlayerdiv #txtcommon_id").hide();
+        $("#frmlayerdiv #common_id").hide();
+
+        setlocalStorage("status", "Active");
+        setlocalStorage('status_code', "A");
+
+        load_master_code();
+        Bankgrid([]);
+        var FY = "";
+        $("#cmb_fy").empty();
+        FY = grid_comboScreen_mastercodes("FY");
+        filter_combobox("cmb_fy", FY);
+
+        var startDate = $("#txtFrom").kendoDatePicker({
+            format: "dd/MM/yyyy"
+        });
+        $("#txtFrom").kendoDatePicker({
+            max: new Date(),
+            format: "dd/MM/yyyy"
+            , change: onchange
+        });
+        function onchange() {
+            var newDateTime = startDate.val().split('/');
+            var mindate = newDateTime[1] + '/' + newDateTime[0] + '/' + newDateTime[2];
+            $("#txtTo").kendoDatePicker({
+                format: "dd/MM/yyyy",
+                min: mindate
+            });
+        };
+
+        $("#txtTo").change(function () {
+            var startDate = document.getElementById("txtFrom").value;
+            var endDate = document.getElementById("txtTo").value;
+            if ((Date.parse(endDate) < Date.parse(startDate))) {
+                alert("Period To should be greater than Period From");
+                document.getElementById("txtTo").value = "";
+            }
+        });
+
+        $('#txtDividentPercent').keypress(function (event) {
+            var $this = $(this);
+            if ((event.which != 46 || $this.val().indexOf('.') != -1) &&
+                ((event.which < 48 || event.which > 57) &&
+                    (event.which != 0 && event.which != 8))) {
+                event.preventDefault();
+            }
+
+            var text = $(this).val();
+            if (text.indexOf('.') != -1) {
+                setTimeout(function () {
+                    if ($this.val().substring($this.val().indexOf('.')).length > 3) {
+                        $this.val($this.val().substring(0, $this.val().indexOf('.') + 3));
+                    }
+                }, 1);
+                if ((text.indexOf('.') != -1) &&
+                    (text.substring(text.indexOf('.')).length > 2) &&
+                    (event.which != 0 && event.which != 8) &&
+                    ($(this)[0].selectionStart >= text.length - 2)) {
+                    event.preventDefault();
+                }
+            }
+            else {
+                if ($this.val().length > 2) {
+                    if (event.which != 46) {
+                        event.preventDefault();
+                    }
+                }
+            }
+
+        });
+
+        $('#txtDividentPercent').bind("paste", function (e) {
+            var text = e.originalEvent.clipboardData.getData('Text');
+            if ($.isNumeric(text)) {
+                if ((text.substring(text.indexOf('.')).length > 3) && (text.indexOf('.') > -1)) {
+                    e.preventDefault();
+                    $(this).val(text.substring(0, text.indexOf('.') + 3));
+                }
+            }
+            else {
+                e.preventDefault();
+            }
+        });
+
+        var Div_type = "";
+        $("#cmb_divident").empty();
+        Div_type = grid_comboScreen_mastercodes("QCD_SHA_DIV_TYPE");//QCD_SHA_DIV_TYPE
+        filter_combobox("cmb_divident", Div_type);
+
+        if (getlocalStorage('btn_clk_val') == "Create") {
+            $('#divCreate #review').hide();
+            $("#txtcommon_id").hide();
+            $("#mode_flag").val("I");
+            $("#bottom_menus").hide();
+            $("#DocStat").val("New");
+
+        }
+        else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
+            $('#divEdit #reviewEd').hide();
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("Bank_form");
+                var obj_val = JSON.parse(formval);
+                obj_val.IOU_dividendstru_rowid = data.Out_dividendstru_rowid;
+                obj_val.IOU_fpoorgn_code = data.Out_fpoorgn_code;
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                //retrieve_DividendStructure_details(data);
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, Header: Context.Header }),
+                    url: "/DividendStructureDefinition/SingleFetchData",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        debugger;
+
+                        if (response.context != null) {
+                            generate_DividendStructure_header(response.context.Header);
+                        }
+                        else {
+                            console.log("Issue where Dropped");
+                        }
+                    },
+                    error: function (er) {
+                        console.log(er);
+                    }
+
+                });
+
+
+                $("#mode_flag").val("S");
+                setlocalStorage('doc_no', $("#fpoorgn_code").val());
+                setlocalStorage('doc_row_id', $("#dividendstru_rowid").val());
+            }
+        }
+    });
+</script>
+<script>
+    var bank_acc_type_desc_list = "";
+    var bank_desc_list = "";
+    var status_desc_list = "";
+    function Bankgrid(data) {
+        try {
+            $("#Bankgrid").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                bank_acc_no: { type: "string", validation: { required: { message: "Account. No cannot be blank" } } },
+                                bank_acc_type: { type: "string", required: true },
+                                branch_code: { type: "string" },
+                                bank_acc_type_desc: {
+                                    validation: {
+                                        dropdownlistValidation: function (input) {
+                                            if (input.is("[name='bank_acc_type_desc']")) {
+                                                var isValid = true;
+                                                input.attr("data-dropdownlistValidation-msg", "Bank Account cannot be blank"); if (input.val().length <= 0) {
+                                                    isValid = false;
+                                                }
+                                                return isValid;
+                                            }
+                                            return true;
+                                        }
+                                    }
+                                },
+
+                                bank_code: { type: "string", required: true },
+                                bank_desc: {
+                                    validation: {
+                                        dropdownlistValidation: function (input) {
+                                            if (input.is("[name='bank_desc']")) {
+                                                var isValid = true;
+                                                input.attr("data-dropdownlistValidation-msg", "Bank cannot be blank"); if (input.val().length <= 0) {
+                                                    isValid = false;
+                                                }
+                                                return isValid;
+                                            }
+                                            return true;
+                                        }
+                                    }
+                                },
+
+
+                                ifsc_code: { type: "string", editable: false, validation: { required: { message: "IFSC Code cannot be blank" } } },
+
+
+                                bank_acc_purpose: { type: "string", required: true },
+                                bank_acc_purpose_desc: {
+                                    validation: {
+                                        dropdownlistValidation: function (input) {
+                                            if (input.is("[name='bank_acc_purpose_desc']")) {
+                                                var isValid = true;
+                                                input.attr("data-dropdownlistValidation-msg", "Account Purpose cannot be blank"); if (input.val().length <= 0) {
+                                                    isValid = false;
+                                                }
+                                                return isValid;
+                                            }
+                                            return true;
+                                        }
+                                    }
+                                },
+
+
+                                status_code: { type: "string", defaultValue: "A" },
+                                status_desc: { type: "string", defaultValue: getlocalStorage('status'), editable: false },
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+                toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 400,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#Bankgrid').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [{
+                    command: [
+                        {
+                            name: "Delete",
+                            id: "Delete",
+                            imageClass: "fa fa-close",
+                            click: function (e) {
+                                var grid = $("#Bankgrid").data("kendoGrid");
+                                var dataItem = $("#Bankgrid").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                                DeleteWindowEvent(e, dataItem, grid);
+                                e.stopImmediatePropagation()
+                            }
+                        },
+
+                    ], title: "Action", width: "35px",
+                },
+                {
+                    field: "bank_code",
+                    title: "BANK",
+                    hidden: true,
+                    width: 1
+                },
+                {
+                    field: "bank_desc",
+                    title: "Bank",
+                    editor: function (container, options) {
+                        combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "bank_code", "Bankgrid")
+                    },
+                    width: 100
+                },
+                {
+                    field: "branch_code",
+                    title: "Branch",
+                    editor: '<div class="input-group input-group-sm"><input type="text" readonly name="branch_code" maxlength="50" style="width:190px;color:black"  onkeypress="return speical_char(event)" data-bind="value:branch_code"/><span class="input-group-btn" style="padding-right: 150px;"><a class="HelpWindow fa fa-search fa-lg" data-toggle="modal" href="/HelpFilter/HelpFilter" hdrtitle="Bank Details" searchid="S08" data-target="#HelpModal" onclick=transfer(this,"grid","Bankgrid","Bankgrid") title="Search" style="font-size: 15px; padding-left: 10px;"></a> </span> </div>',
+                    width: 180,
+                },
+                {
+                    field: "ifsc_code",
+                    title: "IFSC Code",
+                    width: 100
+                },
+                {
+                    field: "bank_acc_no",
+                    title: "Account No",
+                    width: 100,
+                    editor: function (container, options) {
+                        numeric_editor(container, options.field, '16', '0');
+                    },
+
+                },
+                {
+                    field: "dflt_cr_acc",
+                    title: "Remarks",
+                    width: 100,
+                    hidden: true
+                },
+                {
+                    field: "bank_acc_type",
+                    title: "Account Type On",
+                    hidden: true,
+                    width: 1
+                },
+                {
+                    field: "bank_acc_type_desc",
+                    title: "Account Type",
+                    editor: function (container, options) {
+                        combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "bank_acc_type", "Bankgrid")
+                    },
+                    width: 100
+                },
+                {
+                    field: "bank_acc_purpose",
+                    title: "bank_acc_purpose",
+                    hidden: true
+                },
+                {
+                    field: "bank_acc_purpose_desc",
+                    title: "Account Purpose",
+                    editor: function (container, options) {
+                        combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "bank_acc_purpose", "Bankgrid")
+                    },
+                    width: 100,
+                    hidden: true
+                },
+                {
+                    field: "status_code",
+                    title: "Status",
+                    hidden: true,
+                    width: 1
+
+                },
+                {
+                    field: "status_desc",
+                    title: "Status",
+                    editor: function (container, options) {
+                        combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "status_code", "Bankgrid")
+                    },
+                    width: 100
+                },
+                {
+                    field: "mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }],
+                editable: true
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+
+        }
+        load_master_code();
+        bank_acc_type_desc_list = grid_comboScreen_mastercodes("QCD_BANKACCTYPE");
+        bank_desc_list = grid_comboScreen_mastercodes("BANK");
+        bank_acc_purpose_desc_list = grid_comboScreen_mastercodes("QCD_BANKACCPUR");
+    }
+
+</script>
+
+<script>
+    function load_master_code() {
+        try {
+            debugger;
+            var data = {};
+            var context = WebAPIProxy.getContext();
+            data.userId = context.userId
+            data.orgnId = context.orgnId
+            data.locnId = context.locnId
+            data.localeId = context.localeId
+            data.screen_Id = "SETUPDIV";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+
+<script>
+    function save() {
+        debugger;
+        try {
+            var mandatory_check = true;
+            if ($("#mode_flag").val() == "S") {
+                $("#mode_flag").val('U');
+            }
+            var formval = form_Serialize("Dividend_Structure");
+            var obj_val = JSON.parse(formval);
+            if (obj_val.dividendstru_rowid == undefined || obj_val.dividendstru_rowid == '') {
+                obj_val.IOU_dividendstru_rowid = 0;
+            }
+            else {
+                obj_val.IOU_dividendstru_rowid = obj_val.dividendstru_rowid;
+            }
+            if (obj_val.status_code == undefined || obj_val.status_code == '') {
+                obj_val.In_status_code = "A";
+            }
+            if (obj_val.hasOwnProperty('period_from')) {
+                if (obj_val.period_from != '')
+                    obj_val.In_period_from = getFormated_StringDate(obj_val.period_from);
+            }
+            if (obj_val.hasOwnProperty('period_to')) {
+                if (obj_val.period_to != '')
+                    obj_val.In_period_to = getFormated_StringDate(obj_val.period_to);
+            }
+            if (obj_val.hasOwnProperty('report_date')) {
+                if (obj_val.report_date != '')
+                    obj_val.In_report_date = getFormated_StringDate(obj_val.report_date);
+            }
+            if (obj_val.hasOwnProperty('declared_date')) {
+                if (obj_val.declared_date != '')
+                    obj_val.In_declared_date = getFormated_StringDate(obj_val.declared_date);
+            }
+
+            obj_val.In_dividend_percent = obj_val.dividend_percent;
+            obj_val.In_dividend_type = obj_val.dividend_type;
+            obj_val.In_finyear_code = obj_val.finyear_code;
+            obj_val.In_mode_flag = obj_val.mode_flag;
+
+            var org_id = getlocalStorage('org_id');
+            obj_val.IOU_fpoorgn_code = org_id;
+            var grid_val = JSON.stringify($("#Bankgrid").data().kendoGrid._data);
+            var Bind = {};
+            Bind = grid_val;
+            var result = JSON.parse(Bind);
+            var grid_validate_msg = "";
+
+            if (result.length == 0) {
+                kendoAlert("No bank details entered; cannot save the Dividend Setup");
+                mandatory_check = false;
+                return false;
+            }
+            $.each(result, function (key, value) {
+                if (value.bank_desc == "") {
+                    grid_validate_msg += "Bank Name cannot be blank <br>";
+                    mandatory_check = false;
+                }
+                if (value.ifsc_code == "") {
+                    grid_validate_msg += "Ifsc Code cannot be blank <br>";
+                    mandatory_check = false;
+                }
+                if (value.bank_acc_no == "") {
+                    grid_validate_msg += "Bank Account No cannot be blank <br>";
+                    mandatory_check = false;
+                }
+                if (value.bank_acc_type_desc == "") {
+                    grid_validate_msg += "Bank Account Type cannot be blank <br>";
+                    mandatory_check = false;
+                }
+                if (mandatory_check == false) {
+                    kendoAlert(grid_validate_msg);
+                    return false;
+                }
+            });
+
+            if (result.length > 1) {
+                kendoAlert("you can add one bank only");
+                return false;
+            }
+            if (mandatory_check == true) {
+                $.each(result, function (index, value) {
+                    var dividendstru_rowid = value.dividendstru_rowid;
+                    if (dividendstru_rowid == undefined) {
+                        result[index].IOU_dividendstru_rowid = "0";
+                    }
+                    var mmode = result[index].mode_flag;
+                    if (mmode == "S") {
+                        result[index].In_mode_flag = "U";
+                    } else {
+                        result[index].In_mode_flag = result[index].mode_flag;
+                    }
+
+                });
+                var obj_grid_val = result;
+
+                obj_val.In_payor_bank_code = result[0].bank_code;
+                obj_val.In_payor_bank_acc_type = result[0].bank_acc_type;
+                obj_val.In_payor_bank_acc_no = result[0].bank_acc_no;
+                obj_val.In_payor_ifsc_code = result[0].ifsc_code;
+
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                //save_DividendStructure_details(data);
+
+                var Context = data.context;
+
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ orgnId: Context.orgnId, locnId: Context.locnId, userId: Context.userId, localeId: Context.localeId, Header: Context.Header }),
+                    url: "/DividendStructureDefinition/SaveDividend",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        debugger;
+                        if (response != null) {
+                            //generate_FpoMap_Map(response)
+                            kendoAlert("Dividend Structure Saved Successfully");
+                            get_div_struct_details(response.context.Header);
+                        }
+                    },
+                    error: function (er) {
+                        alert(er)
+                        console.log(er)
+                    }
+                });
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+<script>
+    function generate_DividendStructure_header(res) {
+        debugger;
+        try {
+
+            if (res != null) {
+                $("#dividendstru_rowid").val(res.IOU_dividendstru_rowid);
+                $("#fpoorgn_code").val(res.IOU_fpoorgn_code);
+                //var fromDate = res.In_period_from.split('/').reverse().join('/');
+                var fromDate = res.In_period_from;
+                $("#txtFrom").val(fromDate);
+                //var toDate = res.In_period_to.split('/').reverse().join('/');
+                var toDate = res.In_period_to;
+                $("#txtTo").val(toDate);
+                //var rec_date = res.In_report_date.split('/').reverse().join('/');
+                var rec_date = res.In_report_date;
+                $("#txtapplied_on").val(rec_date);
+                $('#cmb_fy').data("kendoComboBox").value(res.In_finyear_code);
+                $('#cmb_divident').data("kendoComboBox").value(res.In_dividend_type);
+                $("#txtDividentPercent").val(res.In_dividend_percent);
+                $("#DocStat ").val(res.In_status_desc);
+                Bankgrid([]);
+                var ifscbranch = res.In_payor_ifsc_code.split('/');
+                var itemGrid = $("#Bankgrid").data("kendoGrid");
+                var ds = { bank_code: res.In_payor_bank_code, bank_desc: res.In_payor_bank_desc, ifsc_code: ifscbranch[0], branch_code: ifscbranch[1], bank_acc_no: res.In_payor_bank_acc_no, dflt_cr_acc: '', bank_acc_type: res.In_payor_bank_acc_type, bank_acc_type_desc: res.In_payor_bank_acc_type_desc, status_code: res.In_status_code, status_desc: res.In_status_desc, mode_flag: res.In_mode_flag };
+                itemGrid.dataSource.add(ds);
+            }
+            else {
+                Bankgrid([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function fetch() {
+        try {
+
+            var formval = form_Serialize("Dividend_Structure");
+            var obj_val = JSON.parse(formval);
+            obj_val.period_from = $("#txtFrom").val();
+            obj_val.period_to = $("#txtTo").val();
+
+            if (obj_val.hasOwnProperty('period_from')) {
+                if (obj_val.period_from != '')
+                    obj_val.period_from = getFormated_StringDate(obj_val.period_from);
+            }
+            if (obj_val.hasOwnProperty('period_to')) {
+                if (obj_val.period_to != '')
+                    obj_val.period_to = getFormated_StringDate(obj_val.period_to);
+            }
+            var data_fetch = {};
+            data_fetch.context = WebAPIProxy.getContext();
+            data_fetch.context.Header = obj_val;
+            retrieve_DividendStructure_details(data_fetch);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function get_div_struct_details(res) {
+        try {
+            var formval = form_Serialize("Bank_form");
+            var obj_val = JSON.parse(formval);
+            obj_val.IOU_dividendstru_rowid = res.IOU_dividendstru_rowid;
+            obj_val.IOU_fpoorgn_code = res.IOU_fpoorgn_code;          
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_val;
+            //retrieve_DividendStructure_details(data);
+            var Context = data.context;
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, Header: Context.Header }),
+                url: "/DividendStructureDefinition/SingleFetchData",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+
+                    if (response.context != null) {
+                        generate_DividendStructure_header(response.context.Header);
+                    }
+                    else {
+                        console.log("Issue where Dropped");
+                    }
+                },
+                error: function (er) {
+                    console.log(er);
+                }
+
+            });
+            $("#mode_flag").val('S');
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>
+<script>
+    function grid_control() {
+        var control_Name = [
+            { "dataCol": "branch_name", "grid_row_col": "branch_code" },
+            { "dataCol": "ifsc_code", "grid_row_col": "ifsc_code" },
+            { "dataCol": "", "grid_row_col": "bank_code" },
+            { "dataCol": "", "grid_row_col": "bank_desc" },
+            { "dataCol": "", "grid_row_col": "bank_acc_no" },
+            { "dataCol": "", "grid_row_col": "bank_acc_type" },
+            { "dataCol": "", "grid_row_col": "bank_acc_type_desc" },
+            { "dataCol": "", "grid_row_col": "bank_acc_purpose" },
+            { "dataCol": "", "grid_row_col": "bank_acc_purpose_desc" },
+            { "dataCol": "", "grid_row_col": "dflt_dr_acc" },
+            { "dataCol": "", "grid_row_col": "status_code" },
+            { "dataCol": "", "grid_row_col": "status_desc" },
+            { "dataCol": "", "grid_row_col": "mode_flag" },
+            { "dataCol": "", "grid_row_col": "uid" },
+        ];
+        return control_Name
+    }
+
+    function controlName() {
+        var control_Name = [
+        ];
+        return control_Name
+    }
+
+    function trans_input_data() {
+        var trans_coll = [
+            { "trasfer": "NO", "dataCol": "", "controlId": "", "grid_id": "", "grid_row_col": "" },
+            { "trasfer": "Yes", "dataCol": "bank_code", "controlId": "", "grid_id": "Bankgrid", "grid_row_col": "" },
+
+        ];
+        return trans_coll;
+    }
+</script>
+

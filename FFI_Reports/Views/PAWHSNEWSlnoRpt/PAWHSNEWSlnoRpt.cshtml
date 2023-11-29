@@ -1,0 +1,414 @@
+﻿
+@{
+    ViewBag.Form = "Serial No Report";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.min.js"></script>
+<form id="frm_slnoRpt" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px;padding-top:12px;">
+                <div class="col-xs-4" style="display:none">
+                    <div class=" form-group">
+                        <label for="ic_code" class=" col-sm-5 control-label">Input Centre Name</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="ic_code" name="ic_code" class="form-control" maxlength="50" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="col-sm-3">
+                        <label for="txt_fromdate" class="col-sm-4 control-label required">Serial No</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_Slno" name="In_slno" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+
+                    <button id="refresh" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button"
+                            data-original-title="Refresh" onclick="listRefresh()">
+                        <span class="glyphicon glyphicon-refresh"></span>
+                    </button>
+
+                    <div class="pull-right" style="margin-top:18px">
+                        <button id="clear" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button"
+                                data-original-title="clear" onclick="listclear()">
+                            clear
+                        </button>
+                        <button type="button" id="btnExport" style="background-color:skyblue" class="Export btn btn-sm btn-info"><span class="glyphicon glyphicon-export"></span></button>
+                        @*<a data-toggle="modal" class="Export btn btn-sm btn-info" href="~/ExportExcel/ExportExcel" hdrtitle="" data-target="#exportexcelModal"><span class=" glyphicon glyphicon-export mr"></span></a>*@
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div id="gd_productmoveregister">
+                        <div id="Slno_grid"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+</form>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/CommonScripts/common.js"></script>
+<script src="~/CommonScripts/tamil.js"></script>
+<script src="~/CommonScripts/Common_func.js"></script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+<script>
+    click_act_name = "home ";
+    click_ctrl_name = "home";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+
+</script>
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#frm_slnoRpt");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        $("#Topsubheader").show();
+        $("#bottomFooter").show();
+        $("#bottom_menus").hide();
+        $("#btndiv").show();
+        $("#frmlayerdiv").hide();
+        $("#divCreate").hide();
+        $("#divEdit").hide();
+        $("#divView").show();
+        $("#DocStat").show();
+        $(".edtviw_item").show();
+        $(".create_item").hide();
+        //$('#btnExport').hide();
+        $(".Export").attr("hdrtitle", "Serial No List");
+        $(".Export").attr("SubTreeId", "ICDSMRRPT");
+
+        Screen_Id = "ICDSMRRPT";
+        // load_master_code();
+        var org_id = getlocalStorage('org_id');
+        $('#ic_code').val(org_id);
+
+        permission = sec_Permission(Screen_Id);
+        page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+        listgrid([]);
+        $("#btnExport").kendoButton({
+            click: function () {
+                debugger;
+                //$("#salesreport_grid").data("kendoGrid").saveAsExcel();
+                ExportButtonClick();
+            }
+        })
+    });
+
+    $(function () {
+        debugger;
+        $('#refresh').click(function () {
+            debugger;
+            if ($("#txt_Slno").val() != "") {
+                var formval = form_Serialize("frm_slnoRpt");
+                var obj_val = JSON.parse(formval);
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                //Item Master Edit Binding  start 18-05-2020
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({
+                        userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId,
+                        In_slno: Context.Header.In_slno,
+                    }),
+                    url: "/PAWHSNEWSlnoRpt/ActualProcurementslnofetch",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        listgrid(response.context.SlnoLotDetail);
+                        //var pass = response.data;
+                        //$("#salesreport_grid").data("kendoGrid").dataSource.data(pass)
+                    },
+                    error: function (er) {
+                        alert(er)
+                        console.log(er)
+                    }
+
+                });
+            }
+            else {
+
+                kendoAlert("Please Select Any One Field");
+            }
+
+
+            return false;
+        });
+    });
+
+
+</script>
+<script>
+    function load_master_code() {
+        debugger;
+        var data = {};
+        var context = WebAPIProxy.getContext();
+        data.userId = context.userId
+        data.orgnId = context.orgnId
+        data.locnId = context.locnId
+        data.localeId = context.localeId
+        data.screen_Id = "ICDSMRRPT";
+        var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+    }
+</script>
+
+<script>
+    function listpageloadfetch() {
+        try {
+
+            var formval = form_Serialize("frm_slnoRpt");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_Fromvalue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_Fromvalue = ".";
+            }
+            obj_val.FilterBy_Tovalue = ".";
+            if (obj_val.status_option == "" || obj_val.status_option == undefined) {
+                obj_val.status_option = "V";
+            }
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Filter = obj_val;
+            var colCount = $("#Slno_grid").find('.k-grid-header colgroup > col').length;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function ExportButtonClick() {
+        debugger
+        var grid = $("#Slno_grid").data("kendoGrid");
+        if (grid.dataSource.total() == 0) {
+            kendoAlert('No records available in the Grid to Export!!!');
+        }
+        else {
+            grid.bind("excelExport", function (e) {
+                debugger;
+                e.workbook.fileName = "Serial No Report.xlsx";
+                var rows1 = e.workbook.sheets[0];
+                var sheet = e.workbook.sheets[0];
+                var grid = $("#Slno_grid").data("kendoGrid");
+                var data = grid.dataSource.data();
+                var gridColumns = grid.columns;
+                var columns = gridColumns.map(function (col) {
+                    return {
+                        value: col.title ? col.title : col.field,
+                        autoWidth: true,
+                        background: "#7a7a7a",
+                        color: "#fff"
+                    };
+                });
+                var rows = [{ cells: columns, type: "header" }];
+
+                for (var i = 0; i < data.length; i++) {
+                    var rowCells = [];
+                    for (var j = 0; j < gridColumns.length; j++) {
+                        var cellValue = data[i][gridColumns[j].field];
+                        rowCells.push({ value: cellValue });
+                    }
+                    rows.push({ cells: rowCells, type: "data" });
+                }
+                sheet.rows = rows;
+            });
+
+            grid.saveAsExcel();
+            kendoAlert('Exported Sucessfully');
+        }
+    }
+
+
+    var status_Priority = [];
+    function listgrid(data) {
+        $("#Slno_grid").kendoGrid({
+            dataSource: {
+                data: data,
+                schema: {
+                    model: {
+                        fields: {
+                            Out_act_rowid: { type: "int", editable: false },
+                            Out_lotno: { type: "string", editable: false },
+                            Out_farmer_code: { type: "string", editable: false },
+                            Out_farmer_name: { type: "string", editable: false },
+                            Out_item_code: { type: "string", editable: false },
+                            Out_item_name: { type: "string", editable: false },
+                            Out_actual_qty: { type: "string", editable: false },
+                            Out_actual_price: { type: "string", editable: false },
+                            Out_actual_value: { type: "string", editable: false },
+                            Out_no_of_bags: { type: "string", editable: false },
+                        }
+                    }
+                },
+                pageSize: 20
+            },
+
+            height: 450,
+            scrollable: true,
+            sortable: true,
+            pageable: {
+                refresh: false,
+                pageSizes: true,
+                previousNext: false,
+                buttonCount: 8
+            },
+            columns: [
+                {
+                    field: "Out_act_rowid",
+                    title: "rowid",
+                    width: 100,
+                    hidden: true
+                },
+                {
+                    field: "Out_lotno",
+                    title: "Lot No",
+                    width: 100
+                },
+
+                {
+                    field: "Out_farmer_code",
+                    title: "Farmer Code",
+                    width: 100,
+
+                },
+                {
+                    field: "Out_farmer_name",
+                    title: "Farmer Name",
+                    width: 100
+
+                },
+
+                {
+                    field: "Out_item_code",
+                    title: "Product Code",
+                    width: 100,
+                    hidden: true,
+
+                },
+
+                {
+                    field: "Out_item_name",
+                    title: "Product Name",
+                    width: 100                
+
+
+                },
+
+                {
+                    field: "Out_actual_qty",
+                    title: "Actual Qty",
+                    width: 90,
+                    attributes: { style: "text-align:right;" }
+
+                },
+                {
+                    field: "Out_actual_price",
+                    title: "Actual Price",
+                    width: 90,
+                    attributes: { style: "text-align:right;" }
+
+                },
+                {
+                    field: "Out_actual_value",
+                    title: "Actual Value",
+                    width: 90,
+                    attributes: { style: "text-align:right;" }
+
+                },
+                {
+                    field: "Out_no_of_bags",
+                    title: "No of Bags",
+                    width: 90,
+                    attributes: { style: "text-align:right;" }
+
+                },
+
+            ],
+
+
+        });
+
+    }
+
+</script>
+
+<script>
+
+    function listRefresh() {
+        try {
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function listclear() {
+        try {
+
+            listgrid([]);
+
+            $('#frm_slnoRpt').find('input:text').val('');
+            //location.reload();
+            var org_id = getlocalStorage('org_id');
+            $('#ic_code').val(org_id);
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function grid_control() {
+        var control_Name = [
+
+        ];
+        return control_Name;
+    }
+
+
+    function form_control() {
+        var control_Name = [
+
+            { "dataCol": "ProductName", "controlId": "cmb_prdtname", "type": "Text" },
+            { "dataCol": "ProductCode", "controlId": "cmb_prdtcode", "type": "Text" }
+
+
+        ];
+        return control_Name;
+    }
+    function trans_input_data() {
+        var trans_coll = [
+            { "trasfer": "Yes", "dataCol": "ic_code", "controlId": "ic_code", "grid_id": "", "grid_row_col": "" },
+            { "trasfer": "Yes", "dataCol": "ProductName", "controlId": "cmb_prdtname", "grid_id": "", "grid_row_col": "farmer_code" },
+            { "trasfer": "Yes", "dataCol": "ProductCode", "controlId": "cmb_prdtcode", "grid_id": "", "grid_row_col": "farmer_name" }
+        ];
+        return trans_coll;
+    }
+    function generate_Invoiceproduct_list(res) {
+        var dataItem = $("#Slno_grid").data("kendoGrid").dataSource.data()[0];
+
+        dataItem.set("ProductName", res[0].product_name);
+        dataItem.set("ProductCode", res[0].product_code);
+
+    }
+</script>

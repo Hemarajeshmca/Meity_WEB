@@ -1,0 +1,6 @@
+farmer_code	farmer_name	farmer_surname	EC_ADDR_TYPE	EC_ADDR_UN	EC_ADDR_STATE	EC_ADDR_DIST	EC_ADDR_TALUK	EC_ADDR_GRAMPAN	EC_ADDR_VILLAGE	EC_ADDR_ADDR1	EC_ADDR_ADDR2	EC_ADDR_PINCODE	UploadStatus	Comments
+SEKAR00001	Sekar	Sekar	Alternate	India	Tamilnadu	Kancheepuram	Uthiramerur	Menallur	Kattupakkam	226, Palla street	Arasanimangalam post	603402	success	-
+SEKAR00001	Sekar	Sekar	Alternate	India	Tamilnadu	Kancheepuram	Uthiramerur	Menallur	Kattupakkam	227, Palla street	Arasanimangalam post2	603402	success	-
+CHAND00002	Chandirasekar	Chandirasekar	Alternate	India	Tamilnadu	Kancheepuram	Uthiramerur	Menallur	Kattupakkam	442, Bajana koil street	Arasanimangalam post	603402	success	-
+MURUG00003	Murugan	Murugan	Alternate	India	Tamilnadu	Kancheepuram	Uthiramerur	Menallur	Kattupakkam	442, Bajana koil street	Arasanimangalam post	603402	success	-
+MAARI0004	Mari	Mari	Alternate	India	Tamilnadu	Kancheepuram	Uthiramerur	Menallur	Kattupakkam	Palla street	Arasanimangalam post	603402	success	-

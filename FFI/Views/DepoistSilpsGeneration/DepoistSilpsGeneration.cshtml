@@ -1,0 +1,337 @@
+﻿@{
+    ViewBag.Form = "Deposit Slips Generation";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+<form id="DepositGeneration_form" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-12">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="cmb_Deposit" class="col-sm-4 control-label required">Receipts</label>
+                            <div class="col-sm-6">
+                                <input id="cmb_Deposit" name="select_option" data-role="filtercombo" style="width:100%" />
+                            </div>
+                            <button id="btnReferesh" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="submit" data-original-title="Refresh" onclick="return  listLoad()"> <span class="glyphicon glyphicon-refresh"></span></button>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="txtrun_date" class="col-sm-5 control-label">Run Date</label>
+                            <div class="col-sm-7">
+                                <input class="cusDate" data-role='datepicker' id="txtrun_date" data-checkdate-msg="Enter Valid Date" name="run_date" style="width:100%" onkeypress="return date_validate(event)" />
+                                <span data-for='valid' class='k-invalid-msg'></span>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div id="grid_deposit_generation"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    click_act_name = "home ";
+    click_ctrl_name = "home";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+
+</script>
+<script src="~/API_Scripts/FLDepositSlipGeneration_retrieveFLDeposit_Slip_Generation_APIClient.js"></script>
+<script src="~/API_Scripts/FLDepositSlipGeneration_saveFLDeposit_Slip_Generation_APIClient.js"></script>
+<script src="~/API_Scripts/retrieveFLDeposit_Slip_Generation_Model.js"></script>
+<script src="~/API_Scripts/saveFLDeposit_Slip_Generation_Model.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/API_Scripts/DepositSlipGeneration.js"></script>
+<script src="~/CommonScripts/report.js"></script>
+<script>
+    $(document).ready(function () {
+
+        master_applysubvention();
+        kendodate_format();
+
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#DepositGeneration_form");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+
+        Screen_Id = "FLCOLUPD";
+        load_master_code();
+
+        var data = [];
+        gridFLLoan();
+
+        $("#divUserRole16 #btnnew").hide();
+        $("#divUserRole16 #btnReport").hide();
+        $("#divUserRole16 #btnview").hide();
+
+        var combo_data = "";
+        $("#cmb_Deposit").empty();
+        combo_data = grid_comboScreen_mastercodes("QCD_FL_DepGen");
+        filter_combobox("cmb_Deposit", combo_data);
+
+        $("#cmb_Deposit").change(function () {
+            var c = $('#cmb_Deposit');
+            ddl = c.data('kendoComboBox').value();
+            if (ddl != "" && ddl != undefined && ddl == 'QCD_FL_TobeGen') {
+                $("#divUserRole16 #btnnew").show();
+                $("#divUserRole16 #btnReport").hide();
+                $("#divUserRole16 #btnview").hide();
+            }
+            if (ddl != "" && ddl != undefined && ddl == 'QCD_FL_AllGen') {
+                $("#divUserRole16 #btnnew").hide();
+                $("#divUserRole16 #btnReport").show();
+                $("#divUserRole16 #btnview").hide();
+            }
+        });
+
+        var container = $("#txtrun_date");
+        kendo.init(container);
+        container.kendoValidator({
+            rules: {
+                checkdate: function (input) {
+                    if (input.attr("data-role") == "datepicker") {
+                        var res = isDate(input.val());
+                        return res;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+            }
+        });
+    });
+</script>
+<script>
+    function load_master_code() {
+        debugger;
+        var data = {};
+        var context = WebAPIProxy.getContext();
+        data.userId = context.userId
+        data.orgnId = context.orgnId
+        data.locnId = context.locnId
+        data.localeId = context.localeId
+        data.screen_Id = "FLCOLUPD";
+        var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+    }
+</script>
+<script>
+    function gridFLLoan(data) {
+        try {
+            $("#grid_deposit_generation").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                bank_name: { type: "string" },
+                                bank_acc_type: { type: "string" },
+                                bank_acc_type_desc: { type: "string" },
+                                bank_acc_no: { type: "string" },
+                                bank_code: { type: "string" },
+                                bank_ifsc_code: { type: "string" },
+                                amount: { type: "string" },
+                                deposit_date: { type: "date" },
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+
+                height: 400,
+                groupable: false,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                    {
+                        field: "bank_name",
+                        title: "Bank Name",
+                        width: 100
+                    },
+                    {
+                        field: "bank_acc_type",
+                        title: "bank_acc_type",
+                        hidden: true
+                    },
+                    {
+                        field: "bank_acc_type_desc",
+                        title: "bank_acc_type_desc",
+                        hidden: true
+                    },
+                    {
+                        field: "bank_code",
+                        title: "bank_code",
+                        hidden: true
+                    },
+                    {
+                        field: "bank_ifsc_code",
+                        title: "bank_ifsc_code",
+                        hidden: true
+                    },
+                    {
+                        field: "branch_name",
+                        title: "branch_name",
+                        hidden: true
+                    },
+                    {
+                        field: "bank_acc_no",
+                        title: "Bank Account No",
+                        width: 100
+                    },
+                {
+                    field: "amount",
+                    title: "Amount",
+                    width: 100
+                },
+
+                  {
+                      field: "deposit_date",
+                      title: "Date Of Deposit",
+                      width: 100,
+                      format: "{0:dd/MM/yyyy}"
+                  },
+
+                {
+                    field: "mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }],
+                editable: true
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+<script>
+ function listLoad() {
+        try {
+            var mandatory_check = true;
+
+            var grid_validate_msg = "";
+
+            if ($('#cmb_Deposit').data("kendoComboBox").value() == "") {
+                grid_validate_msg += "Select List cannot be blank <br>";
+                mandatory_check = false;
+            }
+
+            if (mandatory_check == false) {
+                kendoAlert(grid_validate_msg);
+                return false;
+            }
+            var formval = form_Serialize("DepositGeneration_form");
+            var obj_val = JSON.parse(formval);           
+            var depst_sts = $('#cmb_Deposit').data("kendoComboBox").value();
+            if (obj_val != undefined) {
+                obj_val.select_option = depst_sts;
+                obj_val.run_date = getFormated_StringDate($("#txtrun_date").val());
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                retrieve_DepositSlipGeneration_details(data);
+            }
+
+            var colCount = $("#grid_deposit_generation").find('.k-grid-header colgroup > col').length;
+
+            //If There are no results place an indicator row
+            if ($("#grid_deposit_generation").data("kendoGrid").dataSource._view.length == 0) {
+                $("#grid_deposit_generation").find('.k-grid-content tbody')
+                     .append('<tr class="kendo-data-row"><td colspan="' +
+                         colCount +
+                    '" style="text-align:center; padding-top:10px;background-color:#AFE4FA"><b>No Records To Be Generated</b></td></tr>');
+            }
+           
+            return false;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>
+    function save() {
+        try {
+            if ($("#txtMode").val() == "S") {
+                $("#txtMode").val('U');
+            }
+            var formval = form_Serialize("DepositGeneration_form");
+            var obj_val = JSON.parse(formval);
+            if (obj_val.hasOwnProperty('run_date')) {
+                if (obj_val.run_date != '' && obj_val.run_date != undefined)
+                    obj_val.run_date = getFormated_StringDate(obj_val.run_date);
+            }
+
+            var grid_val = JSON.stringify($("#grid_deposit_generation").data().kendoGrid._data);
+            var Bind = {};
+            Bind = grid_val;
+            var result = JSON.parse(Bind);
+            //result.version_no = "0";
+            $.each(result, function (index, value) {
+                var dpst_date = value.deposit_date;
+                var date = kendo.parseDate(dpst_date);
+                value = kendo.toString(date, "MM/dd/yyyy");
+                result[index].deposit_date = value;
+
+                var row_id = value.bank_acc_type;
+                if (row_id == undefined) {
+                    result[index].bank_acc_type = "0";
+                }
+                var mode = result[index].mode_flag;
+                if (mode == "S") {
+                    result[index].mode_flag = "U";
+                }
+            });
+            var obj_grid_val = result;
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_val;
+            data.context.Detail = obj_grid_val;
+            save_DepositSlipGeneration_details(data);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>
+
+    function generate_DepositSlipGeneration_Header(res)
+    {
+        if (res != null) {
+            var rundate = res.run_date.split('/').reverse().join('/');
+            $("#txtrun_date").val(rundate);
+        }
+    }
+
+    function generate_DepositSlipGeneration_Detail(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                gridFLLoan(data);
+            }
+            else {
+                gridFLLoan([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+
+
+
+
+

@@ -1,0 +1,50 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Notes</title>
+    <link href="~/CSS/popupGrid.css" rel="stylesheet" />
+    <script src="~/CommonScripts/notes.js"></script>
+</head>
+<body>
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 id="nthdr" class="modal-title"></h4>
+    </div>
+    <div class="modal-header" style="height:49px">
+        <div class="col-sm-12" style="margin-top:-7px">
+            <div class="form-group" style="padding-bottom:10px">
+                <div class="col-sm-3">
+                    <button type="button" class="btn btn-sm btn-primary" id="btnSave" style="width:85px" onclick="savenotes()">
+                        Save
+                    </button>
+                </div>
+                <div class="col-sm-10">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="notes_body" class="modal-body" style="height:500px">
+        <input class="form-control input-sm" id="txtMenu" type="hidden" name="menu" />
+        <div class="col-sm-12" style="padding-bottom:10px">
+            Notes:
+            <textarea class="form-control input-sm" rows="10" id="txtNotes" style="width:100%" name="notes"></textarea>
+        </div>
+        <div id="notes_grid1" class="col-sm-12">
+            <div id="colorstrip">
+                <label style="font-weight: 600; font-size :13px">Notes History</label>
+            </div><div id="notes_history_grid"></div>
+        </div>
+    </div>
+</body>
+</html>
+<style>
+    .breadcrumb > li + li:before {
+        color: #E6E6E6;
+    }
+</style>

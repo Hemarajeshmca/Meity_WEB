@@ -1,0 +1,348 @@
+﻿@{
+    ViewBag.Form = "ESP - Revenue Report";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.min.js"></script>
+<form id="Revenue_form" class="form-horizontal" style="padding-top:0px">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:12px;padding-bottom:1px">
+            <div class="row">
+                <div class="col-sm-3" style="display:none">
+                    <div class=" form-group">
+                        <label for="status" class=" col-sm-3 control-label"> Status </label>
+                        <div class=" col-sm-7">
+                            <input type="text" name="status_code" id="cmb_status" data-role="filtercombo" style="width:100%">
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class=" form-group">
+                        <label for="aggregator_code" class=" col-sm-4 control-label"> Run Date </label>
+                        <div class=" col-sm-7">
+                            <input class="cusDate" type="date" data-role='datepicker' disabled id="txtValidity" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="run_date" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class=" form-group">
+                        <label for="aggregator_code" class=" col-sm-4 control-label"> From Date </label>
+                        <div class=" col-sm-7">
+                            <input class="cusDate" type="date" data-role='datepicker' id="txtValidity1" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="from_date" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class=" form-group">
+                        <label for="aggregator_code" class=" col-sm-4 control-label"> To Date </label>
+                        <div class=" col-sm-7">
+                            <input class="cusDate" type="date" data-role='datepicker' id="txtValidity2" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="to_date" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                        @*<button title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button" data-original-title="Refresh" onclick="mandatory()"> <span class="glyphicon glyphicon-refresh"></span></button>*@
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <button type="button" id="btnExport" style="background-color:skyblue" class="Export btn btn-sm btn-info"><span class="glyphicon glyphicon-export"></span></button>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="FLESPRevenueReport"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="~/API_Scripts/FLReveneureport.js"></script>
+<script src="~/API_Scripts/Revenue_Report_retrieveRevenueReport_APIClient.js"></script>
+<script src="~/API_Scripts/retrieveRevenueReport_Model.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script>
+    $(document).ready(function () {
+        kendodate_format();
+        master_Run();
+        $('#divUserRole35').show();
+        $('#divUserRole7').hide();
+        $(".create_item").hide();
+        $('#btnExport').hide();
+        gridrevenenu();
+
+        $("#form_design").css("padding-top", "50px"); 
+        Screen_Id = "FLESPREVREP";
+        permission = sec_Permission(Screen_Id);
+
+        $("#btn_runfunction").button().click(function () {
+            mandatory();
+        });
+
+        $("#btnExport").kendoButton({
+            click: function () {
+                $("#FLESPRevenueReport").data("kendoGrid").saveAsExcel();
+            }
+        })
+
+        $(".file_attach").attr("hdrtitle", "ESP - Revenue Report");
+        $(".notes").attr("hdrtitle", "ESP - Revenue Report");
+        $(".Export").attr("hdrtitle", "ESP Revenue Report");
+        $(".Export").attr("SubTreeId", "ESP - Revenue Report");
+        $("#lblForm_menuid").text("FLESPREVREP");
+
+        $("#txtValidity2").kendoDatePicker({
+            max: new Date(),// sets max date
+            format: "dd/MM/yyyy"
+        });
+        $("#txtValidity1").kendoDatePicker({
+            max: new Date(),// sets max date
+            format: "dd/MM/yyyy"
+        });
+       
+        var d = new Date();
+        var month = d.getMonth() + 1;
+        var day = d.getDate();
+        var output = (day < 10 ? '0' : '') + day+ '/' +
+            (month < 10 ? '0' : '') + month + '/' +
+            d.getFullYear();
+        $('#txtValidity').val(output);
+        $('#txtValidity1').attr('disabled', true);
+        $('#txtValidity2').attr('disabled', true);
+    });
+
+</script>
+
+<script>   
+    function gridrevenenu(data) {
+        try {
+            $("#FLESPRevenueReport").kendoGrid({
+                excel: {
+                    fileName: "ESP Revenue Report.xlsx",
+                    filterable: true,
+                    allPages: false
+                },
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                sl_no: { type: "number" },
+                                esp_name: { type: "string" },
+                                customer_name: { type: "string" },
+                                esp_code: { type: "string", },
+                                booking_id: { type: "string", },
+                                uom: { type: "string", },
+                                uom_desc: { type: "string", },
+                                fromdate: { type: "string", },
+                                todate: { type: "string", },
+                                duration: { type: "string", },
+                                amount: { type: "string", },
+                           
+                            }
+                        }
+                    }
+                },
+                
+                height: 400,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#FLESPRevenueReport').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },    
+  
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                       {
+                           field: "esp_details_rowid",
+                           title: "Sl. No",
+                           width: 100, hidden: true,
+                       },
+                        {
+                            field: "esp_code",
+                            title: "esp_code",
+                            hidden: true,
+                        },
+
+                    {
+                        field: "esp_name",
+                        title: "ESP Name",
+                        width: 100
+                    },
+
+                    {
+                        field: "customer_name",
+                        title: "CM Name",
+                        width: 100
+                    },
+                    {
+                        field: "booking_id",
+                        title: "Booking ID",
+                        width: 100,
+
+                    },
+                     {
+                         field: "uom",
+                         title: "uom",
+                         hidden: true,
+                     },
+
+                     {
+                         field: "uom_desc",
+                         title: "UOM",
+                         width: 80
+                     },
+
+                     {
+                         field: "fromdate",
+                         title: "From Date",
+                         width: 80
+                     },
+                     {
+                         field: "todate",
+                         title: "To Date",
+                         width: 80
+                     },
+                     {
+                         field: "duration",
+                         title: "Duration",
+                         width: 80,
+                         editor: function (container, options) {
+                             item_rate(container, options.field, '9', '2');
+                         },
+                         attributes: { style: "text-align:right;" }
+                     },
+                     {
+                         field: "amount",
+                         title: "Amount",
+                         width: 80,
+                         editor: function (container, options) {
+                             item_rate(container, options.field, '9', '2');
+                         },
+                         attributes: { style: "text-align:right;" }
+                     },
+                ],
+                editable: true,
+
+            });
+        }
+     catch (err) {
+         javascript_log4j_root(arguments.callee.name, err);
+
+     }
+        }
+  
+</script>
+<script>
+    function mandatory() {
+        try {
+            var mandatory_check = true;
+
+            var grid_validate_msg = "";
+            if ($("#txtValidity1").val() == "" && $("#txtValidity2").val() == "") {
+                grid_validate_msg += "Kindly Select Period - From & To Date </br>";
+                mandatory_check = false;
+            }
+            else {
+                if ($("#txtValidity1").val() == "") {
+                    grid_validate_msg += "Kindly Select From Date </br>";
+                    mandatory_check = false;
+                }
+                if ($("#txtValidity2").val() == "") {
+                    grid_validate_msg += "Kindly Select TO date </br>";
+                    mandatory_check = false;
+                }
+            }
+            if (mandatory_check == false) {
+                kendoAlert(grid_validate_msg);
+                return false;
+            }
+            else {
+                return listLoad();
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function listLoad() {
+        try {
+            var formval = form_Serialize("Revenue_form");
+            var obj_val = JSON.parse(formval);
+            obj_val.status_code = "0";
+            obj_val.from_date = $("#txtValidity1").val();
+            obj_val.to_date = $("#txtValidity2").val();
+
+            if (obj_val.hasOwnProperty('from_date')) {
+                if (obj_val.from_date != '')
+                    obj_val.from_date = getFormated_StringDate(obj_val.from_date);
+            }
+            if (obj_val.hasOwnProperty('to_date')) {
+                if (obj_val.to_date != '')
+                    obj_val.to_date = getFormated_StringDate(obj_val.to_date);
+            }
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Header = obj_val;
+            retrieve_Flrevenue_list(data);
+            var colCount = $("#FLESPRevenueReport").find('.k-grid-header colgroup > col').length;
+            if ($("#FLESPRevenueReport").data("kendoGrid").dataSource._view.length == 0) {
+                $("#FLESPRevenueReport").find('.k-grid-content tbody')
+                    .append('<tr class="kendo-data-row"><td colspan="' +
+                        colCount +
+                   '" style="text-align:center; padding-top:10px;background-color:#AFE4FA"><b> No Records Found</b></td></tr>');
+                $('#btnExport').hide();
+            } else {
+                $('#btnExport').show();
+            }
+            return false;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_Flrevenue_header(res) {
+        try {
+            if (res != null && getlocalStorage('btn_clk_val') != "Create") {               
+                var fromDate = res.period_from.split('/').reverse().join('/');
+                $("#txtValidity").val(from_date);
+                var toDate = res.period_to.split('/').reverse().join('/');
+                $("#txtValidity1").val(to_date);              
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function generate_Flrevenue_ESPDetails(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                gridrevenenu(data);
+            }
+            else {
+                gridrevenenu([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function excel() {
+        $("#FLESPRevenueReport").data("kendoGrid").saveAsExcel();
+    }
+</script>
+<style>
+    .k-grid-header th.k-header, .k-filter-row th {
+        text-align: left;
+    }
+</style>

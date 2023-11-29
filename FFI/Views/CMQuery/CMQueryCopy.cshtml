@@ -1,0 +1,217 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>CM Query</title>
+</head>
+<body>
+    <form class="form-horizontal" id="frm_cmquery" data-role="validator" novalidate="novalidate">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">CM Query</h4>
+        </div>
+        <div class="modal-header" style="height:49px">
+            <div class="col-sm-12" style="margin-top:-7px">
+                <div class="form-group" style="padding-bottom:10px">
+                    <div class="col-sm-3">
+                        <button type="button" class="btn btn-sm btn-primary" id="btnsave" onclick=save(); style="width:85px">
+                            Save
+                        </button>
+                        <button type="button" class="btn btn-sm btn-primary" id="btnClose" onclick=closeModal(); style="width:85px">
+                            Close
+                        </button>
+                    </div>
+                    
+                    <div class="col-sm-10">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-body" style="height:450px">
+            <div class="row" style="padding-bottom:15px;padding-left:20PX;padding-right:20PX">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class=" form-group">
+                            <label for="txt_cuscode" class=" col-sm-5 control-label">Customer Code</label>
+                            <div class=" col-sm-6">
+                                <input type="text" id="txt_cuscode" class="form-control" name="user_code" maxlength="50" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class=" form-group">
+                            <label for="txt_cusname" class=" col-sm-5 control-label">Customer Name</label>
+                            <div class=" col-sm-6">
+                                <input type="text" id="txt_cusname" class="form-control" maxlength="50" disabled>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class=" form-group">
+                            <label for="txt_qryid" class=" col-sm-5 control-label">Query ID</label>
+                            <div class=" col-sm-6">
+                                <input type="text" id="txt_qryid" name="chat_rowid" class="form-control" maxlength="50" disabled>
+                                <input type="hidden" id="txtMode" name="mode_flag" value="U">
+                                <input type="hidden" id="txtstatus_code" name="status_code">
+                                <input type="hidden" id="txtsubject" name="subject">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class=" form-group">
+                            <label for="txt_qrydate" class=" col-sm-5 control-label">Query Date</label>
+                            <div class=" col-sm-6">
+                                <input class="cusDate" type="date" data-role='datepicker' onkeypress="return date_validate(event)" id="txt_qrydate" data-checkdate-msg="Enter Valid Date" name="valid_until" style="width:100%" disabled />
+                                <span data-for='valid' class='k-invalid-msg'></span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class=" form-group">
+                            <label for="txt_qry" class=" col-sm-5 control-label">Query</label>
+                            <div class=" col-sm-12">
+                                <textarea id="txt_qry" rows="4" cols="50" name="user_query" class="form-control" disabled></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class=" form-group">
+                            <label for="txt_res" class=" col-sm-5 control-label">Response</label>
+                            <div class=" col-sm-12">
+                                <textarea id="txt_res" rows="4" cols="50" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+</html>
+<script src="~/API_Scripts/CMQuery.js"></script>
+<script src="~/API_Scripts/saveSupportTicket_Model.js"></script>
+<script src="~/API_Scripts/Support_Ticket_saveSupportTicket_APIClient.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<style>
+    .breadcrumb > li + li:before {
+        color: #E6E6E6;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        debugger;
+
+        $('#CMQUERY').on('hidden.bs.modal', function () {
+            $('#CMQUERY').removeData();
+        });
+        kendodate_format();
+
+        var cus_code = getlocalStorage('ls_pageList');
+        $("#customer_code").val(cus_code.customer_code);
+        console.log(cus_code);
+        if (cus_code == '' || cus_code == undefined) {
+            closeModal();
+            kendoAlert('Please Select any Query');
+        }
+        else
+        {
+            bind();
+        }
+
+        function closeModal() {
+            debugger;
+            $('#CMQUERY').modal("hide");
+        }
+    });
+
+    function closeModal() {
+        $('#CMQUERY').modal("hide");
+    }
+
+    function bind()
+    {
+        debugger;
+        var data = getlocalStorage('ls_pageList');
+        $("#txt_cuscode").val(data.customer_code);
+        $("#txt_cusname").val(data.customer_name);
+        $("#txt_qrydate").val(data.date_of_query);
+        $("#txt_qry").val(data.query_id);
+        $("#txt_qryid").val(data.cmquery_rowid);
+        $("#txt_res").val(data.Query_response);
+        $("#txtstatus_code").val(data.status_code);
+    }
+
+    function save() {
+        debugger;
+        if ($("#txt_res").val() == '' || $("#txt_res").val() == undefined)
+            {
+            kendoAlert("Response cannot be empty");
+        }
+        else
+        {
+            field_enable();
+            var formval = form_Serialize("frm_cmquery");
+            var obj_val = JSON.parse(formval);
+            obj_val.user_query = $("#txt_res").val();
+            var data_save = {};
+            data_save.context = WebAPIProxy.getContext();
+            data_save.context.Header = obj_val;
+            save_CMQuery_details(data_save);
+        }
+    }
+
+    function field_enable() {
+        debugger;
+        $("#txt_cuscode").removeAttr("readonly");
+        $("#txt_cuscode").prop("disabled", false);
+        $("#txt_qryid").removeAttr("readonly");
+        $("#txt_qryid").prop("disabled", false);
+        $("#txt_qry").removeAttr("readonly");
+        $("#txt_qry").prop("disabled", false);
+        $("#txtstatus_code").removeAttr("readonly");
+        $("#txtstatus_code").prop("disabled", false);
+        $("#txt_res").attr("readonly");
+        $("#txt_res").prop("disabled", false);
+    }
+    function field_disable() {
+        debugger;
+        $("#txt_cuscode").attr("readonly");
+        $("#txt_cuscode").prop("disabled", true);
+        $("#txt_qryid").attr("readonly");
+        $("#txt_qryid").prop("disabled", true);
+        $("#txt_qry").attr("readonly");
+        $("#txt_qry").prop("disabled", true);
+        $("#txtstatus_code").attr("readonly");
+        $("#txtstatus_code").prop("disabled", true);
+        $("#txt_res").attr("readonly");
+        $("#txt_res").prop("disabled", true);
+    }
+
+    function get_CMQuery_details()
+    {
+        field_disable();
+    }
+</script>
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>
+

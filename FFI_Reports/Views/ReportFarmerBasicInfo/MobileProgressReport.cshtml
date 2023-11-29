@@ -1,0 +1,685 @@
+﻿
+@{
+    ViewBag.Form = "ADS Mobile Progress Report";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+<style>
+    a.k-button.k-button-icontext.k-grid-Edit, a.k-button.k-button-icontext.k-grid-View, a.k-button.k-button-icontext.k-grid-Delete, a.k-button.k-button-icontext.k-grid-edit {
+        background-color: #00c0ef;
+        border-color: #00c0ef;
+    }
+
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.min.js"></script>
+<form id="frm_mobileprogressreport" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px;padding-top:12px;">
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            @*<label for="txt_fromdate" class="col-sm-4 control-label required">From Date</label>
+                            <div class="col-sm-8">
+                                <input class="cusDate" data-role='datepicker' id="txt_fromdate" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="From_date" style="width:100%" />
+                                <span data-for='valid' class='k-invalid-msg'></span>
+                            </div>
+                        </div>*@
+                        @*<div class="col-sm-3">
+                            <label for="txt_todate" class="col-sm-3 control-label required">To Date</label>
+                            <div class="col-sm-8">
+                                <input class="cusDate" data-role='datepicker' id="txt_todate" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="To_date" style="width:100%" />
+                                <span data-for='valid' class='k-invalid-msg'></span>
+                            </div>
+                        </div>*@
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <button id="refresh" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button"
+                                        data-original-title="Refresh" onclick="listRefresh()" style="margin-left:16px;">
+                                    GetReport
+                                </button>
+                                <label id="lblprog" style="color:red;display:none"> In Progress..Please Wait </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pull-right">
+                        <div>
+                            @*<button id="clear" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button"
+                                    data-original-title="clear" onclick="listclear()">
+                                clear
+                            </button>*@
+                            @*<button id="btnExport" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button" data-original-title="Export" style="background-color: #00c0ef ; border-color: #00acd6" ;><span class="fa fa-file-excel-o"></span></button>*@
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div id="gd_mobileprogress">
+                                <div id="mobileprogress_grid"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script src="~/CommonScripts/Common_func.js"></script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+<script src="~/CommonScripts/ExportExcel.js"></script>
+
+<script>
+    click_act_name = "home ";
+    click_ctrl_name = "home";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+
+</script>
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+        debugger;
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#frm_mobileprogressreport");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        $("#Topsubheader").show();
+        $("#bottomFooter").show();
+        $("#bottom_menus").hide();
+        $("#btndiv").show();
+        $("#frmlayerdiv").hide();
+        $("#divCreate").hide();
+        $("#divEdit").hide();
+        $("#divView").show();
+        $("#DocStat").show();
+        $(".edtviw_item").show();
+        $(".create_item").hide();
+
+        $(".Export").attr("hdrtitle", "Mobile Progress Report");
+        $(".Export").attr("SubTreeId", "FARMSOWINGDET");
+
+        Screen_Id = "MPR";
+        permission = sec_Permission(Screen_Id);
+        page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+
+    //    listgrid([]);
+
+        $("#btnExport").kendoButton({
+            click: function () {
+                debugger;
+                ExportButtonClick();
+            }
+        })
+
+
+        //Kendo Date Picker
+        //var date = new Date();
+        //var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+        //var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+        ////kendo datepicker
+        //$("#txt_fromdate").kendoDatePicker({
+        //    min: firstDay,
+        //    max: lastDay,
+        //    format: "dd/MM/yyyy"
+        //});
+
+        //$("#txt_todate").kendoDatePicker({
+        //    min: firstDay,
+        //    max: lastDay,
+        //    format: "dd/MM/yyyy"
+        //});
+
+
+
+        // Alldropdownload();
+    });
+
+    //$("#txt_fromdate").change(function () {
+    //    listgrid([]);
+    //});
+    //$("#txt_todate").change(function () {
+    //    listgrid([]);
+    //});
+
+
+
+    $(function () {
+        $('#refresh').click(function () {
+            debugger
+            //if ($("#txt_fromdate").val() != "" || $("#txt_todate").val() != "") {
+            //    var from_date1 = $("#txt_fromdate").val();
+            //    var to_date1 = $("#txt_todate").val();
+            //    var parts = from_date1.split('/');
+            //    var from_date = parts[2] + '-' + parts[1] + '-' + parts[0];
+
+            //    var parts1 = to_date1.split('/');
+            //    var to_date = parts1[2] + '-' + parts1[1] + '-' + parts1[0];
+            //    if (to_date >= from_date) {
+
+                    $('#refresh').hide();
+                    $('#lblprog').show();
+
+
+                    $.ajax({
+                        type: "POST",
+                       // data: '{fromdate: "' + from_date + '",todate:"' + to_date + '"}',
+                        data: {},
+                        url: "/ReportFarmerBasicInfo/getmobilereport",
+                        dataType: "json",
+                        contentType: 'application/json; charset=utf-8',
+
+                        success: function (Data1) {
+                            debugger;
+                            $('#lblprog').hide();
+                            $('#refresh').show();
+                            $("#exportExcel").show();
+                            var columns = [];
+                            var chkval = Data1;
+                            var arr = [];
+                            $.each(chkval, function (i, e) {
+                                debugger;
+                                $.each(e, function (key, val) {
+                                    arr.push(val);
+                                });
+
+                            });
+                            if (arr == "No Records Found!" || arr == "Error in Data!") {
+                                alert("No Records found..!");
+                                return false;
+                            }
+                            var data = Data1;
+                            // var data2 = JSON.parse(result.Data2);
+                            var i = 0;
+
+                            var entryIndex = "entries[" + i + "]";
+                            for (var key in data[0]) {
+                                debugger;
+                                var propType = typeof data[0][key];
+
+                                if (key == "Ko Id") {
+                                    columns.push({
+                                        field: entryIndex,
+                                        title: key,
+                                        type: propType,
+                                        width: 200,
+
+                                    });
+                                } else
+                                    if (key != "") {
+                                        columns.push({
+                                            field: entryIndex,
+                                            title: key,
+                                            type: propType,
+                                            width: 200,
+                                            //attributes: { style: "text-align: right;" }
+                                        });
+                                    }
+                                i = i + 1;
+                                entryIndex = "entries[" + i + "]";
+
+                            }
+                            debugger;
+
+                            var rows = [];
+                            var data1 = Data1;
+
+                            $.each(data1, function (i, e) {
+                                var entryArray = [];
+                                $.each(e, function (key, val) {
+                                    entryArray.push(val);
+                                });
+                                rows.push(kendo.observable({
+                                    entries: entryArray
+                                }));
+
+
+                            });
+
+                            var viewModel = kendo.observable({
+                                gridRows: rows
+                                
+                            });
+
+                            var configuration = {
+                                //dataBound: onDataBound,
+                                height: 450,
+                                navigatable: true,
+                                groupable: false,
+                                editable: false,
+                                sortable: true,
+                                scrollable: true,
+                                filterable: true,
+                                pagable: true,
+                                pageSize: 5,
+                                resizable: true,
+                                persistSelection: true,
+                                selectable: "false",
+                                columns: columns,
+                                toolbar: ["excel"],
+                                excel: {
+                                    fileName: "ADS MobileProgressReport.xlsx",
+                                    filterable: true,
+                                    allPages: false
+                                },
+                                rows: viewModel
+                            };
+
+                            $("#example").remove();
+                            $('#mobileprogress_grid').append('<div id="example" style="position:relative" class="k-content"><table id="grid"  data-bind="source: gridRows" style="position:relative;overflow:scroll;width:100%"></table></div>');
+                            var timeEditGrid = $("#grid").kendoGrid(configuration).data("kendoGrid");
+                            kendo.bind($("#grid"), viewModel);
+
+                        },
+
+                       error: function (er) {
+                            $('#lblprog').hide();
+                            $('#refresh').show();
+                            alert(er)
+                            console.log(er)
+                        }
+                    });
+                //}
+                //else {
+                //    kendoAlert('Please Select Correct Date');
+                //}
+
+            //}
+            //else {
+            //    kendoAlert('Please Select Any One Field');
+            //}
+
+            return false;
+        });
+    });
+
+
+
+    //test purpose venkat added 12-02-2021
+
+
+    // add the grid options here 
+    function populateGrid(response) {
+        debugger;
+        try {
+            var columns = generateColumns(response);
+            var gridOptions = {
+                dataSource: {
+                    transport: {
+                        read: function (options) {
+                            options.success(response);
+                        }
+                    },
+                    pageSize: 10,
+                    page: 1
+                },
+
+                sortable: true,
+                resizable: true,
+                selectable: true,
+                scrollable: true,
+                navigatable: true,
+                columns: columns,
+                editable: true
+            };
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+        
+        // reuse the same grid, swapping its options as needed
+        var grid = $("#mobileprogress_grid").data("kendoGrid");
+        if (grid) {
+            grid.setOptions(gridOptions);
+        } else {
+            $("#mobileprogress_grid").kendoGrid(gridOptions);
+        }
+    }
+
+
+    function generateColumns(response) {
+        debugger;
+        var columnNames = Object.keys(response[0]);
+        return columnNames.map(function (name) {
+            debugger;
+           // var isIdColumn = name.indexOf("ID") > -1 || name.indexOf("Id") > -1;
+            var isIdColumn = false;
+            return {
+                field: name,
+                width: isIdColumn ? 50 : 180,
+                title: isIdColumn ? "Id" : name
+            };
+        })
+    }
+
+
+
+
+
+
+
+</script>
+<script>
+    function load_master_code() {
+        try {
+            var data = {};
+           // data.screen_Id = "MPR";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            debugger;
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function ExportButtonClick() {
+        debugger
+        var grid = $("#mobileprogress_grid").data("kendoGrid");
+        if (grid.dataSource.total() == 0) {
+            kendoAlert('No records available in the Grid to Export!!!');
+        }
+        else {
+            grid.bind("excelExport", function (e) {
+                debugger;
+                e.workbook.fileName = "MobileProgressReport.xlsx";
+                var rows1 = e.workbook.sheets[0];
+
+                var sheet = e.workbook.sheets[0];
+                var gd = $("#mobileprogress_grid").data("kendoGrid");
+                var gd_fi = $("#mobileprogress_grid").data("kendoGrid").dataSource;
+                var filters = gd_fi.filter();
+                var allData = gd_fi.data();
+                var query = new kendo.data.Query(allData);
+                var data = query.filter(filters).data;
+                var data_tt = gd.dataSource.data();
+                var sheet = e.workbook.sheets[0];
+                var gridColumns = gd.columns;
+
+                var columnCells = [];
+                for (var c = 0; c < gridColumns.length; c++) {
+                    var fieldName = gd.columns[c].hidden;
+                    if (typeof (fieldName) === "undefined") {
+                        var cellValue = gridColumns[c].title ? gridColumns[c].title : gridColumns[c].field;
+                        columnCells.push({ value: cellValue, autoWidth: true, background: "#7a7a7a", color: "#fff" });
+                    }
+                }
+                var rows = [{ cells: columnCells, type: "header" }];
+                for (var i = 0; i < data.length; i++) {
+                    var rowCells = [];
+                    for (var j = 0; j < gridColumns.length; j++) {
+
+                        var fieldName = gd.columns[j].hidden;
+                        if (typeof (fieldName) === "undefined") {
+                            var cellValue = data[i][gridColumns[j].field];
+                            rowCells.push({ value: cellValue });
+                        }
+                    }
+                    rows.push({ cells: rowCells, type: "data" });
+                }
+
+                sheet.rows = rows;
+
+            });
+
+            grid.saveAsExcel();
+            kendoAlert('Exported Sucessfully');
+        }
+    }
+
+</script>
+
+
+<script>
+    function listpageloadfetch() {
+        try {
+
+            var formval = form_Serialize("frm_mobileprogressreport");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_Fromvalue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_Fromvalue = ".";
+            }
+            obj_val.FilterBy_Tovalue = ".";
+            if (obj_val.status_option == "" || obj_val.status_option == undefined) {
+                obj_val.status_option = "V";
+            }
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Filter = obj_val;
+            var colCount = $("#mobileprogress_grid").find('.k-grid-header colgroup > col').length;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+
+    //Existing code 
+    //var status_Priority = [];
+    // function listgrid(data) {
+    //    try {
+    //        $.each(data, function (index, value) {
+    //            var flag = false;
+    //            $.each(status_Priority, function (sindex, svalue) {
+    //                if (svalue == value.status_desc) {
+    //                    flag = true;
+    //                }
+    //            });
+    //            if (flag == false) {
+    //                status_Priority.push(value.status_desc);
+    //            }
+    //        });
+    //        $("#mobileprogress_grid").kendoGrid({
+    //            dataSource: {
+    //                data: data,
+    //                pageSize: 20,
+    //                //schema: {
+    //                //    model: {
+    //                //        fields: {
+    //                //            SowingYear: { type: "string" },
+    //                //            fponame: {type:"string"},
+    //                //            FarmerCode: { type: "string" },
+    //                //            FarmerName: { type: "string" },
+    //                //            district: { type: "string" },
+    //                //            taluk: { type: "string" },
+    //                //            grampanchayat: { type: "string" },
+    //                //            Farmervillage: {type:"string"},
+    //                //            Season: { type: "string" },
+    //                //            CropType: { type: "string" },
+    //                //            CropName: { type: "string" },
+    //                //            CropVariety: { type: "string" },
+    //                //            SeedQuantity: { type: "string" },
+    //                //            LandArea: { type: "string" },
+    //                //            Yield: { type: "string" },
+    //                //            expectedsurplus: {type:"string"},
+    //                //            Pricepaid: { type: "string" },
+    //                //        }
+    //                //    }
+    //                //},
+    //            },
+
+    //            height: 300,
+    //            sortable: true,
+    //            selectable: true,
+
+    //            pageable: {
+    //                refresh: false,
+    //                pageSizes: true,
+    //                buttonCount: 5
+    //            },
+    //            navigatable: true,
+    //            groupable: false,
+    //            filterable: true,
+    //            /* pageable: {
+    //                 refresh: false,
+    //                 pageSizes: true,
+    //                 previousNext: true,
+    //                 buttonCount: 8,
+    //                 pageSize: 20,
+    //                 refresh: true,
+    //                 pageSizes: true
+    //             },*/
+
+    //            columns: ""
+    //            //columns: [
+
+    //            //    {
+    //            //        field: "FarmerCode",
+    //            //        title: "Farmer Code",
+    //            //        width: 160,
+    //            //        filterable: false
+    //            //    },
+
+    //            //    {
+    //            //        field: "FarmerName",
+    //            //        title: "Farmer Name",
+    //            //        width: 100,
+    //            //        filterable: false
+    //            //    },
+    //            //    {
+    //            //        field: "SurName",
+    //            //        title: "Sur Name",
+    //            //        width: 80,
+    //            //        filterable: false
+    //            //    },
+    //            //    {
+    //            //        field: "FatherName",
+    //            //        title: "Father Name",
+    //            //        width: 130,
+    //            //        filterable: false
+    //            //    },
+
+    //            //    {
+    //            //        field: "FarmerDob",
+    //            //        title: "Farmer Dob",
+    //            //        width: 100,
+    //            //        filterable: false
+
+    //            //    },
+
+    //            //    {
+    //            //        field: "Country",
+    //            //        title: "Country",
+    //            //        width: 100,
+    //            //        filterable: false
+
+    //            //    },
+    //            //    {
+    //            //        field: "State",
+    //            //        title: "State",
+    //            //        width: 100
+
+    //            //    },
+    //            //    {
+    //            //        field: "District",
+    //            //        title: "District",
+    //            //        width: 100
+
+    //            //    },
+    //            //    {
+    //            //        field: "Taluk",
+    //            //        title: "Taluk",
+    //            //        width: 130,
+
+    //            //    },
+    //            //    {
+    //            //        field: "GramPanchayat",
+    //            //        title: "Gram Panchayat",
+    //            //        width: 130
+
+    //            //    },
+    //            //    {
+    //            //        field: "Village",
+    //            //        title: "FarmerVillage",
+    //            //        width: 130
+
+    //            //    },
+
+    //            //    {
+    //            //        field: "PinCode",
+    //            //        title: "PinCode",
+    //            //        width: 130
+
+    //            //    },
+    //            //    {
+    //            //        field: "Gender",
+    //            //        title: "Gender",
+    //            //        width: 130
+
+    //            //    },
+
+    //            //    {
+    //            //        field: "MobileNo",
+    //            //        title: "MobileNo",
+    //            //        width: 130
+
+    //            //    },
+
+    //            //    {
+    //            //        field: "CreatedDate",
+    //            //        title: "Created Date",
+    //            //        width: 130,
+    //            //        filterable: false
+
+    //            //    },
+
+    //            //    {
+    //            //        field: "LrpName",
+    //            //        title: "LrpName",
+    //            //        width: 130
+
+    //            //    }
+    //            //],
+    //           // editable: false,
+
+    //        });
+    //    }
+    //    catch (err) {
+    //        alert(err);
+    //    }
+    //}
+
+    
+
+
+</script>
+
+<script>
+
+    function listRefresh() {
+        debugger;
+        try {
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function listclear() {
+        try {
+            listgrid([]);
+            $("#cmb_dist").empty;
+            $("#cmb_fpocode").empty;
+            $("#cmb_village").empty;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+
+<style>
+    .k-footerTemplate {
+        text-align: right;
+    }
+</style>
+

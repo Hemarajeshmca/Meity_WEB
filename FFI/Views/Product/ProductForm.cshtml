@@ -1,0 +1,810 @@
+﻿@{
+    ViewBag.Form = "Product";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+
+<form id="Product_form" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:20px;padding-bottom:20px">
+            <div class="row" style="padding-bottom:1px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txt_mobile" class=" col-sm-5 control-label required">IC Name</label>
+                        <div class=" col-sm-6">
+                            <input id="cmb_filter" name="orgid" style="width: 100%" data-role="filtercombo">
+                            <input id="txtagg_code" type="hidden" />
+                            <input id="txtic_code" type="hidden" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label for="txt_produ_cate" class=" col-sm-5 control-label required">Product Category</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_produ_cate" name="" class="form-control" maxlength="50">
+                        </div>
+                        <div id="pay_help1">
+                            <a class="HelpWindow fa fa-search fa-lg" role="button" id="pay_help1" data-toggle="modal" href="../HelpFilter/HelpFilter" hdrtitle="Product Category" searchid="S34" data-target="#HelpModal" onclick=transfer(this,"form","","form_control"); title="Search" style="font-size: 19px; margin-left: 0px; margin-top: 10px;"></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_produ_sub_cate" class=" col-sm-5 control-label">Product Sub-Category</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_produ_sub_cate" name="In_product_subcatg_code" class="form-control" maxlength="50" disabled>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:5px">
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_pro_cde" class=" col-sm-5 control-label required">Product Code</label>
+                        <div class=" col-sm-6">
+                            <input type="text"  id="txt_pro_cde" name="In_product_code" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_pro_name" class=" col-sm-5 control-label required">Product Name</label>
+                        <div class=" col-sm-6">
+                            <input type="text"  id="txt_pro_name" name="In_product_name" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label for="txt_uom" class=" col-sm-5 control-label required">UOM</label>
+                        <div class=" col-sm-6" id="dropdwn">
+                            <input id="txt_uom" name="In_txt_uom" style="width: 100%" data-role="filtercombo">
+                        </div>
+                    </div>
+                </div>
+                
+
+            </div>
+            <div class="row" style="padding-bottom:5px">
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label class=" col-sm-5 control-label required">GST Applicable</label>
+                        <div class=" col-sm-6">
+                            <input type="radio" id="gstrate" name="In_gstrate" value="Yes" onclick="WITHGSTRATE()" style="font-weight: bold;" /> YES
+                            <input type="radio" id="nongstrate" name="In_gstrate" value="No" onclick="WITHOUTGSTRATE()" style="margin-left: 29px;font-weight: bold;" /> NO
+                            </div>
+                        </div>
+                    </div>
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label for="txt_hsn_code" class=" col-sm-5 control-label required">HSN Code</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_hsn_code" name="In_hsn_code" class="form-control" maxlength="50">
+                        </div>
+                        <div id="pay_help1">
+                            <a class="HelpWindow fa fa-search fa-lg" role="button" id="pay_help2" data-toggle="modal" href="../HelpFilter/HelpFilter" hdrtitle="HSN Code" searchid="S119" data-target="#HelpModal" onclick=transfer(this,"form","","form_control1"); title="Search" style="font-size: 19px; margin-left: 0px; margin-top: 10px;"></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_produ_hsn_desc" class=" col-sm-5 control-label">HSN Description</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_produ_hsn_desc" name="In_hsn_description" class="form-control" maxlength="50" disabled>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:5px">
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_eff_from" class=" col-sm-5 control-label">Effective From</label>
+                        <div class=" col-sm-6">
+                            <input class="cusDate" type="date" data-role='datepicker' onkeypress="return date_validate(event)" id="txtValidity" data-checkdate-msg="Enter Valid Date" name="In_effective_from" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label for="txt_eff_to" class=" col-sm-5 control-label">Effective To</label>
+                        <div class=" col-sm-6">
+                            <input class="cusDate" type="date" data-role='datepicker' onkeypress="return date_validate(event)" id="txtValidity1" data-checkdate-msg="Enter Valid Date" name="In_effective_to" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                            <input type="hidden" id="combo_mst_state" class="form-control" style="width:100%" data-toggle="tooltip" data-placement="bottom" data-role="filtercombo">
+                            <input type="hidden" id="txt_Prcccode" name="In_product_catg_code" />
+                            <input type="hidden" id="txt_proscode" name="In_product_subcatg_code" />
+                            <input type="hidden" id="txt_hsncode" />
+                            <input type="hidden" id="txt_curprd" name="In_current_product" />
+                            <input type="hidden" id="txt_prdrowid" name="IOU_product_rowid" />
+                            <input type="hidden" id="txt_taxrate" name="In_taxrate_rowid" />
+                            <input type="hidden" id="txt_orgcode" name="In_orgn_code" />
+                            <input type="hidden" id="txt_iccode" name="In_ic_code" />
+                            <input type="hidden" id="txt_modeflag" name="In_mode_flag" />
+                            <input type="hidden" id="txt_base_price" name="In_base_price">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_curr_qty" class=" col-sm-5 control-label required">Current Quantity</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_curr_qty" name="In_current_qty" class="form-control" maxlength="50" value="0" disabled>
+                        </div>
+                    </div>
+                </div>
+               
+
+
+            </div>
+            <div class="row" style="padding-bottom:5px">
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label class=" col-sm-5 control-label required">Value Added Product</label>
+                        <div class=" col-sm-6">
+                            <input type="radio" id="valuewith" name="In_valuewithtax" value="Yes"  style="font-weight: bold;" /> YES
+                            <input type="radio" id="valuewithout" name="In_valuewithtax" value="No"  style="margin-left: 29px;font-weight: bold;" /> NO
+                        </div>
+                        </div>
+                    </div>
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label class=" col-sm-5 control-label required">Selling Rate With Tax</label>
+                            <input type="radio" id="productwith" name="In_productwithtax" value="Yes" onclick="EnableDisablewithTax()" style="margin-left:4%; font-weight: bold;" /> YES
+                            <input type="radio" id="productwithout" name="In_productwithtax" value="No" onclick="EnableDisablewithoutTax()" style="margin-left: 52px;font-weight: bold;" /> NO
+                    </div>
+                </div>
+
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_base_price_Tax" class=" col-sm-5 control-label ">Selling Rate (Incl.Tax)</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_base_price_IT" name="In_base_price_intax" class="form-control" maxlength="50" onchange="BasePriceIT()">
+                        </div>
+                    </div>
+                </div>
+              </div>
+            <div class="row" style="padding-bottom:5px">
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_base_price" class=" col-sm-5 control-label ">Selling Rate (Excl.Tax)</label>
+                        <div class=" col-sm-6">
+
+                            <input type="text" id="txt_base_price_ET" name="In_base_price_extax" class="form-control" maxlength="50">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+</form>
+<script src="~/CommonScripts/Common_func.js"></script>
+<script src="~/API_Scripts/product_master_getProduct_APIClient.js"></script>
+<script src="~/API_Scripts/product_master_getProductList_APIClient.js"></script>
+<script src="~/API_Scripts/product_master_saveProduct_APIClient.js"></script>
+<script src="~/API_Scripts/getProduct_Model.js"></script>
+<script src="~/API_Scripts/getProductList_Model.js"></script>
+<script src="~/API_Scripts/saveProduct_Model.js"></script>
+<script src="~/API_Scripts/ProductMaster.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script>
+    $(document).ready(function () {
+        debugger;
+        $("#common_id").hide();
+        $("#txtcommon_id").hide();
+
+        kendodate_format();
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#Product_form");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+
+        Screen_Id = "ICDPRDT";
+        permission = sec_Permission(Screen_Id);
+        load_master_code();
+
+        $(".file_attach").attr("hdrtitle", "Product Master");
+        $(".notes").attr("hdrtitle", "Product Master");
+        $("#lblForm_menuid").text("ICDPRDT");
+
+
+
+        var uom_type = "";
+        $("#txt_uom").empty();
+        uom_type = grid_comboScreen_mastercodes("QCD_UOM_TYPE");
+        filter_combobox("txt_uom", uom_type);
+        var org = getlocalStorage('org_id');
+        $('#txtagg_code').val(org);
+        var state_code = getlocalStorage("fpo_state_code");
+        console.log(state_code);
+        $("#combo_mst_state").val(state_code);
+       
+        if (getlocalStorage('btn_clk_val') == "Create") {
+            $('#divCreate #review').hide();
+            $("#bottom_menus").hide();
+            $("#DocStat").val("New");
+            $("#txt_modeflag").val("I");
+            combo();
+        }
+
+        else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
+            debugger;
+            $("#bottom_menus").hide();
+            $('#divEdit #reviewEd').hide();
+            $('#divEdit #deactivate').hide();
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                $("#txt_produ_sub_cate").removeAttr("disabled");
+                $("#txt_produ_hsn_desc").removeAttr("disabled");
+                var formval = form_Serialize("Product_form");
+                $("#txt_produ_sub_cate").attr("disabled", "disabled");
+                $("#txt_produ_hsn_desc").attr("disabled", "disabled");
+                var obj_val = JSON.parse(formval);
+                if (data != undefined) {
+                    obj_val.product_rowid = data.Out_product_rowid;
+                    $('#txt_prdrowid').val(data.Out_product_rowid);
+                }
+                var data = {};
+                data.context = getContext();
+                data.context.Detail = obj_val;
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, product_rowid : Context.Detail.product_rowid  }),
+                    url: "/Product/Productfetch",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        if (response.context != null) {
+                            generate_productmaster_detail(response.context.Detail);
+                        }
+                        else {
+
+                        }
+                    },
+                    error: function (er) {
+                        alert(er)
+                        console.log(er)
+                    }
+                });
+            }
+            $("#txt_modeflag").val("U");
+            field_enable();
+        }
+
+        $("#txtValidity").kendoDatePicker({
+            max: new Date(),
+            format: "dd/MM/yyyy"
+        });
+
+        $("#txtValidity").attr("disabled", "disabled");
+        $("#txtValidity1").kendoDatePicker({
+            min: new Date(),
+            format: "dd/MM/yyyy"
+        });
+
+        $("#txtValidity1").attr("disabled", "disabled");
+        function field_enable() {
+            if (permission.auth == true || getlocalStorage('btn_clk_val') == "View") {
+                $("#pay_help1").hide();
+                $("#pay_help2").hide();
+                $('#txt_produ_cate').prop("disabled", true);
+                $('#txt_hsn_code').prop("disabled", true);
+                $('#txt_curr_qty').prop("disabled", true);
+                $('#txtValidity').prop("disabled", true);
+                $('#txtValidity1').prop("disabled", true);
+                $("#txt_pro_cde").prop("disabled", true);
+                $("#txt_pro_name").prop("disabled", true);
+                $("#txt_base_price").prop("disabled", true);
+                $("#txt_base_price_ET").prop("disabled", true);
+                $("#txt_base_price_IT").prop("disabled", true);
+                $("#dropdwn option").attr("disabled", "true");
+                var dropdwns = $("#txt_uom").data("kendoComboBox");
+                dropdwns.readonly();
+            }
+        }
+
+        $('#HelpModal').on('hide.bs.modal', function (e) {
+            if ($("#txt_member").val() != undefined && $("#txt_member").val() != "") {
+                fetch_nominee();
+            }
+        });
+
+        $('#txt_base_price').keypress(function (event) {
+            var $this = $(this);
+            if ((event.which != 46 || $this.val().indexOf('.') != -1) &&
+               ((event.which < 48 || event.which > 57) &&
+               (event.which != 0 && event.which != 8))) {
+                event.preventDefault();
+            }
+
+            var text = $(this).val();
+            if (text.indexOf('.') != -1) {
+                if ((text.indexOf('.') != -1) &&
+               (text.substring(text.indexOf('.')).length > 3) &&
+               (event.which != 0 && event.which != 8) &&
+               ($(this)[0].selectionStart >= text.length - 3)) {
+                    event.preventDefault();
+                }
+            }
+            else {
+                if ($this.val().length > 17) {
+                    if (event.which != 46) {
+                        event.preventDefault();
+                    }
+                }
+            }
+
+        });
+        $('#txt_base_price').bind("paste", function (e) {
+            var text = e.originalEvent.clipboardData.getData('Text');
+            if ($.isNumeric(text)) {
+                if ((text.substring(text.indexOf('.')).length > 3) && (text.indexOf('.') > -1)) {
+                    e.preventDefault();
+                    $(this).val(text.substring(0, text.indexOf('.') + 3));
+                }
+            }
+            else {
+                e.preventDefault();
+            }
+        });
+
+        $('#txt_pro_cde').keypress(function (e) {
+            var regex = new RegExp(/^[a-zA-Z0-9\s]+$/);
+            var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+            if (regex.test(str)) {
+                return true;
+            }
+            else {
+                e.preventDefault();
+                return false;
+            }
+        });
+        $('#txt_pro_name').keypress(function (e) {
+            var regex = new RegExp(/^[a-zA-Z0-9\s]+$/);
+            var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+            if (regex.test(str)) {
+                return true;
+            }
+            else {
+                e.preventDefault();
+                return false;
+            }
+        });
+    });
+    function Taxload() {
+        var selling_price_IT = $("#txt_base_price_IT").val();
+           var HSNCODE = $("#txt_hsn_code").val();
+           var HSN = "QCD_UN_" + HSNCODE;
+           console.log(HSN);
+           var state_code = getlocalStorage("fpo_state_code");
+           console.log(state_code);
+           var data1 = { hsn_code: HSN, state_code: state_code}
+            $.ajax({
+            url: '@Url.Action("GetProductTax", "Product")',
+            type: "post",
+            contentType: 'application/x-www-form-urlencoded',
+            data: data1,
+            success: function (response1) {
+            debugger;
+                var url_path = JSON.parse(response1);
+                var GST_RATE = url_path[0].CGST + url_path[0].SGST;
+                var Rate = selling_price_IT - (selling_price_IT * (GST_RATE / 100));
+                var Base_Price= Math.round(Rate);
+                $("#txt_base_price_ET").val(Base_Price);
+                console.log($("#txt_base_price_ET").val(Base_Price));
+            },
+                error: function (er)
+                {
+                alert(er)
+                console.log(er)
+                }
+            });
+    }
+    function EnableDisablewithTax() {
+        debugger;
+        if ($('input[name=In_gstrate]:checked').val() == "No") {
+            kendoAlert("please check with GST Rate(No)!");
+            $('#productwithout').prop('checked', true);
+        }
+        var PRDTX = document.getElementById("productwith");
+        var txtbasepriceIT = document.getElementById("txt_base_price_IT");
+        var txtbasepriceET = document.getElementById("txt_base_price_ET");
+        txtbasepriceIT.disabled = PRDTX.checked ? false : true;
+        if (!txtbasepriceIT.disabled) {
+            txtbasepriceIT.value = "";
+            txtbasepriceIT.focus();
+
+        }
+        txtbasepriceET.disabled = PRDTX.checked ? true : false;
+        txtbasepriceET.value = "0.00";
+    }
+    function EnableDisablewithoutTax() {
+        debugger;
+        var PRDWOTX = document.getElementById("productwithout");
+        var txtbasepriceIT = document.getElementById("txt_base_price_IT");
+        var txtbasepriceET = document.getElementById("txt_base_price_ET");
+        txtbasepriceET.disabled = PRDWOTX.checked ? false : true;
+        if (!txtbasepriceET.disabled) {
+            txtbasepriceET.value = "";
+            txtbasepriceET.focus();
+
+        }
+        txtbasepriceIT.disabled = PRDWOTX.checked ? true : false;
+        txtbasepriceIT.value = "0.00";
+    }
+    function WITHGSTRATE() {
+        debugger;
+        $("#pay_help2").show();
+        $("#txt_hsn_code").val('');
+        $("#txt_produ_hsn_desc").val('');
+        $('#productwith').prop('checked', false);
+        $('#productwithout').prop('checked', false);
+    }
+    function WITHOUTGSTRATE() {
+        debugger;
+        var GstRate = document.getElementById("nongstrate");
+        var txtbasepriceET = document.getElementById("txt_base_price_ET");
+        var hsn_code = "12";
+        var hsn_desc = "SEED";
+        $("#pay_help2").hide();
+        $("#txt_hsn_code").val(hsn_code);
+        $("#txt_produ_hsn_desc").val(hsn_desc);
+        $('#productwithout').prop('checked', true);
+        $("#txt_base_price_IT").prop("disabled", true);
+        $("#txt_base_price_ET").prop('disabled', false);
+        $("#txt_base_price_IT").val('0.00');
+        if (!txtbasepriceET.disabled) {
+            txtbasepriceET.value = "";
+            txtbasepriceET.focus();
+
+        }
+
+    }
+    function BasePriceIT() {
+        debugger;
+        $("#txt_base_price_ET").val('0.00');
+        var GstRate = document.getElementsByClassName('In_gstrate');
+        if ($('input[type=radio][name=In_gstrate]:checked').length == 0)
+
+         {
+            kendoAlert("please select with GST Rate(Yes/No)!");
+            return false;
+        }
+        if ($('#txt_hsn_code').val() == '' || $('#txt_hsn_code').val() == undefined)
+        {
+            kendoAlert('Please Select HSN Code');
+            $("#txt_base_price_IT").val('');
+            return true;
+        }
+        document.getElementById("txt_base_price_IT").focus();
+        var txtbasepriceIT = $("#txt_base_price_IT").val();
+        console.log(txtbasepriceIT);
+        Taxload();
+
+
+    }
+    function combo() {
+         var In_agg_code = $("#txtagg_code").val();
+        var data = { In_agg_code: In_agg_code, module:"ICD" };
+        $.ajax({
+          url: '@Url.Action("lcdcenter_search", "Product")',
+         type: "post",
+        contentType: 'application/x-www-form-urlencoded',
+            data: data,
+            success: function (response) {
+                debugger;
+                if (response != null) {
+                    debugger;
+                    var itemArr = [];
+                    for (var i = 0; i < response.length; i++) {
+                        var list = {};
+                        list.id = response[i].Out_orgn_rowid
+                        list.code = response[i].Out_orgn_code;
+                        list.desc = response[i].Out_orgn_desc;
+                        itemArr.push(list);
+                    }
+                    filter_combobox("cmb_filter", itemArr);
+                }
+                else {
+                    $("#cmb_filter").empty();
+                }
+            },
+            error: function (er) {
+                alert(er);
+                console.log(er);
+            }
+        });
+    }
+    function generate_productmaster_detail(res) {
+        debugger;
+        try {
+            combo();
+            $('#cmb_filter').val(res.In_ic_name);
+            $('#txtic_code').val(res.In_ic_code);
+            $("#cmb_filter").attr("readonly", "");
+            $("#txt_Prcccode").val(res.In_product_catg_code);
+            $("#txt_produ_cate").val(res.In_product_catg_desc);
+            $("#txt_proscode").val(res.In_product_subcatg_code);
+            $("#txt_produ_sub_cate").val(res.In_product_subcatg_desc);
+            $("#txt_pro_cde").val(res.In_product_code);
+            $("#txt_pro_name").val(res.In_product_name);
+            $("#txt_hsn_code").val(res.In_hsn_code);
+            $("#txt_produ_hsn_desc").val(res.In_hsn_description);
+            var BasePrice = parseFloat(res.In_base_price).toFixed(2);
+            $("#txt_base_price").val(BasePrice);
+            var BasePrice_ET = parseFloat(res.In_base_price_extax).toFixed(2);
+            $("#txt_base_price_ET").val(BasePrice_ET);
+            var BasePrice_IT = parseFloat(res.In_base_price_intax).toFixed(2);
+            $("#txt_base_price_IT").val(BasePrice_IT);
+
+            var GSTRATE = res.In_gstrate;
+            if (GSTRATE == "Yes") {
+
+                $("#gstrate").prop('checked', true);
+            }
+            else if (GSTRATE == "No") {
+                $('#nongstrate').prop('checked', true);
+                $("#pay_help2").hide();
+            }
+            else if (GSTRATE == "") {
+                $("#gstrate").prop('checked', false);
+                $('#nongstrate').prop('checked', false);
+            }
+            var PRDVALADD = res.In_valuewithtax;
+            if (PRDVALADD == "Yes") {
+
+                $("#valuewith").prop('checked', true);
+            }
+            else if (PRDVALADD == "No") {
+                $('#valuewithout').prop('checked', true);
+            }
+            else if (PRDVALADD == "") {
+                $("#valuewith").prop('checked', false);
+                $('#valuewithout').prop('checked', false);
+            }
+            var PRDEIETAX = res.In_productwithtax;
+            if (PRDEIETAX == "Yes") {
+
+                $("#productwith").prop('checked', true);
+            }
+            else if (PRDEIETAX == "No") {
+                $('#productwithout').prop('checked', true);
+            }
+            else if (PRDEIETAX == "") {
+                $("#productwith").prop('checked', false);
+                $('#productwithout').prop('checked', false);
+            }
+            $('#txt_uom').data("kendoComboBox").value(res.In_uomtype_code);
+            $("#txt_curr_qty").val(res.In_current_qty);
+            $("#txtValidity").val(res.In_effective_from);
+            $("#txtValidity1").val(res.In_effective_to);
+            $("#txt_taxrate").val(res.In_taxrate_rowid);
+            $("#DocStat").val(res.In_status_desc);
+            $('#cmb_filter').data("kendoComboBox").value(res.In_ic_code);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<script>
+    click_act_name = "ProductList";
+    click_ctrl_name = "Product";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+<script>
+    function load_master_code() {
+        var data = {};
+        data.screen_Id = "ICDPRDT";
+        var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+    }
+</script>
+<script>
+    function save() {
+        debugger;
+        if ($('#txt_produ_cate').val() == '' || $('#txt_produ_cate').val() == undefined) {
+            kendoAlert('Please Select Product Category');
+        } else if ($("#cmb_filter").val() == '' || $("#cmb_filter").val() == undefined) {
+            kendoAlert('Please IC Name');
+        }
+        else if ($('#txt_hsn_code').val() == '' || $('#txt_hsn_code').val() == undefined) {
+            kendoAlert('Please Select HSN Code');
+        }
+
+        else if ($('#txt_base_price_ET').val() == '' || $('#txt_base_price_ET').val() == undefined || $('#txt_base_price_ET').val() == '0' || $('#txt_base_price_ET').val() == '0.00') {
+            kendoAlert('Product price is not empty or 0');
+            return true;
+        }
+        else if ($('input[type=radio][name=In_gstrate]:checked').length == 0) {
+
+            kendoAlert('Please select the GST rate Yes or no');
+            return false;
+        }
+        else if ($('input[type=radio][name=In_productwithtax]:checked').length == 0) {
+
+            kendoAlert('Please select the selling rate with or without tax Yes or no');
+            return false;
+        }
+        else if ($('input[type=radio][name=In_valuewithtax]:checked').length == 0) {
+
+            kendoAlert('Please select the value added tax Yes or no');
+            return false;
+        }
+
+        else {
+            if ($("#txt_prdrowid").val() == "") {
+                $("#txt_prdrowid").val('0');
+            }
+            if ($("#txt_curprd").val() == "") {
+                $("#txt_curprd").val('0');
+            }
+            if ($("#txt_taxrate").val() == "") {
+                $("#txt_taxrate").val('0');
+            }
+            var qty = $("#txt_curr_qty").val();
+            if ($("#txt_curr_qty").val() == "") {
+                $("#txt_curr_qty").val('0');
+            }
+            if ($("#txt_modeflag").val() == "S" || $("#txt_modeflag").val() == "U") {
+                $("#txt_modeflag").val('U');
+                $('#divEdit #btnSaveEd').prop('disabled', true);
+            }
+            else {
+                $('#divCreate #btnSave').prop('disabled', true);
+            }
+            $('#txt_uom').data("kendoComboBox").enable(true);
+
+            $('#txt_produ_hsn_desc').prop("disabled", false);
+            $('#txtValidity').prop("disabled", false);
+            $('#txtValidity1').prop("disabled", false);
+            $('#txt_curr_qty').prop("disabled", false);
+            var formval = form_Serialize("Product_form");
+            var obj_val = JSON.parse(formval);
+
+            $('#txt_produ_hsn_desc').prop("disabled", true);
+            $('#txtValidity').prop("disabled", true);
+            $('#txtValidity1').prop("disabled", true);
+            $('#txt_curr_qty').prop("disabled", true);
+            if ($("#txtic_code").val() == "") {
+                obj_val.In_ic_code = $("#cmb_filter").val();
+                obj_val.In_orgn_code = $("#cmb_filter").val();
+            } else {
+                obj_val.In_ic_code = $("#txtic_code").val();
+                obj_val.In_orgn_code = $("#txtic_code").val();
+            }
+
+            if (obj_val.In_status_code == undefined) {
+                obj_val.In_status_code = "A";
+            }
+            if (obj_val.In_row_timestamp == undefined) {
+                obj_val.In_row_timestamp = "0";
+            }
+
+            if (obj_val.In_current_product == null || obj_val.In_current_product == undefined || obj_val.In_current_product == '') {
+                obj_val.In_current_product = "0.00";
+            }
+          
+             
+                var price = $('#txt_base_price_ET').val();
+                obj_val.In_base_price = price;
+                obj_val.In_base_price_extax = price;
+
+           
+
+            var c = $('#txt_uom');
+            obj_val.In_uomtype_code = c.data('kendoComboBox').value();
+
+            var org=""
+            if ($("#txtic_code").val() != "") {
+                org = $("#txtic_code").val();
+            } else {
+                org = $("#cmb_filter").val();
+            }
+            var data_save = {};
+            data_save.context = getContext();
+            data_save.context.orgnId = org;
+            data_save.context.Detail = obj_val;
+            var Context = data_save.context;
+            console.log(Context);
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, Detail: Context.Detail }),
+                url: "/Product/ProductSave",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    console.log(response)
+                    var Res = JSON.parse(response);
+                    console.log(Res);
+                    if (Res.applicationException.errorDescription == null) {
+
+                        var mode = $("#txt_modeflag").val();
+                        if (mode == "I") {
+                            kendoAlert("Product Master saved successfully");
+                        }
+
+                        else {
+                            kendoAlert("Product Master update successfully");
+                            $('#divCreate #btnSave').prop('disabled', true);
+                          //  savebtn_disable();
+                        }
+                    }
+                    else {
+                        kendoAlert(Res.applicationException.errorDescription);
+                        $('#divCreate #btnSave').prop('disabled', false);
+                       // savebtn_enable();
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+            // $('#divCreate #btnSave').hide();
+
+        }
+    }
+    function savebtn_disable() {
+
+        $('#divCreate #btnSave').hide();
+    }
+    function savebtn_enable() {
+
+        $('#divCreate #btnSave').show();
+    }
+
+
+    function grid_control() {
+        var control_Name = [
+
+        ];
+        return control_Name;
+    }
+
+
+    function form_control() {
+        var control_Name = [
+             { "dataCol": "productcategory", "controlId": "txt_Prcccode", "type": "Text" },
+           { "dataCol": "product_category", "controlId": "txt_produ_cate", "type": "Text" },
+            { "dataCol": "productsubcategory", "controlId": "txt_proscode", "type": "Text" },
+            { "dataCol": "product_sub_category", "controlId": "txt_produ_sub_cate", "type": "Text" },
+
+        ];
+        return control_Name;
+    }
+
+
+    function form_control1() {
+        debugger;
+        var control_Name = [
+            { "dataCol": "HSN_master", "controlId": "txt_HSNMaster_Code", "type": "Text" },
+            { "dataCol": "HSN_code", "controlId": "txt_hsn_code", "type": "Text" },
+            { "dataCol": "hsn_description", "controlId": "txt_produ_hsn_desc", "type": "Text" },
+            { "dataCol": "HSN_uom", "controlId": "txt_uom", "type": "Text" },
+        ];
+        return control_Name;
+      
+
+    }
+
+
+    function trans_input_data() {
+        var trans_coll = [
+            { "trasfer": "Yes", "dataCol": "prodc_cate", "controlId": "", "grid_id": "", "grid_row_col": "" },
+            { "trasfer": "Yes", "dataCol": "State", "controlId": "combo_mst_state", "grid_id": "", "grid_row_col": "" },
+        ];
+        return trans_coll;
+    }
+
+
+
+
+</script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+<script src="~/CommonScripts/common.js"></script>
+

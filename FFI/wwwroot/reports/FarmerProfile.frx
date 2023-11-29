@@ -1,0 +1,631 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="05/27/2020 11:10:04" ReportInfo.Modified="05/27/2020 17:59:09" ReportInfo.CreatorVersion="2020.1.0.0">
+  <Styles Name="Standard">
+    <Style Name="Title" Font="Arial, 12pt, style=Bold"/>
+    <Style Name="Header" Font="Arial, 10pt, style=Bold"/>
+    <Style Name="Group" Font="Arial, 10pt, style=Bold"/>
+    <Style Name="Data" Font="Arial, 10pt"/>
+    <Style Name="Footer" Font="Arial, 10pt"/>
+    <Style Name="EvenRows" Fill.Color="WhiteSmoke" Font="Arial, 10pt"/>
+  </Styles>
+  <Dictionary>
+    <MySqlDataConnection Name="Connection" ConnectionString="rijcmlqJ9ltPwNsYyX+2oAnmCElmGIz/SJ0vefyWJNqFvJ9CpVcxZe7+FQFpmKpxbZDWz0V6R67CmUYRz08CylTygPQ7mxwFaRf9l5qw+TX13GLpKY=" CommandTimeout="0">
+      <TableDataSource Name="Table" Alias="FarmerPersonalDetails" DataType="System.Int32" Enabled="true" SelectCommand="call report_FarmerPersonalDetails()">
+        <Column Name="farmer_code" DataType="System.String"/>
+        <Column Name="entitygrp_name" DataType="System.String"/>
+        <Column Name="Caste/Category" DataType="System.String"/>
+        <Column Name="Educational Qualification" DataType="System.String"/>
+        <Column Name="e-Mail Id" DataType="System.String"/>
+        <Column Name="Farmer Type" DataType="System.String"/>
+        <Column Name="Gross Income Rs." DataType="System.String"/>
+        <Column Name="Marital Status" DataType="System.String"/>
+        <Column Name="Minority (Yes/No)" DataType="System.String"/>
+        <Column Name="Phone - Landline" DataType="System.String"/>
+        <Column Name="Religion" DataType="System.String"/>
+      </TableDataSource>
+      <TableDataSource Name="Table1" Alias="FarmerFamilyDetails" DataType="System.Int32" Enabled="true" SelectCommand="call report_FarmerFamilyDetails();">
+        <Column Name="farmer_code" DataType="System.String"/>
+        <Column Name="entitygrp_name" DataType="System.String"/>
+        <Column Name="DOB" DataType="System.String"/>
+        <Column Name="Family Member Name" DataType="System.String"/>
+        <Column Name="FamilyType" DataType="System.String"/>
+        <Column Name="Gender" DataType="System.String"/>
+        <Column Name="Gross Income" DataType="System.String"/>
+        <Column Name="Highest Educational Qualification" DataType="System.String"/>
+        <Column Name="Occupation" DataType="System.String"/>
+        <Column Name="Relationship" DataType="System.String"/>
+      </TableDataSource>
+      <TableDataSource Name="Table2" Alias="FarmerUser" DataType="System.Int32" Enabled="true" SelectCommand="call report_FarmerUser();">
+        <Column Name="farmer_code" DataType="System.String"/>
+        <Column Name="entitygrp_name" DataType="System.String"/>
+        <Column Name="Id" DataType="System.String"/>
+        <Column Name="Mobile Nos" DataType="System.String"/>
+        <Column Name="Name" DataType="System.String"/>
+        <Column Name="Status" DataType="System.String"/>
+        <Column Name="ValidTill" DataType="System.String"/>
+      </TableDataSource>
+      <TableDataSource Name="Table3" Alias="FarmerAddress" DataType="System.Int32" Enabled="true" SelectCommand="call report_FarmerAddress()">
+        <Column Name="farmer_code" DataType="System.String"/>
+        <Column Name="entitygrp_name" DataType="System.String"/>
+        <Column Name="Address1" DataType="System.String"/>
+        <Column Name="Address2" DataType="System.String"/>
+        <Column Name="AddressType" DataType="System.String"/>
+        <Column Name="Country" DataType="System.String"/>
+        <Column Name="State" DataType="System.String"/>
+        <Column Name="District" DataType="System.String"/>
+        <Column Name="Taluk" DataType="System.String"/>
+        <Column Name="GramPanchayat" DataType="System.String"/>
+        <Column Name="Village" DataType="System.String"/>
+        <Column Name="Pincode" DataType="System.String"/>
+      </TableDataSource>
+      <TableDataSource Name="Table4" Alias="FarmerLoanDetails" DataType="System.Int32" Enabled="true" SelectCommand="call report_FarmerLoanDetails()">
+        <Column Name="farmer_code" DataType="System.String"/>
+        <Column Name="entitygrp_name" DataType="System.String"/>
+        <Column Name="Collateral Security" DataType="System.String"/>
+        <Column Name="EMI Amount (Rs.)" DataType="System.String"/>
+        <Column Name="Institution Branch" DataType="System.String"/>
+        <Column Name="Institution Name" DataType="System.String"/>
+        <Column Name="Interest Rate (%)" DataType="System.String"/>
+        <Column Name="Loan Amount (Rs.)" DataType="System.String"/>
+        <Column Name="Loan End Date" DataType="System.String"/>
+        <Column Name="Loan From" DataType="System.String"/>
+        <Column Name="Loan Start Date" DataType="System.String"/>
+        <Column Name="Loan Status" DataType="System.String"/>
+        <Column Name="Loan Tenor (Months)" DataType="System.String"/>
+        <Column Name="Loan Type" DataType="System.String"/>
+      </TableDataSource>
+      <TableDataSource Name="Table5" Alias="FarmerLandDetails" DataType="System.Int32" Enabled="true" SelectCommand="call report_FarmerLandDetails();">
+        <Column Name="farmer_code" DataType="System.String"/>
+        <Column Name="entitygrp_name" DataType="System.String"/>
+        <Column Name="Crop Category" DataType="System.String"/>
+        <Column Name="Crop Sub -Category" DataType="System.String"/>
+        <Column Name="Irrigation Sources" DataType="System.String"/>
+        <Column Name="Land Type" DataType="System.String"/>
+        <Column Name="No. of Acres" DataType="System.String"/>
+        <Column Name="Ownership" DataType="System.String"/>
+        <Column Name="Price" DataType="System.String"/>
+        <Column Name="Seasonal Crop" DataType="System.String"/>
+        <Column Name="Soil Type" DataType="System.String"/>
+        <Column Name="UOM" DataType="System.String"/>
+      </TableDataSource>
+      <TableDataSource Name="Table6" Alias="FarmerLiveStockDetails" DataType="System.Int32" Enabled="true" SelectCommand="call report_FarmerLiveStockDetails();">
+        <Column Name="farmer_code" DataType="System.String"/>
+        <Column Name="entitygrp_name" DataType="System.String"/>
+        <Column Name="Livestock Sub-Type" DataType="System.String"/>
+        <Column Name="Livestock Type" DataType="System.String"/>
+        <Column Name="Number Possessed" DataType="System.String"/>
+        <Column Name="Ownership" DataType="System.String"/>
+        <Column Name="Price" DataType="System.String"/>
+        <Column Name="Purpose for which used" DataType="System.String"/>
+        <Column Name="UOM" DataType="System.String"/>
+      </TableDataSource>
+      <TableDataSource Name="Table7" Alias="FarmerInsurance" DataType="System.Int32" Enabled="true" SelectCommand="call report_FarmerInsurance();">
+        <Column Name="farmer_code" DataType="System.String"/>
+        <Column Name="entitygrp_name" DataType="System.String"/>
+        <Column Name="Agency Name" DataType="System.String"/>
+        <Column Name="Insurance Type" DataType="System.String"/>
+        <Column Name="Insured On" DataType="System.String"/>
+        <Column Name="Insurer Name" DataType="System.String"/>
+        <Column Name="Maturity Date" DataType="System.String"/>
+        <Column Name="Nominee" DataType="System.String"/>
+        <Column Name="Payment Mode" DataType="System.String"/>
+        <Column Name="Policy No" DataType="System.String"/>
+        <Column Name="Premium" DataType="System.String"/>
+      </TableDataSource>
+      <TableDataSource Name="Table8" Alias="FarmerAssetDetails" DataType="System.Int32" Enabled="true" SelectCommand="call report_FarmerAssetDetails();">
+        <Column Name="farmer_code" DataType="System.String"/>
+        <Column Name="entitygrp_name" DataType="System.String"/>
+        <Column Name="Asset manufacturer" DataType="System.String"/>
+        <Column Name="Asset Serial No." DataType="System.String"/>
+        <Column Name="Asset Sub-Type" DataType="System.String"/>
+        <Column Name="Asset Type" DataType="System.String"/>
+        <Column Name="Hired From / Hypothecated to" DataType="System.String"/>
+        <Column Name="No. of Assets" DataType="System.String"/>
+        <Column Name="Ownership" DataType="System.String"/>
+        <Column Name="Purpose for which used" DataType="System.String"/>
+        <Column Name="Year Purchased" DataType="System.String"/>
+      </TableDataSource>
+    </MySqlDataConnection>
+  </Dictionary>
+  <ReportPage Name="Page1" PaperWidth="300" Watermark.Font="Arial, 60pt">
+    <PageHeaderBand Name="PageHeader1" Width="1058.4" Height="37.8"/>
+    <DataBand Name="Data2" Top="41.8" Width="1058.4" Height="28.35" Guides="0">
+      <SubreportObject Name="Subreport1" Left="9.45" Top="9.45" Width="94.5" Height="18.9" ReportPage="Page2"/>
+    </DataBand>
+    <DataBand Name="Data3" Top="74.15" Width="1058.4" Height="28.35">
+      <SubreportObject Name="Subreport2" Left="9.45" Top="9.45" Width="94.5" Height="18.9" ReportPage="Page3"/>
+    </DataBand>
+    <DataBand Name="Data4" Top="106.5" Width="1058.4" Height="28.35">
+      <SubreportObject Name="Subreport3" Left="9.45" Top="9.45" Width="94.5" Height="18.9" ReportPage="Page4"/>
+    </DataBand>
+    <DataBand Name="Data5" Top="138.85" Width="1058.4" Height="28.35">
+      <SubreportObject Name="Subreport4" Left="9.45" Top="9.45" Width="94.5" Height="18.9" ReportPage="Page5"/>
+    </DataBand>
+    <DataBand Name="Data6" Top="171.2" Width="1058.4" Height="37.8">
+      <SubreportObject Name="Subreport5" Left="9.45" Top="9.45" Width="94.5" Height="18.9" ReportPage="Page6"/>
+    </DataBand>
+    <DataBand Name="Data7" Top="213" Width="1058.4" Height="18.9">
+      <SubreportObject Name="Subreport6" Left="9.45" Width="94.5" Height="18.9" ReportPage="Page7"/>
+    </DataBand>
+    <DataBand Name="Data8" Top="235.9" Width="1058.4" Height="28.35">
+      <SubreportObject Name="Subreport7" Left="9.45" Top="9.45" Width="94.5" Height="18.9" ReportPage="Page8"/>
+    </DataBand>
+    <DataBand Name="Data1" Top="268.25" Width="1058.4" Height="28.35">
+      <SubreportObject Name="Subreport8" Left="9.45" Top="9.45" Width="94.5" Height="18.9" ReportPage="Page9"/>
+    </DataBand>
+    <DataBand Name="Data16" Top="300.6" Width="1058.4" Height="28.35">
+      <SubreportObject Name="Subreport9" Left="9.45" Top="9.45" Width="94.5" Height="18.9" ReportPage="Page10"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page2" PaperWidth="300" Watermark.Font="Arial, 60pt">
+    <DataBand Name="Data9" Top="89.05" Width="1058.4" Height="47.25">
+      <TableObject Name="Table9" Left="9.45" Width="1048.82" Height="47.25">
+        <TableColumn Name="Column12" Width="161.66"/>
+        <TableColumn Name="Column13" Width="123.76"/>
+        <TableColumn Name="Column14" Width="104.88"/>
+        <TableColumn Name="Column15" Width="104.88"/>
+        <TableColumn Name="Column16" Width="85.97"/>
+        <TableColumn Name="Column17" Width="93.53"/>
+        <TableColumn Name="Column18" Width="102.99"/>
+        <TableColumn Name="Column19" Width="102.99"/>
+        <TableColumn Name="Column20" Width="84.08"/>
+        <TableColumn Name="Column21" Width="84.08"/>
+        <TableRow Name="Row2" Height="47.25">
+          <TableCell Name="Cell12" Text="[FarmerPersonalDetails.farmer_code]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell13" Text="[FarmerPersonalDetails.Caste/Category]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell14" Text="[FarmerPersonalDetails.Educational Qualification]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell15" Text="[FarmerPersonalDetails.e-Mail Id]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell16" Text="[FarmerPersonalDetails.Farmer Type]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell17" Text="[FarmerPersonalDetails.Gross Income Rs.]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell18" Text="[FarmerPersonalDetails.Marital Status]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell19" Text="[FarmerPersonalDetails.Minority (Yes/No)]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell20" Text="[FarmerPersonalDetails.Phone - Landline]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell21" Text="[FarmerPersonalDetails.Religion]" HorzAlign="Center" Font="Calibri, 10pt"/>
+        </TableRow>
+      </TableObject>
+      <DataHeaderBand Name="DataHeader1" Width="1058.4" Height="85.05" KeepWithData="true">
+        <TableObject Name="Table9" Left="9.45" Top="37.8" Width="1048.82" Height="47.25">
+          <TableColumn Name="Column1" Width="161.66"/>
+          <TableColumn Name="Column2" Width="123.76"/>
+          <TableColumn Name="Column3" Width="104.88"/>
+          <TableColumn Name="Column4" Width="104.88"/>
+          <TableColumn Name="Column5" Width="85.97"/>
+          <TableColumn Name="Column7" Width="93.53"/>
+          <TableColumn Name="Column8" Width="102.99"/>
+          <TableColumn Name="Column9" Width="102.99"/>
+          <TableColumn Name="Column10" Width="84.08"/>
+          <TableColumn Name="Column11" Width="84.08"/>
+          <TableRow Name="Row1" Height="47.25">
+            <TableCell Name="Cell1" Text="Farmer Code" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell2" Text="Caste&#13;&#10;/Category" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell3" Text="Educational &#13;&#10;Qualification&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell4" Text="EMail ID&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell5" Text="Farmer Type&#13;&#10;&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell7" Text="Gross &#13;&#10;Income Rs &#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell8" Text="Marital &#13;&#10;Status&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell9" Text="Minority &#13;&#10;Yes/ No &#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell10" Text="Phone&#13;&#10; /Landline&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell11" Text="Religion&#13;&#10;&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          </TableRow>
+        </TableObject>
+        <TextObject Name="Text1" Left="198.45" Width="444.15" Height="28.35" Text="Farmer Personal Details Generated on - [Date]" Font="Calibri, 14pt, style=Bold"/>
+      </DataHeaderBand>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page3" PaperWidth="300" Watermark.Font="Arial, 60pt">
+    <DataBand Name="Data10" Top="89.05" Width="1058.4" Height="47.25" StartNewPage="true">
+      <TableObject Name="Table9" Left="9.45" Width="1048.95" Height="47.25">
+        <TableColumn Name="Column31" Width="173.04"/>
+        <TableColumn Name="Column32" Width="135.24"/>
+        <TableColumn Name="Column33" Width="125.79"/>
+        <TableColumn Name="Column34" Width="87.99"/>
+        <TableColumn Name="Column35" Width="78.54"/>
+        <TableColumn Name="Column36" Width="105"/>
+        <TableColumn Name="Column37" Width="114.45"/>
+        <TableColumn Name="Column38" Width="105"/>
+        <TableColumn Name="Column39" Width="123.9"/>
+        <TableRow Name="Row4" Height="47.25">
+          <TableCell Name="Cell31" Text="[FarmerFamilyDetails.farmer_code]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell32" Text="[FarmerFamilyDetails.DOB]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell33" Text="[FarmerFamilyDetails.Family Member Name]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell34" Text="[FarmerFamilyDetails.FamilyType]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell35" Text="[FarmerFamilyDetails.Gender]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell36" Text="[FarmerFamilyDetails.Gross Income]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell37" Text="[FarmerFamilyDetails.Highest Educational Qualification]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell38" Text="[FarmerFamilyDetails.Occupation]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell39" Text="[FarmerFamilyDetails.Relationship]" HorzAlign="Center" Font="Calibri, 10pt"/>
+        </TableRow>
+      </TableObject>
+      <DataHeaderBand Name="DataHeader2" Width="1058.4" Height="85.05" StartNewPage="true" KeepWithData="true">
+        <TableObject Name="Table9" Left="9.45" Top="37.8" Width="1048.95" Height="47.25">
+          <TableColumn Name="Column22" Width="173.04"/>
+          <TableColumn Name="Column23" Width="135.24"/>
+          <TableColumn Name="Column24" Width="125.79"/>
+          <TableColumn Name="Column25" Width="87.99"/>
+          <TableColumn Name="Column26" Width="78.54"/>
+          <TableColumn Name="Column27" Width="105"/>
+          <TableColumn Name="Column28" Width="114.45"/>
+          <TableColumn Name="Column29" Width="105"/>
+          <TableColumn Name="Column30" Width="123.9"/>
+          <TableRow Name="Row3" Height="47.25">
+            <TableCell Name="Cell22" Text="Farmer Code" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell23" Text="DOB" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell24" Text=" Family Member &#13;&#10;Name" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell25" Text="Family Type&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell26" Text="Gender&#13;&#10;&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell27" Text="Gross Income&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell28" Text="Educational &#13;&#10;/Qualification&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell29" Text="Occupation&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell30" Text="Relationship" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          </TableRow>
+        </TableObject>
+        <TextObject Name="Text2" Left="189" Top="9.45" Width="444.15" Height="28.35" Text="Farmer Family Details Generated on - [Date]" Font="Calibri, 14pt, style=Bold"/>
+      </DataHeaderBand>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page4" Watermark.Font="Arial, 60pt">
+    <DataBand Name="Data11" Top="70.15" Width="718.2" Height="28.35" StartNewPage="true">
+      <TableObject Name="Table9" Left="9.45" Width="722.4" Height="28.35">
+        <TableColumn Name="Column45" Width="191.73"/>
+        <TableColumn Name="Column46" Width="153.93"/>
+        <TableColumn Name="Column47" Width="144.48"/>
+        <TableColumn Name="Column48" Width="106.68"/>
+        <TableColumn Name="Column49" Width="125.58"/>
+        <TableRow Name="Row6" Height="28.35">
+          <TableCell Name="Cell45" Text="[FarmerUser.farmer_code]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell46" Text="[FarmerUser.Id]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell47" Text="[FarmerUser.Mobile Nos]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell48" Text="[FarmerUser.Name]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell49" Text="[FarmerUser.ValidTill]" HorzAlign="Center" Font="Calibri, 10pt"/>
+        </TableRow>
+      </TableObject>
+      <DataHeaderBand Name="DataHeader3" Width="718.2" Height="66.15" StartNewPage="true">
+        <TableObject Name="Table9" Left="9.45" Top="37.8" Width="712.95" Height="28.35">
+          <TableColumn Name="Column40" Width="189.84"/>
+          <TableColumn Name="Column41" Width="152.04"/>
+          <TableColumn Name="Column42" Width="142.59"/>
+          <TableColumn Name="Column43" Width="104.79"/>
+          <TableColumn Name="Column44" Width="123.69"/>
+          <TableRow Name="Row5" Height="28.35">
+            <TableCell Name="Cell40" Text="Farmer Code" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell41" Text="ID" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell42" Text="Mobile No" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell43" Text="Name&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell44" Text="Valid Till&#13;&#10;&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          </TableRow>
+        </TableObject>
+        <TextObject Name="Text3" Left="160.65" Width="444.15" Height="28.35" Text="Farmer User Details Generated on - [Date]" Font="Calibri, 14pt, style=Bold"/>
+      </DataHeaderBand>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page5" PaperWidth="300" Watermark.Font="Arial, 60pt">
+    <DataBand Name="Data12" Top="98.5" Width="1058.4" Height="47.25" StartNewPage="true">
+      <TableObject Name="Table9" Left="9.45" Width="1049.09" Height="47.25">
+        <TableColumn Name="Column61" Width="155.68"/>
+        <TableColumn Name="Column62" Width="117.88"/>
+        <TableColumn Name="Column63" Width="98.98"/>
+        <TableColumn Name="Column64" Width="98.98"/>
+        <TableColumn Name="Column65" Width="80.08"/>
+        <TableColumn Name="Column66" Width="87.64"/>
+        <TableColumn Name="Column67" Width="97.09"/>
+        <TableColumn Name="Column68" Width="78.19"/>
+        <TableColumn Name="Column69" Width="78.19"/>
+        <TableColumn Name="Column70" Width="78.19"/>
+        <TableColumn Name="Column71" Width="78.19"/>
+        <TableRow Name="Row8" Height="47.25">
+          <TableCell Name="Cell61" Text="[FarmerAddress.farmer_code]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell62" Text="[FarmerAddress.Address1]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell63" Text="[FarmerAddress.Address2]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell64" Text="[FarmerAddress.AddressType]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell65" Text="[FarmerAddress.Country]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell66" Text="[FarmerAddress.District]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell67" Text="[FarmerAddress.GramPanchayat]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell68" Text="[FarmerAddress.Pincode]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell69" Text="[FarmerAddress.State]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell70" Text="[FarmerAddress.Taluk]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell71" Text="[FarmerAddress.Village]" Font="Calibri, 10pt"/>
+        </TableRow>
+      </TableObject>
+      <DataHeaderBand Name="DataHeader4" Width="1058.4" Height="94.5" StartNewPage="true">
+        <TableObject Name="Table9" Left="9.45" Top="47.25" Width="1049.08" Height="47.25">
+          <TableColumn Name="Column50" Width="154.82"/>
+          <TableColumn Name="Column51" Width="117.02"/>
+          <TableColumn Name="Column52" Width="98.12"/>
+          <TableColumn Name="Column53" Width="98.12"/>
+          <TableColumn Name="Column54" Width="79.22"/>
+          <TableColumn Name="Column55" Width="86.78"/>
+          <TableColumn Name="Column56" Width="96.23"/>
+          <TableColumn Name="Column57" Width="77.33"/>
+          <TableColumn Name="Column58" Width="77.33"/>
+          <TableColumn Name="Column59" Width="77.33"/>
+          <TableColumn Name="Column60" Width="86.78"/>
+          <TableRow Name="Row7" Height="47.25">
+            <TableCell Name="Cell50" Text="Farmer Code" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell51" Text="Address &#13;&#10;Line1" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell52" Text="Address&#13;&#10; Line2&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell53" Text="Address &#13;&#10;Type" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell54" Text="Country&#13;&#10;&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell55" Text="District&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell56" Text="Gram &#13;&#10;Panchayat" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell57" Text="Pincode&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell58" Text="State&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell59" Text="Taluk&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell60" Text="Village" Font="Calibri, 10pt, style=Bold"/>
+          </TableRow>
+        </TableObject>
+        <TextObject Name="Text4" Left="236.25" Top="9.45" Width="444.15" Height="28.35" Text="Farmer Address Details Generated on - [Date]" Font="Calibri, 14pt, style=Bold"/>
+      </DataHeaderBand>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page6" PaperWidth="300" Watermark.Font="Arial, 60pt">
+    <DataBand Name="Data13" Top="89.05" Width="1058.4" Height="47.25" StartNewPage="true">
+      <TableObject Name="Table9" Width="1056.69" Height="47.25">
+        <TableColumn Name="Column81" Width="173.9"/>
+        <TableColumn Name="Column82" Width="136.1"/>
+        <TableColumn Name="Column83" Width="117.2"/>
+        <TableColumn Name="Column84" Width="117.2"/>
+        <TableColumn Name="Column85" Width="98.3"/>
+        <TableColumn Name="Column86" Width="105.86"/>
+        <TableColumn Name="Column87" Width="115.31"/>
+        <TableColumn Name="Column88" Width="96.41"/>
+        <TableColumn Name="Column89" Width="96.41"/>
+        <TableRow Name="Row10" Height="47.25">
+          <TableCell Name="Cell81" Text="[FarmerLoanDetails.farmer_code]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell82" Text="[FarmerLoanDetails.Collateral Security]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell83" Text="[FarmerLoanDetails.EMI Amount (Rs.)]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell84" Text="[FarmerLoanDetails.Institution Branch]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell85" Text="[FarmerLoanDetails.Institution Name]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell86" Text="[FarmerLoanDetails.Interest Rate (%)]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell87" Text="[FarmerLoanDetails.Loan Amount (Rs.)]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell88" Text="[FarmerLoanDetails.Loan End Date]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell89" Text="[FarmerLoanDetails.Loan From]" HorzAlign="Center" Font="Calibri, 10pt"/>
+        </TableRow>
+      </TableObject>
+      <DataHeaderBand Name="DataHeader5" Width="1058.4" Height="85.05" StartNewPage="true">
+        <TableObject Name="Table9" Top="37.8" Width="1056.69" Height="47.25">
+          <TableColumn Name="Column72" Width="173.9"/>
+          <TableColumn Name="Column73" Width="136.1"/>
+          <TableColumn Name="Column74" Width="117.2"/>
+          <TableColumn Name="Column75" Width="117.2"/>
+          <TableColumn Name="Column76" Width="98.3"/>
+          <TableColumn Name="Column77" Width="105.86"/>
+          <TableColumn Name="Column78" Width="115.31"/>
+          <TableColumn Name="Column79" Width="96.41"/>
+          <TableColumn Name="Column80" Width="96.41"/>
+          <TableRow Name="Row9" Height="47.25">
+            <TableCell Name="Cell72" Text="Farmer Code" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell73" Text="Collateral &#13;&#10;Security" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell74" Text="EMI &#13;&#10;Amount Rs " HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell75" Text="Institution &#13;&#10;Branch" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell76" Text="Institution &#13;&#10;Name&#13;&#10;&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell77" Text="Interest &#13;&#10;Rate &#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell78" Text="Loan Amount &#13;&#10;     Rs " HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell79" Text="Loan End Date" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell80" Text="Loan From" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          </TableRow>
+        </TableObject>
+        <TextObject Name="Text5" Left="283.5" Width="444.15" Height="28.35" Text="Farmer Loan Details Generated on - [Date]" HorzAlign="Center" Font="Calibri, 14pt, style=Bold"/>
+      </DataHeaderBand>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page7" PaperWidth="300" Watermark.Font="Arial, 60pt">
+    <DataBand Name="Data14" Top="79.6" Width="1058.4" Height="47.25" StartNewPage="true">
+      <TableObject Name="Table9" Width="1056.72" Height="47.25">
+        <TableColumn Name="Column102" Width="157.89"/>
+        <TableColumn Name="Column103" Width="120.09"/>
+        <TableColumn Name="Column104" Width="101.19"/>
+        <TableColumn Name="Column105" Width="101.19"/>
+        <TableColumn Name="Column106" Width="82.29"/>
+        <TableColumn Name="Column107" Width="61.5"/>
+        <TableColumn Name="Column108" Width="99.3"/>
+        <TableColumn Name="Column109" Width="52.05"/>
+        <TableColumn Name="Column110" Width="80.4"/>
+        <TableColumn Name="Column111" Width="66.94"/>
+        <TableColumn Name="Column112" Width="66.94"/>
+        <TableColumn Name="Column113" Width="66.94"/>
+        <TableRow Name="Row12" Height="47.25">
+          <TableCell Name="Cell102" Text="[FarmerLandDetails.farmer_code]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell103" Text="[FarmerLandDetails.Crop Category]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell104" Text="[FarmerLandDetails.Crop Sub -Category]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell105" Text="[FarmerLandDetails.Irrigation Sources]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell106" Text="[FarmerLandDetails.Land Type]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell107" Text="[FarmerLandDetails.No. of Acres]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell108" Text="[FarmerLandDetails.Ownership]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell109" Text="[FarmerLandDetails.Price]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell110" Text="[FarmerLandDetails.Seasonal Crop]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell111" Text="[FarmerLandDetails.Soil Type]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell112" Text="[FarmerLandDetails.UOM]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell113" Text="&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+        </TableRow>
+      </TableObject>
+      <DataHeaderBand Name="DataHeader6" Width="1058.4" Height="75.6" StartNewPage="true">
+        <TextObject Name="Text6" Left="217.35" Width="444.15" Height="28.35" Text="Farmer Land Details Generated on - [Date]" HorzAlign="Center" Font="Calibri, 14pt, style=Bold"/>
+        <TableObject Name="Table9" Top="28.35" Width="1056.72" Height="47.25">
+          <TableColumn Name="Column90" Width="157.89"/>
+          <TableColumn Name="Column91" Width="120.09"/>
+          <TableColumn Name="Column92" Width="101.19"/>
+          <TableColumn Name="Column93" Width="101.19"/>
+          <TableColumn Name="Column94" Width="82.29"/>
+          <TableColumn Name="Column95" Width="61.5"/>
+          <TableColumn Name="Column96" Width="99.3"/>
+          <TableColumn Name="Column97" Width="52.05"/>
+          <TableColumn Name="Column98" Width="80.4"/>
+          <TableColumn Name="Column99" Width="66.94"/>
+          <TableColumn Name="Column100" Width="66.94"/>
+          <TableColumn Name="Column101" Width="66.94"/>
+          <TableRow Name="Row11" Height="47.25">
+            <TableCell Name="Cell90" Text="Farmer &#13;&#10;Code" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell91" Text="Crop &#13;&#10;Category" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell92" Text="Crop &#13;&#10;Sub Category" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell93" Text="Irrigation &#13;&#10;Sources" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell94" Text="Land &#13;&#10;Type&#13;&#10;&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell95" Text="No of &#13;&#10;Acres&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell96" Text="Ownership&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell97" Text="Price&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell98" Text="Seasonal &#13;&#10;Crop&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell99" Text="Soil &#13;&#10;Type&#13;&#10;" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell100" Text="UOM&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell101" Text="Total &#13;&#10;Quantity&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          </TableRow>
+        </TableObject>
+      </DataHeaderBand>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page8" PaperWidth="300" Watermark.Font="Arial, 60pt">
+    <DataBand Name="Data15" Top="79.6" Width="1058.4" Height="37.8" StartNewPage="true">
+      <TableObject Name="Table9" Left="9.45" Width="1054.97" Height="37.8">
+        <TableColumn Name="Column122" Width="189.28"/>
+        <TableColumn Name="Column123" Width="151.48"/>
+        <TableColumn Name="Column124" Width="142.03"/>
+        <TableColumn Name="Column125" Width="104.23"/>
+        <TableColumn Name="Column126" Width="94.78"/>
+        <TableColumn Name="Column127" Width="121.24"/>
+        <TableColumn Name="Column128" Width="130.69"/>
+        <TableColumn Name="Column129" Width="121.24"/>
+        <TableRow Name="Row14" Height="37.8">
+          <TableCell Name="Cell122" Text="[FarmerLiveStockDetails.farmer_code]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell123" Text="[FarmerLiveStockDetails.Livestock Sub-Type]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell124" Text="[FarmerLiveStockDetails.Livestock Type]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell125" Text="[FarmerLiveStockDetails.Number Possessed]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell126" Text="[FarmerLiveStockDetails.Ownership]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell127" Text="[FarmerLiveStockDetails.Price]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell128" Text="[FarmerLiveStockDetails.Purpose for which used]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell129" Text="[FarmerLiveStockDetails.UOM]" HorzAlign="Center" Font="Calibri, 10pt"/>
+        </TableRow>
+      </TableObject>
+      <DataHeaderBand Name="DataHeader7" Width="1058.4" Height="75.6" StartNewPage="true">
+        <TableObject Name="Table9" Left="9.45" Top="37.8" Width="1045.53" Height="37.8">
+          <TableColumn Name="Column114" Width="188.1"/>
+          <TableColumn Name="Column115" Width="150.3"/>
+          <TableColumn Name="Column116" Width="140.85"/>
+          <TableColumn Name="Column117" Width="103.05"/>
+          <TableColumn Name="Column118" Width="93.6"/>
+          <TableColumn Name="Column119" Width="120.06"/>
+          <TableColumn Name="Column120" Width="129.51"/>
+          <TableColumn Name="Column121" Width="120.06"/>
+          <TableRow Name="Row13" Height="37.8">
+            <TableCell Name="Cell114" Text="Farmer Code" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell115" Text="Livestock &#13;&#10;Sub Type" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell116" Text="Livestock &#13;&#10;Type" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell117" Text="Number &#13;&#10;Possessed&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell118" Text="Ownership&#13;&#10;&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell119" Text="Price&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell120" Text="Purpose For &#13;&#10;Which Used&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell121" Text="UOM&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          </TableRow>
+        </TableObject>
+        <TextObject Name="Text7" Left="226.8" Width="444.15" Height="28.35" Text="Farmer Livestock Details Generated on - [Date]" HorzAlign="Center" Font="Calibri, 14pt, style=Bold"/>
+      </DataHeaderBand>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page9" PaperWidth="300" Watermark.Font="Arial, 60pt">
+    <DataBand Name="Data17" Top="89.05" Width="1058.4" Height="56.7" KeepDetail="true">
+      <TableObject Name="Table9" Width="1054.99" Height="56.7">
+        <TableColumn Name="Column142" Width="171.15"/>
+        <TableColumn Name="Column143" Width="133.3"/>
+        <TableColumn Name="Column144" Width="114.4"/>
+        <TableColumn Name="Column145" Width="114.4"/>
+        <TableColumn Name="Column146" Width="95.5"/>
+        <TableColumn Name="Column147" Width="74.7"/>
+        <TableColumn Name="Column148" Width="112.51"/>
+        <TableColumn Name="Column149" Width="65.27"/>
+        <TableColumn Name="Column150" Width="93.61"/>
+        <TableColumn Name="Column151" Width="80.15"/>
+        <TableRow Name="Row16" Height="56.7">
+          <TableCell Name="Cell142" Text="[FarmerInsurance.farmer_code]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell143" Text="[FarmerInsurance.Insurer Name]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell144" Text="[FarmerInsurance.Agency Name]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell145" Text="[FarmerInsurance.Insurance Type]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell146" Text="[FarmerInsurance.Insured On]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell147" Text="[FarmerInsurance.Policy No]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell148" Text="[FarmerInsurance.Maturity Date]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell149" Text="[FarmerInsurance.Premium]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell150" Text="[FarmerInsurance.Payment Mode]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell151" Text="[FarmerInsurance.Nominee]" Font="Calibri, 10pt"/>
+        </TableRow>
+      </TableObject>
+      <DataHeaderBand Name="DataHeader8" Width="1058.4" Height="85.05" StartNewPage="true">
+        <TextObject Name="Text8" Left="274.05" Width="444.15" Height="28.35" Text="Farmer Insurance Details Generated on - [Date]" HorzAlign="Center" Font="Calibri, 14pt, style=Bold"/>
+        <TableObject Name="Table9" Top="37.8" Width="1054.99" Height="47.25">
+          <TableColumn Name="Column130" Width="171.15"/>
+          <TableColumn Name="Column131" Width="133.3"/>
+          <TableColumn Name="Column132" Width="114.4"/>
+          <TableColumn Name="Column133" Width="114.4"/>
+          <TableColumn Name="Column134" Width="95.5"/>
+          <TableColumn Name="Column135" Width="74.7"/>
+          <TableColumn Name="Column136" Width="112.51"/>
+          <TableColumn Name="Column137" Width="65.27"/>
+          <TableColumn Name="Column138" Width="93.61"/>
+          <TableColumn Name="Column139" Width="80.15"/>
+          <TableRow Name="Row15" Height="47.25">
+            <TableCell Name="Cell130" Text="Farmer &#13;&#10;Code" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell131" Text="Insurer &#13;&#10;Name" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell132" Text="Agency &#13;&#10;Name" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell133" Text="Insurance &#13;&#10;Type" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell134" Text="Insured On&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell135" Text="Policy No&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell136" Text="Maturity Date&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell137" Text="Premium" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell138" Text="Payment &#13;&#10;Mode" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell139" Text="Nominee&#13;&#10;" Font="Calibri, 10pt, style=Bold"/>
+          </TableRow>
+        </TableObject>
+      </DataHeaderBand>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page10" PaperWidth="300" Watermark.Font="Arial, 60pt">
+    <DataBand Name="Data18" Top="98.5" Width="1058.4" Height="47.25" StartNewPage="true">
+      <TableObject Name="Table9" Width="1064.39" Height="47.25">
+        <TableColumn Name="Column166" Width="172.09"/>
+        <TableColumn Name="Column167" Width="134.24"/>
+        <TableColumn Name="Column168" Width="115.34"/>
+        <TableColumn Name="Column169" Width="115.34"/>
+        <TableColumn Name="Column170" Width="96.44"/>
+        <TableColumn Name="Column171" Width="75.64"/>
+        <TableColumn Name="Column172" Width="113.45"/>
+        <TableColumn Name="Column173" Width="66.21"/>
+        <TableColumn Name="Column174" Width="94.55"/>
+        <TableColumn Name="Column175" Width="81.09"/>
+        <TableRow Name="Row18" Height="47.25">
+          <TableCell Name="Cell166" Text="[FarmerAssetDetails.farmer_code]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell167" Text="[FarmerAssetDetails.Asset Type]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell168" Text="[FarmerAssetDetails.Asset Sub-Type]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell169" Text="[FarmerAssetDetails.Ownership]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell170" Text="[FarmerAssetDetails.Hired From / Hypothecated to]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell171" Text="[FarmerAssetDetails.No. of Assets]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell172" Text="[FarmerAssetDetails.Asset manufacturer]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell173" Text="[FarmerAssetDetails.Year Purchased]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell174" Text="[FarmerAssetDetails.Asset Serial No.]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell175" Text="[FarmerAssetDetails.Purpose for which used]" Font="Calibri, 10pt"/>
+        </TableRow>
+      </TableObject>
+      <DataHeaderBand Name="DataHeader9" Width="1058.4" Height="94.5" StartNewPage="true">
+        <TextObject Name="Text9" Left="226.8" Top="9.45" Width="444.15" Height="28.35" Text="Farmer Asset Details Generated on - [Date]" HorzAlign="Center" Font="Calibri, 14pt, style=Bold"/>
+        <TableObject Name="Table9" Top="47.25" Width="1054.99" Height="47.25">
+          <TableColumn Name="Column154" Width="171.15"/>
+          <TableColumn Name="Column155" Width="133.3"/>
+          <TableColumn Name="Column156" Width="114.4"/>
+          <TableColumn Name="Column157" Width="114.4"/>
+          <TableColumn Name="Column158" Width="95.5"/>
+          <TableColumn Name="Column159" Width="74.7"/>
+          <TableColumn Name="Column160" Width="112.51"/>
+          <TableColumn Name="Column161" Width="65.27"/>
+          <TableColumn Name="Column162" Width="93.61"/>
+          <TableColumn Name="Column163" Width="80.15"/>
+          <TableRow Name="Row17" Height="47.25">
+            <TableCell Name="Cell154" Text="Farmer &#13;&#10;Code" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell155" Text="Asset &#13;&#10;Type" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell156" Text="Asset &#13;&#10;Sub Type" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell157" Text="Ownership" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell158" Text="Hired From &#13;&#10;Hypothecated to" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell159" Text="No of Assets&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell160" Text="Asset Manufacturer&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell161" Text="Year &#13;&#10;Purchased" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell162" Text="Asset &#13;&#10;Serial No " HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+            <TableCell Name="Cell163" Text="Purpose For &#13;&#10;Which Used&#13;&#10;" Font="Calibri, 10pt, style=Bold"/>
+          </TableRow>
+        </TableObject>
+      </DataHeaderBand>
+    </DataBand>
+  </ReportPage>
+</Report>

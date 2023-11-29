@@ -1,0 +1,227 @@
+﻿
+@{
+    Layout = null;
+    }
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Farmer Search</title>
+</head>
+<body>
+    <form class="form-horizontal" id="frm_repayment" data-role="validator" novalidate="novalidate">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Farmer Member Search</h4>
+        </div>
+        <div class="modal-header" style="height:49px">
+            <div class="col-sm-12" style="margin-top:-7px">
+                <div class="form-group" style="padding-bottom:10px">
+                    <div class="col-sm-3">
+                        <button type="button" class="btn btn-sm btn-primary" id="btnClose" onclick=closeModal(); style="width:85px">
+                            Close
+                        </button>
+                    </div>
+                    <div class="col-sm-10">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-body" style="height:550px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="textfarmer_id" class=" col-sm-5 control-label">Farmer ID</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="textfarmer_id" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtmember_Id" class="col-sm-5 control-label">Member ID</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txtmember_Id" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtgiven_name" class="col-sm-5 control-label">Farmer Given Name</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txtgiven_name" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="given_name" class="col-sm-5 control-label ">Surname</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="given_name" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtdob" class=" col-sm-5 control-label">DOB</label>
+                        <div class=" col-sm-6">
+                            <input class="cusDate" type="date" data-role='datepicker' id="txtValidity" data-checkdate-msg="Enter Valid Date" name="valid_until" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="cmb_gender" class=" col-sm-5 control-label">Gender</label>
+                        <div class=" col-sm-6">
+                            <input id="cmb_gender" data-role="filtercombo" style="width:100%">
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="nopay_year" class=" col-sm-5 control-label">Registered Mobile No</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="nopay_year" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="padding-bottom:15px">
+                    <div class="col-sm-6">
+                        <input id="Button1" type="button" value="Search" style="float:right">
+
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div id="locdec_list">
+                    </div>
+                </div>
+            </div>  
+        </div>
+    </form>
+</body>
+</html>
+<style>
+    .breadcrumb > li + li:before {
+        color: #E6E6E6;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        $('#searchadvance').on('show.bs.modal', function (e) {
+            gridsearch([]);
+        });
+
+        $('#searchadvance').on('loaded.bs.modal', function (e) {
+            gridsearch([]);
+        });
+      
+        kendodate_format();
+        var combo_data1 = [{ code: 1, desc: "Male" },
+              { code: 1, desc: "Female" }];
+        filter_combobox("cmb_gender", combo_data1);
+    });
+
+    function closeModal() {
+        $('#searchadvance').modal("hide");
+    }
+</script>
+<script>
+    //var data = [];
+    function gridsearch(data) {
+        try {
+
+            $("#locdec_list").kendoGrid({
+                dataSource: {
+                    data: data,
+                    pageSize: 20,
+
+                },
+
+                height: 250,
+                sortable: true,
+                selectable: true,
+                //change: onChangeSelection,
+                selectable: "singl",   //  Grid Row Selection
+                pageable: {
+                    refresh: false,
+                    pageSizes: true,
+                    buttonCount: 5
+                },
+                navigatable: true,
+                groupable: false,
+                columns: [
+                       {
+                           title: "Sel", width: 40,
+                           template: '#=sel_checkbox()#'
+
+                       },
+                    {
+                        field: "farmer_id",
+                        title: "Farmer ID",
+                        width: 80
+                    }, {
+                        field: "member_id",
+                        title: "Member ID",
+                        width: 80
+                    },
+                    {
+                        field: "given_name",
+                        title: "Given Name",
+                        width: 80
+                    },
+                    {
+                        field: "given_surname",
+                        title: "Surname",
+                        width: 80
+                    },
+                    {
+                        field: "dob",
+                        title: "DOB",
+                        width: 70
+                    },
+                    {
+                        field: "gender",
+                        title: "Gender",
+                        width: 80
+                    },
+                    {
+                        field: "regis_mobile",
+                        title: "Registered Mobile No",
+
+                    },
+                {
+                    field: "status",
+                    title: "Status",
+                    width: 80
+                },
+                ]
+            });
+
+            $(".k-dropdown-operator").css('display', 'none');
+            $("#locdec_list .k-input").attr('disabled', 'false');
+
+            var gridRowID = -1;
+            function sel_checkbox() {
+                gridRowID++;
+                return '<input id="chk_sel_' + gridRowID + '" class="checkbox" type="checkbox" />';
+            }
+        }
+        catch (err) {
+        alert(err);
+
+}
+        }
+    
+
+</script>

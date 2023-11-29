@@ -1,0 +1,285 @@
+﻿@{
+    ViewBag.FormName = "User Definition";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+
+<form id="user_form" class="form-horizontal" data-role="validator" novalidate="novalidate" style="padding-top:22px">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row">
+                <div class="col-md-3">
+                    <div id="grid_user_list">
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                <label for="txtUserId" class="col-sm-5 control-label required">User Id:</label>
+                                <div class=" col-sm-7">
+                                    <input type="text" class="form-control" name="user_id" id="txtUserId" maxlength="10">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                <label for="txtUserName1" class="col-sm-5 control-label required">UserName:</label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control" name="user_name" id="txtUserName1" maxlength="125">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                <label for="txtValidity" class=" col-sm-5 control-label">Valid until:</label>
+                                <div class=" col-sm-7">
+                                    @*<input type="text" class="form-control mask_date" id="txtValidity" maxlength="20" readonly>*@
+                                    <input class="cusDate" data-role='datepicker' id="txtValidity" data-checkdate-msg="Enter Valid Date" name="valid_until" style="width:100%" />
+                                    <span data-for='valid' class='k-invalid-msg'></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <div class=" form-group">
+                                <label for="txtEmailId" class=" col-sm-5 control-label">Email Id:</label>
+                                <div class=" col-sm-7">
+                                    <input type="email" class="form-control" id="txtEmailId" maxlength="125" name="email_id">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                <label for="txtPassword1" class=" col-sm-5 control-label required">Password:</label>
+                                <div class="col-sm-7">
+                                    <input type="password" class="form-control" name="user_password" id="txtPassword1" maxlength="20">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="txt_mobile" class=" col-sm-5 control-label required">Mobile No:</label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control number" name="user_mobile" onchange="mobile_change()" id="txt_mobile" maxlength="13">
+                                </div>
+                            </div>
+                        </div>
+                        @*<div class="col-xs-4">
+                                    <div class="form-group">
+                                        <label for="cmb_user" class=" col-sm-5 control-label required">User of:</label>
+                                        <div class=" col-sm-7">
+                                            <input id="cmb_user" name="Userof" data-role="filtercombo" style="width:100%"  />
+                                        </div>
+                                    </div>
+                            </div>*@
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-8">
+                            <div class="form-group">
+                                <label for="cmb_user" class=" col-sm-2 control-label required">User of:</label>
+                                <div class=" col-sm-10" style=" padding-left: 42px;">
+                                    @*<select class="form-control" id="cmb_user" name="Userof"></select>@**@
+                                    <input id="cmb_user" name="user_of_code" data-role="filtercombo" style="width:100%" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class=" form-group">
+                                <label for="cmb_role" class=" col-sm-5 control-label required">Role:</label>
+                                <div class=" col-sm-7">
+                                    @*<select class="form-control" id="cmb_role" name="RoleId" onchange="Role_selectChange()" ></select>*@@*style="height:32px"*@
+                                    <input id="cmb_role" name="role_id" data-role="filtercombo" style="width:100%" onchange="Role_selectChange()" />
+                                </div>
+                            </div>
+                        </div>
+
+                        @*<div class="col-sm-4">
+                                <div class="form-group">
+                                    <label for="txt_mobile" class=" col-sm-5 control-label required">Mobile No:</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control number" name="mobile" onchange="mobile_change()" id="txt_mobile" maxlength="13">
+                                    </div>
+                                </div>
+                            </div>*@
+                        <div style=" display:none">
+                            <div class="form-group" style=" display:none">
+                                <label for="txtMode" class="control-label">Mode Flag</label>
+                                <div>
+                                    <input type="text" name="mode_flag" id="txtMode" class="form-control" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="display:none">
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                <label for="file" class=" col-sm-5 control-label">Profile Image:</label>
+                                <img id="Profile_img" src="~/images/NoImage.png" class="col-sm-5 img-circle profileImg" alt="User Image" height="60" width="60" />
+                                <div class=" col-sm-2">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                <input type="file" name="file" id="file" src="~/images/noimage.png" style="width: 120px;" class=" col-sm-4 control-label" accept="image/x-png, image/gif, image/jpeg" />
+                                @*<input type="file" name="file" id="file" src="~/images/noimage.png"  style="width: 200%;" class=" col-sm-4 control-label" accept="image/x-png, image/gif, image/jpeg" />*@
+                                <input type="hidden" id="txtImageHidden" name="hdnImg" />
+                                <div class=" col-sm-8">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 ">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="active">
+                                    <a href="#permission" role="tab" data-toggle="tab">
+                                        Permission
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane fade active in" id="permission">
+                                    <div id="permission">
+                                        <div id="grid_user_detail">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!-- Main content -->
+
+<script>
+   
+
+    $(document).ready(function () {
+      
+        master_userRoleNew();
+        grid_user([]);
+        grid_user_detail([]);
+        $("#form_design").css("padding-top", "88px");
+      
+    });
+
+   
+
+    function grid_user(data) {
+        $("#grid_user_list").kendoGrid({
+            dataSource: {
+                data: data,
+            },
+            height: 470,
+            sortable: true,
+            selectable: true,            
+            selectable: "singl",   //  Grid Row Selection
+            navigatable: true,
+            columns: [{
+                field: "user_id",
+                title: "User Id"
+            }, {
+                field: "user_name",
+                title: "User Name"
+            }]
+        });
+    }
+
+    function grid_user_detail(master_data) {
+        $("#grid_user_detail").kendoGrid({
+            dataSource: {
+                data: master_data,
+                //pageSize: 20,
+                schema: {
+                    model: {
+                        fields: {
+                            screen_name: { editable: false },
+                            new_perm: { editable: false },
+                            mod_perm: { editable: false },
+                            del_perm: { editable: false },
+                            prn_perm: { editable: false },
+                            view_perm: { editable: false },
+                            deny_perm: { editable: false },
+                        }
+                    }
+                },
+            },
+            height: 285,
+            sortable: true,
+            //pageable: {
+            //    refresh: true,
+            //    pageSizes: true,
+            //    buttonCount: 5
+            //},
+            columns: [
+                   {
+                       field: "screen_name",
+                       title: "Screen Name",
+                       width: 150,
+                       update: false,
+                       editable: false
+                   }, {
+                       field: "new_perm",
+                       title: "New",
+                       template: '<input type="checkbox" #= new_perm == "1" ? "checked=checked" : "" # class="chkbx1" ></input>',
+                       update: true,
+                       width: 100
+                   },
+               {
+                   field: "mod_perm",
+                   title: "Modify",
+                   template: '<input type="checkbox" #= mod_perm == "1" ? "checked=checked" : "" # class="chkbx2" ></input>',
+                   update: true,
+                   width: 100
+               },
+               {
+                   field: "del_perm",
+                   title: "Delete",
+                   template: '<input type="checkbox" #= del_perm == "1" ? "checked=checked" : "" # class="chkbx3" ></input>',
+                   update: true,
+                   width: 100
+               },
+               {
+                   field: "prn_perm",
+                   title: "Print",
+                   template: '<input type="checkbox" #= prn_perm == "1" ? "checked=checked" : "" # class="chkbx4" ></input>',
+                   update: true,
+                   width: 100
+               },
+               {
+                   field: "view_perm",
+                   title: "View",
+                   template: '<input type="checkbox" #= view_perm == "1" ? "checked=checked" : "" # class="chkbx5" ></input>',
+                   update: true,
+                   width: 100
+               },
+               {
+                   field: "deny_perm",
+                   title: "Deny",
+                   template: '<input type="checkbox" #= deny_perm == "1" ? "checked=checked" : "" # class="chkbx6" ></input>',
+                   update: true,
+                   width: 100
+               }],
+
+            editable: true
+        });
+    }
+
+ 
+
+</script>
+
+
+
+<style>
+    #grid_user_detail input[type=checkbox] {
+        margin: 4px 41px 0;
+    }
+</style>
+

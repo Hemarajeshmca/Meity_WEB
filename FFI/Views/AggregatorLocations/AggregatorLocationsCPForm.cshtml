@@ -1,0 +1,394 @@
+﻿@{
+    ViewBag.Form = "Chilling Plant";
+    ViewBag.helpName = "AggregatorLocationsCPForm.html";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+<form id="aggregator_CP" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtaggrorgn_code_desc" class="col-sm-5 control-label required">Aggregator Org Name</label>
+                        <div class="col-sm-6">
+                            <input id="txtaggrorgn_code_desc" name="aggrorgn_code_desc" value="" style="width: 100%" disabled>
+                            <input id="txtaggrorgn_code" name="aggrorgn_code" type="hidden" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtaggrorgn_type_desc" class="col-sm-5 control-label required">Aggregator Org Type </label>
+                        <div class="col-sm-6">
+                            <input id="txtaggrorgn_type_desc" name="aggrorgn_type_desc" style="width: 100%" disabled>
+                            <input id="txtaggrorgn_type" name="aggrorgn_type" type="hidden" />
+                            <input type="hidden" name="location_type" id="location_type" value="Chilling Plant">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="txtMode" class="col-sm-5 control-label">Mode</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtMode" name="mode_flag" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="row" style="padding-bottom:15px">
+                    <div class="col-xs-12">
+                        <div id="grid">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    click_act_name = "AggregatorLocationsList";
+    click_ctrl_name = "AggregatorLocations";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+<script src="~/API_Scripts/CP_CC_retrieve_CP_CC_List_APIClient.js"></script>
+<script src="~/API_Scripts/CP_CC_retrieveCP_CC_APIClient.js"></script>
+<script src="~/API_Scripts/CP_CC_saveCP_CC_APIClient.js"></script>
+<script src="~/API_Scripts/retrieveCP_CC_List_Model.js"></script>
+<script src="~/API_Scripts/retrieveCP_CC_Model.js"></script>
+<script src="~/API_Scripts/saveCP_CC_Model.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/API_Scripts/CP_CC.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+        $(".file_attach").attr("hdrtitle", "Chilling Plant");
+        $(".notes").attr("hdrtitle", "Chilling Plant");
+        $("#lblForm_menuid").text("Chilling Plant (CP)");
+
+        Screen_Id = "MAPCP";
+        permission = sec_Permission(Screen_Id);
+        setlocalStorage("status", "Active");
+
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#aggregator_CP");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+
+        grid([]);
+
+        $("#ststus").css("display", "none");
+        $("#DocStat").css("display", "none");
+        $('#modevalue').css("display", "none")
+        $('#frmlayerdiv').hide();
+        $('#divCreate #review').hide();
+
+        if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
+            $('#divEdit #deactivate').hide();
+            $('#divEdit #reviewEd').hide();
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var orgName = localStorage.getItem('Is_orgName');
+                if (orgName != undefined) {
+                    $('#aggrorgn_code_desc').val(orgName);
+                }
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("aggregator_CP");
+                var obj_val = JSON.parse(formval);
+                if (data != undefined) {
+                    obj_val.aggrorgn_code = data.aggrorgn_code;
+                    obj_val.aggrorgn_type = data.aggrorgn_type;
+                    var data = {};
+                    data.context = WebAPIProxy.getContext();
+                    data.context.Header = obj_val;
+                    retrieve__Cpccactivity_details(data);
+                    var org_id = getlocalStorage('org_id');
+                    var org_type = getlocalStorage('org_type');
+                    var orgtname = getlocalStorage('orgtname');
+                    var org = getlocalStorage('org');
+                    $('#txtaggrorgn_code_desc').val(org);
+                    $('#txtaggrorgn_type_desc').val(orgtname);
+                    $('#txtaggrorgn_code').val(org_id);
+                    $('#txtaggrorgn_type').val(org_type);
+                }
+                $("#DocStat").val(data.status_desc);              
+                setlocalStorage('doc_no', $("#aggrorgn_code").val());
+                setlocalStorage('doc_row_id', data.aggrloc_rowid);
+            }
+        }
+
+    });
+    function clear_val() {
+        grid([]);
+        $("#txtMode").val("");
+    }
+    function get_CpccActivity_details(id) {
+        try{
+        clear_val();
+        var formval = form_Serialize("aggregator_CP");
+        var obj_val = JSON.parse(formval);
+        var data = {};
+        data.context = WebAPIProxy.getContext();
+        data.context.Header = obj_val;
+        retrieve__Cpccactivity_details(data);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<script>
+    var status_desc_list = "";
+    function grid(data) {
+        try {
+            $("#grid").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                aggrloc_code: {
+                                    type: "string", validation: {
+                                        required: { message: "Chilling Plant ID cannot be blank" },
+                                        maxlength:
+                                    function (input) {
+                                        if (input.val().length > 5) {
+                                            input.attr("data-maxlength-msg", "Max length is 5");
+                                            return false;
+                                        }
+                                        return true;
+                                    }
+                                    }
+                                },
+                                aggrloc_shortdesc: {
+                                    type: "string", validation: {
+                                        required: { message: "Chilling Plant Short Desc cannot be blank" },
+                                        maxlength:
+                                                                function (input) {
+                                                                    if (input.val().length > 25) {
+                                                                        input.attr("data-maxlength-msg", "Max length is 25");
+                                                                        return false;
+                                                                    }
+                                                                    return true;
+                                                                }
+                                    }
+                                },
+                                aggrloc_name: {
+                                    type: "string", validation: {
+                                        required: { message: "Chilling Plant Name cannot be blank" },
+                                        maxlength:
+                                    function (input) {
+                                        if (input.val().length > 100) {
+                                            input.attr("data-maxlength-msg", "Max length is 100");
+                                            return false;
+                                        }
+                                        return true;
+                                    }
+                                    }
+                                },
+                                status_code: { type: "string", defaultValue: "A" },
+                                status_desc: { type: "string", defaultValue: getlocalStorage('status'), editable: false },
+                                row_timestamp: { type: "date" },
+                                aggrloc_type: { type: "string", defaultValue: "AGG_LOC_CP" },
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+                toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 250,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                edit: OnEdit,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [{
+                    command: [
+                {
+                    name: "Delete",
+                    id: "Delete",
+                    imageClass: "fa fa-close",
+                    click: function (e) {
+                        // e.preventDefault();
+                        var grid = $("#grid").data("kendoGrid");
+                        var dataItem = $("#grid").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                        DeleteWindowEvent(e, dataItem, grid);
+                        e.stopImmediatePropagation()
+                    }
+                },
+                    ], title: "Action", width: "50px",
+                },
+                 {
+                     field: "aggrloc_rowid",
+                     title: "aggrloc_rowid",
+                     width: 100,
+                     hidden: true,
+                 },
+                {
+                    field: "aggrloc_type",
+                    title: "aggrloc_type",
+                    width: 100,
+                    hidden: true,
+                },
+                {
+                    field: "aggrloc_type_desc",
+                    title: "aggrloc_type_desc",
+                    width: 100,
+                    hidden: true,
+                },
+
+                 {
+                     field: "aggrloc_code",
+                     title: "Chilling Plant ID ",
+
+                     width: 100,
+
+                 },
+                 {
+                     field: "aggrloc_shortdesc",
+                     title: "Chilling Plant Short Desc",
+
+                     width: 100,
+
+                 },
+                 {
+                     field: "aggrloc_name",
+                     title: "Chilling Plant Name",
+                     width: 100,
+
+                 },
+                 {
+                     field: "status_code",
+                     title: "status_code",
+                     hidden: true
+                 },
+                 {
+                     field: "status_desc",
+                     title: "Status",
+                     editor: function (container, options) {
+                         combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "status_code", "grid")
+                     },
+                     width: 100,
+
+                 },
+                {
+                    field: "row_timestamp",
+                    title: "row_timestamp",
+                    hidden: true
+                },
+                {
+                    field: "mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }],
+                editable: true
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function OnEdit(e) {
+        try{
+        setDefaultValues(e);
+
+        e.container.find("input[name='aggrloc_code']").attr('maxlength', '5');
+        e.container.find("input[name='aggrloc_code']").each(function () {
+            if ($(this).val() != "" && e.model.mode_flag != "I") {
+                $(this).attr("disabled", "disabled");
+            }
+        });
+        e.container.find("input[name='aggrloc_shortdesc']").attr('maxlength', '25');
+        e.container.find("input[name='aggrloc_name']").attr('maxlength', '100');
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    status_desc_list = grid_combo_mastercodes("STATUS");
+</script>
+
+<script>
+    function save() {
+        try{
+        if ($("#txtMode").val() == "S") {
+            $("#txtMode").val('U');
+        }
+        var formval = form_Serialize("aggregator_CP");
+        var obj_val = JSON.parse(formval);
+        var grid_val = JSON.stringify($("#grid").data().kendoGrid._data);
+        var Bind = {};
+        Bind = grid_val;
+        var result = JSON.parse(Bind);
+        result.aggrloc_rowid = "0";
+        $.each(result, function (index, value) {
+            var row_id = value.aggrloc_rowid;
+            if (row_id == undefined) {
+                result[index].aggrloc_rowid = "0";
+            }
+            var mode = result[index].mode_flag;
+            if (mode == "S") {
+                result[index].mode_flag = "U";
+            }
+        });
+        var obj_grid_val = result;
+
+        var data = {};
+        data.context = WebAPIProxy.getContext();
+        data.context.Header = obj_val;
+        data.context.Detail = obj_grid_val;
+        save_CpccActivity_details(data);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function DeleteDetails() {
+        try{
+        $("#txtMode").val("D");
+        save();
+        } catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function generate_CpccActivity_header(res) {
+     
+    }
+
+    function generate_CpccActivity_detail(res) {
+        try{
+        if (res != null) {
+            var data = changedataType(res);
+            grid(data);
+        }
+        else {
+            grid([]);
+        }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>

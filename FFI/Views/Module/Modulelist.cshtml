@@ -1,0 +1,182 @@
+﻿
+@{
+    ViewBag.List = "Modules";
+    Layout = "~/Views/Shared/ListViewLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-xs-12">
+        <div id="module_grid"></div>
+    </div>
+</div>
+
+<script>
+    click_act_name = "Modulelist";
+    click_ctrl_name = "Module";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+
+</script>
+
+<script>
+    var data = [];
+    var xmlIdentity_Code = "";
+    var RecieveData = ajaxcall_url_with_1param("../Module/Modulegrid", JSON.stringify({ GetName: xmlIdentity_Code }));
+    data = JSON.parse(RecieveData);
+        $("#module_grid").kendoGrid(
+            {
+                dataSource: {
+                    data: data,
+                    pageSize: 20,
+                    change: function (e) {
+                        setTimeout(function () {
+                            var gd = $("#module_grid").data("kendoGrid");
+                            filter_row(gd);
+                            $('.k-i-close').css('display', 'none');
+                            $('button.k-button-icon').css('display', 'none');
+                            $('#module_grid .k-input').prop('disabled', false);
+                            $('#module_grid .k-input').prop('readonly', true);
+
+                        }, 1);
+                    },
+                },
+                toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                excelExport: function (e) {
+                    var chkall = $('#chkall').is(':checked');
+                    var chkfilter = $('#chkfilter').is(':checked');
+                    var chktemp = $('#chktemp').is(':checked');
+                    var gd = $("#module_grid").data("kendoGrid");
+                    var len = gd.dataSource._data.length;
+                    gd.dataSource.pageSize(len);
+                    exportfunction(e, chkall, chkfilter, chktemp);
+                    gd.dataSource.pageSize('10');
+                },
+                filterable: {
+                    enabled: true,
+                    delay: 1500,
+                    mode: "menu, row",
+                    height: 200,
+                    click: function (e) {
+                        var gd = $("#module_grid").data("kendoGrid");
+                        filter_row(gd);
+                    }
+                },
+                filterMenuInit: function (e) {
+                    var gd = $("#module_grid").data("kendoGrid");
+                    filter_row(gd);
+                },
+                dataBound: function (o) {
+                    var gd = $("#module_grid").data("kendoGrid");
+                    for (var i = 0; i < gd.columns.length; i++) {
+                        gd.showColumn(i);
+                    }
+                    $("div.k-group-indicator").each(function (i, v) {
+                        gd.hideColumn($(v).data("field"));
+                    })
+                },
+                height: 450,
+                sortable: true,
+                selectable: true,
+                //change: onChangeSelection,
+                selectable: "singl",   //  Grid Row Selection
+                pageable: {
+                    refresh: false,
+                    pageSizes: true,
+                    buttonCount: 5
+                },
+                navigatable: true,
+                groupable: false,
+
+                columns: [
+                       {
+                           title: "Sel", width: 40,
+                           template: '#=sel_checkbox()#'
+
+                       },
+                    {
+                        field: "module_id",
+                        title: "Module ID",
+                        filterable: {
+                            cell: {
+                                operator: "contains",
+                                inputWidth: 1500
+                            }
+                        }
+                    },
+
+                     {
+                         field: "module_name",
+                         title: "Module Name",
+                         filterable: {
+                             cell: {
+                                 operator: "contains",
+                                 inputWidth: 1500
+                             }
+                         }
+                     },
+                    {
+                        field: "created_date",
+                        title: "Created Date",
+                        filterable: {
+                            cell: {
+                                operator: "contains",
+                                inputWidth: 1500
+                            }
+                        }
+                    },
+
+
+
+                {
+                    field: "status_code",
+                    title: "Status",
+                    filterable: {
+                        cell: {
+                            operator: "contains",
+                            inputWidth: 1500
+                        }
+                    }
+                },
+                ]
+
+            });
+
+
+
+        $(".k-dropdown-operator").css('display', 'none');
+        $("#module_grid .k-input").attr('disabled', 'false');
+
+        var gridRowID = -1;
+        function sel_checkbox() {
+            gridRowID++;
+            return '<input id="chk_sel_' + gridRowID + '" class="checkbox" type="checkbox" />';
+        }
+
+
+
+</script>
+<script>
+    $("#btn_Edit").bind("click", function () {
+        btn_onClick('Edit');
+        location.href = "../Module/ModuleEdit";
+    });
+
+    $("#btn_View").bind("click", function () {
+        btn_onClick('View');
+        location.href = "../Module/ModuleForm";
+    });
+
+    $("#btn_new").bind("click", function () {
+        btn_onClick('Create');
+        location.href = "../Module/ModuleForm";
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $(".adv_filter").attr("hdrtitle", "");
+        $(".adv_filter").attr("fltid", "");
+        $(".Export").attr("hdrtitle", "Modules List");
+        $(".Export").attr("SubTreeId", "MODULES");
+    });
+</script>
+
+

@@ -1,0 +1,284 @@
+﻿@*@{
+        Layout = null;
+    }*@
+
+<div class="jumbotron">
+
+    <form id="ccform" action="@Url.Action("CcPayment", "PaymentUpdation")" method="post">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Billing Details</h4>
+        </div>
+        <div class="modal-body" style="height:600px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-xs-3">
+                    <div class=" form-group">
+                        <label for="txtcust_code" class=" col-sm-5 control-label">Customer Code</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txtcust_code" name="txtcust_code" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                    <div class=" form-group">
+                        <label for="txtcust_name" class=" col-sm-5 control-label">Customer Name</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txtcust_name" name="customer_name" class="form-control" maxlength="50">
+                            <input type="hidden" id="hdn_billing_address" name="billing_address" />
+                            <input type="hidden" id="hdn_billing_city" name="billing_city" />
+                            <input type="hidden" id="hdn_billing_state" name="billing_state" />
+                            <input type="hidden" id="hdn_billing_zip" name="billing_zip" />
+                            <input type="hidden" id="hdn_billing_country" name="billing_country" />
+                            <input type="hidden" id="hdn_billing_tel" name="billing_tel" />
+                            <input type="hidden" id="hdn_billing_email" name="billing_email" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                    <div class=" form-group">
+                        <label for="txtbkng_id" class=" col-sm-5 control-label">Booking ID</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txtbkng_id" name="booking_no" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class=" form-group">
+                        <label for="txt_equipment" class=" col-sm-5 control-label">Equipment</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_equipment" name="equipment_name" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtbkng_date" class=" col-sm-5 control-label">Booking Date</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txtbkng_date" name="booking_date" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txt_uom" class=" col-sm-5 control-label">UOM Type</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_uom" name="uom_type" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtbkngfrom_date" class="col-sm-5 control-label ">Period From</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txtbkngfrom_date" name="period_from" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtbkngto_date" class="col-sm-5 control-label ">Period To</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txtbkngto_date" name="period_to" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtbkng_rate" class=" col-sm-5 control-label">Rate</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txtbkng_rate" name="rate" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtnet_amt" class=" col-sm-5 control-label">Net Amount</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txtnet_amt" name="net_amount" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtpay_amt" class="col-sm-5 control-label ">Payment Amount</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txtpay_amt" name="payment_amount" class="form-control" maxlength="50">
+                            <input type="hidden" id="hdn_bal_amt" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6" style="padding-bottom:10px">
+                <button id="btn_pay" class="btn btn-primary">Pay</button>
+            </div>
+
+        </div>
+        }
+    </form>
+</div>
+
+<div class="row">
+
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="~/API_Scripts/receipt_update_retrieveReceiptUpdationList_APIClient.js"></script>
+<script src="~/API_Scripts/retrieveReceiptUpdationList_Model.js"></script>
+<script src="~/API_Scripts/ReceiptUpdate.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script>
+    $(document).ready(function () {
+        debugger;
+        if (getlocalStorage("payment_info") != undefined) {
+            bind();
+        }
+
+        $('#txtpay_amt').keypress(function (event) {
+            var $this = $(this);
+            if ((event.which != 46 || $this.val().indexOf('.') != -1) &&
+               ((event.which < 48 || event.which > 57) &&
+               (event.which != 0 && event.which != 8))) {
+                event.preventDefault();
+            }
+
+            var text = $(this).val();
+            if (text.indexOf('.') != -1) {
+                if ((text.indexOf('.') != -1) &&
+               (text.substring(text.indexOf('.')).length > 2) &&
+               (event.which != 0 && event.which != 8) &&
+               ($(this)[0].selectionStart >= text.length - 2)) {
+                    event.preventDefault();
+                }
+            }
+            else {
+                if ($this.val().length > 17) {
+                    if (event.which != 46) {
+                        event.preventDefault();
+                    }
+                }
+            }
+
+        });
+        $('#txtpay_amt').bind("paste", function (e) {
+            var text = e.originalEvent.clipboardData.getData('Text');
+            if ($.isNumeric(text)) {
+                if ((text.substring(text.indexOf('.')).length > 3) && (text.indexOf('.') > -1)) {
+                    e.preventDefault();
+                    $(this).val(text.substring(0, text.indexOf('.') + 3));
+                }
+            }
+            else {
+                e.preventDefault();
+            }
+        })
+        $("#btn_pay").prop("disabled", true);
+        $("#txtpay_amt").change(function () { balamtchk(); });
+    });
+    function bind() {
+        debugger;
+        var data = getlocalStorage("payment_info");
+        //alert(data.customer_code);
+        $("#ccform #txtcust_code").val(data.customer_code);
+        $("#ccform #txtcust_name").val(data.customer_name);
+        $("#ccform #txtbkng_id").val(data.booking_no);
+        $("#ccform #txt_equipment").val(data.equipment_name);
+
+        $("#ccform #txtbkng_date").val(data.booking_date);
+        $("#ccform #txt_uom").val(data.uom_type);
+        $("#ccform #txtbkngfrom_date").val(data.period_from);
+        $("#ccform #txtbkngto_date").val(data.period_to);
+
+        $("#ccform #txtbkng_rate").val(data.rate);
+        $("#ccform #txtnet_amt").val(data.net_amount);
+
+        var bal_amt = getlocalStorage("bal_amt");
+        $("#hdn_bal_amt").val(bal_amt);
+
+        listpageloadfetch();
+    }
+
+    function balamtchk() {
+        try {
+            debugger;
+            /* Balance amount should be fetch and dispalyed or check in DB */
+
+            if ($('#txtpay_amt').val() != '' && $('#txtpay_amt').val() != "0" && $('#txtpay_amt').val() != undefined) {
+                var pay_amt = $('#txtpay_amt').val() != '' ? parseFloat($('#txtpay_amt').val()) : 0;
+                var balance = $('#hdn_bal_amt').val() != '' ? parseFloat($('#hdn_bal_amt').val()) : 0;
+
+                var grid_validate_msg = "";
+                if (pay_amt > balance) {
+                    $('#txtpay_amt').val(0);
+                    $("#btn_pay").prop("disabled", true);
+                    grid_validate_msg = "Payment amount is greater than Balance amount";
+                    kendoAlert(grid_validate_msg);
+                }
+                else {
+                    $("#btn_pay").removeAttr('disabled');
+                }
+            }
+            else {
+                $("#btn_pay").prop("disabled", true);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function listpageloadfetch() {
+        try {
+            debugger;
+            var formval = form_Serialize("ccform");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "CCPAYMENT";
+            obj_val.FilterBy_Code = $("#txtcust_code").val();
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_FromValue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_FromValue = ".";
+            }
+            obj_val.FilterBy_ToValue = ".";
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Filter = obj_val;
+            retrieve_Reciptupdation_list(data);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function generate_Reciptupdation_list(res) {
+        try {
+            if (res != null) {
+                debugger;
+                var a = JSON.stringify(res);
+                var b = a.substring(1, a.length - 1);
+                var data = JSON.parse(b);
+                console.log(data.customer_name);
+                
+                $("#hdn_billing_address").val(data.customer_name);
+                $("#hdn_billing_city").val(data.equipment_name);
+                $("#hdn_billing_state").val(data.status_desc);
+                $("#hdn_billing_zip").val(data.status_code);
+                $("#hdn_billing_country").val(data.customer_code);
+                $("#hdn_billing_tel").val(data.equipment_code);
+                $("#hdn_billing_email").val(data.booking_no);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>

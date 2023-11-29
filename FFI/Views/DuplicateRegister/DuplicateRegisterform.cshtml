@@ -1,0 +1,638 @@
+﻿@{
+    ViewBag.Form = "Duplicate Register";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+<form id="Duplicate_Register" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-12">
+                    <div class="col-sm-5">
+                        <div class="form-group">
+                            <label for="cmb_generate" class="col-sm-4 control-label required">Report name</label>
+                            <div class="col-sm-7">
+                                <input type="text" id="cmb_generate" name="In_register_type" data-role="filtercombo" class="form-control" maxlength="50" style="width:100%" disabled placeholder="Duplicate Register" />
+                            </div>
+                            <input type="hidden" id="register_rowid" name="IOU_register_rowid" />
+                            <input type="hidden" id="register_no"  name="IOU_register_no"/>
+                            <input type="hidden" id="fpoorgn_code" name="In_fpoorgn_code"/>
+                            <input type="hidden" id="status_code" name="In_status_code"/>
+                            <input type="hidden" id="mode_flag" name="In_mode_flag"/>
+                            <input type="hidden" id="row_timestamp" name="In_row_timestamp"/>
+                            <input type="hidden" id="chklist_status_flag" />
+                            <button id="btnFetch" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button" onclick=" return listLoad()"> <span class="glyphicon glyphicon-refresh"></span></button>
+                        </div>
+                    </div>
+                    <div class="col-xs-5">
+                        <div class="form-group">
+                            <label for="txtValidity" class="col-sm-5 control-label required">Report Date:</label>
+                            <div class=" col-sm-4">
+
+                                <input class="cusDate" data-role='datepicker' id="txtValidity" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="In_register_date" style="width:100%"  />
+                                <span data-for='valid' class='k-invalid-msg'></span>
+                            </div>
+                            <div class="col-sm-4 pull-right" style="padding-bottom:10px">
+                                <a data-toggle="modal" class="Export btn btn-sm btn-info" style="float:right" href="~/ExportExcel/ExportExcel" hdrtitle="" data-target="#exportexcelModal"><span class=" glyphicon glyphicon-export mr"></span></a>&nbsp;
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-xs-12">
+                            <div id="grid_Drop_list"></div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="form-group" style="display:none;">
+                            <label for="txtMode" class="col-sm-5 control-label">Mode</label>
+                            <div class="col-sm-7">
+                                <input id="txtMode" name="In_mode_flag" type="text" class="form-control" data-toggle="tooltip" data-placement="bottom" value="I">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</form>
+<script>
+    click_act_name = "DuplicateRegister";
+    click_ctrl_name = "DuplicateRegister";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+<script src="~/API_Scripts/FIS_Register_retrieveDuplicateRegister_APIClient.js"></script>
+<script src="~/API_Scripts/FIS_Register_saveDuplicateRegister_APIClient.js"></script>
+<script src="~/API_Scripts/FIS_Register_retrieveRegisterList_APIClient.js"></script>
+<script src="~/API_Scripts/retrieveDuplicateRegister_Model.js"></script>
+<script src="~/API_Scripts/retrieveRegisterList_Model.js"></script>
+<script src="~/API_Scripts/saveDuplicateRegister_Model.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/API_Scripts/DuplicateRegister.js"></script>
+<script>
+    $(document).ready(function () {
+
+        kendodate_format();
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#Duplicate_Register");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+
+        Screen_Id = "SRVDUPREG";
+        permission = sec_Permission(Screen_Id);
+        gridFilter();
+        $("#common_id").text("Register ID");
+        $("#lblForm_menuid").text("SRVDUPREG");
+        $("#btnFetch").attr("disabled", false);
+        $("#txtValidity").attr("disabled", false);
+        $(".Export").attr("hdrtitle", "Duplicate Register List");
+        $(".Export").attr("SubTreeId", "SRVDUPREG");
+
+        if (getlocalStorage('btn_clk_val') == "Create") {
+            $('#divCreate #review').hide();
+            $("#txtMode").val("I");
+            $("#bottom_menus").hide();
+            $("#DocStat").val("New");
+            $("#status_code").val("A");
+
+        }
+        else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
+            $('#divEdit #reviewEd').hide();
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("Duplicate_Register");
+                $("#btnFetch").attr("disabled", true);
+                $("#txtValidity").attr("disabled", true);
+                var obj_val = JSON.parse(formval);
+                $("#register_rowid").val(data.Out_register_rowid);
+                $("#txtcommon_id").val(data.Out_register_no);
+                $("#register_no").val(data.Out_register_no);
+                obj_val.register_no = data.Out_register_no;
+                obj_val.In_register_rowid = data.Out_register_rowid;
+                obj_val.In_fpoorgn_code = data.Out_fpoorgn_code;
+
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, In_register_rowid: Context.Header.In_register_rowid, In_fpoorgn_code: Context.Header.In_fpoorgn_code }),
+                    url: "/DuplicateRegister/FetchServiceList",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        debugger;
+                        if (response.context.Header != null) {
+                            generate_DuplicateRegister_header(response.context.Header)
+                            //listgrid(response.context.List);
+                            //SetPager(response.context.Filter.out_record_count)
+                        }
+                        if (response.context.Detail != null) {
+                            generate_DuplicateRegister_detail(response.context.Detail)
+                        }
+                      
+                        else {
+                            gridFilter([]);
+                        }
+                        if (response.ApplicationException != null ) {
+                            kendoAlert(response.ApplicationException.errorDescription);
+                        }
+                    },
+                    error: function (er) {
+                        alert(er)
+                        console.log(er)
+                    }
+                });
+                //retrieve_DuplicateRegister_details(data);
+                $("#txtMode").val("U");
+                setlocalStorage('doc_no', $("#register_no").val());
+                setlocalStorage('doc_row_id', $("#register_rowid").val());
+            }
+        }
+        $("#txtValidity").kendoDatePicker({
+            max: new Date(), // sets max date to Jan 1st, 2013
+            format: "dd/MM/yyyy"
+        });
+        setlocalStorage("status", "Active");
+        setlocalStorage('status_code', "A");
+
+
+
+
+    });
+</script>
+<script>
+    function gridFilter(data) {
+        try {
+            $("#grid_Drop_list").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+
+                                service_req_no: { type: "string" },
+                                shareholder: { type: "string" },
+                                certificate_no: { type: "string" },
+                                distinct_from: { type: "string" },
+                                request_type: { type: "string" },
+                                request_sub: { type: "string" },
+                                request_date: { type: "string" },
+                                status: { type: "string" },
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+
+                toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                excelExport: function (e) {
+                    var gd = $("#grid_Drop_list").data("kendoGrid");
+                    var len = gd.dataSource._data.length;
+                    var chkall = $('#chkall').is(':checked');
+                    var chkfilter = $('#chkfilter').is(':checked');
+                    var chktemp = $('#chktemp').is(':checked');
+                    var twokendobox = true;
+                    gd.dataSource.pageSize(len);
+                    if (e.sender.dataSource._data.length == len) {
+                        twokendobox = false;
+                        exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                    }
+                    else {
+                        exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                    }
+                    gd.dataSource.pageSize('10');
+                    return false;
+                },
+
+
+
+
+                height: 400,
+                groupable: false,
+
+
+
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                 {
+                        field: "In_servicereq_rowid",
+                     title: "servicereq_rowid",
+                     hidden: true
+                 },
+            {
+                field: "In_farmer_code",
+                title: "Farmer ID",
+                width: 150,
+
+            },
+            {
+                field: "In_fpomember_code",
+                title: "Member ID",
+                width: 150,
+
+            },
+            {
+                field: "In_member_name",
+                title: "Farmer Given Name",
+                width: 150,
+
+            },
+            {
+                field: "In_member_sur_name",
+                title: "Surname",
+                width: 150,
+
+            },
+            {
+                field: "In_certificate_sno",
+                title: "Certificate No",
+                width: 150,
+
+            },
+            {
+                field: "In_issued_date",
+                title: "Issued Date",
+                width: 150,
+
+            },
+
+               {
+                   field: "In_dist_from",
+                   title: "Distinct From",
+                   width: 150,
+
+               },
+                {
+                    field: "In_dist_to",
+                    title: "Distinct To",
+                    width: 150,
+
+                },
+                 {
+                     field: "In_servicereq_no",
+                     title: "Service Request No",
+                     width: 150,
+
+                 },
+                  {
+                      field: "In_request_date",
+                      title: "Request Date",
+                      width: 150,
+
+                  },
+                {
+                    field: "In_request_type_desc",
+                    title: "Request Type",
+                    width: 150,
+
+                },
+                 {
+                     field: "In_request_type",
+                     title: "request_type_desc",
+                     width: 150,
+                     hidden: true
+
+                 },
+
+                {
+                    field: "In_requestsub_type",
+                    title: "Request Sub Type",
+                    width: 150,
+                    hidden: true
+                },
+                 {
+                     field: "In_requestsub_type_desc",
+                     title: "requestsub_type_desc",
+                     hidden: true
+                 },
+                  {
+                      field: "In_chklist_status_flag",
+                      title: "chklist_status_flag",
+                      hidden: true
+                  },
+                   {
+                       field: "In_sr_comments",
+                       title: "sr_comments",
+                       hidden: true
+                   },
+                {
+                    field: "In_status_desc",
+                    title: "Status",
+                    width: 150,
+                },
+
+                 {
+                     field: "In_mode_flag",
+                     title: "mode_flag",
+                     hidden: true
+                 },
+            {
+                field: "In_status_code",
+                title: "status_code",
+                hidden: true
+            },
+                {
+                    field: "In_row_timestamp",
+                    title: "row_timestamp",
+                    hidden: true
+                }],
+
+            });
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+</script>
+
+<script>
+    function listLoad() {
+        try {
+            var formval = form_Serialize("Duplicate_Register");
+            var obj_val = JSON.parse(formval);
+            obj_val.In_register_rowid = "0";
+            obj_val.In_fpoorgn_code = getlocalStorage('org_id');
+            obj_val.In_register_type = "QCD_SHA_DUP_REG";           
+            obj_val.In_register_date = $("#txtValidity").val();
+
+            if (obj_val.hasOwnProperty('In_register_date')) {
+                if (obj_val.In_register_date != '')
+                    obj_val.In_register_date = getFormated_StringDate(obj_val.In_register_date);
+            }
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Header = obj_val;
+            var Context = data.context;
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, In_register_rowid: Context.Header.In_register_rowid, In_fpoorgn_code: Context.Header.In_fpoorgn_code }),
+                url: "/DuplicateRegister/FetchServiceList",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    if (response.context.Header != null) {
+                        generate_DuplicateRegister_header(response.context.Header)
+                        //listgrid(response.context.List);
+                        //SetPager(response.context.Filter.out_record_count)
+                    }
+                    if (response.context.Detail != null) {
+                        generate_DuplicateRegister_detail(response.context.Detail)
+                    }
+                  
+                    else {
+                        gridFilter([]);
+                    }
+
+                    if (response.ApplicationException != null ) {
+                        kendoAlert(response.ApplicationException.errorDescription);
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+            });
+
+
+            //retrieve_DuplicateRegister_details(data);
+
+            var colCount = $("#grid_Drop_list").find('.k-grid-header colgroup > col').length;
+
+            //If There are no results place an indicator row
+            if ($("#grid_Drop_list").data("kendoGrid").dataSource._view.length == 0) {
+                $("#grid_Drop_list").find('.k-grid-content tbody')
+                    .append('<tr class="kendo-data-row"><td colspan="' +
+                        colCount +
+                   '" style="text-align:center; padding-top:10px;background-color:#AFE4FA"><b>No pending FPO Duplicate register</b></td></tr>');
+            }
+
+            return false;
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+
+    function get_DuplicateRegister_details(res) {
+        try {
+           var formval = form_Serialize("Duplicate_Register");
+            var obj_val = JSON.parse(formval);
+            obj_val.In_register_rowid = res.IOU_register_rowid;
+            obj_val.In_fpoorgn_code = getlocalStorage('org_id');
+            obj_val.In_register_type = "QCD_SHA_DUP_REG";           
+            obj_val.In_register_date = $("#txtValidity").val();
+
+            if (obj_val.hasOwnProperty('In_register_date')) {
+                if (obj_val.In_register_date != '')
+                    obj_val.In_register_date = getFormated_StringDate(obj_val.In_register_date);
+            }
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Header = obj_val;
+            var Context = data.context;
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, In_register_rowid: Context.Header.In_register_rowid, In_fpoorgn_code: Context.Header.In_fpoorgn_code }),
+                url: "/DuplicateRegister/FetchServiceList",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    if (response.context.Header != null) {
+                        generate_DuplicateRegister_header(response.context.Header)
+                        //listgrid(response.context.List);
+                        //SetPager(response.context.Filter.out_record_count)
+                    }
+                    if (response.context.Detail != null) {
+                        generate_DuplicateRegister_detail(response.context.Detail)
+                    }
+                  
+                    else {
+                        gridFilter([]);
+                    }
+
+                    if (response.ApplicationException != null ) {
+                        kendoAlert(response.ApplicationException.errorDescription);
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+            });;
+
+            }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function generate_DuplicateRegister_header(res)
+    {
+        if (res != null)
+         {
+            $("#txtcommon_id").val(res.In_register_no);
+            $("#txtValidity").val(res.In_register_date);
+            $("#DocStat").val(res.In_status_desc);
+         }
+    }
+    function generate_DuplicateRegister_detail(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+
+                gridFilter(data);
+            }
+            else {
+                gridFilter([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+</script>
+<script>
+    function save(mode) {
+        debugger;
+        try {
+            if ($("#txtMode").val() == "") {
+                $("#txtMode").val('I');
+            }
+            if ($("#DocStat").val() == "Active") {
+                $("#txtMode").val('U');
+            }
+
+            if (mode != undefined) {
+                $("#txtMode").val('D');
+            }
+            var formval = form_Serialize("Duplicate_Register");
+            var obj_val = JSON.parse(formval);
+
+            if ($("#txtcommon_id").val() == undefined || $("#txtcommon_id").val() == "") {
+                obj_val.IOU_register_no = "0";
+            }
+            else {
+                obj_val.IOU_register_no = $("#txtcommon_id").val();
+            }
+
+            obj_val.In_fpoorgn_code = getlocalStorage('org_id');
+            obj_val.In_register_type = "QCD_SHA_DUP_REG";
+            if (obj_val.In_status_code == undefined) {
+                obj_val.In_status_code = "A";
+            }
+            if (obj_val.In_row_timestamp == undefined) {
+                obj_val.In_row_timestamp = "0";
+            }
+            if (getlocalStorage('btn_clk_val') == "Create") {
+                obj_val.In_mode_flag = "I";
+            }
+            else if (getlocalStorage('btn_clk_val') == "Edit") {
+                obj_val.In_mode_flag = "U";
+            }
+
+            var grid_val = JSON.stringify($("#grid_Drop_list").data().kendoGrid._data);
+            var Bind = {};
+            Bind = grid_val;
+            var result = JSON.parse(Bind);
+
+            if ($("#register_rowid").val() == undefined || $("#register_rowid").val() == "") {
+                obj_val.IOU_register_rowid = "0";
+            }
+            else {
+                obj_val.IOU_register_rowid = $("#register_rowid").val();
+            }
+            //  result.entity_rowid = "0";
+            if (result.length == 0) {
+                kendoAlert("Atleast one record needs to be entered");    
+                return false;
+            }
+            $.each(result, function (index, value) {
+                var row_id = value.In_servicereq_rowid;
+                if (row_id == undefined || row_id == "") {
+                    result[index].In_servicereq_rowid = "0";
+                }
+
+                var mode = value.In_mode_flag;
+                if (mode == "S") {
+                    result[index].In_mode_flag = "U";
+                }
+
+            });
+            var obj_grid_val = result;
+
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_val;
+            data.context.Detail = obj_grid_val;
+            var Context = data.context;
+
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, Header: Context.Header, Detail: Context.Detail}),
+                url: "/DuplicateRegister/SaveDuplicateRegister",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    var Res = JSON.parse(response);
+                    if (Res != null) {
+                        var msg = Res.ApplicationException;
+                        //retrive_SingleFetch_Details(Res.context);
+                        if (Res.ApplicationException == null || Res.ApplicationException == "") {
+                            kendoAlert("Duplicate register details saved successfully");
+                            get_DuplicateRegister_details(Res.context.Header)
+                        }
+                        else {
+                            kendoAlert(Res.ApplicationException.errorDescription);
+                        }
+
+
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+            //save_DuplicateRegister_details(data);
+
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+</script>
+
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>

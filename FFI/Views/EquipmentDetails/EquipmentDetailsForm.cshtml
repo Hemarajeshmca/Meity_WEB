@@ -1,0 +1,1348 @@
+﻿@{
+    ViewBag.Form = "ESP Equipment Setup";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+<form id="frm_eqpsetup" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txt_esp_code" class="col-sm-5 control-label required">ESP Code </label>
+                        <div class="col-sm-6">
+                            <input id="txt_esp_code" value="" name="esp_code" style="width: 100%" disabled>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txt_esp_name" class="col-sm-5 control-label required">ESP Name </label>
+                        <div class="col-sm-6">
+                            <input id="txt_esp_name" value="" style="width: 100%" disabled>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <section class="col-md-12">
+                    <div id="tab_list" class="col-md-12">
+                        <ul class="nav nav-tabs">
+
+                            <li class="active">
+                                <a href="#Booking" id="" role="tab" data-toggle="tab">
+                                    Equipment Details
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane fade active in" id="Booking">
+                                <div class="panel panel-default">
+
+                                    <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+                                        <div class="row" style="padding-bottom:5px">
+                                            <div class="col-xs-4">
+                                                <div class=" form-group">
+                                                    <label for="cmb_eqp_code" class=" col-sm-5 control-label required">Equipment Name</label>
+                                                    <div class=" col-sm-6">
+                                                        <input id="cmb_eqp_code" name="equipment_code" data-role="filtercombo" style="width:100%" />
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-4">
+                                                <div class=" form-group">
+                                                    <label for="txtmanufacture_name" class=" col-sm-5 control-label required">Manufacturer Name</label>
+                                                    <div class=" col-sm-6">
+                                                        <input type="text" id="txtmanufacture_name" name="manfaturer_name" class="form-control" maxlength="50">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-4">
+                                                <div class=" form-group">
+                                                    <label for="txtserial_no" class=" col-sm-5 control-label ">Serial No</label>
+                                                    <div class=" col-sm-6">
+                                                        <input type="text" id="txtserial_no" name="serial_no" class="form-control" maxlength="50">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-bottom:5px">
+                                            <div class="col-sm-4">
+                                                <div class=" form-group">
+                                                    <label for="txt_chasis_no" class="col-sm-5 control-label ">Chassis No</label>
+                                                    <div class=" col-sm-6">
+                                                        <input type="text" id="txt_chasis_no" name="chasis_no" class="form-control">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-4">
+                                                <div class=" form-group">
+                                                    <label for="tximei_no" class=" col-sm-5 control-label ">IMEI No</label>
+                                                    <div class=" col-sm-6">
+                                                        <input type="text" id="tximei_no" name="imei_no" class="form-control" maxlength="50">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-4">
+                                                <div class=" form-group">
+                                                    <label for="txtsim_no" class=" col-sm-5 control-label ">SIM No</label>
+                                                    <div class=" col-sm-6">
+                                                        <input type="text" id="txtsim_no" name="sim_no" class="form-control" maxlength="50">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" >
+                                            <div class="col-xs-4">
+                                                <div class=" form-group">
+                                                    <label for="txtgps_id" class=" col-sm-5 control-label ">GPS ID</label>
+                                                    <div class=" col-sm-6">
+                                                        <input type="text" id="txtgps_id" name="gps_id" class="form-control" maxlength="50">
+                                                        <input type="hidden" id="hdn_espequipment_rowid" name="espequipment_rowid">
+                                                        <input type="hidden" id="txt_status_code" name="status_code">
+                                                        <input type="hidden" id="txtMode" name="mode_flag">
+                                                        <input type="hidden" id="txt_row_timestamp" name="row_timestamp">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label for="txtequipment_no" class=" col-sm-5 control-label">Equipment No </label>
+
+                                                    <div class=" col-sm-6">
+                                                        <input type="text" id="txtequipment_no" name="equipment_no" class="form-control" maxlength="50">
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label for="txtconditiondate" class="col-sm-5 control-label">Date</label>
+                                                    <div class=" col-sm-7">
+                                                        @*data-role='datepicker'*@
+                                                        <input class="cusDate" id="txtconditiondate" data-checkdate-msg="Enter Valid Date" name="equipment_image_date" style="width:100%" onkeypress="return date_validate(event)" />
+                                                        <span data-for='valid' class='k-invalid-msg'></span>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-bottom:5px">
+                                            <div class="col-xs-4">
+                                                <div class=" form-group">
+                                                    <label for="file" class=" col-sm-5 control-label">Equipment Photo </label>
+                                                    <div class=" col-sm-7">
+                                                        <img id="farmer_img" src="~/images/NoImage.png" class="col-sm-5 img-bordered profileImg" alt="User Image" height="150" width="50" />
+                                                        <input type="file" name="file" id="farmerfile" src="~/images/noimage.png" style="width: 120px;" class=" col-sm-4 control-label" accept="image/x-png, image/gif, image/jpeg" />
+                                                        @*<button title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="submit" data-original-title="Capture Signature"> <span class="glyphicon glyphicon-camera"></span></button>*@
+                                                        <input type="hidden" id="txtImageHidden" name="equipment_image" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="form-group">                                                   
+
+                                                    <div class=" col-sm-6">                                                      
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                
+                                                    <div class=" col-sm-7">
+                                            
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+
+            <div class="row">
+                <section class="col-md-12">
+                    <div id="tab_list" class="col-md-12">
+                        <ul class="nav nav-tabs">
+                            <li>
+                                <a href="#Rate" id="" role="tab" data-toggle="tab">
+                                    Rate
+                                </a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div class="tab-pane fade active in" id=" Rate">
+                                <div class="panel panel-default">
+                                    <div class="panel-body" style="padding-bottom:5px">
+                                        <div id="grid_ESPrate"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="row">
+                <section class="col-md-12">
+                    <div id="tab_list" class="col-md-12">
+                        <ul class="nav nav-tabs">
+                            <li>
+                                <a href="#Terms" id="" role="tab" data-toggle="tab">
+                                    Terms & Conditions
+                                </a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div class="tab-pane fade active in" id="terms">
+                                <div class="panel panel-default">
+                                    @*<div class="panel-body" style="padding-bottom:5px">
+                                            <p>1)</p>
+                                            <p>2)</p>
+                                            <p>3)</p>
+                                            <p>4)</p>
+                                        </div>*@
+                                    <div id="grid_terms"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="row">
+                <section class="col-md-12">
+                    <div id="tab_list" class="col-md-12">
+                        <ul class="nav nav-tabs">
+                            <li>
+                                <a href="#History" id="" role="tab" data-toggle="tab">
+                                    History
+                                </a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div class="tab-pane fade active in" id="History">
+                                <div class="panel panel-default">
+                                    <div class="panel-body" style="padding-bottom:5px">
+
+                                        <div class="row">
+                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                                <div class="col-sm-12" id="default-example">
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-heading" role="tab" id="headingone">
+                                                            <h4 class="panel-title">
+                                                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseone" aria-expanded="true" aria-controls="collapseone">
+                                                                    <i class="more-less glyphicon glyphicon-plus"></i>
+                                                                    Equipment Details
+                                                                </a>
+                                                            </h4>
+                                                        </div>
+                                                        <div id="collapseone" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingone">
+                                                            <div class="panel-body">
+                                                                <div class="col-sm-12">
+                                                                    <div id="grid_ESP"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-12" id="default-example">
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-heading" role="tab" id="headingTwo">
+                                                            <h4 class="panel-title">
+                                                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" class="collapsed">
+                                                                    <i class="more-less glyphicon glyphicon-plus"></i>
+                                                                    Rate
+                                                                </a>
+                                                            </h4>
+                                                        </div>
+                                                        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                                            <div class="panel-body">
+                                                                <div class="col-sm-12">
+                                                                    <div id="grid_ESPrate1"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-12" id="default-example">
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-heading" role="tab" id="headingThree">
+                                                            <h4 class="panel-title">
+                                                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree" class="collapsed">
+                                                                    <i class="more-less glyphicon glyphicon-plus"></i>
+                                                                    Terms & Conditions
+                                                                </a>
+                                                            </h4>
+                                                        </div>
+                                                        <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                                                            <div class="panel-body">
+                                                                <div class="col-sm-12">
+                                                                    <div id="grid_terms1"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+        </div>
+    </div>
+
+</form>
+<script src="~/API_Scripts/Equipment_Details.js"></script>
+<script src="~/API_Scripts/ESP_EquipmentSetup_retrieveESPEquipmentSetup_APIClient.js"></script>
+<script src="~/API_Scripts/ESP_EquipmentSetup_saveESPEquipmentSetup_APIClient.js"></script>
+<script src="~/API_Scripts/retrieveESPEquipmentSetup_Model.js"></script>
+<script src="~/API_Scripts/saveESPEquipmentSetup_Model.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script>
+    click_act_name = "EquipmentDetailsList";
+    click_ctrl_name = "EquipmentDetails";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+
+<script>
+    $(document).ready(function () {
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#frm_eqpsetup");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+
+        $(".file_attach").attr("hdrtitle", "ESP Equipment Setup");
+        $(".notes").attr("hdrtitle", "ESP Equipment Setup");
+        $("#lblForm_menuid").text("FALEQPDEI");
+
+        Screen_Id = "FALEQPDEI";
+        permission = sec_Permission(Screen_Id);
+        load_master_code();
+        //translate();
+        $("#common_id").text("ESP Code");
+        kendodate_format();
+        $("#divEdit #de_active").hide();
+        $("#divEdit #review").hide();
+        $("#divCreate #deactivate").hide();
+        $("#divCreate #review").hide();
+        $("#bottom_menus").hide();
+
+        $('#frmlayerdiv').hide();
+        gridterms([]);
+        grid_EQPHistory([]);
+        grid_ESPrate([]);
+
+        grid_ESPDetails([]);
+
+        grid_ESPrate1([]);
+        gridterms1([]);
+
+        var org_id = getlocalStorage('org_id');
+        //var org_type = getlocalStorage('org_type');
+        //var orgtname = getlocalStorage('orgtname');
+        var org = getlocalStorage('org');
+        $('#txt_esp_code').val(org_id);
+        $('#txt_esp_name').val(org);
+
+        var ORGFO = "";
+        $("#cmb_eqp_code").empty();
+        EQUNAME = grid_comboScreen_mastercodes("QCD_FL_EQNAME");
+        filter_combobox("cmb_eqp_code", EQUNAME);
+
+        if (getlocalStorage('btn_clk_val') == "Create") {
+            $('#divCreate #review').hide();
+            $("#txtMode").val("I");
+            $("#bottom_menus").hide();
+            $("#DocStat").val("New");
+            $("#txt_status_code").val("A");
+        }
+        else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
+            $('#divEdit #reviewEd').hide();
+            $('#divEdit #btnApprove').hide();
+            $('#divEdit #btnReject').hide();
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("frm_eqpsetup");
+                var obj_val = JSON.parse(formval);
+                obj_val.espequipment_rowid = data.espequipment_rowid;
+                obj_val.esp_code = getlocalStorage('org_id');
+                $("#txtcommon_id").val(getlocalStorage('org_id'));
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                retrieve_EQPdetails_details(data);
+                $("#txtMode").val("U");
+            }
+        }
+
+       
+
+    });
+
+    $("#farmerfile").change(function () {
+        readURL(this);
+    });
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#farmer_img').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+
+        }
+    }
+</script>
+@*loadmaster code*@
+<script>
+    function load_master_code() {
+        debugger;
+        var data = {};
+        var context = WebAPIProxy.getContext();
+        data.userId = context.userId
+        data.orgnId = context.orgnId
+        data.locnId = context.locnId
+        data.localeId = context.localeId
+        data.screen_Id = "FALEQPDEI";
+        var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+    }
+</script>
+@*terms and conditions*@
+<script>
+    var status_desc_list = "";
+    function gridterms(data) {
+        try {
+            $("#grid_terms").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                equipment_rowid: { type: "string" },
+                                termsandconditions_rowid: { type: "string" },
+                                sl_no: { type: "string"},
+                                termsandconditions: { type: "string" },
+                                status_code: { type: "string", defaultValue: "A" },
+                                status_desc: { type: "string"},
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+                toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 200,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                change: function (e) {
+                    $("#grid_terms tbody .k-state-selected").css({
+                        "background-color": "lightgreen"
+                    });
+                },
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_terms').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                    {
+                        field: "equipment_rowid",
+                        title: "equipment_rowid",
+                        hidden: true
+
+                    },
+                    {
+                        field: "termsandconditions_rowid",
+                        title: "termsandconditions_rowid",
+                        hidden: true
+
+                    },
+                    {
+                        field: "sl_no",
+                        title: "SI no",
+                        width: 30,
+
+                    },
+                    {
+                        field: "termsandconditions",
+                        title: "Terms and Conditions",
+                        width: 100,
+                    },
+                    {
+                        field: "status_code",
+                        title: "status_code",
+                        hidden: true
+                    },
+                    {
+                        field: "status_desc",
+                        title: "Status",
+                        width: 50,
+                        editor: function (container, options) {
+                            combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "status_code", "grid_terms")
+                        }
+                    },
+                    {
+                        field: "mode_flag",
+                        title: "Mode",
+                        hidden: true
+                    }],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+    //load_master_code();
+    status_desc_list = grid_comboScreen_mastercodes("STATUS");
+</script>
+@*rate*@
+<script>
+    var uomtype_desc_list = "";
+    var status_desc_list = "";
+    function grid_ESPrate(data) {
+        try {
+            $("#grid_ESPrate").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                equipment_rowid: { type: "string" },
+                                uomtype_code: { type: "string", required: true },
+                                uomtype_desc: {
+                                    validation: {
+                                        dropdownlistValidation: function (input) {
+                                            if (input.is("[name='uomtype_desc']")) {
+                                                var isValid = true;
+                                                input.attr("data-dropdownlistValidation-msg", "UOM Type cannot be blank"); if (input.val().length <= 0) {
+                                                    isValid = false;
+                                                }
+                                                return isValid;
+                                            }
+                                            return true;
+                                        }
+                                    }
+                                },
+                                effective_from: { type: "date", required: true },
+                                effective_to: { type: "date", required: true },
+                                status_code: { type: "string", required: true, defaultValue: "A" },
+                                status_desc: {
+                                    defaultValue: "Active",
+                                    validation: {
+                                        dropdownlistValidation: function (input) {
+                                            if (input.is("[name='status_desc']")) {
+                                                var isValid = true;
+                                                input.attr("data-dropdownlistValidation-msg", "Status Type cannot be blank"); if (input.val().length <= 0) {
+                                                    isValid = false;
+                                                }
+                                                return isValid;
+                                            }
+                                            return true;
+                                        }
+                                    }
+                                },
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+                toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 200,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_ESPrate').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                 {
+                     field: "equipment_rowid",
+                     title: "equipment_rowid",
+                     hidden: true,
+                 },
+                 {
+                     field: "esp_code",
+                     title: "esp_code",
+                     hidden: true,
+                 },
+                 {
+                     field: "equipment_code",
+                     title: "equipment_code",
+                     hidden: true,
+                 },
+                 {
+                     field: "rate",
+                     title: "Rate",
+                     width: 50,
+                     editor: function (container, options) {
+                         item_rate(container, options.field, '9', '2');
+                     },
+                 },
+                 {
+                     field: "uomtype_code",
+                     title: "uomtype_code",
+                     hidden: true
+                 },
+                 {
+                     field: "uomtype_desc",
+                     title: "UOM Type",
+                     editor: function (container, options) {
+                         combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "uomtype_code", "grid_ESPrate")
+                     },
+                     width: 100
+
+                 },
+                 {
+                     field: "effective_from",
+                     title: "Form Date",
+                     width: 50,
+                     format: "{0:dd/MM/yyyy}",
+                     //editor: function (container, options) {
+                     //    $('<input data-text-field="' + options.field + '" data-value-field="' + options.field + '" data-bind="value:' + options.field + '" data-format="' + options.format + '"/>')
+                     //    .appendTo(container)
+                     //    .kendoDatePicker({
+                     //        max: new Date()
+                     //    });
+                     //}
+
+                     //editor: function (container, options) {
+                     //    $('<input data-text-field="' + options.field + '" data-value-field="' + options.field + '" data-bind="value:' + options.field + '" data-format="' + options.format + '"/>')
+                     //    .appendTo(container)
+                     //    .kendoDateTimePicker({
+                     //        max: new Date()
+                     //    });
+                     //}
+                 },
+                 {
+                     field: "effective_to",
+                     title: "To Date",
+                     width: 50,
+                     format: "{0:dd/MM/yyyy}",
+                     //editor: function (container, options) {
+                     //    $('<input data-text-field="' + options.field + '" data-value-field="' + options.field + '" data-bind="value:' + options.field + '" data-format="' + options.format + '"/>')
+                     //    .appendTo(container)
+                     //    .kendoDatePicker({
+                     //        min: new Date()
+                     //    });
+                     //}
+                 },
+                 {
+                     field: "status_code",
+                     title: "status_code",
+                     hidden: true
+                 },
+                 {
+                     field: "status_desc",
+                     title: "Status",
+                     width: 50,
+                     editor: function (container, options) {
+                         combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "status_code", "grid_ESPrate")
+                     }
+                 },
+                 {
+                     field: "mode_flag",
+                     title: "Mode",
+                     hidden: true
+                 }],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+    load_master_code();
+    uomtype_desc_list = grid_comboScreen_mastercodes("QCD_FL_EQUOMTYPE");
+    status_desc_list = grid_comboScreen_mastercodes("STATUS");
+</script>
+@*history*@
+<script>
+    function grid_EQPHistory(data) {
+        try {
+            $("#grid_EQPHistory").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                history_rowid: { type: "string" },
+                                sl_no: { type: "string" },
+                                role: { type: "string" },
+                                changes: { type: "string" },
+                                status_code: { type: "string" },
+                                status_desc: { type: "string", editable: false }
+                            }
+                        }
+                    }
+                },
+                height: 200,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_EQPHistory').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                    {
+                        field: "history_rowid",
+                        title: "history_rowid",
+                        hidden: true
+                    },
+                    {
+                        field: "sl_no",
+                        title: "Serial No",
+                        width: 60,
+                    },
+                    {
+                        field: "role",
+                        title: "Role",
+                        width: 60,
+                    },
+                    {
+                        field: "changes",
+                        title: "Changes",
+                        width: 50
+                    },
+                    {
+                        field: "status_code",
+                        title: "status_code",
+                        hidden: true
+                    },
+                    {
+                      field: "status_desc",
+                      title: "Status",
+                      width: 50,
+                      editor: function (container, options) {
+                         combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "status_code", "grid_ESPrate")
+                      }
+                    }],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+    //var grid_equipment_type = [{ code: 1, description: "Tractor" },
+    //{ code: 2, description: "Power Tiller" }, { code: 3, description: "Threshers" }, ];
+    //equipment_type_list = getGridComboList(grid_equipment_type);
+    //var grid_uomtype_code = [{ code: 1, description: "Per Hour" },
+    //{ code: 2, description: "Per Day" }, { code: 3, description: "Per Week" }];
+    //uomtype_code_list = getGridComboList(grid_uomtype_code);
+</script>
+@*save and fetch*@
+<script>
+    function save()
+    {
+        try {
+            save_Image(); //save equipment image and return the path
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function save_equipment() {
+        try {
+            if ($("#txtMode").val() == "S") {
+                $("#txtMode").val('U');
+            }
+            if ($("#hdn_espequipment_rowid").val() == "") {
+                $("#hdn_espequipment_rowid").val('0');
+            }
+            if ($("#txtequipment_no").val() == "") {
+                $("#txtequipment_no").val('0');
+            }
+            var formval = form_Serialize("frm_eqpsetup");
+            var obj_val = JSON.parse(formval);
+
+            obj_val.esp_code = getlocalStorage('org_id');
+            obj_val.esp_name = getlocalStorage('org');
+
+            if (obj_val.hasOwnProperty('equipment_image_date')) {
+                if (obj_val.equipment_image_date != '')
+                    obj_val.equipment_image_date = getFormated_StringDate(obj_val.equipment_image_date);
+            }
+
+            var espcode = getlocalStorage('org_id');
+            var equipmentcode = $('#cmb_eqp_code').data('kendoComboBox').value();
+            //terms and conditions
+            var grid_val = JSON.stringify($("#grid_terms").data().kendoGrid._data);
+            var Bind = {};
+            Bind = grid_val;
+            var result = JSON.parse(Bind);
+            $.each(result, function (index, value) {
+                var equipment_rowid1 = value.equipment_rowid;
+                if (equipment_rowid1 == undefined || equipment_rowid1 == '') {
+                    result[index].equipment_rowid = "0";
+                }
+                var row_id = value.termsandconditions_rowid;
+                if (row_id == undefined || row_id == '') {
+                    result[index].termsandconditions_rowid = "0";
+                }
+                else {
+                    result[index].mode_flag = "S";
+                }
+                var mode = value.mode_flag;
+                if (mode == "") {
+                    result[index].mode_flag = "I";
+                }
+                if (mode == "S") {
+                    result[index].mode_flag = "U";
+                }
+                result[index].esp_code = espcode;
+                result[index].equipment_code = equipmentcode;
+            });
+            var obj_grid_val = result;
+
+            //rate
+            var grid_val1 = JSON.stringify($("#grid_ESPrate").data().kendoGrid._data);
+            var Bind1 = {};
+            Bind1 = grid_val1;
+            var result1 = JSON.parse(Bind1);
+            
+            $.each(result1, function (index, value) {
+                var equipment_rowid = value.equipment_rowid;
+                if (equipment_rowid == undefined || equipment_rowid == '') {
+                    result1[index].equipment_rowid = "0";
+                }
+                else {
+                    result1[index].mode_flag = "S";
+                }
+                var mode = value.mode_flag;
+                if (mode == "") {
+                    result1[index].mode_flag = "I";
+                }
+                if (mode == "S") {
+                    result1[index].mode_flag = "U";
+                }
+                if ((result1[index].effective_from == null) || (result1[index].effective_from == "")) {
+                    var efd = new Date();
+                    var efdate = kendo.parseDate(efd);
+                    value1 = kendo.toString(efdate, "MM/dd/yyyy");
+                    result1[index].effective_from = value1;
+                }
+                else {
+                    var efd1 = value.effective_from;
+                    var efdate1 = kendo.parseDate(efd1);
+                    value1 = kendo.toString(efdate1, "MM/dd/yyyy");
+                    result1[index].effective_from = value1;
+                }
+
+                if ((result1[index].effective_to == null) || (result1[index].effective_to == "")) {
+                    var etd1 = new Date();
+                    var etdate1 = kendo.parseDate(etd1);
+                    value = kendo.toString(etdate1, "MM/dd/yyyy");
+                    result1[index].effective_to = value;
+                }
+                else {
+                    var etd = value.effective_to;
+                    var etdate = kendo.parseDate(etd);
+                    value = kendo.toString(etdate, "MM/dd/yyyy");
+                    result1[index].effective_to = value;
+                }
+                result1[index].esp_code = espcode;
+                result1[index].equipment_code = equipmentcode;
+            });
+            var obj_grid_val1 = result1;
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_val;
+            data.context.Terms_and_Condition = obj_grid_val;
+            data.context.ESPRate = obj_grid_val1;
+            save_EQP_details(data);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+
+    }
+    function save_Image() {
+        try {
+            var xhr = new XMLHttpRequest();
+            var fd = new FormData();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var value = JSON.parse(xhr.responseText);
+                    if (value.result != undefined) {
+                        $("#txtImageHidden").val(value.result);
+                    }
+                    save_equipment();
+                }
+            };
+
+
+            fd.append("file", document.getElementById('farmerfile').files[0]);
+            fd.append("userID", $('#txtUserId').val());
+            xhr.open("POST", "/UserDefinition/User/", true);
+            xhr.send(fd);
+            xhr.addEventListener("load", function (event) {
+            }, false);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    //bind non grid controls
+    function generate_EQPdetails_header(res) {
+        try {
+            $("#hdn_espequipment_rowid").val(res.espequipment_rowid);
+            $("#txt_esp_code").val(res.esp_code);
+            $("#txt_esp_name").val(res.esp_name);
+            $("#txtcommon_id").val(res.orgn_code);
+            $("#cmb_eqp_code").data("kendoComboBox").value(res.equipment_code); 
+            $("#txtmanufacture_name").val(res.manfaturer_name);
+            $("#txtequipment_no").val(res.equipment_no);
+            $("#txtserial_no").val(res.serial_no);
+            $("#txt_chasis_no").val(res.chasis_no);
+            $("#tximei_no").val(res.imei_no);
+            $("#txtsim_no").val(res.sim_no);
+            $('#txtgps_id').val(res.gps_id);
+            $("#txt_status_code").val(res.status_code);
+            $("#DocStat").val(res.status_desc);
+            $("#txtMode").val(res.mode_flag);
+            $("#txt_row_timestamp").val(res.row_timestamp);
+            $("#txtImageHidden").val(res.equipment_image);
+            //var imgDate = res.equipment_image_date.split('/').reverse().join('/');
+            //$("#txtconditiondate").val(imgDate);
+            $("#txtconditiondate").val(res.equipment_image_date);
+
+
+            var equipmentimage = res.equipment_image;
+            if (equipmentimage != "")
+                document.getElementById("farmer_img").src = "data:image/png;base64," + equipmentimage;
+            else
+                document.getElementById("farmer_img").src = "/images/noimage.png";
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    //bind equipment rate grid
+    function generate_EQPdetails_ESPRate(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                grid_ESPrate(data);
+            }
+            else {
+                grid_ESPrate([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    //bind terms & conditions grid
+    function generate_EQPdetails_Terms_and_Condition(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                gridterms(data);
+            }
+            else {
+                gridterms([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    //bind equipment detail history grid
+    function generate_EQPdetails_EquipmentDetailsHistory(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                grid_ESPDetails(data);
+            }
+            else {
+                grid_ESPDetails([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    //bind equipment rate history grid
+    function generate_EQPdetails_RateHistory(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                grid_ESPrate1(data);
+            }
+            else {
+                grid_ESPrate1([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    //bind equipment terms & conditions grid
+    function generate_EQPdetails_TermsAndConditionsHistory(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                gridterms1(data);
+            }
+            else {
+                gridterms1([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    
+    function get_EQP_details(res)
+    {
+        var formval = form_Serialize("frm_eqpsetup");
+        var obj_val = JSON.parse(formval);
+        obj_val.espequipment_rowid = res.espequipment_rowid;
+        obj_val.esp_code = res.esp_code;
+        //$("#txtcommon_id").val(data.orgn_code);
+        var data = {};
+        data.context = WebAPIProxy.getContext();
+        data.context.Header = obj_val;
+        retrieve_EQPdetails_details(data);
+        $("#txtMode").val("U");
+    }
+</script>
+@*kendo validtion style*@
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>
+@*history grids*@
+<script>
+    function grid_ESPrate1(data) {
+        try {
+            $("#grid_ESPrate1").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                rate_history_rowid: { type: "string" },
+                                rate_rowid: { type: "string" },
+                                uom_code: { type: "string" },
+                                uom_desc: { type: "string" },
+                                from_date: { type: "string" },
+                                to_date: { type: "string" },
+                                user_code: { type: "string" },
+                                user_name: { type: "string" }
+                            }
+                        }
+                    }
+                },
+                height: 200,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_ESPrate1').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                    {
+                        field: "rate_history_rowid",
+                        title: "rate_history_rowid",
+                        hidden : true
+                    },
+                    {
+                        field: "rate_rowid",
+                        title: "rate_rowid",
+                        hidden: true
+                    },
+                    {
+                        field: "uom_code",
+                        title: "uom_code",
+                        hidden: true
+                    },
+                    {
+                        field: "uom_desc",
+                        title: "UOM",
+                        width: 80,
+                    },
+                    {
+                        field: "from_date",
+                        title: "Effective From",
+                        width: 80,
+                    },
+                    {
+                        field: "to_date",
+                        title: "Effective To",
+                        width: 80,
+                    },
+                    {
+                        field: "user_code",
+                        title: "User Code",
+                        width: 80,
+                    },
+                    {
+                        field: "user_name",
+                        title: "User Name",
+                        width: 80,
+                    },
+                ],
+                editable: false
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+    var grid_equipment_type = [{ code: 1, description: "Tractor" },
+    { code: 2, description: "Power Tiller" }, { code: 3, description: "Threshers" }, ];
+    equipment_type_list = getGridComboList(grid_equipment_type);
+    var grid_uomtype_code = [{ code: 1, description: "Per Hour" },
+    { code: 2, description: "Per Day" }, { code: 3, description: "Per Week" }];
+    uomtype_code_list = getGridComboList(grid_uomtype_code);
+</script>
+
+<script>
+    function grid_ESPDetails(data) {
+        try {
+            $("#grid_ESP").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                hespequipment_rowid: { type: "string" },
+                                espequipment_history_rowid: { type: "string" },
+                                equipment_code: { type: "string" },
+                                equipment_name: { type: "string" },
+                                manufacturer_name: { type: "string" },
+                                serial_no: { type: "string" },
+                                chasis_no: { type: "string" },
+                                gps_id: { type: "string" },
+                                imei_no: { type: "string" },
+                                sim_no: { type: "string" },
+                                user_code: { type: "string" },
+                                user_name: { type: "string" },
+                            }
+                        }
+                    }
+                },
+                height: 200,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_ESP').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                    
+                {
+                    field: "hespequipment_rowid",
+                    title: "hespequipment_rowid",
+                    hidden:true
+                },
+                {
+                    field: "espequipment_history_rowid",
+                    title: "espequipment_history_rowid",
+                    hidden: true
+                },
+                {
+                    field: "equipment_code",
+                    title: "equipment_code",
+                    hidden: true
+                },
+                  {
+                      field: "equipment_name",
+                      title: "Equipment Name",
+                      width: 100,
+                  },
+                  {
+                      field: "manufacturer_name",
+                     title: "Manufacture Name",
+                     width: 120
+                  },
+                 {
+                     field: "serial_no",
+                     title: "Serial No",
+                     width: 60,
+                 },
+                  {
+                      field: "chasis_no",
+                      title: "Chasis No",
+                      width: 60,
+                  },
+
+                 {
+                     field: "gps_id",
+                     title: "Gps ID",
+                     width: 50
+                 },
+
+
+                 {
+                     field: "imei_no",
+                     title: "IMEI No",
+                     width: 50,
+                 },
+                 {
+                     field: "sim_no",
+                     title: "Sim No",
+                     width: 80,
+                 },
+                  {
+                      field: "user_name",
+                      title: "User Name",
+                      width: 80,
+                  },
+                    {
+                        field: "user_code",
+                        title: "Row user_code",
+                        hidden:true
+
+                    },],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+</script>
+
+<script>
+    function gridterms1(data) {
+        try {
+            $("#grid_terms1").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                termsandconditions_history_rowid: { type: "string" },
+                                termsandconditions_rowid : { type: "string", editable: false },
+                                serial_no: { type: "string", editable: false },
+                                terms_and_conditions: { type: "string", editable: false },
+                                user_code: { type: "string", editable: false },
+                                user_name: { type: "string", editable: false }
+                            }
+                        }
+                    }
+                },
+
+
+                height: 200,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                change: function (e) {
+                    $("#grid_terms1 tbody .k-state-selected").css({
+                        "background-color": "lightgreen"
+                    });
+                },
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_terms1').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                    {
+                        field: "termsandconditions_history_rowid",
+                        title: "termsandconditions_history_rowid",
+                        hidden: true
+                    },
+                    {
+                        field: "termsandconditions_rowid",
+                        title: "termsandconditions_rowid",
+                        hidden: true
+                    },
+                    {
+                        field: "serial_no",
+                        title: "SI no",
+                        width: 30,
+
+                    },
+                    {
+                        field: "terms_and_conditions",
+                        title: "Terms and Conditions",
+                        width: 100,
+                    },
+
+                    {
+                        field: "user_code",
+                        title: "user_code",
+                        hidden: true
+                    },
+                    {
+                        field: "user_name",
+                        title: "User Name",
+                        width: 30,
+                    }],
+                editable: false
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+</script>
+
+
+

@@ -1,0 +1,607 @@
+﻿@{
+    ViewBag.Form = "Vehicle Master";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+    <div class="row">
+        <div class="col-xs-12">
+        </div>
+    </div>
+
+    <form id="Vehicle_Master" class="form-horizontal" data-role="validator" novalidate="novalidate">
+        <div class="panel panel-default">
+            <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+
+                <div class="row" style="padding-bottom:15px">
+                    <div class="col-sm-4">
+                        <div class=" form-group">
+                            <label for="txt_vehicle_code" class="col-sm-6  control-label">Vehicle Code</label>
+                            <div class=" col-sm-6">
+                                <input type="text" id="txt_vehicle_code" name="IOU_vehicle_code" class="form-control"  readonly />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="txt_manuf_name" class="col-sm-6 control-label required">Manufacturer Name</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="txt_manuf_name" name="In_vehicle_manf_name" class="form-control" maxlength="50">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="txt_vehicle_regno" class="col-sm-6  control-label required">Vehicle Reg.No</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="txt_vehicle_regno" name="In_vehicle_regno" class="form-control" maxlength="50">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" style="padding-bottom:15px">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="max_carrry_weight" class="col-sm-6 control-label required ">Max.Carry Weight (in Kgs)</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="max_carrry_weight" name="In_max_carrry_weight" onkeypress="return isNumberKey(event)" style="text-align:right" class="form-control" maxlength="50">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4" style="display:none">
+                        <div class="form-group" style="display:none">
+                            <label for="loadspace_volume" class="col-sm-5 control-label required">Load space Volume </label>
+                            <div class=" col-sm-6">
+                                <input type="text" id="loadspace_volume" class="form-control" maxlength="50" value="23.21">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="loadfloor_height" class="col-sm-6 control-label required">Load Floor Height (in mtrs)</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="loadfloor_height" name="In_loadspace_height" onkeypress="return isNumberKey(event)" style="text-align:right" class="form-control" maxlength="50">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="loadfloor_width" class="col-sm-6  control-label required">Load Floor Width (in mtrs)</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="loadfloor_width" name="In_loadspace_width" onkeypress="return isNumberKey(event)" style="text-align:right" class="form-control" maxlength="50">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row" style="padding-bottom:15px">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="loadfloor_length" class="col-sm-6 control-label required">Load Floor Length (in mtrs)</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="loadfloor_length" name="In_loadspace_length" onkeypress="return isNumberKey(event)" style="text-align:right" class="form-control" maxlength="50">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="gps_tracking_id" class="col-sm-6  control-label required">GPS Tracking ID</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="gps_tracking_id" name="In_gps_id" onkeypress="return isNumberKey(event)" style="text-align:right" class="form-control" maxlength="50">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="imei_no" class="col-sm-6  control-label required required">IMEI No.</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="imei_no" name="In_imei_no" class="form-control" maxlength="50">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" style="padding-bottom:15px">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="sim_no" class="col-sm-6  control-label required">SIM No.</label>
+                            <div class=" col-sm-6">
+                                <input type="text" name="In_sim_no" onkeypress="return isNumberKey(event)" id="sim_no" class="form-control" maxlength="50" style="text-align:right">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4" style="display:none">
+                        <div class="form-group">
+                            <label for="text_vehicle_rowid" class="col-sm-5 control-label ">Vehcile RowID</label>
+                            <div class=" col-sm-6">
+                                <input type="text" name="IOU_vehicle_rowid" onkeypress="return isNumberKey(event)" id="text_vehicle_rowid" class="form-control" maxlength="50" style="text-align:right">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4" style="display:none">
+                        <div class="form-group">
+                            <label for="txt_agg_code" class="col-sm-5 control-label ">Agg Code</label>
+                            <div class=" col-sm-6">
+                                <input type="text" name="agg_code" onkeypress="return isNumberKey(event)" id="txt_agg_code" class="form-control" maxlength="50" style="text-align:right" value="AGG">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group" style="display:none;">
+                            <label for="txt_status_code" class="col-sm-5 control-label">Status_code</label>
+                            <div class="col-sm-4">
+                                <input type="text" value="A" id="txt_status_code" name="In_status_code" class="form-control" maxlength="10">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3">
+                        <div class="form-group" style="display:none;">
+                            <label for="txtMode" class="col-sm-5 control-label">Mode</label>
+                            <div class="col-sm-4">
+                                <input type="text" id="txtMode" name="In_mode_flag" class="form-control" maxlength="10">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group" style="display:none;">
+                            <label for="row_timestamp" class="col-sm-5 control-label">Timestamp:</label>
+                            <div class="col-sm-4">
+                                <input type="text" id="txt_row_timestamp" name="In_row_timestamp" class="form-control" maxlength="10">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>    
+@*<script>
+    function cleartextbox() {
+        $('#txt_manuf_name').val('');
+        $('#txt_vehicle_regno').val('');
+        $('#max_carry_weight').val('');
+        $('#loadfloor_height').val('');
+        $('#loadfloor_length').val('');
+        $('#loadfloor_width').val('');
+        $('#gps_tracking_id').val('');
+        $('#imei_no').val('');
+        $('#sim_no').val('');
+    }
+</script>*@
+
+    <script>
+        click_act_name = "PAWHSVehicleMasterList";
+        click_ctrl_name = "PAWHSVehicleMaster";
+        form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+    </script>
+<script>
+    function load_master_code() {
+        try {
+            var data = {};
+            data.screen_Id = "PWVEHIMAS";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function viewdisable() {
+        $("#txt_vehicle_code").attr("disabled", true);
+        $("#txt_manuf_name").attr("disabled", true);
+        $("#txt_vehicle_regno").attr("disabled", true);
+        $("#max_carrry_weight").attr("disabled", true);
+        $("#loadfloor_height").attr("disabled", true);
+        $("#loadfloor_width").attr("disabled", true);
+        $("#loadfloor_length").attr("disabled", true);
+        $("#gps_tracking_id").attr("disabled", true);
+        $("#imei_no").attr("disabled", true);
+        $("#sim_no").attr("disabled", true);
+
+    }
+</script>
+    <script>
+        $(document).ready(function () {
+            Form_validate_Name = $('form.form-horizontal').attr('id');
+            var container = $("#Vehicle_Master");
+            kendo.init(container);
+            container.kendoValidator({
+            });
+            $(".file_attach").attr("hdrtitle", "Vehicle ");
+            $(".notes").attr("hdrtitle", "Vehicle ");
+            $("#lblForm_menuid").text("PWVEHIMAS");
+            $("#hide_div").hide();
+
+            Screen_Id = "PWVEHIMAS";
+            permission = sec_Permission(Screen_Id);
+
+           // load_master_code();
+            if (getlocalStorage('btn_clk_val') == "Create") {
+                $('#divCreate #review').hide();
+                $("#txtMode").val("I");
+                $("#bottom_menus").hide();
+                $("#DocStat").val("New");
+            }
+            else if (getlocalStorage('btn_clk_val') == "Edit") {
+                debugger;
+                        $('#divEdit #reviewEd').hide();
+                        $('#divEdit #deactivate').hide();                       
+                        $("#bottom_menus li:nth-child(1)").hide();
+                        $("#bottom_menus li:nth-child(3)").hide();
+                        if (getlocalStorage("ls_pageList") != undefined) {
+                            var data = getlocalStorage("ls_pageList");
+                            var formval = form_Serialize("Vehicle_Master");
+                            var obj_val = JSON.parse(formval);
+                            obj_val.vehicle_rowid = data.vehicle_rowid;
+                            obj_val.agg_code = data.Out_vehicle_code;
+                            var data = {};
+                            data.context = WebAPIProxy.getContext();
+                            data.context.Header = obj_val;
+                            var Context = data.context;
+                            $.ajax({
+                                type: "POST",
+                                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, vehicle_rowid: Context.Header.vehicle_rowid, agg_code: Context.Header.agg_code }),
+                                url: "/PAWHSVehicleMaster/PAWHSVehicleMasterfetch",
+                                dataType: "json",
+                                contentType: 'application/json; charset=utf-8',
+                                success: function (response) {
+                                    debugger;
+                                    if (response.context != null) {
+                                        generate_VehicleMaster_header(response.context.Header);
+                                    }
+                                    else {}
+                                },
+                                error: function (er) {
+                                    alert(er)
+                                    console.log(er)
+                                }
+                            });
+                            $("#txtMode").val("U");
+                            setlocalStorage('doc_no', $("#txt_vehicle_code").val());
+                            setlocalStorage('doc_row_id', '0');
+                            $("#DocStat").val("Active");
+                        }
+                    }
+                    else if (getlocalStorage('btn_clk_val') == "View") {
+                        $('#divEdit #reviewEd').hide();
+                        $('#divEdit #deactivate').hide();
+                        $("#bottom_menus li:nth-child(1)").hide();
+                        $("#bottom_menus li:nth-child(3)").hide();
+                        viewdisable();
+
+                        if (getlocalStorage("ls_pageList") != undefined) {
+                            var data = getlocalStorage("ls_pageList");
+                            var formval = form_Serialize("Vehicle_Master");
+                            var obj_val = JSON.parse(formval);
+                            obj_val.vehicle_rowid = data.Out_vehicle_rowid;
+                            obj_val.agg_code = data.Out_agg_code;
+
+                            var data = {};
+                            data.context = WebAPIProxy.getContext();
+                            data.context.Header = obj_val;
+                            retrieve_Vehicle_MasterScreen(data);
+                            $("#txtMode").val("U");
+                            setlocalStorage('doc_no', $("#txt_vehicle_code").val());
+                            setlocalStorage('doc_row_id', '0');
+                            $("#DocStat").val("Active");
+
+
+                        }
+                    }
+        });
+        
+        $('#max_carrry_weight').keypress(function (event) {
+            var $this = $(this);
+            if ((event.which != 46 || $this.val().indexOf('.') != -1) &&
+               ((event.which < 48 || event.which > 57) &&
+               (event.which != 0 && event.which != 8))) {
+                event.preventDefault();
+            }
+
+            var text = $(this).val();
+            if (text.indexOf('.') != -1) {
+                if ((text.indexOf('.') != -1) &&
+               (text.substring(text.indexOf('.')).length > 2) &&
+               (event.which != 0 && event.which != 8) &&
+               ($(this)[0].selectionStart >= text.length - 2)) {
+                    event.preventDefault();
+                }
+            }
+            else {
+                if ($this.val().length > 17) {
+                    if (event.which != 46) {
+                        event.preventDefault();
+                    }
+                }
+            }
+
+        });
+     
+        $('#loadfloor_height').keypress(function (event) {
+            var $this = $(this);
+            if ((event.which != 46 || $this.val().indexOf('.') != -1) &&
+               ((event.which < 48 || event.which > 57) &&
+               (event.which != 0 && event.which != 8))) {
+                event.preventDefault();
+            }
+
+            var text = $(this).val();
+            if (text.indexOf('.') != -1) {
+                if ((text.indexOf('.') != -1) &&
+               (text.substring(text.indexOf('.')).length > 2) &&
+               (event.which != 0 && event.which != 8) &&
+               ($(this)[0].selectionStart >= text.length - 2)) {
+                    event.preventDefault();
+                }
+            }
+            else {
+                if ($this.val().length > 17) {
+                    if (event.which != 46) {
+                        event.preventDefault();
+                    }
+                }
+            }
+
+        });
+        
+        $('#loadfloor_width').keypress(function (event) {
+            var $this = $(this);
+            if ((event.which != 46 || $this.val().indexOf('.') != -1) &&
+               ((event.which < 48 || event.which > 57) &&
+               (event.which != 0 && event.which != 8))) {
+                event.preventDefault();
+            }
+
+            var text = $(this).val();
+            if (text.indexOf('.') != -1) {
+                if ((text.indexOf('.') != -1) &&
+               (text.substring(text.indexOf('.')).length > 2) &&
+               (event.which != 0 && event.which != 8) &&
+               ($(this)[0].selectionStart >= text.length - 2)) {
+                    event.preventDefault();
+                }
+            }
+            else {
+                if ($this.val().length > 17) {
+                    if (event.which != 46) {
+                        event.preventDefault();
+                    }
+                }
+            }
+
+        });
+       
+        $('#loadfloor_length').keypress(function (event) {
+            var $this = $(this);
+            if ((event.which != 46 || $this.val().indexOf('.') != -1) &&
+               ((event.which < 48 || event.which > 57) &&
+               (event.which != 0 && event.which != 8))) {
+                event.preventDefault();
+            }
+
+            var text = $(this).val();
+            if (text.indexOf('.') != -1) {
+                if ((text.indexOf('.') != -1) &&
+               (text.substring(text.indexOf('.')).length > 2) &&
+               (event.which != 0 && event.which != 8) &&
+               ($(this)[0].selectionStart >= text.length - 2)) {
+                    event.preventDefault();
+                }
+            }
+            else {
+                if ($this.val().length > 17) {
+                    if (event.which != 46) {
+                        event.preventDefault();
+                    }
+                }
+            }
+
+        });
+        function Cancel() {
+            try {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("Vehicle_Master");
+                var obj_val = JSON.parse(formval);
+                obj_val.vehicle_rowid = data.vehicle_rowid;
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                retrieve_Vehicle_MasterScreen(data);
+                $("#txtMode").val("U");
+            }
+            catch (err) {
+                javascript_log4j_root(arguments.callee.name, err);
+            }
+        }
+        function clear_val() {
+        }
+
+        function Get_VehicleMaster_details(res) {
+            debugger;
+            try {
+                $("#txt_vehicle_code").val(res.IOU_vehicle_code);
+                var formval = form_Serialize("Vehicle_Master");
+                var obj_val = JSON.parse(formval);
+                obj_val.vehicle_rowid = res.IOU_vehicle_rowid;
+                obj_val.agg_code = res.IOU_vehicle_code;
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, vehicle_rowid: Context.Header.vehicle_rowid, agg_code: Context.Header.agg_code }),
+                    url: "/PAWHSVehicleMaster/PAWHSVehicleMasterfetch",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        debugger;
+                        if (response.context != null) {
+                            generate_VehicleMaster_header(response.context.Header);
+                            //  generate_AllotmentRegister_detail(response.context.Detail);
+                        }
+                        else {
+
+                        }
+                    },
+                    error: function (er) {
+                        alert(er)
+                        console.log(er)
+                    }
+
+                });
+              //  retrieve_Vehicle_MasterScreen(data);
+               
+                $("#txtMode").val("U");;
+                $("#txt_vehicle_code").val(res.IOU_vehicle_code);
+                setlocalStorage('doc_no', $("#txt_vehicle_code").val());
+                setlocalStorage('doc_row_id', '0');
+
+                
+            }
+            catch (err) {
+                javascript_log4j_root(arguments.callee.name, err);
+            }
+        }
+
+    </script>
+
+    <script>
+        function save() {
+            debugger;
+            try {
+                var reg = $("#txt_vehicle_regno").val();
+                var Weight = $("#max_carrry_weight").val();
+                var Height = $("#loadfloor_height").val();
+                var Width = $("#loadfloor_width").val();
+                var Length = $("#loadfloor_length").val();
+                var GPS = $("#gps_tracking_id").val();
+                var IMEI = $("#imei_no").val();
+                var Sim = $("#sim_no").val();
+
+                if (reg <= '0') {
+                    kendoAlert("Vehicle Reg.No should be valid ");
+                    return false;
+                }
+                if (Weight <= '0') {
+                    kendoAlert("MAx carry Weight should be greater than zero ");
+                    return false;
+                }
+                if (Height <= '0') {
+                    kendoAlert("Loadfloor Height should be greater than zero ");
+                    return false;
+                }
+                if (Width <= '0') {
+                    kendoAlert("Loadfloor Width should be greater than zero ");
+                    return false;
+                }
+                if (Length <= '0') {
+                    kendoAlert("Loadfloor Length should be greater than zero ");
+                    return false;
+                }
+                if (GPS <= '0') {
+                    kendoAlert("GPS Tracking ID should be valid ");
+                    return false;
+                }
+                if (IMEI <= '0') {
+                    kendoAlert("IMEI No. should be valid ");
+                    return false;
+                }
+                if (Sim <= '0') {
+                    kendoAlert("SIM No. should be Valid ");
+                    return false;
+                }
+
+                $("#txt_vehicle_code").removeAttr("readonly");
+                if ($("#text_vehicle_rowid").val() == "") {
+                    $("#text_vehicle_rowid").val('0');
+                }
+                var formval = form_Serialize("Vehicle_Master");
+                var obj_val = JSON.parse(formval);
+
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, Header: Context.Header }),
+                    url: "/PAWHSVehicleMaster/PAWHSVehicleMasterSave",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        console.log(response)
+                        var Res = response;
+                        if (Res.context != null) {
+                            var mode = $("#txtMode").val();
+                            if (mode == "I") {
+                                kendoAlert("Vehicle Master Saved Successfully");
+                                Get_VehicleMaster_details(Res.context.Header);
+                                //get_attribute_group_details(responseJSON.context.Header.entitygrp_rowid);
+                            }
+                            else if (mode == "U") {
+                                kendoAlert("Vehicle Master Updated Successfully");
+                                Get_VehicleMaster_details(Res.context.Header);
+                            }
+                        }
+                        else {
+                            kendoAlert(Res.ApplicationException.errorDescription);
+                        }
+                    },
+                    error: function (er) {
+                        alert(er)
+                        console.log(er)
+                    }
+
+                });
+               // SaveVehicleMasterList(data);
+                //s cleartextbox();
+
+                $("#txt_vehicle_code").attr("readonly", true);
+                $("#txtMode").val("U");
+                $("#DocStat").val("Active");
+
+            }
+            
+            catch (err) {
+                javascript_log4j_root(arguments.callee.name, err);
+            }
+        }
+        
+        function generate_VehicleMaster_header(res) {
+            try {
+                //$("#txtagg_code").attr("readonly", "");
+                $("#txtagg_code").val(res.agg_code);
+                $("#txt_vehicle_code").val(res.In_vehicle_code);
+                $("#txt_manuf_name").val(res.In_vehicle_manf_name);
+                $("#txt_vehicle_regno").val(res.In_vehicle_regno);
+                $("#max_carrry_weight").val(res.In_max_carrry_weight);
+                $("#loadfloor_height").val(res.In_loadspace_height);
+                $("#loadfloor_length").val(res.In_loadspace_length);
+                $("#loadfloor_width").val(res.In_loadspace_width);
+                $("#gps_tracking_id").val(res.In_gps_id);
+                $("#imei_no").val(res.In_imei_no);
+                $("#sim_no").val(res.In_sim_no);
+                $("#text_vehicle_rowid").val(res.vehicle_rowid);
+                $("#txt_status_code").val(res.In_status_code);
+                $("#DocStat").val(res.In_status_desc);
+                $("#txtMode").val(res.In_mode_flag);
+                $("#txt_row_timestamp").val(res.In_row_timestamp);
+                $("#DocStat").val("Active");
+              
+            }
+            catch (err) {
+                javascript_log4j_root(arguments.callee.name, err);
+            }
+        }
+    </script>
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>

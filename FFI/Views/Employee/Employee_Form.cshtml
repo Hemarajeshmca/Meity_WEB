@@ -1,0 +1,307 @@
+﻿
+@{
+    ViewBag.FormName = "Employee_Form";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+
+<form id="form_emp" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row" style="display :none">
+                <div class="col-md-7">
+                    <div class="form-group">
+                        <label for="txt_status_code" class="col-sm-4 control-label">Status Code:</label>
+                        <div class="col-sm-8">
+                            <input id="txt_status_code" name="status_code" type="hidden" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" style="display :none">
+                <div class="col-md-7">
+                    <div class="form-group">
+                        <label for="txt_Row_Id" class="col-sm-4 control-label">Row Id:</label>
+                        <div class="col-sm-8">
+                            <input id="txt_Row_Id" name="Row_Id" type="text" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="display :none">
+                <div class="col-md-7">
+                    <div class="form-group">
+                        <label for="txt_Mode" class="col-sm-4 control-label">Mode:</label>
+                        <div class="col-sm-8">
+                            <input id="txt_Mode" name="Mode" type="text" class="form-control" />
+                            @*<input id="txt_manufacturer" type="text" class="form-control" name="manufacturer" />*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="txt_name" id="lbl_name" class="col-sm-6 control-label required">Name:</label>
+                        <div class="col-sm-6">
+                            <input id="txt_name" type="text" class="form-control" name="Name" maxlength="50" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="txt_shrtcode" id="lbl_shrtcode" class="col-sm-6 control-label">Short Code:</label>
+                        <div class="col-sm-6">
+                            <input id="txt_shrtcode" type="text" class="form-control" name="ShortCode" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="txt_shrtname" id="lbl_shrtname" class="col-sm-6 control-label ">Short Name:</label>
+                        <div class="col-sm-6">
+                            <input id="txt_shrtname" type="text" class="form-control" name="ShrtName" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="cmb_unitlctn" id="lbl_unitlctn" class="col-sm-6 control-label required">Unit Location:</label>
+                        <div class="col-sm-6">
+                            <input id="cmb_unitlctn" name="UnitLocation" data-role="filtercombo" style="width: 100%" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div id="date_div" class="form-group">
+                        <label for="txt_dob" id="lbl_dob" class="col-sm-6 control-label required">Date of birth:</label>
+                        <div class="col-sm-6">
+                            <input class="cusDate1" id="txt_dob" data-role='datepicker' name="txt_dob" style="width:100%" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="txt_usrid" id="lbl_usrid" class="col-sm-6 control-label required">User ID:</label>
+                        <div class="col-sm-5">
+                            <input id="txt_usrid" type="text" class="form-control" name="UsrId" maxlength="25" />
+                        </div>
+                        <div class="col-sm-1">
+                            <a class="HelpWindow fa fa-search fa-lg" data-toggle="modal" href="/HelpFilter/HelpFilter"
+                               hdrtitle="User Details" searchid="S04" data-target="#HelpModal"
+                               onclick=transfer(this,"form","","form_control")
+                               title="Search" style="font-size: 19px; margin-left: -17px; margin-top: 10px;"></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="txt_pwd" id="lbl_pwd" class="col-sm-6 control-label required">Password:</label>
+                        <div class="col-sm-6">
+                            <input id="txt_pwd" type="password" class="form-control" name="Password" maxlength="25" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label for="file" class=" col-sm-5 control-label">Profile Image:</label>
+                        <img id="Profile_img" src="~/images/NoImage.png" class="col-sm-5 img-circle profileImg" alt="User Image" height="91" width="70" style=" margin-top: -51px; margin-left: 31px; " />
+                        <div class=" col-sm-2">
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="txt_email" id="lbl_email" class="col-sm-6 control-label ">Email ID:</label>
+                        <div class="col-sm-6">
+                            <input id="txt_email" type="text" class="form-control" name="Email" maxlength="75" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="txt_mobno" id="lbl_mobno" class="col-sm-6 control-label ">Mobile No:</label>
+                        <div class="col-sm-6">
+                            <input id="txt_mobno" type="text" class="form-control" name="MobileNo" maxlength="10" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+
+                    <div class=" col-sm-4">
+                    </div>
+                    <div class="form-group">
+                        <input type="file" name="file" id="file" src="~/images/noimage.png" style="width: 120px;" class=" col-sm-8 control-label" accept="image/x-png, image/gif, image/jpeg" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body" style="margin-top :-36px">
+            <div class="box-body">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-xs-12">
+
+                            <div id="colorstrip">
+                                <label style="font-weight: 600; font-size :13px">Role Details</label>
+                            </div>
+                            <div id="grid_role"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    click_act_name = "Employee";
+    click_ctrl_name = "Employee";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+
+    var oldform_value = [];
+    $(document).ready(function () {
+        $("#lblForm_menuid").text("EMPLOYEE");
+        $(".file_attach").attr("hdrtitle", "Employee"); 
+        $(".crt_task").attr("hdrtitle", "Employee");
+        $(".chklist").attr("hdrtitle", "Employee");
+        $(".notes").attr("hdrtitle", "Employee");
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var combo_data = [{ code: 1, desc: "Unit Location 1" },
+   { code: 2, desc: "Unit Location 2" },
+   { code: 3, desc: "Unit Location 3" }];
+        filter_combobox("cmb_unitlctn", combo_data);
+
+        var formval = form_Serialize("form_emp");
+        oldform_value = JSON.parse(formval);
+
+        dirty_modal();
+        $(document).on('click', '.dirty_anger a:not([target="_blank"])', onAnchorClick);
+
+        kendodate_format();
+        $("#form_design").css("padding-top", "85px");
+
+        Emp_grid([]);
+
+        $('#DocStat').hide();
+        $('#lbldocNo').css("display", "none")
+    });
+    function Emp_grid(data_role) {
+        try {
+            $("#grid_role").kendoGrid({
+                dataSource: {
+                    data: data_role,
+                    schema: {
+                        model: {
+
+                            fields: {
+                                role_rowid: { type: "string" },
+                                role_id: { type: "string" },
+                                role_name: {
+                                    type: "string",
+                                    validation: {
+                                        dropdownlistValidation: function (input) {
+                                            if (input.is("[name='role_name']")) {
+                                                var isValid = true;
+                                                input.attr("data-dropdownlistValidation-msg", "Role name cannot be blank"); if (input.val().length <= 0) {
+                                                    isValid = false;
+                                                }
+                                                return isValid;
+                                            }
+                                            return true;
+                                        }
+                                    },
+                                },
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+                toolbar: "<a class=' k-grid-add'  id = 'btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 250,
+                dataBinding: setDefaultValues,
+                edit: setDefaultValues,
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_role').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                sortable: true,
+                selectable: true,
+                selectable: "singl",   //  Grid Row Selection
+                navigatable: true,
+                columns: [
+                      {
+                          command: [
+                     {
+                         name: "Delete",
+                         id: "Delete",
+                         imageClass: "fa fa-close",
+                         click: function (e) {
+                             e.preventDefault();
+                             var grid = $("#grid_role").data("kendoGrid");
+                             var dataItem = $("#grid_role").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                             DeleteWindowEvent(e, dataItem, grid);
+                             e.stopImmediatePropagation()
+                         }
+                     },
+                      {
+                          name: "Copy",
+                          imageClass: "fa fa-clipboard",
+                          click: function (e) {
+                              var grid_role = $("#grid_role").data("kendoGrid");
+                              var row = $(e.target).closest("tr");
+                              grid_role.select().each(function () {
+                                  var dataItem = grid_role.dataItem($(this));
+                                  if (dataItem.role_name != "") {
+                                      grid_role.dataSource.add({ role_name: dataItem.role_name, mode_flag: "I" });
+                                  }
+                                  e.stopImmediatePropagation();
+                                  e.preventDefault();
+                                  return false;
+                              });
+                          }
+                      }], title: "&nbsp;", width: "20px",
+                      },
+                      {
+                          field: "role_rowid",
+                          title: "Role Row Id",
+                          hidden: true,
+                      },
+                      {
+                          field: "role_name",
+                          title: "Role Name",
+                          width: 300,
+                         
+                      },
+                    {
+                        field: "role_id",
+                        title: "Role Id",
+                        hidden: true,
+                    },
+                {
+                    field: "mode_flag",
+                    title: "mode_flag",
+                    hidden: true
+                }],
+                editable: true
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+   
+</script>
+
+
+

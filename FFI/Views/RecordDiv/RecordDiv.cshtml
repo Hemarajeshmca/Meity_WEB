@@ -1,0 +1,430 @@
+﻿@{
+    ViewBag.Form = "Dividend Paid";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+<form id="UpdateStatus_form" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-12">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @*<label for="cmb_despatchstatus" class="col-sm-4 control-label required">Despatch Status</label>*@
+                            <label for="cmb_despatchstatus" class="col-sm-4 control-label required">Dividend Status</label>
+                            <div class="col-sm-7">
+                                <input id="cmb_despatchstatus" name="In_despatch_status" data-role="filtercombo" style="width:100%" />
+                            </div>
+                            <button title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button" data-original-title="Refresh" onclick="mandatory()"> <span class="glyphicon glyphicon-refresh"></span></button>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            @*<label for="despatchdate" class=" col-md-4 control-label">Despatch Date:</label>*@
+                            <label for="despatchdate" class=" col-md-4 control-label">Dividend Date:</label>
+                            <div class=" col-sm-4">
+                                <input class="cusDate" data-role='datepicker' id="despatchdate" data-checkdate-msg="Enter Valid Date" name="In_despatch_date" style="width:100%" onkeypress="return date_validate(event)" />
+                                <span data-for='valid' class='k-invalid-msg'></span>
+                            </div>
+                            <div class=" col-sm-4">
+                                <input type="checkbox" id="apply_all" checked> Apply to all
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <div id="grid_Div_Status_Up_list">
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+<script src="~/API_Scripts/Dividend_Management_retrieveDividendUpdateStatus_APIClient.js"></script>
+<script src="~/API_Scripts/Dividend_Management_saveDividendUpdateStatus_APIClient.js"></script>
+<script src="~/API_Scripts/retrieveDividendUpdateStatus_Model.js"></script>
+<script src="~/API_Scripts/saveDividendUpdateStatus_Model.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/API_Scripts/DividendUpdateStatus.js"></script>
+
+<script>
+    $(document).ready(function () {     
+        master_userRoleNew2();
+        kendodate_format();
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#UpdateStatus_form");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        var data = [];
+        gridDivReg(data);
+        setlocalStorage("status", "Active");
+        $(".file_attach").attr("hdrtitle", "Update status");
+        $(".notes").attr("hdrtitle", "Update status");
+        $("#lblForm_menuid").text("Update status");
+        Screen_Id = "DIVSTATUS";
+        permission = sec_Master_Permission(Screen_Id);
+
+        load_master_code();
+        var FY = "";
+        $("#cmb_despatchstatus").empty();
+        FY = grid_comboScreen_mastercodes("QCD_SHA_CERT_DESP_STAT");
+        filter_combobox("cmb_despatchstatus", FY);
+
+        $("#despatchdate").kendoDatePicker({
+            max: new Date(),// sets max date to Jan 1st, 2013
+            format: "dd/MM/yyyy"
+        });
+        $("#RIform").hide();
+        $("#FPOform").hide();
+    });
+</script>
+
+<script>
+    function load_master_code() {
+        try {
+            var data = {};
+            data.screen_Id = "DIVSTATUS";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>  
+    function gridDivReg(data) {
+        try {
+            $("#grid_Div_Status_Up_list").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                shareholder_name: { type: "string" },
+                                share_cer_no: { type: "string" },
+                                distinct_from: { type: "string" },
+                                dividend_amount: { type: "string" },
+                                paymode: { type: "string" },
+                                despatch_date: { type: "date" },
+                                AWB: { type: "string" },
+                                despetch_status: { type: "string" },
+                                remarks: { type: "string" },
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+
+                height: 400,
+                groupable: false,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                    {
+                        field: "In_dividend_rowids",
+                        title: "dividend_rowid",
+                        hidden: true
+                    },
+                    {
+                        field: "In_share_holder_name",
+                        title: "Shareholder Name",
+                        width: 100
+                    },
+                    {
+                        field: "In_certificate_no",
+                        title: "Share Certificate No",
+                        width: 100
+                    },
+                    {
+                        field: "In_ditinct_from_to",
+                        title: "Distinct(From-To)",
+                        width: 100
+                    },
+                    {
+                        field: "In_dividend_amount",
+                        title: "Dividend Amount",
+                        width: 100
+                    },
+                    {
+                        field: "In_payment_mode",
+                        title: "Paymode",
+                        hidden: true,
+                        width: 1
+                    },
+                    {
+                        field: "In_payment_mode_desc",
+                        title: "Paymode",
+                        editor: function (container, options) {
+                            combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "In_payment_mode", "grid_Div_Status_Up_list")
+                        },
+                        width: 100
+                    },
+                    {
+                        field: "In_despatch_date",
+                        title: "Dividend Date",
+                        width: 100,
+                        format: "{0:dd/MM/yyyy}"
+                    },
+                    {
+                        field: "In_bank_ref_no",
+                        title: "Bank Reference No",
+                        width: 100
+                    },
+                    {
+                        field: "In_despatch_status",
+                        title: "Despatch Status",
+                        hidden: true
+                    },
+                    {
+                        field: "In_despatch_status_desc",
+                        title: "Dividend Status",
+                        editor: function (container, options) {
+                            combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "In_despatch_status", "grid_Div_Status_Up_list")
+                        },
+                        width: 100
+                    },
+                    {
+                        field: "In_despatch_remark",
+                        title: "Remarks",
+                        width: 100
+                    },
+                    {
+                        field: "In_status_code",
+                        title: "status_code",
+                        hidden: true
+                    },
+                    {
+                        field: "In_status_desc",
+                        title: "Status",
+                        width: 100
+                    },
+                    {
+                        field: "In_mode_flag",
+                        title: "Mode",
+                        hidden: true
+                    },
+                    {
+                        field: "In_row_timestamp",
+                        title: "row_timestamp",
+                        hidden: true
+                    }
+                ],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+        load_master_code();
+        In_payment_mode_desc_list = grid_comboScreen_mastercodes("QCD_AEPS_PAYMENT_MODE");
+        In_despatch_status_desc_list = grid_comboScreen_mastercodes("QCD_SHA_CERT_DESP_STAT"); 
+        In_status_desc_list = grid_comboScreen_mastercodes("STATUS");
+    }    
+</script>
+<script>
+    function fetch_details() {
+        
+        var formval = form_Serialize("UpdateStatus_form");
+        var obj_val = JSON.parse(formval);
+        var org_id = getlocalStorage('org_id');
+        obj_val.In_fpoorgn_code = org_id;
+        if (obj_val.In_despatch_date == "" || obj_val.In_despatch_date == undefined)
+            obj_val.In_despatch_date = '0';
+        else
+            obj_val.In_despatch_date = getFormated_StringDate(obj_val.In_despatch_date);
+        var data = {};
+        data.context = WebAPIProxy.getContext();
+        data.context.Header = obj_val;
+        var Context = data.context;
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, In_fpoorgn_code: Context.Header.In_fpoorgn_code, In_despatch_status: Context.Header.In_despatch_status, In_despatch_date: Context.Header.In_despatch_date }),
+            url: "/RecordDiv/ServiceList",
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                debugger;
+                if (response.context.Header != null) {
+                    generate_DividendRegister_header(response.context.Header)
+                    //listgrid(response.context.List);
+                    //SetPager(response.context.Filter.out_record_count)
+                }
+                if (response.context.Detail != null) {
+                    generate_Dividend_StatusUpdateStatus_detail(response.context.Detail)
+                }
+               
+                else {
+                    gridDivReg([]);
+                }
+                if (response.ApplicationException != null) {
+                    kendoAlert(response.ApplicationException.errorDescription);
+                }
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+        });
+        //retrieve_DividendUpdateStatus_details(data);
+        var colCount = $("#grid_Div_Status_Up_list").find('.k-grid-header colgroup > col').length;
+
+        //If There are no results place an indicator row
+        if ($("#grid_Div_Status_Up_list").data("kendoGrid").dataSource._view.length == 0) {
+            $("#grid_Div_Status_Up_list").find('.k-grid-content tbody')
+                .append('<tr class="kendo-data-row"><td colspan="' +
+                    colCount +
+               '" style="text-align:center; padding-top:10px;background-color:#AFE4FA"><b> No records match the provided criteria for Dividend payment update </b></td></tr>');
+        }
+    }
+
+    function save() {
+        debugger;
+        var formval = form_Serialize("UpdateStatus_form");
+        var obj_val = JSON.parse(formval);
+        var org_id = getlocalStorage('org_id');
+        obj_val.In_fpoorgn_code = org_id;
+
+        var grid_val1 = JSON.stringify($("#grid_Div_Status_Up_list").data().kendoGrid._data);
+
+
+
+        var Bind1 = {};
+        Bind1 = grid_val1;
+        var result1 = JSON.parse(Bind1);
+        $.each(result1, function (index, value) {
+            var dividend_rowid = value.In_dividend_rowid;
+            var despatchdate = value.In_despatch_date;         
+            if (dividend_rowid == undefined) {
+                result1[index].In_dividend_rowid = "0";
+            }       
+            var date = kendo.parseDate(despatchdate);
+            value = kendo.toString(date, "MM/dd/yyyy");
+            result1[index].In_despatch_date = value;
+            var mmode = result1[index].In_mode_flag;
+            if (mmode == "S") {
+                result1[index].In_mode_flag = "U";
+            }
+            if (result1[index].In_despatch_date == undefined || result1[index].In_despatch_date == "") {
+                result1[index].In_despatch_date = "0";
+            }
+        });
+        var obj_grid_val1 = result1;
+        var data = {};
+
+        data.context = WebAPIProxy.getContext();
+        data.context.Header = obj_val;
+        data.context.Detail = obj_grid_val1;
+        var Context = data.context;
+
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({ orgnId: Context.orgnId, locnId: Context.locnId, userId: Context.userId, localeId: Context.localeId, Header: Context.Header, Detail: Context.Detail }),
+            url: "/RecordDiv/SaveDividendUpdate",
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                debugger;
+              //  var Res = JSON.parse(response);
+                var Res = response;
+                if (Res.document.context.Header.In_despatch_status != null) {
+                    kendoAlert("Dividend update status details saved successfully");
+                    ////   var msg = Res.ApplicationException;
+                    //   //retrive_SingleFetch_Details(Res.context);
+                    //   if (Res.ApplicationException == null || Res.ApplicationException == "") {
+
+                    //       //get_Div_Reg__details(Res)
+                    //   }
+                    //   else {
+                    //       kendoAlert(Res.ApplicationException.errorDescription);
+                    //   }
+                }
+                else {
+                    kendoAlert("Dividend update status details failed");
+                }
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+
+        });
+        //save_DividendUpdateStatus_details(data);
+    }
+
+    function generate_Dividend_StatusUpdateStatus_detail(res) {       
+        if ($("#despatchdate").val() != "") {
+            var date = $("#despatchdate").val();
+            var code = date.split("/");
+            var applydate = code[1] + '/' + code[0] + '/' + code[2];
+        }
+        if (res != null) {
+            var data = changedataType(res);
+            gridDivReg(data);
+            if ($('#apply_all').is(':checked')) {
+                if (applydate != "" && applydate != undefined) {
+
+                    var grid_val = JSON.stringify($("#grid_Div_Status_Up_list").data().kendoGrid._data);
+                    var Bind = {};
+                    Bind = grid_val;
+                    var result = JSON.parse(Bind);
+                    $.each(result, function (index, value) {
+
+                        var date = kendo.parseDate(applydate);
+                        value = kendo.toString(date, "MM/dd/yyyy");
+                        result[index].In_despatch_date = value;
+
+                    });
+                    gridDivReg(result);
+                }
+                else {
+                    var data = changedataType(res);
+                    gridDivReg(data);
+                }
+            }
+            else {
+                var data = changedataType(res);
+                gridDivReg(data);
+            }
+        }
+        else {
+            gridDivReg([]);
+        }
+    }
+    function get_UpdateStatus_details() {
+        fetch_details();
+    }
+    function mandatory() {
+        try {
+            var mandatory_check = true;
+
+            var grid_validate_msg = "";
+
+            if ($('#cmb_despatchstatus').data("kendoComboBox").value() == "") {
+                grid_validate_msg += "Despatch status cannot be blank <br>";
+                mandatory_check = false;
+            }
+
+            if (mandatory_check == false) {
+                kendoAlert(grid_validate_msg);
+                return false;
+            }
+            else {
+                return fetch_details();
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+
+
+
+
+
+

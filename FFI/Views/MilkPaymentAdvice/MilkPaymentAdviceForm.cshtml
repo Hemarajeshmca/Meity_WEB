@@ -1,0 +1,2110 @@
+﻿@{
+    ViewBag.Form = "Milk Payment Advice";
+    ViewBag.helpName = "MilkPaymentAdvice.html";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.min.js"></script>
+
+<form id="MapMilk_DNew_form" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:25px">
+            <div class="row" style="padding-top:10px;">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txt_bill" class="col-sm-4 control-label">Advice For Bill</label>
+                        <div class="col-sm-5" style="width:200px;">
+                            <input type="text" id="txt_bill" name="ccbill_no" class="form-control" maxlength="50" onchange="advice_bill()" readonly>@**@
+
+                        </div>
+                        <div id="pay_help">
+                            <a class="HelpWindow fa fa-search fa-lg" role="button" id="pay_help1" data-toggle="modal" href="/HelpFilter/HelpFilter" hdrtitle="Payment Advice Details" searchid="S04" data-target="#HelpModal" onclick=transfer(this,"form","","form_control"); title="Search" style="font-size: 19px; margin-left: 0px; margin-top: 10px;"></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+
+                        <label for="txt_supply_period" class="col-sm-5 control-label">Milk Supply Period</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txt_supply_period" name="milk_supply_period" class="form-control" maxlength="50" style="width:175px" readonly>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-sm-4">
+
+                    <div class="form-group">
+                        <label for="txtpayment_date" class="col-sm-5 control-label required">Payment Advice Date</label>
+                        <div class="col-sm-5" id="pays_date" style="display:block">
+                            <input class="cusDate" data-role='datepicker' id="txtpayment_date" name="payment_date" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                        <div class="col-sm-5" id="paydate" style="display:none">
+                            <input id="txtpay_date" name="pay" readonly class="form-control" />
+                            <input type="hidden" id="milkmancode">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-5" style="display:none">
+                    <div class="form-group">
+                        <label for="txt_paymenthead_rowid" class="col-sm-5 control-label">Payment Row Id:</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txt_paymenthead_rowid" name="paymenthead_rowid" class="form-control" maxlength="125">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-5" style="display:none">
+                    <div class="form-group">
+                        <label for="txtpayment_id" class="col-sm-5 control-label">Payment No:</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtpayment_id" name="payment_no" class="form-control" maxlength="125">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-5" style="display:none">
+                    <div class="form-group">
+                        <label for="txt_row_timestamp" class="col-sm-5 control-label">Timestamp:</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txt_row_timestamp" name="row_timestamp" class="form-control" maxlength="125">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-5" style="display:none">
+                    <div class="form-group">
+                        <label for="txt_status_code" class="col-sm-5 control-label">Status Code:</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txt_status_code" name="status_code" class="form-control" maxlength="125">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3" style=" display:none">
+                    <div class="form-group" style=" display:none">
+                        <label for="txtMode" class="col-sm-5 control-label">Mode Flag</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtMode" name="mode_flag" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-5" style="display:none">
+                    <div class="form-group">
+                        <label for="txt_retailsale_amount" class="col-sm-5 control-label">Retailsale amount:</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txt_retailsale_amount" name="retailsale_amount" class="form-control" maxlength="125">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-5" style="display:none">
+
+                </div>
+                <div class="col-sm-5" style="display:none">
+                    <div class="form-group">
+                        <label for="txtcp_bill_amount" class="col-sm-5 control-label">Amount:</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtcp_bill_amount" name="cp_bill_amount" class="form-control" maxlength="125">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-5" style="display:none">
+                    <div class="form-group">
+                        <label for="txt_deduction_per_ltr" class="col-sm-5 control-label">Deduction per ltr:</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txt_deduction_per_ltr" name="deduction_per_ltr" class="right" maxlength="125">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3" style=" display:none">
+                    <div class="form-group" style=" display:none">
+                        <label for="txtdeduction_amount" class="col-sm-5 control-label"> Deduction amount</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtdeduction_amount" name="deduction_amount" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3" style=" display:none">
+                    <div class="form-group" style=" display:none">
+                        <label for="txtprocess_status" class="col-sm-5 control-label">Process status</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtprocess_status" name="process_status" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3" style=" display:none">
+                    <div class="form-group" style=" display:none">
+                        <label for="txtprocess_payment" class="col-sm-5 control-label">Process payment</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtprocess_payment" name="process_payment" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-xs-6">
+                    <label>Transfer Bill Details:</label>
+                    <div id="MilkBill_grid">
+                    </div>
+                </div>
+                <div class="col-xs-2">
+
+                </div>
+
+                <div class="col-xs-6">
+                    <label>Retail Sale Details:</label>
+                    <div id="Milk_retail_grid">
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-xs-12">
+                    <div class="col-sm-2">
+                        <label>Payment Bill Details:</label>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div id="Payment_bill_grid">
+                    </div>
+                </div>
+                <div class="row" >
+                    <div class="col-xs-10" style="padding-top:15px">
+                        <a data-toggle="modal" type="button" id="btnrateview" style="float:right" class="btn btn-info" href="../MilkPaymentAdvice/MilkPaymentAdviceview" data-target="#milkview"><span class="glyphicon glyphicon-eye-open">View</span></a>
+                    </div>
+                    <div class="col-xs-2" style="padding-top:15px">
+                        <a data-toggle="modal" type="button" id="btnerror"class="btn btn-info" href="../MilkPaymentAdvice/MilkPaymentAdviceerror" data-target="#milkview1"><span class="glyphicon glyphicon-eye-open">Error</span></a>
+                    </div>
+                </div>
+                </div> 
+            <div class="row" style="padding-top:34px;padding-bottom:15px" id="editpay">
+                <div class="col-xs-12" style="padding-bottom:15px;width:103%">
+                    <div class="col-sm-2"><label style="padding-left:0px;margin-left:-15px">Payment Advice ID</label></div>
+                    <div class="col-sm-7">
+                        
+                    </div>
+
+                    <div class="col-sm-3" style="padding-left:0px">
+                        <button type="button" class="btn btn-info"  id="calpay" onclick="payment()">Calculate Payment Advice</button>
+                        <a data-toggle="modal" id="btnReport" type="button" class="Export btn btn-sm btn-info" href="~/Reportlist/Report" data-target="#ReportModal"><span class="glyphicon glyphicon-export"></span></a>
+                        @*<a data-toggle="modal" id="btnExcel" type="button" class="Export btn btn-sm btn-info" href="~/Reportlist/Report" data-target="#ReportModal"><span class="glyphicon glyphicon-export"></span></a>*@
+                        <button type="button" id="btnExport" style="background-color:skyblue" class="Export btn btn-sm btn-info"><span class="glyphicon glyphicon-export"></span>Advance</button>
+                        @*<button type="button" class="Export btn btn-sm btn-info" id="btnExport" style="width: 75px; height: 33px;"> <span class=" glyphicon glyphicon-export  "></span> Advance  </button>*@
+                    </div>
+                </div>
+                <div class="col-xs-12" style="margin-top:-15px;padding-bottom:20px">
+                    <div id="grid">
+                    </div>
+                </div>
+
+                <div class="row" style="padding-top:10px; display:none">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="txttot_amount" class="col-sm-5">Total Amount (Rs.)</label>
+                            <div class=" col-sm-5">
+                                <input type="text" id="txttot_amount" name="total_advance_amount" class="form-control" maxlength="50" style="margin-left:15px;text-align:right" readonly />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <div class="col-sm-5"></div>
+                            <div class=" col-sm-6">
+                                <input type="text" id="txtmilkacc" name="total_gross_amount" class="form-control" style="text-align:right" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <div class="col-sm-5"></div>
+                            <div class=" col-sm-6">
+                                <input type="text" id="txtmilkacc1" name="total_net_amount" class="form-control" style="text-align:right" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="Assign_sevices"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="~/API_Scripts/Payment_Advice_retrievePaymentAdvice_APIClient.js"></script>
+<script src="~/API_Scripts/Payment_Advice_retrievePaymentAdviceBillDetail_APIClient.js"></script>
+<script src="~/API_Scripts/Payment_Advice_retrievePaymentAdviceList_APIClient.js"></script>
+<script src="~/API_Scripts/Payment_Advice_savePaymentAdvice_APIClient.js"></script>
+<script src="~/API_Scripts/PaymentAdvice.js"></script>
+<script src="~/API_Scripts/retrievePaymentAdvice_Model.js"></script>
+<script src="~/API_Scripts/retrievePaymentAdviceBillDetail_Model.js"></script>
+<script src="~/API_Scripts/retrievePaymentAdviceList_Model.js"></script>
+<script src="~/API_Scripts/savePaymentAdvice_Model.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/CommonScripts/report.js"></script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+
+<script>
+    click_act_name = "MilkPaymentAdviceList";
+    click_ctrl_name = "MilkPaymentAdvice";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+
+<script>
+
+
+
+    $(document).ready(function () {
+        kendodate_format();
+
+        $(".Export").attr("hdrtitle", "Payment Advice List");
+        $(".Export").attr("SubTreeId", "");
+        Screen_Id = "MBADVGEN";
+        permission = sec_Permission(Screen_Id);
+
+        //master_userRoleNew1();
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#MapMilk_DNew_form");
+        kendo.init(container);
+        container.kendoValidator({
+            rules: {
+                checkdate: function (input) {
+                    if (input.attr("data-role") == "datepicker") {
+                        var res = isDate(input.val());
+                        return res;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+            }
+        });
+        setlocalStorage("milkmancode", "");
+        $("#bottom_menus").hide();
+        $("#common_id").text("Payment Advice ID")
+        $('#divCreate #review').hide();
+        if (getlocalStorage('btn_clk_val') == "Create") {
+            $('#divCreate #review').hide();
+            $("#txtMode").val("I");
+            $("#bottom_menus").hide();
+
+            $("#txtpayment_date").removeAttr("readonly");
+            //load_master_code();
+            $('#editpay').hide();
+            $('#editpay1').hide();
+            // advice_bill();
+
+            grid_adv([]);
+            bill_details([]);
+            retail_details([]);
+            Milk_Payment_Details([]);
+            grid_rate([]);
+            $("#DocStat").val("New");
+            $("#btnerror").hide();
+            $('#btnrateview').hide();
+            //calculate();
+        }
+        else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
+
+            $('#divEdit #reviewEd').hide();
+            $('#divEdit #deactivate').hide();
+            $("#pay_help").hide();
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("MapMilk_DNew_form");
+                var obj_val = JSON.parse(formval);
+                obj_val.paymenthead_rowid = data.paymenthead_rowid;
+                obj_val.payment_no = data.payment_no;
+                $("#paydate").css("display", "block");
+                $("#pays_date").css("display", "none");
+                // $("#txtpayment_date").attr("disabled", "disabled");
+                // $("#txtpayment_date").attr("readonly", "readonly");
+                var data = {};
+                data.context = WebAPIProxy.getContext();;
+                data.context.Header = obj_val;
+
+                retrieve_paymntadvce_details(data);
+
+                //$("#txt_expense_rowid").val(data.expense_rowid);
+                //$("#txtcommon_id").val(data.expense_no);
+                //$("#txtMode").val("U");
+                //$('#cmb_collection').data("kendoComboBox").enable(false);
+                //$('#cmb_finyear').data("kendoComboBox").enable(false);
+
+                setlocalStorage('doc_row_id', $("#txt_paymenthead_rowid").val());
+                setlocalStorage('doc_no', $("#txtcommon_id").val());
+                //  calculate();
+                //message();
+              
+                    $('#btnrateview').hide();
+                    $('#btnerror').hide();
+                         }
+        }
+
+
+        //     $("#txt_bill").change(function () { alert("content changed"); });
+        $('#HelpModal').on('hide.bs.modal', function (e) {
+            if ($("#txt_bill").val() != "") {
+                advice_bill();
+            }
+        });
+        $("#btnExport").kendoButton({
+            click: function () {
+                $("#grid").data("kendoGrid").saveAsExcel();
+            }
+        });
+       
+        $("#btnExport1").kendoButton({
+            click: function () {
+
+            }
+        });
+        function message() {
+            var colCount = $("#grid").find('.k-grid-header colgroup > col').length;
+            if ($("#grid").data("kendoGrid").dataSource._view.length == 0) {
+                
+                $('#btnrateview').hide();
+                $('#btnerror').show();
+                //$('#btnerror').hide();
+            } else {
+                $('#btnerror').hide();
+                $('#btnrateview').show();
+                $("#calpay").attr("disabled", true);
+            }
+            return false;
+        }
+    });
+</script>
+<script>
+    //var data = [];
+    function gridFilter(data) {
+        try {
+            $("#grid_Drop_list").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+
+                                report_ref_no: { type: "string" },
+                                payment_for: { type: "string" },
+                                period_from: { type: "string" },
+                                period_to: { type: "string" },
+                                report_date: { type: "string" },
+                                Records_processed: { type: "string" },
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+
+                height: 200,
+                sortable: true,
+                selectable: true,
+                selectable: "singl", //  Grid Row Selection
+                navigatable: true,
+                groupable: false,
+
+                columns: [{
+                    command: [
+            {
+                name: "View",
+                id: "View",
+                imageClass: "fa fa-print",
+
+            },
+                    ], title: "Action", width: "25px",
+                }, {
+                    field: "report_ref_no",
+                    title: "Report Reference No",
+                    width: 100
+                },
+                {
+                    field: "payment_for",
+                    title: "Payment for",
+                    width: 100
+                },
+                 {
+                     field: "payment_advice_date",
+                     title: "Payment Advice Date",
+                     width: 100
+                 },
+                  {
+                      field: "records_processed",
+                      title: "Records Processed",
+                      width: 100
+                  },
+                {
+                    field: "mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }],
+                editable: true
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script type="text/x-kendo-template" id="assignservices_template" style="color: #004db6">   
+        <button type="button" class="close" onclick="closeModal1()">&times;</button>      
+    <button type="button" id="btnExport1" onclick="excel()" style="background-color:skyblue" class="Export btn btn-sm btn-info"><span class="glyphicon glyphicon-export"></span></button>
+      <div class="modal-body" style="height:434px">
+        <div class="row" style="padding-bottom:15px">
+            <div class="col-sm-12">
+                <div id="gr_Services">
+                    <div id="grid_rate"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+</script>
+<script>
+  
+    function grid_rate(data) {
+        $("#grid_rate").kendoGrid(
+                  {
+                      excel: {
+                          fileName: "Milk Rate.xlsx",
+                          filterable: true,
+                          allPages: false
+                      },
+                      dataSource: {
+                          data: data,
+                          schema: {
+                              model: {
+                                  fields: {
+                                      farmer_code: { type: "string" },
+                                      farmer_name: { type: "string" },
+                                      Milkman_code: { type: "string" },
+                                      milk_qty: { type: "string" },
+                                      fat_percent: { type: "string" },
+                                      snf_percent: { type: "string" },
+                                      milk_rate: { type: "string" },
+                                      milk_from: { type: "string" },
+                                      milksession_code: { type: "string" },
+                                      advance: { type: "string" },
+                                  }
+                              }
+                          }
+                      },
+                      height: 400,
+                      groupable: false,
+                      dataBinding: setDefaultValues,
+                      editable: true,
+                      dataBound: function (e) {
+                          resultData = e.sender._data;
+                          var rows = $('#grid_rate').data('kendoGrid').tbody.children();
+                          setColor(rows, resultData);
+                          e.preventDefault();
+                      },
+                      sortable: true,
+                      selectable: true,
+                      navigatable: true,
+                      columns: [
+                       {
+                           field: "farmer_code",
+                           title: "Farmer Code",
+                           width: 100,
+                       },
+                       {
+                           field: "farmer_name",
+                           title: "Farmer Name",
+                           width: 100,
+                       },
+                       {
+                           field: "milkman_code",
+                           title: "Milkman Code",
+                           width: 100,
+                       },
+
+                      {
+                          field: "milksession_code",
+                          title: "Milk Session",
+                          width: 120
+                      },
+
+                     {
+                         field: "milk_from",
+                         title: "Milk From",
+                         width: 100,
+                     },
+                       {
+                           field: "milk_qty",
+                           title: "pouring milk",
+                           attributes: { style: "text-align:right;" },
+                           width: 100,
+                       },
+                       {
+                           field: "fat_percent",
+                           title: "FAT",
+                           attributes: { style: "text-align:right;" },
+                           width: 100,
+
+                       },
+                       {
+                           field: "snf_percent",
+                           title: "SNF",
+                           attributes: { style: "text-align:right;" },
+                           width: 100,
+                       },
+                       {
+                           field: "awm_percent",
+                           title: "AWN",
+                           attributes: { style: "text-align:right;" },
+                           width: 100,
+
+                       },
+                       {
+                           field: "milk_rate",
+                           title: "Milk Rate",
+                           attributes: { style: "text-align:right;" },
+                           width: 100,
+                       },
+                       {
+                           field: "advance",
+                           title: "Advance",
+                           attributes: { style: "text-align:right;" },
+                           width: 100,
+                       },
+                       {
+                           field: "milk_amount",
+                           title: "Amount",
+                           attributes: { style: "text-align:right;" },
+                           width: 100,
+                       },
+                      ],
+                     
+                  });
+    }
+    function grid_adv(data) {
+        try {
+            $("#grid").kendoGrid({
+                excel: {
+                    fileName: "Milk Payment Advice.xlsx",
+                    filterable: true,
+                    allPages: false
+                },
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+
+                                payment_no: { type: "string", editable: false },
+                                milkman_code: { type: "string", editable: false },
+                                farmer_name: { type: "string", editable: false },
+                                milk_qty: { type: "string", editable: false },
+                                calc_amount: { type: "string", editable: false },
+                                advance_amount: { type: "string", editable: false },
+                                payment_status_desc: { type: "string", editable: false },
+                                payment_mode_desc: { type: "string", editable: false },
+                                dr_bank_code: { type: "string", editable: false },
+                                dr_bank_acc_type: { type: "string", editable: false },
+                                dr_bank_acc_no: { type: "string", editable: false },
+                                dr_bank_ifsc_code: { type: "string", editable: false },
+                                mode_flag: { type: "string", defaultValue: "I" },
+                                action: { value: "View" }
+                            }
+                        }
+                    }
+                },
+                //toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                //excelExport: function (e) {
+                //    var gd = $("#grid").data("kendoGrid");
+                //    var len = gd.dataSource._data.length;
+                //    var chkall = $('#chkall').is(':checked');
+                //    var chkfilter = $('#chkfilter').is(':checked');
+                //    var chktemp = $('#chktemp').is(':checked');
+                //    var twokendobox = true;
+                //    gd.dataSource.pageSize(len);
+                //    if (e.sender.dataSource._data.length == len) {
+                //        twokendobox = false;
+                //        exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                //    }
+                //    else {
+                //        exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                //    }
+                //    gd.dataSource.pageSize('10');
+                //    return false;
+                //},
+                height: 200,
+                groupable: false,
+                editable: true,              
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                       {
+                           field: "payment_no",
+                           title: "Payment ID",
+                           width: 100
+
+                       },
+                    {
+                        field: "milkman_code",
+                        title: "Milkman ID",
+                        width: 100
+                    },
+
+
+                {
+                    field: "farmer_name",
+                    title: "Farmer Name",
+                    width: 150
+
+                },
+
+                 {
+                     field: "milk_qty",
+                     title: "Milk Quantity",
+                     attributes: { style: "text-align:right;" },
+                     width: 90
+                 },
+                 {
+                     field: "calc_amount",
+                     title: "Gross Amount",
+                     attributes: { style: "text-align:right;" },
+                     width: 90
+                 },
+                  {
+                      field: "advance_amount",
+                      title: "Advance",
+                      attributes: { style: "text-align:right;" },
+                      width: 80
+
+                  },
+                   {
+                       field: "payment_amount",
+                       title: " Payment Amount",
+                       attributes: { style: "text-align:right;" },
+                       //   hidden: true,
+                       width: 110
+
+                   },
+
+
+
+                     {
+                         field: "cr_bank_code",
+                         title: "Bank Name",
+
+                         width: 100
+
+                     },
+
+                       {
+                           field: "cr_bank_acc_type",
+                           title: "Acct Type",
+
+                           width: 150
+
+                       },
+                       {
+                           field: "cr_bank_acc_no",
+                           title: "Acct Number",
+                           //    attributes: { style: "text-align:right;" },
+                           width: 100
+
+                       },
+                         {
+                             field: "cr_bank_ifsc_code",
+                             title: "IFSC Code",
+                             //  attributes: { style: "text-align:right;" },
+                             width: 100
+
+                         },
+
+                        {
+                            field: "payment_status_desc",
+                            title: "Payment status",
+                            width: 200
+
+                        },
+                         {
+                             field: "milk_qty",
+                             title: "milk Quantity",
+                             hidden: true,
+                             width: 100
+
+                         },
+                         {
+                             field: "payment_mode",
+                             title: "Paymode Method",
+                             hidden: true,
+                             width: 100
+
+                         },
+
+                     {
+                         field: "dr_bank_code",
+                         title: "Bank Name",
+                         hidden: true,
+                         width: 100
+
+                     },
+
+                         {
+                             field: "dr_bank_acc_type",
+                             title: "Acct Type",
+                             hidden: true,
+                             width: 100
+
+                         },
+                       {
+                           field: "dr_bank_acc_no",
+                           title: "Acct Number",
+                           hidden: true,
+
+                           width: 100
+
+                       },
+
+                          {
+                              field: "dr_bank_ifsc_code",
+                              title: "IFSC Code",
+                              hidden: true,
+
+                              width: 100
+
+                          },
+                         {
+                             field: "payment_mode_desc",
+                             title: "Payment Mode Desc ",
+                             width: 150,
+                             hidden: true
+
+                         },
+                         {
+                             field: "farmer_code",
+                             title: "Farmer cde",
+                             hidden: true,
+                             width: 100
+                         },
+
+                          //{
+                          //    field: "action",
+                          //    title: "action",
+                          //    editor: '<div <button type="button"  style="color: Black"; class="btn btn-default" data-toggle="modal" href="../MilkPaymentAdvice/MilkPaymentAdviceview" data-target="#milkview"><span class="glyphicon glyphicon-eye-open"></span></button></div>',
+                          //    width: 100
+                          //},
+                   //       {
+                   //           command: [
+                   //{
+                   //    name: "View",
+                   //    id: "View",
+                   //    imageClass: "fa fa-eye",
+
+                   //    editor: '<div <button type="button"  style="color: Black"; class="btn btn-default" data-toggle="modal" href="../MilkPaymentAdvice/MilkPaymentAdviceview" data-target="#milkview"><span class="glyphicon glyphicon-eye-open">View</span></button></div>',
+                   //},
+                   //           ], title: "&nbsp;", width: "75px",
+                   //       },
+                    {
+                        command: [{
+                            name: "action",
+                            text: "",
+                            id: "action",
+                            template: '<input type="button" value="View" class="run1 btn_1"  click:Assign_sevices name="services"/>',
+                        }], title: "Action", width: "100px",
+                    },
+                          {
+                              field: "mode_flag",
+                              title: "Mode",
+                              hidden: true
+                          }
+                ],
+
+            });
+            $('#grid').data('kendoGrid').tbody.find('.run1').click(function (e) {
+                var dataitem = $('#grid').data('kendoGrid').dataItem($(e.currentTarget).closest("tr"));
+                save_wnd1.content($("#assignservices_template").html()).center().open();
+                //import_assign_Services([]);
+                grid_rate([]);
+                $("#milkmancode").val(dataitem.milkman_code);
+                fetch_milk_rate1();
+                if (navigator.userAgent.indexOf("Chrome") != -1) {
+                }
+                else if (navigator.userAgent.indexOf("Firefox") != -1) {
+
+                }
+                else {
+                    $("#cont_ht").css("display", "none");
+                }
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+   
+    save_wnd1 = $("#Assign_sevices").kendoWindow({
+        title: "Milk Rate",
+        modal: true,
+        draggable: false,
+        visible: false,
+        resizable: false,
+        width: 895,
+        // height: 430
+    }).data("kendoWindow");
+
+    function closeModal1() {
+        debugger;            
+        $(".k-window .k-window-content").data("kendoWindow").close();     
+    }
+    function excel() {
+        $("#grid_rate").data("kendoGrid").saveAsExcel();
+    }
+</script>
+<script>
+
+    function bill_details(data) {
+        //var grid = $("#MilkBill_grid");
+        //grid.width(600);
+        try {
+            $("#MilkBill_grid").kendoGrid(
+             {
+                 dataSource: {
+                     data: data,
+                     schema: {
+                         model: {
+                             fields: {
+                                 cc_aggrloc_code: { type: "string" },
+                                 cc_aggrloc_desc: { type: "string" },
+                                 cp_aggrloc_code: { type: "string" },
+                                 cp_aggrloc_desc: { type: "string" },
+                                 milk_from: { type: "string" },
+                                 milk_supply_from: { type: "string" },
+                                 milk_supply_to: { type: "string" },
+                                 accepted_qty: { type: "string" },
+                                 milk_rate: { type: "string", defaultValue: "0" },
+                                 milk_amount: { type: "string" },
+                             }
+                         }
+                     },
+
+                 },
+                 width: 617,
+                 height: 200,
+                 sortable: true,
+                 selectable: true,
+                 selectable: "singl",   //  Grid Row Selection
+
+                 navigatable: true,
+                 groupable: false,
+
+                 columns: [
+                       {
+                           field: "cc_aggrloc_code",
+                           title: "CC Code",
+                           hidden: true,
+                           width: 45
+                       },
+                    {
+                        field: "cc_aggrloc_desc",
+                        title: "CC Code",
+                        hidden: true,
+                        width: 100
+                    },
+                    {
+                        field: "cp_aggrloc_code",
+                        title: "CP Code",
+                        hidden: true,
+                        width: 45
+                    },
+
+                    {
+                        field: "cp_aggrloc_desc",
+                        title: "CP Code",
+                        hidden: true,
+                        width: 100
+                    },
+                     {
+                         field: "milk_from",
+                         title: "Milk From",
+                         width: 40
+                     },
+
+                   {
+                       field: "milk_supply_from",
+                       title: "Supplied From",
+                       hidden: true,
+                       width: 60
+                   },
+
+                     {
+                         field: "milk_supply_to",
+                         title: "Supplied To",
+                         hidden: true,
+                         width: 60
+                     },
+                     {
+                         field: "accepted_qty",
+                         title: "Total Milk Amount(Rs)",
+                         attributes: { style: "text-align:right;" },
+                         width: 40
+                     },
+                     {
+                         field: "milk_rate",
+                         title: "Rate",
+                         attributes: { style: "text-align:right;" },
+                         width: 40
+                     },
+                     {
+                         field: "milk_amount",
+                         title: "Gross Amount(Rs)",
+                         attributes: { style: "text-align:right;" },
+                         //   format: "{0:n2}",
+                         //   template: '#= kendo.toString(Quantity, "n2")#  #=Unit#',
+                         //  format: "{0:##.##}",
+                         //   editor: numberEditor,
+                         //  format: '{0:n3}',
+                         width: 40
+
+                     },
+                 ]
+             });
+        }
+
+
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+<script src="~/Scripts/json2.js"></script>
+<script src="~/Scripts/jquery.collapse.js"></script>
+<script src="~/Scripts/jquery.collapse_storage.js"></script>
+<script src="~/Scripts/jquery.collapse_cookie_storage.js"></script>
+<script>
+
+    function retail_details(data) {
+        try {
+            gridRowID = -1;
+            data = addRandomNum(data);
+            $("#Milk_retail_grid").kendoGrid(
+             {
+                 dataSource: {
+                     data: data,
+                     schema: {
+                         model: {
+                             fields: {
+                                 cust_name: { type: "string" },
+                                 milk_from: { type: "string" },
+                                 retail_total_milk: { type: "string" },
+                                 milk_rate: { type: "string", defaultValue: "0" },
+                                 retail_total_amount: { type: "string" },
+                             }
+                         }
+                     },
+                     pageSize: 20,
+                     change: function (e) {
+                         setTimeout(function () {
+                             var gd = $("#Milk_retail_grid").data("kendoGrid");
+                             filter_row(gd);
+                             $('.k-i-close').css('display', 'none');
+                             $('button.k-button-icon').css('display', 'none');
+                             $('#Milk_retail_grid .k-input').prop('readonly', false);
+                             $('#Milk_retail_grid .k-input').prop('readonly', true);
+                         }, 1);
+                     },
+                 },
+                 height: 200,
+                 sortable: true,
+                 selectable: true,
+                 selectable: "singl",   //  Grid Row Selection
+                 navigatable: true,
+                 groupable: false,
+
+                 columns: [
+                      {
+                          field: "cust_name",
+                          title: "Customer Name",
+                          hidden: true,
+                          width: 60
+                      },
+                       {
+                           field: "milk_from",
+                           title: "Milk From",
+                           width: 60
+                       },
+
+                        {
+                            field: "retail_total_milk",
+                            title: "Total Milk(Lts.)",
+                            attributes: { style: "text-align:right;" },
+                            width: 60
+                        },
+                         {
+                             field: "milk_rate",
+                             title: "Rate",
+                             attributes: { style: "text-align:right;" },
+                             width: 60
+                         },
+                    {
+                        field: "retail_total_amount",
+                        title: "Total Amount(Rs.pp)",
+                        attributes: { style: "text-align:right;" },
+                        width: 60
+                    },
+                 ]
+             });
+
+            $(".k-dropdown-operator").css('display', 'none');
+            $("#Milk_retail_grid .k-input").attr('readonly', 'false');
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+
+
+
+<script>
+
+    function Milk_Payment_Details(data) {
+        var grid = $("#Payment_bill_grid");
+        grid.width(1165);
+        var ddl_val = "";
+        try {
+            $("#Payment_bill_grid").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                transfer_or_retail: { type: "string" },
+                                cc_aggrloc_desc: { type: "string" },
+                                cp_aggrloc_code: { type: "string" },
+                                cp_aggrloc_desc: { type: "string" },
+                                milk_from: { type: "string" },
+                                milk_supply_from: { type: "string" },
+                                milk_supply_to: { type: "string" },
+                                accepted_qty: { type: "string" },
+                                milk_rate: { type: "string", },
+                                milk_amount: { type: "string" },
+                                Deduction_type: { type: "string" },
+                                deduction: { type: "string" },
+                                revised_rate: { type: "string" },
+                                revised_amt: { type: "string" },
+                            }
+                        }
+                    }
+
+                },
+                //   toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 250,
+                groupable: false,
+                dataBinding: setDefaultValues,
+                change: function (e) {
+
+
+                    $("#Payment_bill_grid tbody .k-state-selected").css({
+                        "background-color": "lightgreen"
+
+
+                    });
+                },
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#Payment_bill_grid').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+
+
+                },
+                edit: function (e) {
+
+                    //if (parseFloat(e.model.milkrate) == 0)
+                    //{
+                    //    e.model.revised_rate = parseFloat(e.model.milkrate).toFixed(2);
+
+                    //    e.model.revised_amt = parseFloat(e.model.milkrate * e.model.accepted_qty).toFixed(2);
+                    //}
+
+
+                    e.container.find("input[name='deduction']").focusout(function () {
+                        if (parseFloat(e.model.deduction) == 0) {
+                            e.model.revised_rate = parseFloat(e.model.milkrate).toFixed(2);
+                            e.model.revised_amt = parseFloat(e.model.milkrate * e.model.accepted_qty).toFixed(2);
+                        }
+                    });
+
+
+                    //var total_milk = parseFloat(e.model.accepted_qty);
+                    //var milkrate = parseFloat(e.model.milkrate);
+
+                    //e.model.milk_amount = total_milk * milkrate;
+                    //console.log(e.model.milk_amount);
+                    //e.container.find("input[name='Deduction_type']").change(function () {
+
+                    //    ddl_val = $("#Deduction_type").data("kendoDropDownList").value();
+                    //})
+                    //if (ddl_val == "per litre") {
+                    //    var rate = e.model.milkrate;
+                    //    console.log(rate)
+
+                    //    if (parseFloat(e.model.milkrate) != 0 || parseFloat(e.model.milkrate) != "") {
+
+                    //        var sumTotalAmount = parseFloat(e.model.milkrate);
+                    //        var sumTotalDepriciated = parseFloat(e.model.deduction);
+
+                    //        e.model.revised_rate = parseFloat(sumTotalAmount - sumTotalDepriciated).toFixed(2);
+
+                    //        e.model.revised_amt = parseFloat(e.model.revised_rate * e.model.accepted_qty).toFixed(2);
+
+
+                    //    }
+                    //}
+                    //if (ddl_val == "flat") {
+                    //    var rate = e.model.milkrate;
+                    //    console.log(rate)
+                    //    if (parseFloat(e.model.milkrate) != 0 || parseFloat(e.model.milkrate) != "") {
+                    //        var sumTotalAmount = parseFloat(e.model.milkrate);
+                    //        var sumTotalDepriciated = parseFloat(e.model.deduction);
+                    //        e.model.revised_rate = parseFloat((sumTotalAmount - sumTotalDepriciated) / e.model.accepted_qty).toFixed(2);
+
+                    //        e.model.revised_amt = parseFloat(e.model.revised_rate * e.model.accepted_qty).toFixed(2);
+
+
+
+                    //    }
+                    //}
+
+                },
+                //edit: OnEdit,
+                save: function (data) {
+
+                    if (data.values.deduction) {
+                        if (parseFloat(data.values.deduction)) {
+                            if (data.model.Deduction_type == "per litre") {
+
+                                if (parseFloat(data.model.milkrate) != 0 || parseFloat(data.model.milkrate) != "") {
+                                    data.model.set("revised_rate", parseFloat(data.model.milkrate - data.values.deduction).toFixed(2));
+                                    data.model.set("revised_amt", parseFloat(data.model.revised_rate * data.model.accepted_qty).toFixed(2));
+
+                                }
+                            }
+                            if (data.model.Deduction_type == "flat") {
+
+                                if (parseFloat(data.model.milkrate) != 0 || parseFloat(data.model.milkrate) != "") {
+
+                                    data.model.set("revised_rate", parseFloat(parseFloat(data.model.milk_amount - data.values.deduction) / parseFloat(data.model.accepted_qty)).toFixed(2));
+                                    data.model.set("revised_amt", parseFloat(data.model.revised_rate * data.model.accepted_qty).toFixed(2));
+
+                                }
+                            }
+                        }
+                        else {
+
+
+                        }
+                    }
+
+                },
+
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [{
+                    command: [
+                        {
+                            name: "Delete",
+                            id: "Delete",
+                            imageClass: "fa fa-close",
+                            click: function (e) {
+                                // e.preventDefault();
+                                var grid = $("#Payment_bill_grid").data("kendoGrid");
+                                var dataItem = $("#Payment_bill_grid").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                                DeleteWindowEvent(e, dataItem, grid);
+                                e.stopImmediatePropagation()
+                            }
+                        },
+                    ], title: "Action", width: "20px",
+                },
+                    {
+                        field: "cc_aggrloc_code",
+                        title: "Transfer/Retail",
+                        width: 60,
+                        footerTemplate: "Total:"
+                    },
+                    {
+                        field: "cc_aggrloc_desc",
+                        title: "CC Code",
+                        hidden: true,
+                        width: 100
+                    },
+                    {
+                        field: "cp_aggrloc_code",
+                        title: "CP Code",
+                        width: 40
+                    },
+
+                    {
+                        field: "cp_aggrloc_desc",
+                        title: "CP Code",
+                        hidden: true,
+                        width: 100
+                    },
+                    {
+                        field: "milk_from",
+                        title: "Milk From",
+                        width: 40
+                    },
+
+                  {
+                      field: "milk_supply_from",
+                      title: "Supplied From",
+                      attributes: { style: "text-align:right;" },
+                      width: 50
+                  },
+
+                    {
+                        field: "milk_supply_to",
+                        title: "Supplied To",
+                        attributes: { style: "text-align:right;" },
+                        width: 40
+                    },
+                    {
+                        field: "accepted_qty",
+                        title: "Total Milk",
+                        attributes: { style: "text-align:right;" },
+                        width: 40
+                    },
+                    {
+                        field: "milkrate",
+                        title: "Rate/Litre(A)",
+                        attributes: { style: "text-align:right;" },
+                        width: 40
+                    },
+                    {
+                        field: "milk_amount",
+                        title: "Amount(Rs)",
+                        attributes: { style: "text-align:right;" },
+                        //   format: "{0:n2}",
+                        //   template: '#= kendo.toString(Quantity, "n2")#  #=Unit#',
+                        //  format: "{0:##.##}",
+                        //   editor: numberEditor,
+                        //  format: '{0:n3}',
+                        width: 40
+
+                    },
+
+                     {
+                         field: "Deduction_type",
+                         title: "Deduction Type",
+                         // attributes: { style: "text-align:right;" },
+                         width: 50,
+                         //editor: securityActionDropDownEditor,
+                         hidden: true,
+                         //template: "#=Action#"
+                     },
+                      {
+                          field: "deduction",
+                          title: "Deduction(B)",
+                          attributes: { style: "text-align:right;" },
+                          width: 40,
+                          hidden: true,
+                      },
+                       {
+                           field: "revised_rate",
+                           title: "Revised Rate(A-B)",
+                           attributes: { style: "text-align:right;" },
+                           width: 50,
+                           hidden: true,
+                           //template: '<div>#= parseFloat(milkrate)- parseFloat(deduction)#</div>'
+                       },
+                        {
+                            field: "revised_amt",
+                            title: "Revised Amount",
+                            attributes: { style: "text-align:right;" },
+                            width: 50,
+                            hidden: true,
+                        },
+                ],
+                editable: true
+            });
+            //function OnEdit(e) {
+            //    setDefaultValues(e);
+            //    var grid_validate_msg = "";
+            //    grid_validate_msg = "enter dection amount";
+            //    e.container.find("input[name='deduction']").focusout(function () {
+            //        if (parseFloat($(this).val()) != '') {
+            //            e.model.deduction = 0;
+            //            kendoAlert(grid_validate_msg);
+            //            return false;
+            //        }
+            //    });
+
+
+            //}
+        }
+
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function securityActionDropDownEditor(container, options) {
+
+        $('<input required name="Deduction_type" id="Deduction_type" data-text-field="text" data-value-field="value" data-bind="value:' + options.field + '"/>')
+            .appendTo(container)
+            .kendoDropDownList({
+                dataSource: [
+                              { text: "per litre", value: "per litre" },
+                              { text: "flat", value: "flat" },
+
+                ],
+                autoBind: false,
+                index: 0
+            });
+        console.log(options);
+        console.log(options.field);
+    }
+</script>
+<script src="~/Scripts/json2.js"></script>
+<script src="~/Scripts/jquery.collapse.js"></script>
+<script src="~/Scripts/jquery.collapse_storage.js"></script>
+<script src="~/Scripts/jquery.collapse_cookie_storage.js"></script>
+
+
+<script>
+    var grossqty = "";
+    function save(mode) {
+        try {
+            var mandatory_check = true;
+            var grid_validate_msg = "";
+            var id = $("#txtcommon_id").val();
+            $("#txtpayment_id").val(id);
+
+            if ($("#txt_paymenthead_rowid").val() == "") {
+                $("#txt_paymenthead_rowid").val('0');
+            }
+            if ($("#txtpayment_id").val() == "") {
+                $("#txtpayment_id").val('0');
+            }
+            if ($("#txtMode").val() == "") {
+                $("#txtMode").val('I');
+            }
+            if ($("#DocStat").val() == "Active") {
+                $("#txtMode").val('U');
+            }
+
+            if (mode != undefined) {
+                $("#txtMode").val('D');
+            }
+            if ($("#txt_retailsale_amount").val() == "") {
+                $("#txt_retailsale_amount").val('0');
+            }
+            if ($("#txtcp_bill_amount").val() == "") {
+                $("#txtcp_bill_amount").val('0');
+            }
+
+            if ($("#txt_gross_qty").val() == "") {
+                $("#txt_gross_qty").val('0');
+            }
+            if ($("#txt_deduction_per_ltr").val() == "") {
+                $("#txt_deduction_per_ltr").val('0');
+            }
+            if ($("#txtdeduction_amount").val() == "") {
+                $("#txtdeduction_amount").val('0');
+            }
+
+
+            $("#radio_ded_type").attr('disabled', false);
+            $("#radio_ded_type1").attr('disabled', false);
+
+            var formval = form_Serialize("MapMilk_DNew_form");
+            var obj_val = JSON.parse(formval);
+
+
+            if (obj_val.hasOwnProperty('payment_date')) {
+                if (obj_val.payment_date != '')
+                    obj_val.payment_date = getFormated_StringDate(obj_val.payment_date);
+            }
+
+            var obj_val1 = JSON.parse(formval);
+            if (obj_val1.hasOwnProperty('payment_date')) {
+                if (obj_val1.payment_date != '')
+                    obj_val1.payment_date = getFormated_StringDate(obj_val1.payment_date);
+            }
+            var obj_val1 = {};
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_val;
+
+
+            var grid_val = JSON.stringify($("#MilkBill_grid").data().kendoGrid._data);
+            var Bind = {};
+            Bind = grid_val;
+            var result = JSON.parse(Bind);
+
+
+
+            var grid_val2 = JSON.stringify($("#Milk_retail_grid").data().kendoGrid._data);
+            var Bind2 = {};
+            Bind2 = grid_val2;
+            var result2 = JSON.parse(Bind2);
+
+
+
+
+            var grid_val3 = JSON.stringify($("#Payment_bill_grid").data().kendoGrid._data);
+            var Bind3 = {};
+            Bind3 = grid_val3;
+
+            var result3 = JSON.parse(Bind3);
+
+
+
+
+            $.each(result3, function (index, value) {
+
+                var indlen = result3.length;
+                var len = result3.length - 1;
+                console.log(len);
+                if (index == len) {
+                    obj_val1.process_status = 'Update';
+                }
+                else {
+                    obj_val1.process_status = 'NEW';
+                }
+                obj_val1.transfer_or_retail = result3[index].cc_aggrloc_code;
+                obj_val1.deduction_type = result3[index].Deduction_type;
+                obj_val1.cp_code = result3[index].cp_aggrloc_code;
+                obj_val1.milk_from = result3[index].milk_from;
+                obj_val1.supplied_from = result3[index].milk_supply_from;
+                obj_val1.supplied_to = result3[index].milk_supply_to;
+                obj_val1.total_milk = result3[index].accepted_qty;
+                obj_val1.rate_per_ltr = result3[index].milkrate;
+                obj_val1.amount = result3[index].milk_amount;
+                obj_val1.revised_rate = result3[index].revised_rate;
+                obj_val1.revised_amount = result3[index].revised_amt;
+                obj_val1.deduction_per_ltr = result3[index].deduction;
+                obj_val1.deduction_amount = result3[index].revised_rate;
+                obj_val1.deduction_total_amount = result3[index].revised_amt;
+                obj_val1.gross_qty = result3[index].accepted_qty;
+                obj_val1.net_amount = result3[index].revised_amt;
+                obj_val1.gross_amount = result3[index].revised_amt;
+                obj_val1.cp_bill_amount = index;
+
+                var sec = obj_val1.transfer_or_retail;
+                console.log(sec);
+                if (sec == "Sale") {
+                    $.each(result2, function (index, value) {
+                        var tmilk = result2[index].retail_total_milk;
+                        var tamt = result2[index].milk_rate;
+
+                        if (obj_val1.total_milk == tmilk) {
+                            obj_val1.retailsale_amount = result2[index].retail_total_amount;
+                            obj_val1.calcrate_per_ltr = result2[index].milk_rate;
+                            obj_val1.total_gross_amount = result2[index].retail_total_amount;
+
+                        }
+
+                    });
+                }
+                if (sec == "Transfer") {
+
+                    $.each(result, function (index, value) {
+                        var tmilk1 = result[index].accepted_qty;
+                        var tamt1 = result[index].milk_rate;
+                        if (obj_val1.total_milk == tmilk1 && obj_val1.rate_per_ltr == tamt1) {
+                            obj_val1.retailsale_amount = result[index].milk_amount;
+                            obj_val1.calcrate_per_ltr = result[index].milk_rate;
+                            obj_val1.total_gross_amount = result[index].milk_amount;
+                        }
+
+                    });
+                }
+                //if (obj_val1.deduction_type == "" || obj_val1.deduction_type == undefined) {
+                //    grid_validate_msg += "Enter Deduction Type  <br>";
+                //    mandatory_check = false;
+                //}
+                //if (obj_val1.deduction_per_ltr == "" || obj_val1.deduction_per_ltr == undefined) {
+                //    grid_validate_msg += "Enter Deduction amount  <br>";
+                //    mandatory_check = false;
+                //}
+                //if (obj_val1.revised_rate == "" || obj_val1.revised_rate == undefined || obj_val1.revised_rate == 0) {
+                //    grid_validate_msg += "Enter revised rate  <br>";
+                //    mandatory_check = false;
+                //}
+                if (obj_val1.transfer_or_retail == "") {
+                    grid_validate_msg += "Enter Deduction Amount  <br>";
+                    mandatory_check = false;
+                }
+                if (mandatory_check == false) {
+                    kendoAlert(grid_validate_msg);
+                    return false;
+                }
+                if (mandatory_check == true) {
+                    data.context.summary = obj_val1;
+                    save_payment_details(data);
+                }
+            });
+
+            var result5 = JSON.stringify(grid_val3);
+
+
+
+
+        }
+
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function payment(mode) {
+        try {
+            var mandatory_check = true;
+            var grid_validate_msg = "";
+            var id = $("#txtcommon_id").val();
+            $("#txtpayment_id").val(id);
+            var obj_val1 = {};
+
+            if ($("#txt_paymenthead_rowid").val() == "") {
+                $("#txt_paymenthead_rowid").val('0');
+            }
+            if ($("#txtpayment_id").val() == "") {
+                $("#txtpayment_id").val('0');
+            }
+            if ($("#txtMode").val() == "") {
+                $("#txtMode").val('I');
+            }
+            if ($("#DocStat").val() == "Active") {
+                $("#txtMode").val('G');
+            }
+            if ($("#txtMode").val() == 'U') {
+                $("#txtMode").val('G');
+            }
+
+            if (mode != undefined) {
+                $("#txtMode").val('D');
+            }
+            if ($("#txt_retailsale_amount").val() == "") {
+                $("#txt_retailsale_amount").val('0');
+            }
+            if ($("#txtcp_bill_amount").val() == "") {
+                $("#txtcp_bill_amount").val('0');
+            }
+
+            if ($("#txt_gross_qty").val() == "") {
+                $("#txt_gross_qty").val('0');
+            }
+            if ($("#txt_deduction_per_ltr").val() == "") {
+                $("#txt_deduction_per_ltr").val('0');
+            }
+            if ($("#txtdeduction_amount").val() == "") {
+                $("#txtdeduction_amount").val('0');
+            }
+
+
+            $("#radio_ded_type").attr('disabled', false);
+            $("#radio_ded_type1").attr('disabled', false);
+
+            var formval = form_Serialize("MapMilk_DNew_form");
+            var obj_val = JSON.parse(formval);
+
+
+            if (obj_val.hasOwnProperty('payment_date')) {
+                if (obj_val.payment_date != '')
+                    obj_val.payment_date = getFormated_StringDate(obj_val.payment_date);
+            }
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_val;
+            //var obj_val1 = JSON.parse(formval);
+            //if (obj_val1.hasOwnProperty('payment_date')) {
+            //    if (obj_val1.payment_date != '')
+            //        obj_val1.payment_date = getFormated_StringDate(obj_val1.payment_date);
+            //}
+            var grid_val = JSON.stringify($("#MilkBill_grid").data().kendoGrid._data);
+            var Bind = {};
+            Bind = grid_val;
+            var result = JSON.parse(Bind);
+
+
+            var grid_val2 = JSON.stringify($("#Milk_retail_grid").data().kendoGrid._data);
+            var Bind2 = {};
+            Bind2 = grid_val2;
+            var result2 = JSON.parse(Bind2);
+
+            var grid_val3 = JSON.stringify($("#Payment_bill_grid").data().kendoGrid._data);
+            var Bind3 = {};
+            Bind3 = grid_val3;
+            var result3 = JSON.parse(Bind3);
+            $.each(result3, function (index, value) {
+
+                var indlen = result3.length;
+
+                var len = result3.length - 1;
+                console.log(len);
+                if (index == len) {
+                    obj_val1.process_status = 'Update';
+                }
+                else {
+                    obj_val1.process_status = 'NEW';
+                }
+                obj_val1.transfer_or_retail = result3[index].cc_aggrloc_code;
+                obj_val1.deduction_type = result3[index].Deduction_type;
+                obj_val1.cp_code = result3[index].cp_aggrloc_code;
+                obj_val1.milk_from = result3[index].milk_from;
+                obj_val1.supplied_from = result3[index].milk_supply_from;
+                obj_val1.supplied_to = result3[index].milk_supply_to;
+                obj_val1.total_milk = result3[index].accepted_qty;
+                obj_val1.rate_per_ltr = result3[index].milkrate;
+                obj_val1.amount = result3[index].milk_amount;
+                obj_val1.revised_rate = result3[index].revised_rate;
+                obj_val1.revised_amount = result3[index].revised_amt;
+                obj_val1.deduction_per_ltr = result3[index].deduction;
+                obj_val1.deduction_amount = result3[index].revised_rate;
+                obj_val1.deduction_total_amount = result3[index].revised_amt;
+                obj_val1.gross_qty = result3[index].accepted_qty;
+                obj_val1.net_amount = result3[index].revised_amt;
+                obj_val1.gross_amount = result3[index].revised_amt;
+                obj_val1.cp_bill_amount = result3[index].milk_amount;
+                var sec = obj_val1.transfer_or_retail;
+                console.log(sec);
+                if (sec == "Sale") {
+                    $.each(result2, function (index, value) {
+                        var tmilk = result2[index].retail_total_milk;
+                        var tamt = result2[index].milk_rate;
+
+                        if (obj_val1.total_milk == tmilk) {
+                            obj_val1.retailsale_amount = result2[index].retail_total_amount;
+                            console.log(obj_val1.retailsale_amount);
+                            obj_val1.calcrate_per_ltr = result2[index].milk_rate;
+                            console.log(obj_val1.calcrate_per_ltr);
+                            obj_val1.total_gross_amount = result2[index].retail_total_amount;
+                            console.log(obj_val1.total_gross_amount);
+
+                        }
+
+                    });
+                }
+                if (sec == "Transfer") {
+
+                    $.each(result, function (index, value) {
+                        var tmilk1 = result[index].accepted_qty;
+                        var tamt1 = result[index].milk_rate;
+                        if (obj_val1.total_milk == tmilk1 && obj_val1.rate_per_ltr == tamt1) {
+                            obj_val1.retailsale_amount = result[index].milk_amount;
+                            obj_val1.calcrate_per_ltr = result[index].milk_rate;
+                            obj_val1.total_gross_amount = result[index].milk_amount;
+                        }
+
+                    });
+                }
+                //if (obj_val1.deduction_type == "" || obj_val1.deduction_type == undefined) {
+                //    grid_validate_msg += "Enter Deduction Type  <br>";
+                //    mandatory_check = false;
+                //}
+                //if (obj_val1.deduction_per_ltr == "" || obj_val1.deduction_per_ltr == undefined) {
+                //    grid_validate_msg += "Enter Deduction amount  <br>";
+                //    mandatory_check = false;
+                //}
+                //if (obj_val1.revised_rate == "" || obj_val1.revised_rate == undefined || obj_val1.revised_rate == 0) {
+                //    grid_validate_msg += "Enter revised rate  <br>";
+                //    mandatory_check = false;
+                //}
+                if (mandatory_check == false) {
+                    kendoAlert(grid_validate_msg);
+                    return false;
+                }
+                if (mandatory_check == true) {
+                    data.context.summary = obj_val1;
+                    save_payment_details(data);
+                    $("#calpay").attr("disabled", true);
+                    if ($("#grid").data("kendoGrid").dataSource._view.length == 0) {
+                        $('#btnrateview').hide();
+                        $('#btnerror').show();
+                        //$('#btnerror').hide();
+                    }
+                    else {
+                        $('#btnrateview').show();
+                    }
+                }
+            });
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function advice_bill() {
+        try {
+            var formval = form_Serialize("MapMilk_DNew_form");
+            var obj_val = JSON.parse(formval);
+            obj_val.ccbill_no = $("#txt_bill").val();//"2017-18/BIL/00034";
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_val;
+
+
+            retrieve_paymntadvce_bill_details(data);
+            $("#DocStat").val("New");
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_payment_advice_bill_header(res) {
+        try {
+            $("#txt_paymenthead_rowid").val(res.paymenthead_rowid);
+            $("#txtcommon_id").val(res.payment_no);
+
+            if ($("#txtcommon_id").val() == "") {
+                $("#pay_help").show();
+            }
+            else {
+                $("#pay_help").hide();
+            }
+
+            $("#txt_bill").val(res.ccbill_no);
+            $("#txtpayment_date").val(res.payment_date);
+            $("#txtpay_date").val(res.payment_date);
+
+            $("#txtprocess_payment").val(res.process_payment);
+            //  $("#txt_supply_period").val(res.milk_supply_period);
+
+            $("#txt_paymenthead_rowid").val(res.paymenthead_rowid);
+            $("#txtcommon_id").val(res.payment_no);
+            $("#txt_bill").val(res.ccbill_no);
+            $("#txt_supply_period").val(res.milk_supply_period);
+            $("#txt_status_code").val(res.status_code);
+            $("#DocStat").val(res.status_desc);
+            $("#txtMode").val(res.mode_flag);
+            $("#txt_row_timestamp").val(res.row_timestamp);
+            message();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function generate_payment_advice_bill_detail(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+
+                bill_details(data);
+                retail_details(data);
+                Milk_Payment_Details(data);
+            }
+            else {
+                bill_details([]);
+                retail_details([]);
+                Milk_Payment_Details([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_payment_advice_bill_summary(res) {
+        try {
+            //summary
+            $("#txtgross_amount").val(res.gross_amount);
+            $("#txtnetamount").val((res.net_amount).toFixed(2));
+            $("#txtrate").val((res.calcrate_per_ltr).toFixed(2));
+            $("#txt_retailsale_amount").val(res.retailsale_amount);
+            $("#txtcp_bill_amount").val(res.cp_bill_amount);
+
+
+            $("#txt_gross_qty").val((res.gross_qty).toFixed(2));
+
+            $("#txt_totaldeduction").val((res.deduction_total_amount).toFixed(2));
+
+
+
+            var frequency = res.deduction_type;
+
+
+            if (frequency == "F") {
+                $("#radio_ded_type").attr("checked", true);
+                $("#txtltr").attr("disabled", true);
+                $("#txtflat").removeAttr("disabled");
+                $("#txtflat").val(res.deduction_amount);
+
+            }
+
+            else {
+                $("#radio_ded_type1").attr("checked", true);
+                $("#txtflat").attr("disabled", true);
+                $("#txtltr").removeAttr("disabled");
+                $("#txtltr").val(res.deduction_per_ltr);
+                // $("#radio_ded_type1").val(res.deduction_type);
+            }
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_payment_advice_retail_detail(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+
+
+                retail_details(data);
+            }
+            else {
+
+                retail_details([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_payment_advice_Milk_Payment_Details(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+
+
+                Milk_Payment_Details(data);
+            }
+            else {
+
+                Milk_Payment_Details([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function get_fetch_advice_details(id, no) {
+        try {
+
+            var formval = form_Serialize("MapMilk_DNew_form");
+            var obj_val = JSON.parse(formval);
+            obj_val.paymenthead_rowid = id;
+            obj_val.payment_no = no;
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Header = obj_val;
+            retrieve_paymntadvce_details(data);
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_payment_advice_payment_summary(res) {
+        try {
+            $("#txttot_amount").val(res.total_advance_amount);
+            $("#txtmilkacc").val(res.total_gross_amount);
+            $("#txtmilkacc1").val(res.total_net_amount);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_payment_advice_adv(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+
+
+                grid_adv(data);
+
+                $('#Payment_bill_grid').data('kendoGrid').dataSource.read();
+                $('#Payment_bill_grid').data('kendoGrid').refresh();
+                message();
+            }
+            else {
+
+                grid_adv([]);
+            }
+        }
+
+
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function calculate() {
+        try {
+            var gross_amt = $("#txtgross_amount").val();
+            var deduction_amt = ($("#txt_totaldeduction").val());
+            var net_amt = parseFloat(gross_amt) - parseFloat(deduction_amt);
+            $("#txtnetamount").val((net_amt).toFixed(2));
+
+            var netamt = $("#txtnetamount").val();
+            var gross_qty = $("#txt_gross_qty").val();
+            var amt = (parseFloat(netamt) / parseFloat(gross_qty));
+            $("#txtrate").val((amt).toFixed(2));
+
+
+        }
+
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function flat_change() {
+        try {
+            var flat_val = $("#txtflat").val();
+            // var gross_qty= $("#txt_gross_qty").val();
+            var net = (parseFloat("1") * parseFloat(flat_val));
+            $("#txt_totaldeduction").val(net);
+            // ((net).toFixed(2));
+            calculate();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function ltr_change() {
+        try {
+            var ltr_val = $("#txtltr").val();
+            var gross_qty = $("#txt_gross_qty").val();
+            var net = parseFloat(ltr_val) * parseFloat(gross_qty);
+            $("#txt_totaldeduction").val((net).toFixed(2));
+
+            calculate();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function grid_control() {
+        var control_Name = [
+
+        ];
+        return control_Name;
+    }
+
+    function form_control() {
+        var control_Name = [
+            { "dataCol": "ccbill_no", "controlId": "txt_bill", "type": "Text" },
+        ];
+        return control_Name;
+    }
+    function trans_input_data() {
+        var trans_coll = [
+            { "trasfer": "Yes", "dataCol": "ccbill_no", "controlId": "", "grid_id": "", "grid_row_col": "" },
+            { "trasfer": "No", "dataCol": "", "controlId": "", "grid_id": "", "grid_row_col": "" }
+        ];
+        return trans_coll;
+    }
+
+
+    function export_fuc1() {
+        $('.k-grid-excel').click();
+
+    }
+    function exportfunction(e) {
+        var detail = {};
+        var sdata = {};
+        if (sdata.griddata == "" || sdata.griddata == undefined) {
+            sdata.griddata = JSON.stringify(e.sender.dataSource._data);
+
+        }
+
+        var export_excel_data = ajaxcall_param("/MilkPaymentAdvice/Export_Excel", JSON.stringify(sdata));
+        if (export_excel_data != undefined) {
+            var exp_excel = JSON.parse(export_excel_data);
+            if (exp_excel.success == true) {
+                var pathname = window.location.pathname;
+                var url = window.location.href;
+                url = url.split("#");
+                url = url[0];
+                url = url.replace(pathname, "");
+                window.location.href = url + (exp_excel.path);
+                kendoAlert(exp_excel.msg);
+            }
+            //if (twokendobox == false) {
+            //    kendoAlert(exp_excel.msg);
+            //}
+            e.preventDefault();
+            return false;
+        }
+    }
+
+    function lock() {
+        try {
+            $("#txtflat").attr("readonly", true);
+            $("#radio_ded_type").attr('disabled', true);
+            $("#radio_ded_type1").attr('disabled', true);
+            $("#txtltr").attr("readonly", true);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function clear_val() {
+        try {
+            $("#radio_ded_type").val("");
+            $("#txtflat").val("");
+            $("#txtflat").attr("disabled", true);
+            $("#txtltr").removeAttr("disabled");
+            $("#txtltr").focus();
+            $("#txt_totaldeduction").val("0");
+            calculate();
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function change_val() {
+        try {
+            $("#radio_ded_type1").val("");
+            $("#txtltr").val("");
+            $("#txtltr").attr("disabled", true);
+            $("#txtflat").removeAttr("disabled");
+            $("#txtflat").focus();
+            $("#txt_totaldeduction").val("0");
+            calculate();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function fetch_milk_rate1() {
+        debugger;
+        var payno = getlocalStorage('doc_no');
+        var milkcode = $("#milkmancode").val();        
+        $.ajax({
+            type: "POST",
+            data: '{frm_code: "' + payno + '",frm_name:"' + milkcode + '"}',
+            url: "/MilkPaymentAdvice/Milk_rate_report1",
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                grid_rate(response);
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+
+        });
+       
+    }
+</script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+<style type="text/css">
+    .right {
+        text-align: right;
+    }
+
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>

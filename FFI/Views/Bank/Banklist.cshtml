@@ -1,0 +1,333 @@
+﻿@{
+    ViewBag.List = "Bank";
+    Layout = "~/Views/Shared/ListViewLayout.cshtml";
+}
+<form id="frm_bank_form" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="gd_bank">
+                <div id="bank_grid"></div>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script>
+    click_act_name = "BankForm";
+    click_ctrl_name = "Bank";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+        $(".adv_filter").attr("hdrtitle", "Bank Details");
+        $(".adv_filter").attr("fltid", "Bank_fltr");
+        $(".Export").attr("hdrtitle", "Bank Details");
+        $(".Export").attr("SubTreeId", "BANK");
+
+        Screen_Id = "BANK";
+        permission = sec_Permission(Screen_Id);
+        page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+        listpageloadfetch();
+    });
+</script>
+<script>
+    function listpageloadfetch() {
+        try {
+            var formval = form_Serialize("frm_bank_form");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_FromValue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_FromValue = ".";
+            }
+            obj_val.FilterBy_Tovalue = ".";
+
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Filter = obj_val;
+            var Context = data.context;
+
+
+            var data = { user: Context.userId, org: Context.orgnId, locn: Context.locnId, lang: Context.localeId, FilterBy_Option: Context.Filter.FilterBy_Option, FilterBy_Code: Context.Filter.FilterBy_Code, FilterBy_FromValue: Context.Filter.FilterBy_FromValue, FilterBy_ToValue: Context.Filter.FilterBy_Tovalue };
+
+          $.ajax({
+          url: '@Url.Action("BankListfetch", "Bank")',
+         type: "post",
+        contentType: 'application/x-www-form-urlencoded',
+            data: data,
+            success: function (response1) {
+                debugger;
+                if (response1 != null) {
+                    generate_bank_list(response1.context.BankDtl);
+                }
+                else {
+                    listgrid([]);
+                }
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+        });
+
+
+            //HTTP GET API Purpose Commented by Venkat 10-09-2020 Start
+            //$.ajax({
+            //    type: "POST",
+            //    url: '/Bank/BankListfetch',
+            //    dataType: 'json',
+            //    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, FilterBy_Option: Context.Filter.FilterBy_Option, FilterBy_Code: Context.Filter.FilterBy_Code, FilterBy_FromValue: Context.Filter.FilterBy_FromValue, FilterBy_ToValue: Context.Filter.FilterBy_Tovalue }),
+            //    contentType: 'application/json; charset=utf-8',
+            //    success: function (response) {
+            //        //var list = JSON.parse(response);
+            //        if (response.context != null) {
+            //            generate_bank_list(response.context.BankDtl);
+            //        }
+            //        else {
+            //            listgrid([]);
+            //        }
+            //    },
+            //    error: function (er) {
+            //        alert(er)
+            //        console.log(er)
+            //    }
+
+            //});
+            //HTTP GET API Purpose Commented by Venkat 10-09-2020 END
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    var status_Priority = [];
+    function listgrid(data) {
+        try {
+            $.each(data, function (index, value) {
+                var flag = false;
+                $.each(status_Priority, function (sindex, svalue) {
+                    if (svalue == value.status_desc) {
+                        flag = true;
+                    }
+                });
+                if (flag == false) {
+                    status_Priority.push(value.status_desc);
+                }
+            });
+            $("#bank_grid").kendoGrid(
+                {
+                    dataSource: {
+                        data: data,
+                        pageSize: 20,
+                        change: function (e) {
+                            setTimeout(function () {
+                                var gd = $("#bank_grid").data("kendoGrid");
+                                filter_row(gd);
+                                $('.k-i-close').css('display', 'none');
+                                $('button.k-button-icon').css('display', 'none');
+                                $('#bank_grid .k-input').prop('disabled', false);
+                                $('#bank_grid .k-input').prop('readonly', true);
+                            }, 1);
+                        },
+                    },
+                    toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                    excelExport: function (e) {
+                        var gd = $("#bank_grid").data("kendoGrid");
+                        var len = gd.dataSource._data.length;
+                        var chkall = $('#chkall').is(':checked');
+                        var chkfilter = $('#chkfilter').is(':checked');
+                        var chktemp = $('#chktemp').is(':checked');
+                        var twokendobox = true;
+                        gd.dataSource.pageSize(len);
+                        if (e.sender.dataSource._data.length == len) {
+                            twokendobox = false;
+                            exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                        }
+                        else {
+                            exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                        }
+                        gd.dataSource.pageSize('10');
+                        return false;
+                    },
+                    filterable: {
+                        enabled: true,
+                        delay: 1500,
+                        mode: "menu, row",
+                        height: 200,
+                        click: function (e) {
+                            var gd = $("#bank_grid").data("kendoGrid");
+                            filter_row(gd);
+                        }
+                    },
+                    filterMenuInit: function (e) {
+                        var gd = $("#bank_grid").data("kendoGrid");
+                        filter_row(gd);
+                    },
+                    change: selectRow,
+                    height: 450,
+                    sortable: true,
+                    selectable: true,
+                    selectable: "singl",   //  Grid Row Selection
+                    pageable: {
+                        refresh: false,
+                        pageSizes: true,
+                        buttonCount: 5
+                    },
+                    navigatable: true,
+                    groupable: false,
+                    columns: [
+                        {
+                            field: "Out_bank_rowid",
+                            title: " Row Id",
+                            width: 1,
+                            hidden: true,
+                        },
+                           {
+                               field: "Out_bank_code",
+                               title: "Bank Code",
+                               filterable: {
+                                   cell: {
+                                       operator: "contains",
+                                       inputWidth: 1500
+                                   }
+                               }
+                           },
+
+                         {
+                             field: "Out_bank_name",
+                             title: "Bank Name",
+                             filterable: {
+                                 cell: {
+                                     operator: "contains",
+                                     inputWidth: 1500
+                                 }
+                             }
+                         },
+
+                       {
+                           field: "Out_status_code",
+                           title: "STATUS Id",
+                           width: 1,
+                           hidden: true,
+                       },
+
+                            {
+                                field: "Out_status_desc",
+                                title: "Status",
+                                filterable: {
+                                    ui: statusFilter,
+                                    cell: {
+                                        operator: "contains",
+                                        inputWidth: 1500
+                                    }
+                                }
+                            },
+                    ]
+                });
+
+            $(".k-dropdown-operator").css('display', 'none');
+            $("#bank_grid .k-input").attr('disabled', 'false');
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function selectRow() {
+        try {
+            var grid = $("#bank_grid").data("kendoGrid");
+            var selectedItem = grid.dataItem(grid.select());
+            setlocalStorage("ls_pageList", selectedItem);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function statusFilter(element) {    // Dropdown list functionality
+        element.kendoDropDownList({
+            dataSource: status_Priority,
+            optionLabel: "--Select Value--"
+        });
+    }
+
+</script>
+<script>
+    $("#btn_Edit").bind("click", function () {
+        getSerializedSelectedRows('edit');
+    });
+
+    $("#btn_View").bind("click", function () {
+        getSerializedSelectedRows('view');
+    });
+
+    $("#btn_new").bind("click", function () {
+        btn_onClick('Create');
+        location.href = "../Bank/BankForm";
+    });
+
+    function getSerializedSelectedRows(mode) {
+        try {
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var items = getlocalStorage("ls_pageList");
+                if (items.length == 0) {
+                    kendoAlert("Please select records");
+                }
+                else {
+                    if (mode == "edit") {
+                        btn_onClick('Edit');
+                        location.href = "../Bank/BankForm";
+                    }
+                    else if (mode == "view") {
+                        btn_onClick('View');
+                        location.href = "../Bank/BankForm";
+                    }
+                }
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>
+    function generate_bank_list(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                $("#gd_bank").empty();
+                $("#gd_bank").append("<div id='bank_grid'></div>");
+                listgrid(data);
+
+
+            }
+            else {
+                listgrid([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function listRefresh() {
+        try {
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+</script>
+

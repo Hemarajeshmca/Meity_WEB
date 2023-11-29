@@ -1,0 +1,1151 @@
+@{
+    ViewBag.Form = "Bulk Uploads";
+    ViewBag.helpName = "BulkUploads.html";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+<style>
+    #display_loading {
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        transform: translate(-50%, 50%);
+        display: none;
+    }
+
+    body {
+        background-color: #ffffff;
+    }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.min.js"></script>
+<form id="bulkupload_form"  >
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+          
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="cmbMenu" class="col-sm-5 control-label" style="padding-right:0px">Upload Screen Name:</label>
+                        <div class="col-sm-7">
+                            <input id="cmbMenu" name="cmbMenu" data-role="filtercombo" style="width :100%" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-8" style="padding-left:0px">
+                    <div class="col-sm-4" style="padding-left:18px">
+                        <input type="file" id="FileUpload1" oncontextmenu="return false" ondrop="return false" disabled onkeydown="return setfocus()" />
+                    </div>
+                    <div class="col-sm-1">
+                        <input id="btn_upload" type="button" value="Upload" onclick="return checkFileExt()" />
+                        <a id="downloadpath" download href=""></a>
+                        <div id="display_loading" style="z-index: 999;"><img src="https://i.stack.imgur.com/rBLb3.gif" style="height:100px; width:100px;"></div>
+                    </div>
+                    <div class="col-sm-2">
+                        <input id="btn_download_template"  type="button" value="Download Template" onclick="return download_Excel_template()" />
+                        <a id="download_exl_template" download href=""></a>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row" style="padding-top:10px; padding-bottom:10px">
+                <div class="col-sm-12">
+                    <label>Upload History</label>
+                    <div id="excel_history_grid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="~/API_Scripts/uploadExcelScalar_Model.js"></script>
+<script src="~/API_Scripts/uploadExcelVector_Model.js"></script>
+<script src="~/API_Scripts/Excel_Template_retrieveExcelTemplate_APIClient.js"></script>
+<script src="~/API_Scripts/Excel_Template_saveExcelHistoryLog_APIClient.js"></script>
+<script src="~/API_Scripts/Excel_Template_uploadExcelScaler_APIClient.js"></script>
+<script src="~/API_Scripts/Excel_Template_uploadExcelVector_APIClient.js"></script>
+<script src="~/API_Scripts/retrieveExcelTemplate_Model.js"></script>
+<script src="~/API_Scripts/saveExcelHistoryLog_Model.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/API_Scripts/Excel_Template.js"></script>
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+        debugger;
+        role_ri();
+        Screen_Id = "BULK";
+        permission = sec_Permission(Screen_Id);
+        master_Bulk();
+        historyGrid([]);
+        load_master_code();
+        $("#cmbMenu").empty();
+        list_in = grid_comboScreen_mastercodes("TEMPLATE");
+        filter_combobox("cmbMenu", list_in);
+
+        $("#btnSave").hide();
+        $("#btnnew").hide();
+        $("#deactivate").hide();
+        $("#btn_download_template").hide();
+        $("#btn_upload").hide();
+
+
+
+        $("#cmbMenu").change(function (evt) {
+            debugger;
+            $("#btn_download_template").show();
+            $("#btn_upload").show();
+            var menu_id = $('#cmbMenu').data("kendoComboBox").value();
+            var templateName = get_code_to_desc("cmbMenu");
+            tmp_name = templateName + "_template";
+            console.log(tmp_name + "venkat testing");
+            if (menu_id != "") {
+
+                $("#btn_download_template").attr("disabled", false);
+                $("#btn_upload").attr("disabled", false);
+                $("#FileUpload1").attr("disabled", false);
+                $("#FileUpload1").val('');
+                var formval = form_Serialize("bulkupload_form");
+                var obj_val = JSON.parse(formval);
+                obj_val.excel_upload_code = menu_id;
+
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                var Context = data.context;
+                var data = { excel_upload_code: Context.Header.excel_upload_code, orgnId: Context.orgnId, localeId: Context.localeId, userId: Context.userId, locnId: Context.locnId, templateName: tmp_name };
+                //venkat Added 22-04-2020
+                $.ajax({
+              url: '@Url.Action("retrieve_Excel_Template_list", "Bulkuploads")',
+             type: "post",
+             contentType: 'application/x-www-form-urlencoded',
+            data: data,
+                    success: function (response) {
+                        debugger;
+                        generate_Excel_Template_history(response.context.excelHistory);
+                        generate_Excel_Template_Header(response.context.Header);
+                        generate_Excel_Template_Column(response.context.excelColumn);
+                    },
+                    error: function (err) {
+                        console.log(err)
+                    }
+                });
+
+                //venkat end 22-04-2020
+                //retrieve_Excel_Template_list(data);
+            }
+            else {
+                var data = [];
+                historyGrid(data);
+            }
+        });
+    });
+
+    function load_master_code() {
+        debugger;
+        var data = {};
+        var context = WebAPIProxy.getContext();
+        data.userId = context.userId
+        data.orgnId = context.orgnId
+        data.locnId = context.locnId
+        data.localeId = context.localeId
+        data.screen_Id = "BULK";
+        var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+    }
+
+    function historyGrid(data) {
+        try {
+            $("#excel_history_grid").kendoGrid({
+                dataSource: {
+                    data: data,
+                },
+                height: 300,
+                selectable: true,
+                scrollable: true,
+                columns: [
+                    {
+                        field: "excel_upload_code",
+                        title: "Excel Upload Code",
+                        hidden: true,
+                        width: 100
+
+                    },
+                    {
+                        field: "excel_filename",
+                        title: "Excel Filename",
+                        width: 100
+
+                    },
+                    {
+                        field: "status_code",
+                        title: "Status",
+                        hidden: true,
+                        width: 100
+                    },
+                    {
+                        field: "status_desc",
+                        title: "Status",
+                        width: 100
+
+                    },
+                    {
+                        field: "uploaded_by",
+                        title: "Uploaded by",
+                        width: 100
+                    },
+                    {
+                        field: "uploaded_datetime",
+                        title: "Uploaded Date Time",
+                        width: 100
+                    },
+                ]
+            });
+        }
+        catch (err) {
+
+        }
+    }
+
+    function generate_Excel_Template_history(res) {
+        if (res == null) {
+            historyGrid([]);
+        }
+        else {
+            var data = changedataType(res);
+            historyGrid(data);
+        }
+
+    }
+
+    var entity_gcode = "";
+    var no_columns = "";
+    var proc_name = "";
+    var proc_type = "";
+
+    function generate_Excel_Template_Header(res) {
+        debugger;
+        entity_gcode = res.out_entity_group_code;
+        setlocalStorage("entity_groupcode", entity_gcode)
+        no_columns = res.out_no_of_columns;
+        proc_name = res.out_procedure_name;
+        proc_type = res.out_procedure_type;
+
+        setlocalStorage("procedure_type", proc_type)
+    }
+
+    function generate_Excel_Template_Column(res) {
+        debugger;
+        removelocalStorage("excel_fetch_column");
+        setlocalStorage("excel_fetch_column", res)
+    }
+
+    function ex_colname() {
+        var colname = getlocalStorage("excel_fetch_column");
+        return colname;
+    }
+
+
+    function exl_tmp_name() {
+        var menu_id = get_code_to_desc("cmbMenu");
+        tmp_name = menu_id + "_template";
+        return tmp_name;
+    }
+
+    function get_code_to_desc(id) {
+        debugger;
+        try {
+            var mat_desc = "";
+            var data_source = $('#' + id).data("kendoComboBox");
+            data_source = data_source.dataSource._data;
+            var cmb_value = $("#" + id).data("kendoComboBox").value();
+            $.each(data_source, function (key, val) {
+                var deseription = data_source[key];
+                if (data_source[key].code.toString() == cmb_value.toString()) {
+                    mat_desc = data_source[key].desc.toString();
+                    return false;
+                }
+            });
+            return mat_desc;
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+    $("#cmb_RIBelongform").change(function () {
+        debugger;
+             var selected_value = $(this).val();
+             var data1 = { RI_Code: selected_value}
+            $.ajax({
+            url: '@Url.Action("GetFPOlistRIBASE", "Login")',
+            type: "post",
+            contentType: 'application/x-www-form-urlencoded',
+            data: data1,
+            success: function (response1) {
+            debugger;
+                var url_path = JSON.parse(response1);
+                var itemArrFPO = [];
+                for (var i = 0; i < url_path.Table.length; i++) {
+                    var list = {};
+                    list.id = url_path.Table[i].serial_number;
+                    list.code = url_path.Table[i].dist_code;
+                    list.desc = url_path.Table[i].Member_district_name;
+                    itemArrFPO.push(list);
+                }
+                filter_combobox("cmb_FPOBelongform", itemArrFPO);
+                Alldropdownload();
+            },
+                error: function (er)
+                {
+                alert(er)
+                console.log(er)
+                }
+            });
+
+    });
+    // test method
+
+    function Getrootpath() {
+        debugger;
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({ }),
+            url: "/Bulkuploads/Getrootpath",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                debugger;
+                if (response != null) {
+                    debugger;
+                    txtrootpath.value = response;
+                }
+
+            },
+            error: function (err) {
+                console.log(err)
+                txtrootpath.value = responseText;
+            }
+        });
+    }
+
+
+
+
+    function download_Excel_template() {
+        debugger;
+        if ($("#cmbMenu").val() == "") {
+            kendoAlert("Please Select a menu.");
+            return false;
+        }
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                debugger;
+                var result = JSON.parse(xhr.responseText);
+                if (result.msg != undefined)
+                    kendoAlert(result.msg);
+                else {
+                    if (result.path != undefined) {
+                        debugger;
+                        var url_path = result.path;
+                        $("#download_exl_template").attr("href", url_path);
+                        document.getElementById("download_exl_template").click();
+                    }
+                }
+            }
+        };
+
+        var col_name = ex_colname();
+       // var col_name1 = [{ "excel_column": "", "column_name": "farmer_code", "column_type": "QCD_TEXT", "max_len": 250, "seq_no": 1 }, { "excel_column": "", "column_name": "farmer_name", "column_type": "QCD_TEXT", "max_len": 250, "seq_no": 2 }, { "excel_column": "", "column_name": "sur_name", "column_type": "QCD_TEXT", "max_len": 250, "seq_no": 3 }, { "excel_column": "", "column_name": "fhw_name", "column_type": "QCD_TEXT", "max_len": 250, "seq_no": 4 }, { "excel_column": "", "column_name": "farmer_dob", "column_type": "Date", "max_len": 250, "seq_no": 5 }, { "excel_column": "", "column_name": "gender_flag", "column_type": "QCD_TEXT", "max_len": 250, "seq_no": 6 }, { "excel_column": "", "column_name": "farmer_village", "column_type": "QCD_TEXT", "max_len": 250, "seq_no": 7 }, { "excel_column": "", "column_name": "farmer_panchayat", "column_type": "QCD_TEXT", "max_len": 250, "seq_no": 8 }, { "excel_column": "", "column_name": "farmer_taluk", "column_type": "QCD_TEXT", "max_len": 250, "seq_no": 9 }, { "excel_column": "", "column_name": "farmer_dist", "column_type": "QCD_TEXT", "max_len": 250, "seq_no": 10 }, { "excel_column": "", "column_name": "farmer_state", "column_type": "QCD_TEXT", "max_len": 250, "seq_no": 11 }, { "excel_column": "", "column_name": "farmer_country", "column_type": "QCD_TEXT", "max_len": 250, "seq_no": 12 }, { "excel_column": "", "column_name": "farmer_addr1", "column_type": "QCD_TEXT", "max_len": 250, "seq_no": 13 }, { "excel_column": "", "column_name": "farmer_addr2", "column_type": "QCD_TEXT", "max_len": 250, "seq_no": 14 }, { "excel_column": "", "column_name": "farmer_pincode", "column_type": "QCD_TEXT", "max_len": 250, "seq_no": 15 }, { "excel_column": "", "column_name": "reg_mobile_no", "column_type": "QCD_TEXT", "max_len": 250, "seq_no": 16 }, { "excel_column": "", "column_name": "UploadStatus", "column_type": "QCD_TXT", "max_len": 250, "seq_no": 90 }, { "excel_column": "", "column_name": "Comments", "column_type": "QCD_TXT", "max_len": 250, "seq_no": 100 }];
+        var fd = new FormData();
+        fd.append("template_name", exl_tmp_name());
+        fd.append("column_name", JSON.stringify(col_name));
+        xhr.open("POST", "/BulkUploads/Excel_Template", true);
+        xhr.send(fd);
+        xhr.addEventListener("load", function (event) {
+        }, false);
+    }
+
+
+    function checkFileExt() {
+        debugger;
+        try
+        {
+            var file = bulkupload_form.FileUpload1.value;
+            var validExtensions = ".xls";
+            var allowSubmit = false;
+            if ($("#cmbMenu").val() == "") {
+                kendoAlert("Please Select a menu.");
+                return false;
+            }
+            if ($("#cmbMenu").val() == "FARMREG")
+            {
+                if ($("#cmb_FPOBelongform").data("kendoComboBox").value() == "ALL")
+                {
+                    kendoAlert("Please Select a FPO.");
+                    return false;
+                }
+            }
+            if (file.indexOf("\\") == -1)
+            {
+                kendoAlert("Please Select a file.");
+                $("#FileUpload1").focus();
+                return false
+            }
+            else
+            {
+                var ext = file.slice(file.lastIndexOf(".")).toLowerCase();
+                if (validExtensions == ext) {
+                    $("#display_loading").show();
+                    $(".panel-default").css("opacity", 0.2);
+                    setTimeout(function () {
+                        $(".panel-default").css("opacity", 1);
+                        $("#display_loading").css({ "display": "none" });
+                    }, 5500);
+                    $('#btn_upload').hide();
+                    uploadExcelFile(file);
+                    return true;
+                }
+                else
+                {
+                    kendoAlert("Please choose Excel(.xls) files only.");
+                    $("#FileUpload1").focus();
+                    return false;
+                }
+            }
+
+        }
+        catch (err)
+        {
+            alert(err);
+            return false
+        }
+    }
+
+
+
+
+    function uploadExcelFile(file) {
+        debugger;
+        try {
+            var xhr = new XMLHttpRequest();
+            var fd = new FormData();
+            xhr.onreadystatechange = function () {
+                debugger;
+
+
+
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    debugger;
+                    var result = JSON.parse(xhr.response);
+                    if (result.msg == undefined) {
+                        download_excel();
+                        kendoAlert("Excel Upload Success");
+                        $('#btn_upload').show();
+                        status = "Success"
+                    }
+                    else
+                    {
+                        kendoAlert(result.msg);
+                    }
+                   
+                }
+            };
+            var menu_id = $('#cmbMenu').data("kendoComboBox").value();
+
+            var col_name = ex_colname();
+            fd.append("column_name", JSON.stringify(col_name));
+            fd.append("user_id", getlocalStorage('User_Id_Value'));
+            fd.append("menu_id", menu_id);
+            fd.append("orgn_id", $("#cmb_FPOBelongform").data("kendoComboBox").value());
+            fd.append("Procedure_type", getlocalStorage("procedure_type"))
+            fd.append("importExcelFile", document.getElementById('FileUpload1').files[0]);
+            xhr.open("POST", "/BulkUploads/readexcel_data", true);
+            xhr.send(fd);
+            xhr.addEventListener("load", function (event) {
+            },
+                false);
+        }
+        catch (err) {
+            alert(err);
+            // javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function role_ri() {
+        /*  Prema added for fpo based abd ri user base loading*/
+        var role = getlocalStorage("orgn_level")
+        if (role == "ORG_FO") {
+            debugger;
+            filter_combobox("cmb_RIBelongform", getlocalStorage("rilist"));
+            filter_combobox("cmb_FPOBelongform", getlocalStorage("fpolist"));
+            $("#cmb_FPOBelongform").data("kendoComboBox").value("ALL");
+            var cmb_ri = $("#cmb_RIBelongform").data("kendoComboBox");
+            cmb_ri.value(getlocalStorage("org_id"));
+            $("#RI").show();
+            $("#cmb_RIBelongformform").data("kendoComboBox").enable(false);
+            $("#FPO").show();
+            $("#cmb_FPOBelongform").data("kendoComboBox").enable(true);
+            fpoload();
+        }
+        if (role == "ORG_PF") {
+            debugger;
+            filter_combobox("cmb_RIBelongform", getlocalStorage("rilist"));
+            $("#cmb_RIBelongform").data("kendoComboBox").value("ALL");
+            filter_combobox("cmb_FPOBelongform", getlocalStorage("fpolist"));
+            $("#cmb_FPOBelongform").data("kendoComboBox").value("ALL");
+            $("#RI").show();
+            $("#cmb_RIBelongform").data("kendoComboBox").enable(true);
+            $("#FPO").show();
+            $("#cmb_FPOBelongform").data("kendoComboBox").enable(true);
+            fpoload();
+        }
+        if (role == "ORG_FPO") {
+            debugger;
+            filter_combobox("cmb_RIBelongform", getlocalStorage("rilist"));
+            filter_combobox("cmb_FPOBelongform", getlocalStorage("fpolist"));
+            var cmb_ri = $("#cmb_RIBelongform").data("kendoComboBox");
+            cmb_ri.value(getlocalStorage("parent_code"));
+            $("#RI").show();
+            $("#cmb_RIBelongform").data("kendoComboBox").enable(false);
+            $("#FPO").show();
+            $("#cmb_FPOBelongform").data("kendoComboBox").enable(false);
+            var cmap_insel = $("#cmb_FPOBelongform").data("kendoComboBox");
+            //  cmap_insel.value(getlocalStorage("org_id"));
+            cmap_insel.value(getlocalStorage("org_code"));
+
+        }
+        /*  prema ended*/
+    }
+    function fpoload() {
+        var data = {};
+            data.userId = getlocalStorage("User_Id_Value");
+        var orgnid = $("#cmb_RIBelongform").data("kendoComboBox").value();
+            var user_code = data.userId;
+            var data1 = {User_code: user_code, orgn_code: orgnid}
+            $.ajax({
+            url: '@Url.Action("GetFPOlist", "Login")',
+            type: "post",
+            contentType: 'application/x-www-form-urlencoded',
+            data: data1,
+            success: function (response1) {
+            debugger;
+                var url_path = JSON.parse(response1);
+                var itemArrFPO = [];
+                for (var i = 0; i < url_path.Table.length; i++) {
+                    var list = {};
+                    list.id = url_path.Table[i].serial_number;
+                    list.code = url_path.Table[i].dist_code;
+                    list.desc = url_path.Table[i].Member_district_name;
+                    itemArrFPO.push(list);
+                }
+                filter_combobox("cmb_FPOBelongform", itemArrFPO);
+            },
+                error: function (er)
+                {
+                alert(er)
+                console.log(er)
+                }
+
+            });
+    }
+
+    function scalar_value(result) {
+        debugger;
+        var res = JSON.parse(result.scaler);
+        $.each(res, function (Key, val) {
+            var formval = form_Serialize("bulkupload_form");
+            obj_val = JSON.parse(formval);
+            //obj_val.option_type = "FARMREG";
+            var optval = $('#cmbMenu').data("kendoComboBox").value();
+            obj_val.option_type = optval;
+            obj_val.parameters = res[Key];
+            obj_val.rowval = Key;
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.header = obj_val;
+           
+        });
+
+       // download_excel();
+    }
+
+    function vector_value(result) {
+        debugger;
+        //  var data = JSON.parse(result.data);
+        var data1 = JSON.parse(result.data);
+        var arr = [];
+        var old_farmer = '';
+        var new_farmer = '';
+        var obj_val = '';
+        var row_no = 0;
+        $.each(data1, function (Key, val) {
+            debugger;
+            arr = [];
+            for (key in val) {
+                var obj = {};
+                new_farmer = data1[Key].farmer_code;
+                obj.In_entitygrp_code = getlocalStorage('entity_groupcode');
+                if (old_farmer != new_farmer)
+                    row_no = 1;
+                obj.In_row_slno = row_no;
+                obj.In_entity_code = key;
+                obj.In_entity_value = val[key];
+                arr.push(obj);
+                var formval = form_Serialize("bulkupload_form");
+                obj_val = JSON.parse(formval);
+                obj_val.In_farmer_code = data1[Key].farmer_code;
+                obj_val.In_version_no = "1";
+                obj_val.In_farmer_name = data1[Key].farmer_name;
+                obj_val.In_sur_name = data1[Key].farmer_surname;
+                obj_val.row = Key;
+            }
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_val;
+
+            data.context.Detail = arr;
+            old_farmer = new_farmer;
+            row_no = row_no + 1;
+        });
+        //download_excel();
+    }
+
+
+    function download_excel() {
+        debugger;
+        var data = {};
+        data.menu = "";
+        var tab_values = ajaxcall_param("/BulkUploads/downloadexcel", JSON.stringify(data));
+        if (tab_values != undefined) {
+            debugger;
+            var url_path = JSON.parse(tab_values);
+            $("#downloadpath").attr("href", url_path.path);
+            document.getElementById("downloadpath").click();
+        }
+    }
+
+    function successHandler(data) {
+        try {
+            var result = JSON.parse(data);
+            if (result == "columnMissmatch") {
+                kendoAlert("Invalid excel file,Your excel column name is missmatch");
+                $('#FileUpload1').val(null);
+            } else {
+                createGrid(JSON.parse(data));
+                $('#FileUpload1').val(null);
+            }
+        }
+        catch (err) {
+            alert(err);
+            //javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function setfocus() {
+        var charCode = (event.which) ? event.which : event.keyCode;
+        if (charCode == 13) {
+            //O("Button1").focus();
+            return true
+        } else if (charCode == 9) {
+            return true
+        } return false
+    }
+
+    var status = '';
+    function insert_excel_history_log() {
+        debugger;
+        var pro_type = getlocalStorage('procedure_type');
+        if (pro_type == "S") {
+            if (getlocalStorage("SFail") == "Failure") {
+                kendoAlert("Atleast one record has failure check the downloaded document");
+                status = "Failure"
+                setlocalStorage("SFail", '');
+            }
+            else if (getlocalStorage("SFail") == "" || getlocalStorage("SFail") == undefined) {
+                kendoAlert("Excel Upload Success");
+                status = "Success"
+            }
+        }
+        if (pro_type == "V") {
+            if (getlocalStorage("VFail") == "Failure") {
+                kendoAlert("Atleast one record has failure check the downloaded document");
+                status = "Failure"
+                setlocalStorage("VFail", '');
+            }
+            else if (getlocalStorage("VFail") == "" || getlocalStorage("VFail") == undefined) {
+                kendoAlert("Excel Upload Success");
+                status = "Success"
+            }
+        }
+        var formval = form_Serialize("bulkupload_form");
+        var obj_val = JSON.parse(formval);
+        var filename = FileUpload1.value;
+        filename = filename.split("\\");
+        obj_val.excel_filename = filename[filename.length - 1];
+        obj_val.excel_upload_code = $("#cmbMenu ").data("kendoComboBox").value();
+        obj_val.status_code = status;
+        var data = {};
+        data.context = WebAPIProxy.getContext();
+        data.context.excelHistory = obj_val;
+        //venkat start 24-04-2020
+        var Context = data.context;
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({}),
+            url: "/Bulkuploads/insert_excel_history_log",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                debugger;
+                console.log(response);
+
+            },
+            error: function (err) {
+                console.log(err);
+            }
+
+        });
+
+
+            //venkat end
+       // save_Excel_history_details(data);  //  var upl
+    }
+
+    function fetch_excel_historylog() {
+        debugger;
+        var menu_id = $('#cmbMenu').data("kendoComboBox").value();//$("#cmbMenu").val();
+        if (menu_id != "") {
+
+            var formval = form_Serialize("bulkupload_form");
+            var obj_val = JSON.parse(formval);
+            obj_val.excel_upload_code = menu_id;
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_val;
+            retrieve_Excel_Template_list(data);
+        }
+        else {
+            var data = [];
+            historyGrid(data);
+        }
+    }
+
+</script>
+
+@*<script>
+    function historyGrid(data) {
+        try {
+            $("#excel_history_grid").kendoGrid({
+                dataSource: {
+                    data: data,
+                },
+                height: 300,
+                selectable: true,
+                scrollable: true,
+                columns: [
+                     {
+                         field: "excel_upload_code",
+                         title: "Excel Upload Code",
+                         hidden: true,
+                         width: 100
+
+                     },
+                    {
+                        field: "excel_filename",
+                        title: "Excel Filename",
+                        width: 100
+
+                    },
+                    {
+                        field: "status_code",
+                        title: "Status",
+                        hidden: true,
+                        width: 100
+                    },
+                     {
+                         field: "status_desc",
+                         title: "Status",
+                         width: 100
+
+                     },
+                     {
+                         field: "uploaded_by",
+                         title: "Uploaded by",
+                         width: 100
+                     },
+                       {
+                           field: "uploaded_datetime",
+                           title: "Uploaded Date Time",
+                           width: 100
+                       },
+                ]
+            });
+        }
+        catch (err) {
+
+        }
+    }
+
+    function generate_Excel_Template_history(res) {
+        if (res == null) {
+            historyGrid([]);
+        }
+        else {
+            var data = changedataType(res);
+            historyGrid(data);
+        }
+
+    }
+
+    var entity_gcode = "";
+    var no_columns = "";
+    var proc_name = "";
+    var proc_type = "";
+
+    function generate_Excel_Template_Header(res) {
+        entity_gcode = res.entity_group_code;
+        setlocalStorage("entity_groupcode", entity_gcode)
+        no_columns = res.no_of_columns;
+        proc_name = res.procedure_name;
+        proc_type = res.procedure_type;
+
+        setlocalStorage("procedure_type", proc_type)
+    }
+
+    function generate_Excel_Template_Column(res) {
+        removelocalStorage("excel_fetch_column");
+        setlocalStorage("excel_fetch_column", res)
+    }
+
+    function ex_colname() {
+        var colname = getlocalStorage("excel_fetch_column");
+        return colname;
+    }
+
+
+    function exl_tmp_name() {
+        var menu_id = get_code_to_desc("cmbMenu");
+        tmp_name = menu_id + "_template";
+        return tmp_name;
+    }
+
+    function get_code_to_desc(id) {
+        try {
+            var mat_desc = "";
+            var data_source = $('#' + id).data("kendoComboBox");
+            data_source = data_source.dataSource._data;
+            var cmb_value = $("#" + id).data("kendoComboBox").value();
+            $.each(data_source, function (key, val) {
+                var deseription = data_source[key];
+                if (data_source[key].code.toString() == cmb_value.toString()) {
+                    mat_desc = data_source[key].desc.toString();
+                    return false;
+                }
+            });
+            return mat_desc;
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+
+    //venkata workout
+
+    function test_method() {
+        debugger;
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({ }),
+            url: "/BulkUploads/downloadFile",
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+           // }).done(function (data) {
+
+            //get the file name for download
+            ///if (data.fileName != "") {
+                //use window.location.href for redirect to download action for download the file
+                window.location.href = "@Url.RouteUrl(new { Controller = "Bulkuploads", Action = "downloadFile" })/?fileName=" + data.fileName;
+            }
+           // success: function (response) {
+                //debugger;
+                //console.log(response)
+                //var Res = JSON.parse(response);
+                //if (Res.context != null) {
+                //    console.log(Res);
+                   // kendoAlert("Saved Succedfully");
+
+                   // get_farmer_registration_details(Res.context.Header.in_farmer_rowid, Res.context.Header.in_farmer_code, Res.context.Header.in_version_no);
+                    // generate_farmer_registration_header(Res.context.header);
+              // }
+                //else {
+                //    kendoAlert(Res.ApplicationException.errorDescription);
+                //}
+           // },
+          //  error: function (er) {
+            //    alert(er)
+            //    console.log(er)
+           // }
+
+        });
+
+    }
+
+
+    function download_Excel_template() {
+        debugger;
+        if ($("#cmbMenu").val() == "") {
+            kendoAlert("Please Select a menu.");
+            return false;
+        }
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                var result = JSON.parse(xhr.responseText);
+                if (result.msg != undefined)
+                    kendoAlert(result.msg);
+                else {
+                    if (result.path != undefined) {
+                        debugger;
+                        var url_path = result.path;
+                        $("#download_exl_template").attr("href", url_path);
+                        document.getElementById("download_exl_template").click();
+                    }
+                }
+            }
+        };
+
+        var col_name = ex_colname();
+        var col_name1 = [{ "excel_column": "", "column_name": "farmer_code", "column_type": "QCD_TEXT", "max_len": 250, "seq_no": 1 }, { "excel_column": "", "column_name": "farmer_name", "column_type": "QCD_TEXT", "max_len": 250, "seq_no": 2 }, { "excel_column": "", "column_name": "sur_name", "column_type": "QCD_TEXT", "max_len": 250, "seq_no": 3 }, { "excel_column": "", "column_name": "fhw_name", "column_type": "QCD_TEXT", "max_len": 250, "seq_no": 4 }, { "excel_column": "", "column_name": "farmer_dob", "column_type": "Date", "max_len": 250, "seq_no": 5 }, { "excel_column": "", "column_name": "gender_flag", "column_type": "QCD_TEXT", "max_len": 250, "seq_no": 6 }, { "excel_column": "", "column_name": "farmer_village", "column_type": "QCD_TEXT", "max_len": 250, "seq_no": 7 }, { "excel_column": "", "column_name": "farmer_panchayat", "column_type": "QCD_TEXT", "max_len": 250, "seq_no": 8 }, { "excel_column": "", "column_name": "farmer_taluk", "column_type": "QCD_TEXT", "max_len": 250, "seq_no": 9 }, { "excel_column": "", "column_name": "farmer_dist", "column_type": "QCD_TEXT", "max_len": 250, "seq_no": 10 }, { "excel_column": "", "column_name": "farmer_state", "column_type": "QCD_TEXT", "max_len": 250, "seq_no": 11 }, { "excel_column": "", "column_name": "farmer_country", "column_type": "QCD_TEXT", "max_len": 250, "seq_no": 12 }, { "excel_column": "", "column_name": "farmer_addr1", "column_type": "QCD_TEXT", "max_len": 250, "seq_no": 13 }, { "excel_column": "", "column_name": "farmer_addr2", "column_type": "QCD_TEXT", "max_len": 250, "seq_no": 14 }, { "excel_column": "", "column_name": "farmer_pincode", "column_type": "QCD_TEXT", "max_len": 250, "seq_no": 15 }, { "excel_column": "", "column_name": "reg_mobile_no", "column_type": "QCD_TEXT", "max_len": 250, "seq_no": 16 }, { "excel_column": "", "column_name": "UploadStatus", "column_type": "QCD_TXT", "max_len": 250, "seq_no": 90 }, { "excel_column": "", "column_name": "Comments", "column_type": "QCD_TXT", "max_len": 250, "seq_no": 100 }];
+        var fd = new FormData();
+        fd.append("template_name", exl_tmp_name());
+        fd.append("column_name1", JSON.stringify(col_name1));
+        xhr.open("POST", "/BulkUploads/Excel_Template", true);
+        xhr.send(fd);
+        xhr.addEventListener("load", function (event) {
+        }, false);
+    }
+
+
+    function checkFileExt() {
+        debugger;
+        try {
+            var file = bulkupload_form.FileUpload1.value;
+            var validExtensions = ".xls";
+            // var validExtensions1 = ".xlsx";
+            var allowSubmit = false;
+            if ($("#cmbMenu").val() == "") {
+                kendoAlert("Please Select a menu.");
+                return false;
+            }
+            if (file.indexOf("\\") == -1) {
+                kendoAlert("Please Select a file.");
+                $("#FileUpload1").focus();
+                return false
+            } else {
+                var ext = file.slice(file.lastIndexOf(".")).toLowerCase();
+                if (validExtensions == ext) {
+                    uploadExcelFile(file);
+                    return true;
+                } else {
+                    kendoAlert("Please choose Excel(.xls) files only.");
+                    $("#FileUpload1").focus();
+                    return false;
+                }
+            }
+        } catch (err) {
+            alert(err);
+            // javascript_log4j_root(arguments.callee.name, err);
+            return false
+        }
+    }
+
+    function uploadExcelFile(file) {
+        try {
+            var xhr = new XMLHttpRequest();
+            var fd = new FormData();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var result = JSON.parse(xhr.response);
+                    var pro_type = getlocalStorage('procedure_type');
+                    if (pro_type == "S") {
+                        scalar_value(result);
+                    }
+                    else {
+                        vector_value(result);
+                    }
+                }
+            };
+            var col_name = ex_colname();
+            fd.append("column_name", JSON.stringify(col_name));
+            fd.append("user_id", getlocalStorage('User_Id_Value'));
+            fd.append("menu_id", $("#cmbMenu").val());
+            fd.append("importExcelFile", document.getElementById('FileUpload1').files[0]);
+            xhr.open("POST", "/BulkUploads/readexcel_data", true);
+            xhr.send(fd);
+            xhr.addEventListener("load", function (event) {
+            },
+            false);
+        }
+        catch (err) {
+            alert(err);
+            // javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+
+    function scalar_value(result) {
+        debugger;
+        var res = JSON.parse(result.scaler);
+        $.each(res, function (Key, val) {
+            var formval = form_Serialize("bulkupload_form");
+            obj_val = JSON.parse(formval);
+            //obj_val.option_type = "FARMREG";
+ 	        var optval = $('#cmbMenu').data("kendoComboBox").value();
+            obj_val.option_type = optval;
+            obj_val.parameters = res[Key];
+            obj_val.rowval = Key;
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.header = obj_val;
+            save_ExcelScaler_Template_details(data);
+        });
+
+        download_excel();
+    }
+
+    function vector_value(result) {
+      //  var data = JSON.parse(result.data);
+        var data1 = JSON.parse(result.data);
+        var arr = [];
+        var old_farmer = '';
+        var new_farmer = '';
+        var obj_val = '';
+        var row_no = 0;
+        $.each(data1,function(Key, val) {
+            arr = [];
+            for (key in val) {
+                var obj = {};
+                new_farmer = data1[Key].farmer_code;
+                obj.entitygrp_code = getlocalStorage('entity_groupcode');
+                if (old_farmer != new_farmer)
+                    row_no = 1;
+                obj.row_slno = row_no;
+                obj.entity_code = key;
+                obj.entity_value = val[key];
+                arr.push(obj);
+                var formval = form_Serialize("bulkupload_form");
+                obj_val = JSON.parse(formval);
+                obj_val.farmer_code = data1[Key].farmer_code;
+                obj_val.version_no = "1";
+                obj_val.farmer_name = data1[Key].farmer_name;
+                obj_val.sur_name = data1[Key].farmer_surname;
+                obj_val.row = Key;
+            }
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_val;
+            data.context.Detail = arr;
+            save_ExcelVector_Template_details(data);
+            old_farmer = new_farmer;
+            row_no = row_no + 1;
+        });
+        download_excel();
+    }
+
+
+    function download_excel() {
+        var data = {};
+        data.menu = "";
+        var tab_values = ajaxcall_param("/BulkUploads/downloadexcel", JSON.stringify(data));
+        if (tab_values != undefined) {
+            var url_path = JSON.parse(tab_values);
+            $("#downloadpath").attr("href", url_path.path);
+            document.getElementById("downloadpath").click();
+        }
+        insert_excel_history_log();
+        fetch_excel_historylog();
+
+    }
+
+    function successHandler(data) {
+        try {
+            var result = JSON.parse(data);
+            if (result == "columnMissmatch") {
+                kendoAlert("Invalid excel file,Your excel column name is missmatch");
+                $('#FileUpload1').val(null);
+            } else {
+                createGrid(JSON.parse(data));
+                $('#FileUpload1').val(null);
+            }
+        }
+        catch (err) {
+            alert(err);
+            //javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function setfocus() {
+        var charCode = (event.which) ? event.which : event.keyCode;
+        if (charCode == 13) {
+            //O("Button1").focus();
+            return true
+        } else if (charCode == 9) {
+            return true
+        } return false
+    }
+
+    var status = '';
+    function insert_excel_history_log() {
+        var pro_type = getlocalStorage('procedure_type');
+        if (pro_type == "S") {
+            if (getlocalStorage("SFail") == "Failure") {
+                kendoAlert("Atleast one record has failure check the downloaded document");
+                status = "Failure"
+                setlocalStorage("SFail", '');
+            }
+            else if (getlocalStorage("SFail") == "" || getlocalStorage("SFail") == undefined) {
+                kendoAlert("Excel Upload Success");
+                status = "Success"
+            }
+        }
+        if (pro_type == "V") {
+            if (getlocalStorage("VFail") == "Failure") {
+                kendoAlert("Atleast one record has failure check the downloaded document");
+                status = "Failure"
+ 		setlocalStorage("VFail", '');
+            }
+            else if (getlocalStorage("VFail") == "" || getlocalStorage("VFail") == undefined) {
+                kendoAlert("Excel Upload Success");
+                status = "Success"
+            }
+        }
+        var formval = form_Serialize("bulkupload_form");
+        var obj_val = JSON.parse(formval);
+        var filename = FileUpload1.value;
+        filename = filename.split("\\");
+        obj_val.excel_filename = filename[filename.length - 1];
+        obj_val.excel_upload_code = $("#cmbMenu ").data("kendoComboBox").value();
+        obj_val.status_code = status;
+        var data = {};
+        data.context = WebAPIProxy.getContext();
+        data.context.excelHistory = obj_val;
+        save_Excel_history_details(data);  //  var upl
+    }
+
+    function fetch_excel_historylog() {
+        var menu_id = $('#cmbMenu').data("kendoComboBox").value();//$("#cmbMenu").val();
+        if (menu_id != "") {
+
+            var formval = form_Serialize("bulkupload_form");
+            var obj_val = JSON.parse(formval);
+            obj_val.excel_upload_code = menu_id;
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_val;
+            retrieve_Excel_Template_list(data);
+        }
+        else {
+            var data = [];
+            historyGrid(data);
+        }
+    }
+</script>*@

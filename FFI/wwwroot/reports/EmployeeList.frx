@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="04/17/2020 12:58:17" ReportInfo.Modified="04/17/2020 13:03:50" ReportInfo.CreatorVersion="2020.1.0.0">
+  <Dictionary>
+    <MySqlDataConnection Name="Connection" ConnectionString="Data Source=169.38.82.131;UserID=mysql;Password=Flexi@!23;Database=iemproduct_development;Port=3307;SslMode=None">
+      <TableDataSource Name="Employee" DataType="System.Int32" Enabled="true" SelectCommand="select * from iem_mst_temployee LIMIT 20 OFFSET 20;">
+        <Column Name="employee_gid" DataType="System.Int64"/>
+        <Column Name="employee_code" DataType="System.String"/>
+        <Column Name="employee_password" DataType="System.String"/>
+        <Column Name="employee_name" DataType="System.String"/>
+        <Column Name="employee_gender" DataType="System.String"/>
+        <Column Name="employee_dob" DataType="System.DateTime"/>
+        <Column Name="employee_doj" DataType="System.DateTime"/>
+        <Column Name="employee_iem_designation_gid" DataType="System.Int32"/>
+        <Column Name="employee_grade_gid" DataType="System.Int32"/>
+        <Column Name="employee_dept_gid" DataType="System.Int32"/>
+        <Column Name="employee_addr1" DataType="System.String"/>
+        <Column Name="employee_addr2" DataType="System.String"/>
+        <Column Name="employee_city_gid" DataType="System.Int32"/>
+        <Column Name="employee_pincode" DataType="System.String"/>
+        <Column Name="employee_permanent_addr" DataType="System.String"/>
+        <Column Name="employee_office_email" DataType="System.String"/>
+        <Column Name="employee_personal_email" DataType="System.String"/>
+        <Column Name="employee_mobile_no" DataType="System.String"/>
+        <Column Name="employee_contact_no" DataType="System.String"/>
+        <Column Name="employee_employeebranch_gid" DataType="System.Int32"/>
+        <Column Name="employee_branch_gid" DataType="System.Int32"/>
+        <Column Name="employee_era_acc_no" DataType="System.String"/>
+        <Column Name="employee_era_bank_gid" DataType="System.Int32"/>
+        <Column Name="employee_era_bank_code" DataType="System.String"/>
+        <Column Name="employee_era_Branch_Gid" DataType="System.Int32"/>
+        <Column Name="employee_card_no" DataType="System.String"/>
+        <Column Name="employee_fccc_gid" DataType="System.Int32"/>
+        <Column Name="employee_FC_gid" DataType="System.Int32"/>
+        <Column Name="employee_CC_gid" DataType="System.Int32"/>
+        <Column Name="employee_product_gid" DataType="System.Int32"/>
+        <Column Name="employee_dor" DataType="System.DateTime"/>
+        <Column Name="employee_status" DataType="System.String"/>
+        <Column Name="employee_photo_flag" DataType="System.String"/>
+        <Column Name="employee_photo_filename" DataType="System.String"/>
+        <Column Name="HRIS_LASTMODIFIEDON" DataType="System.DateTime"/>
+        <Column Name="employee_lastworkingdate" DataType="System.DateTime"/>
+        <Column Name="employee_effectivedate" DataType="System.DateTime"/>
+        <Column Name="employee_bankaccounttype" DataType="System.String"/>
+        <Column Name="employee_functionname" DataType="System.String"/>
+        <Column Name="employee_supervisor_gid" DataType="System.Int32"/>
+        <Column Name="employee_supervisor_code" DataType="System.String"/>
+        <Column Name="employee_physical_branch_gid" DataType="System.Int32"/>
+        <Column Name="employee_isremoved" DataType="System.String"/>
+        <Column Name="employee_isloggedin" DataType="System.String"/>
+        <Column Name="employee_insert_by" DataType="System.Int32"/>
+        <Column Name="employee_insert_date" DataType="System.DateTime"/>
+        <Column Name="employee_update_by" DataType="System.Int32"/>
+        <Column Name="employee_update_date" DataType="System.DateTime"/>
+        <Column Name="employee_update_flag" DataType="System.String"/>
+      </TableDataSource>
+    </MySqlDataConnection>
+  </Dictionary>
+  <ReportPage Name="Page1" Watermark.Font="Arial, 60pt">
+    <ReportTitleBand Name="ReportTitle1" Width="718.2" Height="37.8"/>
+    <PageHeaderBand Name="PageHeader1" Top="41.8" Width="718.2" Height="28.35">
+      <TextObject Name="Text2" Left="18.9" Width="94.5" Height="18.9" Text="employee_code" Font="Arial, 10pt"/>
+      <TextObject Name="Text4" Left="170.1" Width="94.5" Height="18.9" Text="employee_name" Font="Arial, 10pt"/>
+      <TextObject Name="Text6" Left="396.9" Width="94.5" Height="18.9" Text="employee_doj" Font="Arial, 10pt"/>
+    </PageHeaderBand>
+    <DataBand Name="Data1" Top="74.15" Width="718.2" Height="75.6" DataSource="Employee">
+      <TextObject Name="Text1" Left="18.9" Top="28.35" Width="122.85" Height="18.9" Text="[Employee.employee_code]" Font="Arial, 10pt"/>
+      <TextObject Name="Text3" Left="170.1" Top="28.35" Width="179.55" Height="18.9" Text="[Employee.employee_name]" Font="Arial, 10pt"/>
+      <TextObject Name="Text5" Left="396.9" Top="28.35" Width="94.5" Height="18.9" Text="[Employee.employee_doj]" Format="Date" Format.Format="d" Font="Arial, 10pt"/>
+    </DataBand>
+    <PageFooterBand Name="PageFooter1" Top="153.75" Width="718.2" Height="18.9"/>
+  </ReportPage>
+  <ReportPage Name="Page2" Watermark.Font="Arial, 60pt">
+    <ReportTitleBand Name="ReportTitle2" Height="37.8"/>
+    <PageHeaderBand Name="PageHeader2" Height="28.35"/>
+    <DataBand Name="Data2" Height="75.6"/>
+    <PageFooterBand Name="PageFooter2" Height="18.9"/>
+  </ReportPage>
+</Report>

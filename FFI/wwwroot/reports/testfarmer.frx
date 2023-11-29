@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="05/07/2020 18:39:27" ReportInfo.Modified="05/08/2020 13:30:00" ReportInfo.CreatorVersion="2020.1.0.0">
+  <Styles Name="Standard">
+    <Style Name="Title" Font="Arial, 12pt, style=Bold"/>
+    <Style Name="Header" Font="Arial, 10pt, style=Bold"/>
+    <Style Name="Group" Font="Arial, 10pt, style=Bold"/>
+    <Style Name="Data" Font="Arial, 10pt"/>
+    <Style Name="Footer" Font="Arial, 10pt"/>
+    <Style Name="EvenRows" Fill.Color="WhiteSmoke" Font="Arial, 10pt"/>
+  </Styles>
+  <Dictionary>
+    <MySqlDataConnection Name="Connection1" ConnectionString="rijcmlqJ9ltPwNsYyX+2oAnmCElmGIz/SJ0vefyWJNqFvJ9CpVcxZe7+FQFpmKpxbZDWz0V6R67CmUYRz08CylTygPQ7tGKoWmVH7erf2Do7JeUmBA=">
+      <TableDataSource Name="Table" DataType="System.Int32" Enabled="true" SelectCommand="SELECT C.farmer_code, C.farmer_name, C.fhw_name, C.farmer_dob, C.farmer_country, C.farmer_state, C.farmer_dist, C.farmer_taluk, C.farmer_panchayat, C.farmer_village, C.farmer_pincode&#13;&#10;FROM `core_mst_tfarmer` C&#13;&#10;">
+        <Column Name="farmer_code" DataType="System.String"/>
+        <Column Name="farmer_name" DataType="System.String"/>
+        <Column Name="fhw_name" DataType="System.String"/>
+        <Column Name="farmer_dob" DataType="System.DateTime"/>
+        <Column Name="farmer_country" DataType="System.String"/>
+        <Column Name="farmer_state" DataType="System.String"/>
+        <Column Name="farmer_dist" DataType="System.String"/>
+        <Column Name="farmer_taluk" DataType="System.String"/>
+        <Column Name="farmer_panchayat" DataType="System.String"/>
+        <Column Name="farmer_village" DataType="System.String"/>
+        <Column Name="farmer_pincode" DataType="System.String"/>
+      </TableDataSource>
+    </MySqlDataConnection>
+  </Dictionary>
+  <ReportPage Name="Page1" Landscape="true" PaperWidth="337" PaperHeight="210" Watermark.Font="Arial, 60pt">
+    <ReportTitleBand Name="ReportTitle1" Width="1198.26" Height="47.25">
+      <TextObject Name="Text9" Left="368.55" Top="9.45" Width="330.75" Height="18.9" Text="Sample Farmer Report" HorzAlign="Center" Font="Calibri, 14pt, style=Bold"/>
+    </ReportTitleBand>
+    <PageHeaderBand Name="PageHeader1" Top="51.25" Width="1198.26" Height="47.25">
+      <TextObject Name="Text3" Width="132.3" Height="18.9" Text="FarmerCode&#13;&#10;" HorzAlign="Center" Font="Calibri, 12pt, style=Bold"/>
+      <TextObject Name="Text5" Left="189" Width="66.15" Height="37.8" Text="Farmer&#13;&#10;Name" Font="Calibri, 12pt, style=Bold"/>
+      <TextObject Name="Text7" Left="264.6" Width="56.7" Height="37.8" Text="Father&#13;&#10;Name&#13;&#10;" Font="Calibri, 12pt, style=Bold"/>
+      <TextObject Name="Text1" Left="330.75" Width="66.15" Height="47.25" Text="Farmer &#13;&#10;Dob" HorzAlign="Center" Font="Calibri, 12pt, style=Bold"/>
+      <TextObject Name="Text10" Left="415.8" Width="66.15" Height="37.8" Text="Farmer &#13;&#10;Country&#13;&#10;" Font="Calibri, 12pt, style=Bold"/>
+      <TextObject Name="Text12" Left="519.75" Width="75.6" Height="37.8" Text="Farmer &#13;&#10;State&#13;&#10;" Font="Calibri, 12pt, style=Bold"/>
+      <TextObject Name="Text14" Left="633.15" Width="94.5" Height="37.8" Text="Farmer &#13;&#10;District&#13;&#10;" Font="Calibri, 12pt, style=Bold"/>
+      <TextObject Name="Text16" Left="765.45" Width="75.6" Height="37.8" Text="Farmer &#13;&#10;Taluk&#13;&#10;&#13;&#10;" Font="Calibri, 12pt, style=Bold"/>
+      <TextObject Name="Text17" Left="859.95" Width="75.6" Height="37.8" Text="Farmer &#13;&#10;Panchyat&#13;&#10;&#13;&#10;&#13;&#10;" Font="Calibri, 12pt, style=Bold"/>
+      <TextObject Name="Text18" Left="1001.7" Width="113.4" Height="37.8" Text="Farmer &#13;&#10;Village&#13;&#10;&#13;&#10;&#13;&#10;" HorzAlign="Center" Font="Calibri, 12pt, style=Bold"/>
+      <TextObject Name="Text22" Left="1134" Width="66.15" Height="37.8" CanGrow="true" Text="Farmer &#13;&#10;Pincode&#13;&#10;&#13;&#10;&#13;&#10;" Font="Calibri, 12pt, style=Bold"/>
+    </PageHeaderBand>
+    <DataBand Name="Data1" Top="102.5" Width="1198.26" Height="28.35" EvenStyle="EvenRows" Guides="0" DataSource="Table">
+      <TextObject Name="Text8" Left="330.75" Width="85.05" Height="18.9" CanGrow="true" CanBreak="false" Text="[Table.farmer_dob]" Format="Date" Format.Format="d" Font="Calibri, 10pt"/>
+      <TextObject Name="Text2" Left="9.45" Width="170.1" Height="18.9" CanGrow="true" CanBreak="false" Text="[Table.farmer_code]" Font="Calibri, 10pt"/>
+      <TextObject Name="Text4" Left="189" Width="66.15" Height="18.9" CanGrow="true" CanBreak="false" Text="[Table.farmer_name]" Font="Calibri, 10pt"/>
+      <TextObject Name="Text6" Left="264.6" Width="66.15" Height="18.9" CanGrow="true" CanBreak="false" Text="[Table.fhw_name]" Font="Calibri, 10pt"/>
+      <TextObject Name="Text11" Left="425.25" Width="94.5" Height="18.9" CanGrow="true" CanBreak="false" Text="[Table.farmer_country]" Font="Calibri, 10pt"/>
+      <TextObject Name="Text13" Left="529.2" Width="94.5" Height="18.9" CanBreak="false" Text="[Table.farmer_state]" Font="Calibri, 10pt"/>
+      <TextObject Name="Text15" Left="623.7" Width="132.3" Height="18.9" CanGrow="true" CanBreak="false" Text="[Table.farmer_dist]" Font="Calibri, 10pt"/>
+      <TextObject Name="Text19" Left="756" Width="122.85" Height="18.9" CanGrow="true" CanBreak="false" Text="[Table.farmer_taluk]" Font="Calibri, 10pt"/>
+      <TextObject Name="Text20" Left="869.4" Width="141.75" Height="18.9" CanGrow="true" CanBreak="false" Text="[Table.farmer_panchayat]" Font="Calibri, 10pt"/>
+      <TextObject Name="Text21" Left="1011.15" Width="122.85" Height="18.9" CanGrow="true" CanBreak="false" Text="[Table.farmer_village]" Font="Calibri, 10pt"/>
+      <TextObject Name="Text23" Left="1143.45" Width="56.7" Height="18.9" CanGrow="true" CanBreak="false" Text="[Table.farmer_pincode]" HorzAlign="Center" Font="Calibri, 10pt"/>
+    </DataBand>
+    <PageFooterBand Name="PageFooter1" Top="134.85" Width="1198.26" Height="18.9"/>
+  </ReportPage>
+</Report>

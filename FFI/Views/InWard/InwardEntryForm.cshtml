@@ -1,0 +1,3444 @@
+﻿@{ ViewBag.Form = "Stock Inward";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml"; }
+<style>
+    li.create_item {
+        margin-left: 2px;
+        margin-top: -51px;
+        display: inline-block;
+        position: relative;
+        top: 28px;
+    }
+</style>
+<form id="Inwardentry_form" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:2px;padding-bottom:20px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-xs-4" style="display:none">
+                    <div class=" form-group">
+                        <label for="txtorgn_code" class=" col-sm-5 control-label">orgn_code</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txtorgn_code" name="In_orgn_code" class="form-control" maxlength="50" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="txt_inward_rowid" class="col-sm-5 control-label ">inward_rowid:</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txt_inward_rowid" name="IOU_inward_rowid" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4" style="display:none">
+                    <div class="form-group">
+                        <label for="txtValidity" class=" col-sm-5 control-label">GRN Date</label>
+                        <div class=" col-sm-6">
+                            <input class="cusDate" type="date" data-role='' onkeypress="return date_validate(event)" id="txtValidity" data-checkdate-msg="Enter Valid Date" name="In_grn_date" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4" style="display:none">
+                    <div class=" form-group">
+                        <label for="ic_code" class=" col-sm-5 control-label">ic_code</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="ic_code" name="In_ic_code" class="form-control" maxlength="50" disabled>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txt_mobile" class=" col-sm-6 control-label required">IC Name</label>
+                        <div class=" col-sm-6">
+                            <input id="cmb_filter" name="orgid" style="width: 100%" data-role="filtercombo">
+                            <input id="txtagg_code" type="hidden" />
+                            <input id="txtic_code" type="hidden" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txtSupplier" class=" col-sm-5 control-label required">Supplier Name</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txtSupplier" name="In_supplier_name" class="form-control" maxlength="50">
+                        </div>
+                        <div id="pay_help2">
+                            <a class="HelpWindow fa fa-search fa-lg" role="button" id="pay_help21" data-toggle="modal" href="/HelpFilter/HelpFilter" hdrtitle="Supplier" searchid="INW01" data-target="#HelpModal" onclick=transfer(this,"form","","form_control"); title="Search" style="font-size: 19px; "></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txtSupplierloc" class=" col-sm-6 control-label required">Supplier Location</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txtSupplierloc" name="In_supplier_location" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:5px">
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="cmb_state" class=" col-sm-6 control-label required">From State</label>
+                        <div class=" col-sm-6">
+                            <input id="cmb_state" name="In_from_state" style="width: 100%" onclick="from_state">
+                        </div>
+                    </div>
+                </div>
+                @*<div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="txtValidity" class=" col-sm-5 control-label required">GRN Date</label>
+                            <div class=" col-sm-6">
+                                <input class="cusDate" type="date" data-role='' onkeypress="return date_validate(event)" id="txtValidity" data-checkdate-msg="Enter Valid Date" name="In_grn_date" style="width:100%" />
+                                <span data-for='valid' class='k-invalid-msg'></span>
+                            </div>
+                        </div>
+                    </div>*@
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_inward_code" class=" col-sm-5 control-label required">Bill NO</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_inward_code" name="In_inward_code" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="TextArea1" class=" col-sm-6 control-label">Remarks</label>
+                        <div class=" col-sm-6">
+                            @*<textarea id="TextArea1" rows="1" cols="1" name="In_Remarks" style="width:180px;height:33px;" class="form-control"></textarea>*@
+                            <input type="text" id="TextArea1" name="In_Remarks" class="form-control" maxlength="20">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4" style="display:none">
+                    <div class=" form-group">
+                        <label for="txtSupplierloc" class=" col-sm-6 control-label required">Loading/UnLoading Cost</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txtloadunloading" name="In_loading_unloading_cost" class="form-control" maxlength="6" value="0" onkeypress="return isNumberKey(event)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:5px">
+
+                <div class="col-xs-4" style="display:none">
+                    <div class=" form-group">
+                        <label for="cmb_state" class=" col-sm-6 control-label required">Local Transport Cost</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txtlocaltransport" name="In_local_transport_cost" class="form-control" maxlength="6" value="0" onkeypress="return isNumberKey(event)">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4" style="display:none">
+                    <div class=" form-group">
+                        <label for="txtSupplierloc" class=" col-sm-5 control-label required">Local/Unloading Cost</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txtlocalloadunload" name="In_local_loading_unloading_cost" class="form-control" maxlength="6" value="0" onkeypress="return isNumberKey(event)">
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+            <div class="row">
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="file" class=" col-sm-3 control-label">Vendor Bill </label>
+                        <div class=" col-sm-7" style="padding-left: 5%;">
+                            <input type="file" name="file" id="Billfile" style="width: 220px;" class=" col-sm-4 control-label" accept="image/x-png, image/gif, image/jpeg" />
+                            <input type="hidden" id="txtImageHidden" name="In_bill_image" />
+                            <button type="button" id="upoloadview" name="View" onclick="Uploadview()">View</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-4">
+                <div class=" form-group" style="display:none">
+                    <label for="txt_grn_sts" class=" col-sm-5 control-label">GRN Status</label>
+                    <div class=" col-sm-6">
+                        <input type="text" id="txt_grn_sts" name="In_process_status" class="" maxlength="50">
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-4">
+                <div class=" form-group" style="display:none">
+                    <label for="row_timestamp" class=" col-sm-5 control-label">row_timestamp</label>
+                    <div class=" col-sm-6">
+                        <input id="row_timestamp" name="In_row_timestamp" class="form-control" maxlength="50">
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-4">
+                <div class=" form-group" style="display:none">
+                    <label for="txtMode" class=" col-sm-5 control-label">mode_flag</label>
+                    <div class=" col-sm-6">
+                        <input type="text" id="txtMode" name="In_mode_flag" class="" maxlength="50">
+                        <input type="hidden" id="txt_status_code" name="In_status_code">
+                        <input type="hidden" id="tax_rate" name="In_tax_rate">
+                        <input type="hidden" id="In_hdn_hsn_code">
+                        <input type="hidden" id="In_hdn_hsn_code_desc">
+                        <input type="hidden" id="hdn_tot_amt">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <section class="col-md-12">
+                    <div id="tab_list" class="col-md-12">
+                        <ul class="nav nav-tabs">
+                            <li class="active">
+                                <a href="#stockinward" id="" onclick="inward1()" role="tab" data-toggle="tab">
+                                    Inward
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#tax" id="txtdtl" onclick="tax1()" role="tab" data-toggle="tab">
+                                    Tax
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="#discount" id="distypesdtls" role="tab" onclick="DiscountTypes()" data-toggle="tab">
+                                    Adjustments
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#slno" id="slnodtls" role="tab" onclick="serialNo()" data-toggle="tab">
+                                    Serial Numbers
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#otherinp" id="othtypesdtls" role="tab" onclick="OtherTypes()" data-toggle="tab">
+                                    Other Inputs
+                                </a>
+                            </li>
+
+                        </ul>
+
+                        <div class="tab-content">
+                            <div class="tab-pane fade active in" id="stockinward">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div id="grid_inward"> </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="tab-pane fade active in" id="tax">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div id="grid_tax"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" tab-pane fade active in" id="discount">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div id="grid_discount"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" tab-pane fade active in" id="slno">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div id="grid_Serial"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" tab-pane fade active in" id="otherinp">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div id="grid_otherInput"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <script type="text/x-kendo-template" id="Yes_No-confirmation">
+                            <div class="row" style="padding-bottom: 20px; padding-left: 17px;">
+                                <strong>Are you sure you want to change the state?</strong>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                </div>
+                                <div class="col-sm-2">
+                                    <button class="Yes-confirm k-button" style="width:125%">Yes</button>
+                                </div>
+                                <div class="col-sm-2">
+                                    <button class="No-cancel k-button" style="width:125%"> No</button>
+                                </div>
+                                <div class="col-sm-2">
+                                </div>
+                            </div>
+                        </script>
+                    </div>
+                </section>
+            </div>
+            <div class="row">
+                <div class="col-sm-4" style="display:none">
+                    <div class="form-group">
+                        <label for="txt_transamt" class=" col-sm-5 control-label required">Transport</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_transamt" name="In_transport_amount" class="form-control" maxlength="10" onpaste="return false;" value="0" onkeypress="return isNumberKey(event)">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4" style="display:none">
+                    <div class="form-group">
+                        <label for="txt_transamt" class=" col-sm-5 control-label required">Total Amount</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_totamt" name="" class="form-control" maxlength="10" readonly onpaste="return false;" value="0" onkeypress="return isNumberKey(event)">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4" style="display:none">
+                    <div class=" form-group">
+                        <label for="txt_others" class=" col-sm-6 control-label required">Others charges</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_others" name="In_others" class="form-control" maxlength="10" onpaste="return false;" value="0" onkeypress="return isNumberKey(event)">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txtroundoff" class=" col-sm-5 control-label">roundoff</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txtroundoff" name="In_roundoff" class="form-control" maxlength="6" value="0">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_others" class=" col-sm-6 control-label required">Total Bill Amount</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_total" name="In_total_amount" class="form-control" maxlength="50" value="0.00" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="dialogFileuploadView">
+                <img id="Bill_img" src="~/images/Bill Image.jpg" class="col-sm-5 img-bordered profileImg" alt="User Image" height="250" width="100" />
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+
+                </div>
+                <div class="col-sm-2">
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+
+                        <a id="btnPayment" data-toggle="modal" type="button" class="btn btn-info" role="button" href="~/InWard/InwardPayment" data-target="#inward_payment">Payment Collection</a>
+
+                        <input type="hidden" id="tax_rate" name="In_tax_rate">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="hdispaid" value="" />
+</form>
+<script>
+    click_act_name = "InwardEntryList";
+    click_ctrl_name = "InWard";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+
+<script>
+    $(document).ready(function () {
+        $("#hdispaid").val("false");
+        $("#frmlayerdiv").hide();
+        $("#inward").show();
+
+        kendodate_format();
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#Inwardentry_form");
+        kendo.init(container);
+        container.kendoValidator({
+            rules: {
+                checkdate: function (input) {
+                    if (input.attr("data-role") == "datepicker") {
+                        var res = isDate(input.val());
+                        return res;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+            }
+        });
+
+        GridInward([]);
+        GridTax([]);
+
+        $(".file_attach").attr("hdrtitle", "Stock Inward");
+        $(".notes").attr("hdrtitle", "Stock Inward");
+        $("#lblForm_menuid").text("ICDINWARD");
+
+        Screen_Id = "ICDINWARD";
+        permission = sec_Permission(Screen_Id);
+        setlocalStorage('screen', Screen_Id);
+        setlocalStorage("procrowid", "");
+        setlocalStorage("process", "ICDINWARD");
+        $("#common_id").text("GRN NO");
+        $("#modevalue").hide();
+        var combo_statefrom = "";
+        $("#cmb_state").empty();
+        combo_statefrom = grid_comboScreen_mastercodes("QCD_UN_STATE");
+        filter_combobox("cmb_state", combo_statefrom);
+        setlocalStorage("inward_data", "");
+        var org = getlocalStorage('org_id');
+        $('#txtagg_code').val(org);
+        $("#bottom_menus").hide();
+
+
+        $("#dialogFileuploadView").hide();
+        $("div#tax").hide();
+        $("div#slno").hide();
+        $("div#discount").hide();
+        $("div#otherinp").hide();
+
+        if (getlocalStorage('btn_clk_val') == "Create") {
+
+            $('#divCreate #review').hide();
+            $("#bottom_menus").hide();
+            $("#txtMode").val("I");
+            $("#grn_no").val("0");
+            var In_Date = new Date();
+            var Mon = In_Date.getMonth();
+            Mon++;
+            $("#txtic_inwarddate").val(In_Date.getDate() + "/" + Mon + "/" + In_Date.getUTCFullYear());
+            disable();
+        }
+
+        else if (getlocalStorage('btn_clk_val') == "Edit") {
+
+            $('#divEdit #reviewEd').hide();
+            $('#divEdit #deactivate').hide();
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("Inwardentry_form");
+                var obj_val = JSON.parse(formval);
+                obj_val.orgn_code = data.Out_ic_code;
+                obj_val.inward_rowid = data.Out_inward_rowid;
+                $("#inward #txtGRN_NO").val(data.Out_grn_no);
+                var data = {};
+                data.context = getContext();
+                data.context.orgnId = obj_val.orgn_code
+                data.context.Header = obj_val;
+                data.context.Detail = obj_val;
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, inward_rowid: Context.Detail.inward_rowid }),
+                    url: "/Inward/Inwardfetch",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+
+                        if (response.context != null) {
+                            generate_Stockinward_header(response.context.Header);
+                            generate_Stockinward_detail(response.context.Detail);
+                            generate_Stockinward_slnodlts(response.context.Slno);
+                            //Ramya added
+                            Bind_Discount_Grid(response.context.OtherCostInfo);
+                            generate_OtherInputs_details(response.context.OtherInputs);                           
+                            enable();
+                            TotalAmount();
+                            UpdateInwardwithDiscount();
+                            fetch_grid();
+                            $("#txtMode").val("U");
+                            //  $("#hdn_mode_flag").val("U");
+                            setlocalStorage('doc_no', $("#txtcommon_id").val());
+                            setlocalStorage('doc_row_id', $("#inward_rowid").val());
+                            $("#txtic_inwarddate").attr("disabled", true);
+                            setlocalStorage('doc_no', $("#txtcommon_id").val());
+                            setlocalStorage('doc_row_id', $("#inward_rowid").val());
+                        }
+                        else {
+
+                        }
+                    },
+                    error: function (er) {
+                        alert(er)
+                        console.log(er)
+                    }
+
+                });
+
+                fetch_Inward_payment(Context.Detail.inward_rowid);
+            }
+        }
+        else if (getlocalStorage('btn_clk_val') == "View") {
+
+            $('#divEdit #reviewEd').hide();
+            $('#divEdit #deactivate').hide();
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("Inwardentry_form");
+                var obj_val = JSON.parse(formval);
+                obj_val.orgn_code = data.Out_ic_code;
+                obj_val.inward_rowid = data.Out_inward_rowid;
+                $("#txtGRN_NO").val(data.Out_grn_no);
+                var data = {};
+                data.context = getContext();
+                data.context.orgnId = obj_val.orgn_code
+                data.context.Header = obj_val;
+                data.context.Detail = obj_val;
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, inward_rowid: Context.Detail.inward_rowid }),
+                    url: "/Inward/Inwardfetch",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+
+                        if (response.context != null) {
+                            generate_Stockinward_header(response.context.Header);
+                            generate_Stockinward_detail(response.context.Detail);
+                            generate_Stockinward_slnodlts(response.context.Slno);
+                            //Ramya added
+                            Bind_Discount_Grid(response.context.OtherCostInfo);
+                            generate_OtherInputs_details(response.context.OtherInputs);                           
+                            disable();
+                            TotalAmount();
+                            UpdateInwardwithDiscount();
+                            fetch_grid();
+                            $("#txtMode").val("U");
+                            //  $("#hdn_mode_flag").val("U");
+                            setlocalStorage('doc_no', $("#txtcommon_id").val());
+                            setlocalStorage('doc_row_id', $("#inward_rowid").val());
+                            $("#txtic_inwarddate").attr("disabled", true);
+                            setlocalStorage('doc_no', $("#txtcommon_id").val());
+                            setlocalStorage('doc_row_id', $("#inward_rowid").val());
+                        }
+                        else {
+
+                        }
+                    },
+                    error: function (er) {
+                        alert(er)
+                        console.log(er)
+                    }
+
+                });
+
+
+            }
+        }
+
+        $("#txtdtl").click(function () {
+
+            var sourcegrid = $('#grid_inward').data('kendoGrid');
+            var destinationgrid = $('#grid_tax').data('kendoGrid');
+            if (sourcegrid._data.length > 0 && destinationgrid._data.length > 0) {
+                for (var i = 0; i < sourcegrid._data.length; i++) {
+                    for (var j = 0; j < destinationgrid._data.length; j++) {
+                        var srcdataitem = sourcegrid._data[i];
+                        var decdataitem = destinationgrid._data[j];
+                        if (srcdataitem.In_product_code == decdataitem.In_product_code) {
+                            if (srcdataitem.In_discount_amount == "") {
+                                srcdataitem.In_discount_amount = "0";
+                            }
+                            var firstItem = $('#grid_tax').data().kendoGrid.dataSource.data()[j];
+                            if (srcdataitem.In_Non_Base_Price == "") {
+                                var amt = ((parseFloat(srcdataitem.In_net_amount)) - (parseFloat(srcdataitem.In_tax_amount))).toFixed(2);
+                                firstItem["In_taxable_amount"] = parseFloat(amt).toFixed(2);
+                                firstItem["In_tax_amount"] = parseFloat(srcdataitem.In_tax_amount).toFixed(2);
+                            } else {
+                                firstItem["In_taxable_amount"] = parseFloat(srcdataitem.In_taxable_amount).toFixed(2);
+                                firstItem["In_tax_amount"] = parseFloat(srcdataitem.In_tax_amount).toFixed(2);
+                            }
+                        }
+                    }
+                }
+                destinationgrid.refresh();
+            }
+        });
+
+        $('#cmb_state').on('change', function (e) {
+
+            var grid_val = JSON.stringify($("#grid_inward").data().kendoGrid._data);
+            var Bind = {};
+            Bind = grid_val;
+            var result = JSON.parse(Bind);
+            if (result.length >= 1) {
+                var kendoWindow = $("<div />").kendoWindow({
+                    title: "Confirm",
+                    width: "350px",
+                    height: "130px",
+                    resizable: false,
+                    modal: true
+                });
+                kendoWindow.data("kendoWindow")
+                    .content($("#Yes_No-confirmation").html())
+                    .center().open();
+                kendoWindow
+                    .find(".Yes-confirm,.No-cancel")
+                    .click(function () {
+                        if ($(this).hasClass("Yes-confirm")) {
+                            $("#txt_inward_code").val("");
+                            $("#txt_transamt").val("0");
+                            $("#txt_others").val("0");
+                            $("#txt_total").val("0.00");
+                            $("#cmb_state").data("kendoComboBox").value("");
+                            Inactive();
+
+                            $("#grid_inward").data("kendoGrid").dataSource.data([]);
+                            $("#grid_tax").data("kendoGrid").dataSource.data([]);
+                        }
+                        else {
+
+                            kendoWindow.data("kendoWindow").close();
+                        }
+                        kendoWindow.data("kendoWindow").close();
+                    })
+
+                return false;
+            }
+        });
+        $('#txt_inward_code').on('keypress', function (event) {
+            var regex = new RegExp("^[ A-Za-z0-9-/ ]+$");
+            var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+            if (!regex.test(key)) {
+                event.preventDefault();
+                return false;
+            }
+        });
+        loadicdcenter();
+        load_master_code();
+        $("#cmb_filter").on('change', function (e) {
+            load_master_code();
+            $('#grid_inward').data('kendoGrid').refresh();
+            var combo_statefrom = "";
+            $("#cmb_state").empty();
+            combo_statefrom = grid_comboScreen_mastercodes("QCD_UN_STATE");
+            filter_combobox("cmb_state", combo_statefrom);
+        });
+
+    });
+
+</script>
+<script>
+
+    function loadicdcenter()
+    {
+        var combo_statefrom = "";
+        $("#cmb_state").empty();
+        combo_statefrom = grid_comboScreen_mastercodes("QCD_UN_STATE");
+        filter_combobox("cmb_state", combo_statefrom);
+
+          var In_agg_code = $("#txtagg_code").val();
+        var data = { In_agg_code: In_agg_code, module: "ICD" };
+        $.ajax({
+          url: '@Url.Action("lcdcenter_search", "Product")',
+         type: "post",
+        contentType: 'application/x-www-form-urlencoded',
+            data: data,
+            success: function (response) {
+
+                if (response != null) {
+
+                    var itemArr = [];
+                    for (var i = 0; i < response.length; i++) {
+                        var list = {};
+                        list.id = response[i].Out_orgn_rowid
+                        list.code = response[i].Out_orgn_code;
+                        list.desc = response[i].Out_orgn_desc;
+                        itemArr.push(list);
+                    }
+                    filter_combobox("cmb_filter", itemArr);
+                    load_master_code();
+                }
+                else {
+                    $("#cmb_filter").empty();
+                }
+            },
+            error: function (er) {
+                alert(er);
+                console.log(er);
+            }
+        });
+    }
+
+
+
+    function Bind_Discount_Grid(data) {
+        var grid_val = JSON.stringify($("#grid_inward").data().kendoGrid._data);
+        var Bind = {};
+        Bind = grid_val;
+        var result = JSON.parse(Bind);
+        var grid_validate_msg = "";
+        var disctype = [];
+        $.each(result, function (key, value) {
+            var list = {};
+            if (value != null) {
+                list.code = value.In_product_code;
+                list.desc = value.In_product_desc;
+            }
+            disctype.push(list);
+        });
+        setlocalStorage("disctype", disctype);
+
+        //Discount Type
+        var DiscountType = "";
+        var DiscountTypeArr = [];
+        DiscountType = grid_comboScreen_mastercodes("QCD_ICD_OTHERCOST");
+        $.each(DiscountType, function (key, value) {
+            var list = {};
+            if (value != null) {
+                list.code = value.code;
+                list.desc = value.desc;
+            }
+            DiscountTypeArr.push(list);
+        });
+        setlocalStorage("DiscountTypeArr", DiscountTypeArr);
+
+        //To Fill Add Less Combo box
+        var AddLessarr = [];
+        var AddLessList = {};
+        AddLessList.code = "Add";
+        AddLessList.desc = "Add";
+        AddLessarr.push(AddLessList);
+        AddLessList = {};
+        AddLessList.code = "Less";
+        AddLessList.desc = "Less";
+        AddLessarr.push(AddLessList);
+        setlocalStorage("AddLessarr", AddLessarr);
+
+        //To Fill CostOn Combo box
+        var CostOnarr = [];
+        var CostOnList = {};
+        CostOnList.code = "Base Price";
+        CostOnList.desc = "Base Price";
+        CostOnarr.push(CostOnList);
+        CostOnList = {};
+        CostOnList.code = "Non Base Price";
+        CostOnList.desc = "Non Base Price";
+        CostOnarr.push(CostOnList);
+        setlocalStorage("CostOnarr", CostOnarr);
+
+        grid_Discount_details(data);
+    }
+</script>
+<script>
+    function UpdateInwardwithDiscount() {
+
+        try {
+            var grid_val = JSON.stringify($("#grid_inward").data().kendoGrid._data);
+            var Bindinw = {};
+            Bindinw = grid_val;
+            var resultinw = JSON.parse(Bindinw);
+
+            var grid_disc = JSON.stringify($("#grid_discount").data().kendoGrid._data);
+            var Bind = {};
+            Bind = grid_disc;
+            var discresult = JSON.parse(Bind);
+            var totalamt = 0;
+            if (discresult.length > 0) {
+                if (resultinw.length > 0) {
+                    for (var i = 0; i < resultinw.length; i++) {
+                        var product_code = resultinw[i].In_product_desc;
+                        var Baddamt = 0; var Naddamt = 0;
+                        var Blessamt = 0; var Nlessamt = 0;
+                        var Baseprice = 0; var NonBaseprice = 0;
+                        for (var j = 0; j < discresult.length; j++) {
+                            // list oly take this product
+                            if (discresult[j].In_product_code == product_code) {
+                                if (discresult[j].In_OtherCostOn == "Base Price") {
+                                    if (discresult[j].In_OtherCostType == "Add") {
+                                        Baddamt = Baddamt + discresult[j].In_OtherCostAmount;
+                                    }
+                                    else if (discresult[j].In_OtherCostType == "Less") {
+                                        Blessamt = Blessamt + discresult[j].In_OtherCostAmount;
+                                    }
+                                }
+                                else if (discresult[j].In_OtherCostOn == "Non Base Price") {
+                                    if (discresult[j].In_OtherCostType == "Add") {
+                                        Naddamt = Naddamt + discresult[j].In_OtherCostAmount;
+                                    }
+                                    else if (discresult[j].In_OtherCostType == "Less") {
+                                        Nlessamt = Nlessamt + discresult[j].In_OtherCostAmount;
+                                    }
+                                }
+                            }
+                            //totalcost = 5;
+                        }
+
+                        Baseprice = Baddamt - Blessamt;
+                        NonBaseprice = Naddamt - Nlessamt;
+                        resultinw[i].In_Base_Price = Baseprice;
+                        resultinw[i].In_Non_Base_Price = NonBaseprice;
+                        var RecvQty = resultinw[i].In_received_qty;
+                        var PrdAmt = resultinw[i].In_product_amount;
+                        var Cost = (parseFloat(RecvQty) * parseFloat(PrdAmt)).toFixed(2);
+                        Cost = parseFloat(Cost) + parseFloat(Baseprice);
+                        var TaxPer = resultinw[i].In_tax_rate;
+                        var NetAmt = resultinw[i].In_net_amount;
+                        //resultinw[i].In_amount = parseFloat(Cost);
+                        resultinw[i].In_taxable_amount = parseFloat(Cost).toFixed(2);
+                        resultinw[i].In_tax_amount = (((parseFloat(Cost) * parseFloat(TaxPer)) / 100.0).toFixed(2));
+                        resultinw[i].In_gross_amount = ((parseFloat(Cost) + parseFloat(resultinw[i].In_tax_amount)).toFixed(2));
+                        resultinw[i].In_net_amount = ((parseFloat(Cost) + parseFloat(resultinw[i].In_tax_amount) + parseFloat(NonBaseprice)).toFixed(2));
+
+
+                        totalamt = totalamt + resultinw[i].In_net_amount;
+                    }
+                }
+
+                GridInward(resultinw);
+            }
+            else {
+                //GridInward(resultinw);
+            }
+
+            TotalAmount();
+        }
+        catch (err) {
+        }
+    }
+</script>
+<script>
+    $("#stockinward").focusout(function () {
+        var grid1 = $("#grid_inward").data("kendoGrid");
+        var gridData1 = grid1.dataSource.view();
+        var net_amt1 = 0;
+        for (var i = 0; i < gridData1.length; i++) {
+            if (gridData1[i].In_net_amount != '') {
+                net_amt1 += gridData1[i].In_net_amount != undefined ? parseFloat(gridData1[i].In_net_amount) : parseFloat(0);
+            }
+        }
+
+        $("#txt_totamt").val(parseFloat(net_amt1).toFixed(2));
+        TotalAmount();
+    });
+    $("#txtloadunloading").focusout(function () {
+        TotalAmount();
+    });
+    $("#txtlocaltransport").focusout(function () {
+        TotalAmount();
+    });
+    $("#txtlocalloadunload").focusout(function () {
+        TotalAmount();
+    });
+    $("#txt_others").focusout(function () {
+        TotalAmount();
+    });
+    $("#txtroundoff").focusout(function () {
+        TotalAmount();
+    });
+    function disable() {
+        $("#btnPayment").attr("disabled", true);
+        $("#btnPayment").css("pointer-events", "none");
+    }
+    function enable() {
+        $("#btnPayment").css("pointer-events", "default");
+        $("#btnPayment").attr("disabled", false);
+        $("#btnPayment").removeAttr("style");
+    }
+    function Uploadview() {
+        debugger
+        $("#dialogFileuploadView").kendoWindow();
+        var dialog = $("#dialogFileuploadView").data("kendoWindow");
+        dialog.open().element.closest(".k-window").css({
+            top: 195,
+            left: 300, height: 277, width: 915
+        });
+        dialog.title("Bill Upload");
+    }
+    $("#Billfile").change(function () {
+        readURL(this);
+    });
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#Bill_img').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+
+        }
+    }
+    function load_master_code() {
+        var data = {};
+        var context = getContext();
+        data.userId = context.userId
+        var org = ""
+        if ($("#ic_code").val() != "") {
+            org = $("#ic_code").val();
+        } else {
+            org = $("#cmb_filter").val();
+        }
+        data.orgnId = org
+        data.locnId = context.locnId
+        data.localeId = context.localeId
+        data.screen_Id = "ICDINWARD";
+        var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+    }
+    function inward1() {
+        debugger;
+        try {
+            //Ramya added
+            UpdateInwardwithDiscount();
+            //$("div#stockinward").toggleClass('tab-pane fade active in');
+            $("div#tax").hide();
+            $("div#stockinward").show();
+            $("div#slno").hide();
+            $("div#discount").hide();
+            $("div#otherinp").hide();
+            var itemGrid = $("#grid_inward").data("kendoGrid");
+            itemGrid.refresh();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function tax1() {
+        debugger;
+        try {
+            //$("div#tax").toggleClass('tab-pane fade active in');
+            $("div#stockinward").hide();
+            $("div#tax").show();
+            $("div#slno").hide();
+            $("div#discount").hide();
+            $("div#otherinp").hide();
+            //Ramya added 03 Jun 21
+            UpdateInwardwithDiscount();
+            //fetch_grid();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function DiscountTypes() {
+        debugger;
+        try {
+            //$("div#discount").toggleClass('tab-pane fade active in');
+            $("div#stockinward").hide();
+            $("div#tax").hide();
+            $("div#slno").hide();
+            $("div#discount").show();
+            $("div#otherinp").hide();
+
+            var grid_val = JSON.stringify($("#grid_inward").data().kendoGrid._data);
+            var Bind = {};
+            Bind = grid_val;
+            var result = JSON.parse(Bind);
+            var grid_validate_msg = "";
+            var disctype = [];
+            $.each(result, function (key, value) {
+                var list = {};
+                if (value != null) {
+                    list.code = value.In_product_code;
+                    list.desc = value.In_product_desc;
+                }
+                disctype.push(list);
+            });
+            setlocalStorage("disctype", disctype);
+
+            //Discount Type
+            var DiscountType = "";
+            var DiscountTypeArr = [];
+            DiscountType = grid_comboScreen_mastercodes("QCD_ICD_OTHERCOST");
+            $.each(DiscountType, function (key, value) {
+                var list = {};
+                if (value != null) {
+                    list.code = value.code;
+                    list.desc = value.desc;
+                }
+                DiscountTypeArr.push(list);
+            });
+            setlocalStorage("DiscountTypeArr", DiscountTypeArr);
+
+            //To Fill Add Less Combo box
+            var AddLessarr = [];
+            var AddLessList = {};
+            AddLessList.code = "Add";
+            AddLessList.desc = "Add";
+            AddLessarr.push(AddLessList);
+            AddLessList = {};
+            AddLessList.code = "Less";
+            AddLessList.desc = "Less";
+            AddLessarr.push(AddLessList);
+            setlocalStorage("AddLessarr", AddLessarr);
+
+            //To Fill CostOn Combo box
+            var CostOnarr = [];
+            var CostOnList = {};
+            CostOnList.code = "Base Price";
+            CostOnList.desc = "Base Price";
+            CostOnarr.push(CostOnList);
+            CostOnList = {};
+            CostOnList.code = "Non Base Price";
+            CostOnList.desc = "Non Base Price";
+            CostOnarr.push(CostOnList);
+            setlocalStorage("CostOnarr", CostOnarr);
+
+
+            try {
+                var grid_disc = JSON.stringify($("#grid_discount").data().kendoGrid._data);
+                var Bind = {};
+                Bind = grid_disc;
+                var discresult = JSON.parse(Bind);
+                grid_Discount_details(discresult);
+            }
+            catch (err) {
+                grid_Discount_details([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function serialNo() {
+        debugger;
+        try {
+            //$("div#slno").toggleClass('tab-pane fade active in');
+            $("div#stockinward").hide();
+            $("div#tax").hide();
+            $("div#slno").show();
+            $("div#discount").hide();
+            $("div#other").hide();
+            var grid_val = JSON.stringify($("#grid_inward").data().kendoGrid._data);
+            var Bind = {};
+            Bind = grid_val;
+            var result = JSON.parse(Bind);
+            var grid_validate_msg = "";
+            var disctype = [];
+            $.each(result, function (key, value) {
+                var list = {};
+                if (value != null) {
+                    list.code = value.In_product_code;
+                    list.desc = value.In_product_desc;
+                }
+                disctype.push(list);
+            });
+            setlocalStorage("SInoP", disctype);
+            try {
+                var grid_SIno = JSON.stringify($("#grid_Serial").data().kendoGrid._data);
+                var Bind = {};
+                Bind = grid_SIno;
+                var SInoresult = JSON.parse(Bind);
+                GridSerial(SInoresult);
+            }
+            catch (err) {
+                GridSerial([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function OtherTypes() {
+        debugger;
+        try {
+            //$("div#otherinp").toggleClass('tab-pane fade active in'); //double click tab issue - grid hiding issue - ramya 03 Jun 21
+            $("div#stockinward").hide();
+            $("div#tax").hide();
+            $("div#slno").hide();
+            $("div#discount").hide();
+            $("div#otherinp").show();
+            try {
+                var grid_othin = JSON.stringify($("#grid_otherInput").data().kendoGrid._data);
+                var Bind = {};
+                Bind = grid_othin;
+                var OthInpresult = JSON.parse(Bind);
+                generate_OtherInputs_details(OthInpresult);
+            }
+            catch (err) {
+                grid_OtherInputs_details([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>
+    function GridInward(data) {
+        try {
+            $("#grid_inward").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                In_product_catg_code: { type: "string" },
+                                In_product_catg_desc: { type: "string", },
+                                In_product_subcatg_desc: { type: "string" },
+                                In_product_desc: { type: "string" },
+                                In_received_qty: { type: "string" },
+                                In_rate: { type: "string" },
+                                In_cgst_rate: { type: "string" },
+                                In_sgst_rate: { type: "string" },
+                                In_ugst_rate: { type: "string" },
+                                In_sugst_rate: { type: "string" },
+                                In_igst_rate: { type: "string" },
+                                In_tax_rate: { type: "string" },
+                                In_product_subcatg_code: { type: "string" },
+                                In_product_code: { type: "string" },
+                                In_uomtype_desc: { type: "string" },
+                                uomtype_code: { type: "string" },
+                                In_transport_amount: { type: "number", defaultValue: 0.00 },
+                                In_discount: { type: "string", defaultValue: 0.00 },
+                                In_product_amount: { type: "string" },
+                                In_Base_Price: { type: "number", defaultValue: 0.00 },
+                                In_Non_Base_Price: { type: "number", defaultValue: 0.00 },
+                                In_tax_amount: { type: "string", defaultValue: 0 },
+                                In_net_amount: { type: "number", defaultValue: "0" },
+                                In_amount: { type: "string" },
+                                In_taxable_amount: { type: "string" },
+                                In_gross_amount: { type: "string" },
+                                In_hsn_code: { type: "string" },
+                                In_hsn_desc: { type: "string" },
+                                In_mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    },
+                    aggregate: [{ field: "In_net_amount", aggregate: "sum" }],
+                },
+                toolbar: "<a class='k-grid-add' id='btnSave' href='' onclick=inwardgrid_addevent();><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 250,
+                groupable: false,
+                dataBinding: setDefaultValues,
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_inward').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                edit: OnEdit,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                save: function (data) {
+
+                    if (data.values.In_product_amount) {
+                        data.model.set("In_amount", (parseFloat(data.model.In_received_qty) * parseFloat(data.values.In_product_amount)).toFixed(2));
+                        var amt = (data.model.In_amount != undefined ? parseFloat(data.model.In_amount) : parseFloat(0.0));
+                        var disamt = (data.model.In_discount != undefined ? parseFloat(data.model.In_discount) : parseFloat(0.0));
+                        data.model.set("In_tax_amount", (((parseFloat(amt) - (parseFloat(disamt))) * parseFloat(data.model.In_tax_rate)) / 100.0).toFixed(2));
+                        data.model.set("In_net_amount", (parseFloat(amt) + parseFloat(data.model.In_tax_amount) - parseFloat(disamt)).toFixed(2));
+                        data.model.set("In_taxable_amount", parseFloat(amt));
+                        data.model.set("In_gross_amount", (parseFloat(amt) + parseFloat(data.model.In_tax_amount) - parseFloat(disamt)).toFixed(2));
+                    }
+                    if (data.values.In_received_qty) {
+                        if (data.model.In_product_amount != undefined && data.model.In_product_amount != '') {
+                            data.model.set("In_amount", (parseFloat(data.values.In_received_qty) * parseFloat(data.model.In_product_amount)).toFixed(2));
+                            var net_amount = data.model.In_amount != undefined ? parseFloat(data.model.In_amount) : parseFloat(0.0);
+                            var ttl = (data.model.In_amount != undefined ? parseFloat(data.model.In_amount) : parseFloat(0.0)) - (data.model.In_discount != undefined ? parseFloat(data.model.In_discount) : parseFloat(0.0));
+                            var disamt = (data.model.In_discount != undefined ? parseFloat(data.model.In_discount) : parseFloat(0.0));
+                            data.model.set("In_tax_amount", ((parseFloat(ttl) * parseFloat(data.model.In_tax_rate)) / 100.0).toFixed(2));
+                            data.model.set("In_net_amount", (parseFloat(net_amount) + parseFloat(data.model.In_tax_amount) - parseFloat(disamt)).toFixed(2));
+                            data.model.set("In_taxable_amount", parseFloat(amt));
+                            data.model.set("In_gross_amount", (parseFloat(amt) + parseFloat(data.model.In_tax_amount) - parseFloat(disamt)).toFixed(2));
+                            $('#grid_inward').data('kendoGrid').refresh();
+                        }
+                    }
+
+                    if (data.values.In_discount) {
+                        if (parseFloat(data.values.In_discount) > parseFloat(data.model.In_amount)) {
+                            kendoAlert("Please Enter a valid Discount Amount");
+                            data.model.set("discount", "");
+                            return false;
+                        }
+
+                        var amt_disc = (data.model.In_amount != undefined ? parseFloat(data.model.In_amount) : parseFloat(0.0)) - (data.values.In_discount != undefined ? parseFloat(data.values.In_discount) : parseFloat(0.0));
+                        data.model.set("In_tax_amount", ((parseFloat(amt_disc) * parseFloat(data.model.In_tax_rate)) / 100.0).toFixed(2));
+                        data.model.set("In_net_amount", ((parseFloat(amt_disc)) + parseFloat(data.model.In_tax_amount)).toFixed(2));
+
+                    }
+                    if (data.values.In_discount == 0) {
+                        if (parseFloat(data.values.In_discount) > parseFloat(data.model.In_amount)) {
+                            kendoAlert("Please Enter a valid Discount Amount");
+                            data.model.set("In_discount", "");
+                            return false;
+                        }
+                        var amt_disc = (data.model.In_amount != undefined ? parseFloat(data.model.In_amount) : parseFloat(0.0)) - (data.values.In_discount != undefined ? parseFloat(data.values.In_discount) : parseFloat(0.0));
+                        data.model.set("In_tax_amount", ((parseFloat(amt_disc) * parseFloat(data.model.In_tax_rate)) / 100.0).toFixed(2));
+                        data.model.set("In_net_amount", ((parseFloat(amt_disc)) + parseFloat(data.model.In_tax_amount)).toFixed(2));
+                    }
+                },
+
+                columns: [{
+                    command: [
+                        {
+                            name: "Delete",
+                            id: "Delete",
+                            imageClass: "fa fa-close",
+                            click: function (e) {
+
+                                var grid = $("#grid_inward").data("kendoGrid");
+                                var dataItem = $("#grid_inward").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                                DeleteWindowEvent(e, dataItem, grid);
+                                e.stopImmediatePropagation()
+
+                                var gridTax2 = $("#grid_tax").data("kendoGrid");
+                                var gridData2 = gridTax2.dataSource.view();
+
+                                for (var i = 0; i < gridData2.length; i++) {
+                                    if (gridData2[i].In_product_code == dataItem.In_product_code) {
+                                        var array1 = gridTax2.dataSource.data();
+                                        gridTax2.dataSource.remove(array1[i]);
+                                    }
+                                }
+                                var gridDiscount = $("#grid_discount").data("kendoGrid");
+                                var gridData3 = gridDiscount.dataSource.view();
+
+                                for (var i = 0; i < gridData3.length; i++) {
+                                    if (gridData3[i].In_product_code == dataItem.In_product_desc) {
+                                        var array2 = gridDiscount.dataSource.data();
+                                        gridDiscount.dataSource.remove(array2[i]);
+                                    }
+                                }
+                                var gridSlno = $("#grid_Serial").data("kendoGrid");
+                                var gridData4 = gridSlno.dataSource.view();
+
+                                for (var i = 0; i < gridData4.length; i++) {
+                                    if (gridData4[i].In_product_code == dataItem.In_product_desc) {
+                                        var array3 = gridSlno.dataSource.data();
+                                        gridSlno.dataSource.remove(array3[i]);
+                                    }
+                                }
+                                var gridOtherInput = $("#grid_otherInput").data("kendoGrid");
+                                var gridData5 = gridOtherInput.dataSource.view();
+
+                                for (var i = 0; i < gridData5.length; i++) {
+                                    if (gridData5[i].In_product_code == dataItem.In_product_desc) {
+                                        var array4 = gridOtherInput.dataSource.data();
+                                        gridOtherInput.dataSource.remove(array4[i]);
+                                    }
+                                }
+                            }
+                        },
+                    ], title: "", width: "35px",
+
+                },
+                {
+                    field: "In_inwarddtl_rowid",
+                    title: "In_inwarddtl_rowid",
+                    hidden: true,
+                },
+                {
+                    field: "In_inward_code",
+                    title: "inward_code",
+                    hidden: true,
+                },
+                {
+                    field: "In_grn_no",
+                    title: "grn_no",
+                    hidden: true,
+                },
+                {
+                    field: "In_product_catg_code",
+                    title: "product_catg_code",
+                    hidden: true,
+                },
+                {
+                    field: "In_product_desc",
+                    title: "Product Name",
+                    editor: function (container, options) {
+                        combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "", "grid_inward")
+                    },
+                    width: 150,
+                },
+                {
+                    field: "In_product_catg_desc",
+                    title: "Product Category",
+                    width: 130,
+
+                },
+                {
+                    field: "In_product_subcatg_desc",
+                    title: "Product Sub-Category",
+                    width: 130,
+                },
+                {
+                    field: "In_product_subcatg_code",
+                    title: "product_subcatg_code",
+                    hidden: true,
+                },
+                {
+                    field: "In_product_code",
+                    title: "Product Code",
+                    width: 100,
+
+                },
+
+                {
+                    field: "In_uomtype_desc",
+                    title: "Selling UOM",
+                    width: 100,
+                },
+                {
+                    field: "In_uomtype_code",
+                    title: "Selling UOM",
+                    hidden: true,
+                    width: 100,
+
+                },
+                {
+                    field: "In_batch_no",
+                    title: "Batch No",
+                    width: 100,
+                    hidden: true,
+                },
+                {
+                    field: "In_received_qty",
+                    title: "Received Quantity",
+                    width: 120,
+                    attributes: { style: "text-align:right;" },
+                    format: "{0:n2}",
+                    template: "<div class='ra'>#= In_received_qty #</div>",
+                    editor: function (container, options) {
+                        item_rate(container, options.field, '9', '2');
+                    }
+
+                },
+                {
+                    field: "In_product_amount",
+                    title: "Rate",
+                    width: 100,
+                    format: "{0:n2}",
+                    attributes: { style: "text-align:right;" },
+                    template: "<div class='ra'>#= In_product_amount #</div>",
+                    editor: function (container, options) {
+                        numeric_editor_dot(container, options.field, '9', '3');
+                    },
+
+                },
+                {
+                    field: "In_amount",
+                    title: "Cost",
+                    width: 100,
+                    format: "{0:n2}",
+                    attributes: { style: "text-align:right;" },
+                    template: "<div class='ra'>#= In_amount #</div>",
+                    editor: function (container, options) {
+                        item_rate(container, options.field, '9', '2');
+                    }
+
+                },
+                {
+                    field: "In_Base_Price",
+                    title: "Base Price Adj",
+                    width: 100,
+                    format: "{0:n2}",
+                    attributes: { style: "text-align:right;" },
+                    template: "<div class='ra'>#= In_Base_Price #</div>",
+                    editor: function (container, options) {
+                        item_rate(container, options.field, '9', '2');
+                    },
+                },
+                {
+                    field: "In_taxable_amount",
+                    title: "Taxable Amount",
+                    width: 100,
+                    format: "{0:n2}",
+                    attributes: { style: "text-align:right;" },
+                    template: "<div class='ra'>#= In_taxable_amount #</div>",
+                    editor: function (container, options) {
+                        item_rate(container, options.field, '9', '2');
+                    },
+                },
+                {
+                    field: "In_tax_amount",
+                    title: "Tax",
+                    width: 100,
+                    format: "{0:n2}",
+                    template: "<div class='ra'>#= In_tax_amount #</div>",
+                    attributes: { style: "text-align:right;" },
+
+                },
+                {
+                    field: "In_gross_amount",
+                    title: "Gross Amount",
+                    width: 100,
+                    format: "{0:n2}",
+                    template: "<div class='ra'>#= In_gross_amount #</div>",
+                    attributes: { style: "text-align:right;" },
+                    editor: function (container, options) {
+                        item_rate(container, options.field, '9', '2');
+                    }
+                },
+                {
+                    field: "In_Non_Base_Price",
+                    title: "Non Base Price Adj",
+                    width: 120,
+                    format: "{0:n2}",
+                    attributes: { style: "text-align:right;" },
+                    template: "<div class='ra'>#= In_Non_Base_Price #</div>",
+                    editor: function (container, options) {
+                        item_rate(container, options.field, '9', '2');
+                    },
+                    footerTemplate: "Total",
+                },
+
+                {
+                    field: "In_discount",
+                    title: "Discount",
+                    width: 100,
+                    format: "{0:n2}",
+                    attributes: { style: "text-align:right;" },
+                    template: "<div class='ra'>#= In_discount #</div>",                  
+                    editor: function (container, options) {
+                        item_rate(container, options.field, '9', '2');
+                    }
+
+                },
+
+                {
+                    field: "In_net_amount",
+                    title: "Net Amount",
+                    width: 100,
+                    format: "{0:0.##}",
+                    footerTemplate: "<div style='text-align:right'>#= kendo.toString(sum, '0.00') # </div>",
+                    attributes: { style: "text-align:right;" },
+                    editor: function (container, options) {
+                        item_rate(container, options.field, '9', '2');
+                    },
+
+                },
+
+                {
+                    field: "In_status_code",
+                    title: "status_code",
+                    hidden: true,
+                },
+                {
+                    field: "In_status_desc",
+                    title: "Status",
+                    editor: function (container, options) {
+                        combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "In_status_code", "grid_Check_List")
+                    },
+                    width: 300,
+                    hidden: true,
+                },
+                {
+                    field: "In_mode_flag",
+                    title: "Mode",
+                    hidden: true
+                },
+                {
+                    field: "In_hsn_code",
+                    title: "HSN CODE",
+                    hidden: true
+                },
+                {
+                    field: "In_hsn_desc",
+                    title: "HSN Description",
+                    hidden: true
+                },
+                {
+                    field: "In_cgst_rate",
+                    title: "CGST %",
+                    editor: function (container, options) {
+                        item_rate(container, options.field, '4', '2');
+                    },
+                    format: "{0:n2}",
+                    attributes: { style: "text-align:right;" },
+                    hidden: true
+                },
+                {
+                    field: "In_sgst_rate",
+                    title: "sgst_rate",
+                    editor: function (container, options) {
+                        item_rate(container, options.field, '4', '2');
+                    },
+                    format: "{0:n2}",
+                    attributes: { style: "text-align:right;" },
+                    hidden: true
+                },
+                {
+                    field: "In_ugst_rate",
+                    title: "ugst_rate",
+                    editor: function (container, options) {
+                        item_rate(container, options.field, '4', '2');
+                    },
+                    attributes: { style: "text-align:right;" },
+                    hidden: true
+                },
+                {
+                    field: "In_sgst_rate",
+                    title: "SGST % / UGST %",
+                    editor: function (container, options) {
+                        item_rate(container, options.field, '4', '2');
+                    },
+                    attributes: { style: "text-align:right;" },
+                    hidden: true
+                },
+                {
+                    field: "In_igst_rate",
+                    title: "IGST %",
+                    //width: 100,
+                    editor: function (container, options) {
+                        item_rate(container, options.field, '4', '2');
+                    },
+                    attributes: { style: "text-align:right;" },
+                    hidden: true
+                },
+                {
+                    field: "In_tax_rate",
+                    title: "Tax Rate",
+                    hidden: true,
+                    attributes: { style: "text-align:right;" },
+                    template: "<div class='ra'>#= tax_rate #</div>"
+                }],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+
+
+    function inwardgrid_addevent() {
+        In_product_desc_list = grid_comboScreen_mastercodes("PRODCTNAME");
+        In_uomtype_desc_list = grid_comboScreen_mastercodes("QCD_UOM_TYPE");
+    }
+    function OnEdit(e) {
+        setDefaultValues(e);
+        if (e.model.isNew() == true) {
+            $("#uomtype_desc").attr("readonly", true);
+            e.container.find("input[name='In_uomtype_desc']").attr('onkeypress', 'return false');
+            $("#tax_amount").attr("readonly", true);
+            e.container.find("input[name='In_tax_amount']").attr('onkeypress', 'return false');
+            $("#net_amount").attr("readonly", true);
+            e.container.find("input[name='In_net_amount']").attr('onkeypress', 'return false');
+            $("#amount").attr("readonly", true);
+            e.container.find("input[name='In_amount']").attr('onkeypress', 'return false');
+        }
+
+        //Ramya added
+        e.container.find("input[name='In_Base_Price']").prop('readonly', true);
+        e.container.find("input[name='In_Non_Base_Price']").prop('readonly', true);
+        e.container.find("input[name='In_amount']").prop('readonly', true);
+        e.container.find("input[name='In_gross_amount']").prop('readonly', true);
+        e.container.find("input[name='In_taxable_amount']").prop('readonly', true);
+        e.container.find("input[name='In_tax_amount']").prop('readonly', true);
+        e.container.find("input[name='In_net_amount']").prop('readonly', true);
+        e.container.find("input[name='In_product_catg_desc']").prop('readonly', true);
+        e.container.find("input[name='In_product_subcatg_desc']").prop('readonly', true);
+        e.container.find("input[name='In_product_code']").prop('readonly', true);
+        e.container.find("input[name='In_uomtype_desc']").prop('readonly', true);
+        e.container.find("input[name='In_Base_Price']").attr('onkeypress', 'return false');
+        e.container.find("input[name='In_Non_Base_Price']").attr('onkeypress', 'return false');
+        e.container.find("input[name='In_tax_amount']").attr('onkeypress', 'return false');
+        e.container.find("input[name='In_net_amount']").attr('onkeypress', 'return false');
+        e.container.find("input[name='In_product_catg_desc']").attr('onkeypress', 'return false');
+        e.container.find("input[name='In_product_subcatg_desc']").attr('onkeypress', 'return false');
+        e.container.find("input[name='In_product_code']").attr('onkeypress', 'return false');
+        var columnIndex = this.cellIndex(e.container);
+        var fieldName = this.thead.find("th").eq(columnIndex).data("field");
+
+        e.container.find("input[name='In_tax_amount']").focusout(function () {
+            if (parseFloat($(this).val()) < 0 || $(this).val() == "") {
+                e.model.In_tax_amount = 0;
+                return false;
+            }
+        });
+        e.container.find("input[name='In_rate']").focusout(function () {
+            if (parseFloat($(this).val()) < 0 || $(this).val() == "") {
+                e.model.In_rate = 0;
+                return false;
+            }
+        });
+
+        e.container.find("input[name='In_received_qty']").focusout(function () {
+            if (parseFloat($(this).val()) < 0 || $(this).val() == "") {
+                e.model.In_received_qty = 0;
+                return false;
+            }
+        });
+
+
+        e.container.find("input[name='In_net_amount']").focusout(function () {
+            if (parseFloat($(this).val()) < 0 || $(this).val() == "") {
+                e.model.In_net_amount = 0;
+                return false;
+            }
+        });
+        if (fieldName = "In_rate") {
+
+            var rate_set = e.model.In_rate;
+            if (rate_set != "") {
+                e.model.In_rate = parseFloat(rate_set).toFixed(2);
+            }
+        }
+
+        if (fieldName = "In_received_qty") {
+
+            var rcdqty_set = e.model.In_received_qty;
+            if (rcdqty_set != "") {
+                e.model.In_received_qty = parseFloat(rcdqty_set).toFixed(2);
+            }
+        }
+
+        if (fieldName = "In_discount") {
+            var discount_set = e.model.In_discount;
+            if (discount_set != "" || discount_set != null) {
+                e.model.In_discount = parseFloat(discount_set).toFixed(2);
+            }
+            else {
+                e.model.In_discount_set = "";
+            }
+        }
+        var grid_validate_msg = "";
+        grid_validate_msg = "Received should greater than 0";
+        e.container.find("input[name='In_received_qty']").focusout(function () {
+            if (parseFloat($(this).val()) <= 0) {
+                e.model.In_received_qty = 0;
+                kendoAlert(grid_validate_msg);
+                return false;
+            }
+        });
+        e.container.find("input[name='In_product_desc']").change(function () {
+            var grid = $("#grid_inward").data("kendoGrid");
+            var models = grid.dataSource.data();
+            var model = models[0];
+            var uniqueId = model.uid
+            var row = grid.table.find("[data-uid=" + uniqueId + "]");
+            grid.select(row);
+            if ($("#cmb_state").val() != '') {
+                var valueprd = $(this).val();
+                var formval = form_Serialize("Inwardentry_form");
+                var obj_val = JSON.parse(formval);
+                obj_val.FilterBy_Option = "ALL";
+                obj_val.FilterBy_Code = valueprd;
+                obj_val.FilterBy_FromValue = $("#cmb_state").data("kendoComboBox").value();
+                obj_val.FilterBy_ToValue = ".";
+                var data = {};
+                data.context = getContext();
+
+                data.context.orgnId = $("#cmb_filter").val();
+                data.context.Header = obj_val;
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    url: '/InWard/InwardProductfetch',
+                    dataType: 'json',
+                    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, FilterBy_Option: Context.Header.FilterBy_Option, FilterBy_Code: Context.Header.FilterBy_Code, FilterBy_FromValue: Context.Header.FilterBy_FromValue, FilterBy_ToValue: Context.Header.FilterBy_ToValue }),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        //var list = JSON.parse(response);
+                        if (response.context != null) {
+                            generate_TaxInvoiceproduct_list(response.context.InvoiceTax);
+                            generate_Invoiceproduct_list(response.context.Detail);
+                        }
+                        else {
+
+                        }
+                    },
+                    error: function (er) {
+                        alert(er)
+                        console.log(er)
+                    }
+
+                });
+            }
+            //var grid = $("#grid_inward").data("kendoGrid");
+            //grid.select(grid.tbody.find("tr").eq(0)); e.sender.element.focus();
+            //grid.editCell(grid.tbody.find("tr").eq(0).find("td").eq(13));
+
+        });
+
+
+        var boolean = true;
+        var name = $('#txtSupplier').val();
+        var location = $('#txtSupplierloc').val();
+        var state = $('#cmb_state').val();
+        var icname = $('#cmb_filter').val();
+        if (name == "" || name == null || location == "" || location == null || state == "" || state == null || icname == "" || icname == null) {
+            $("#grid_inward").data('kendoGrid').dataSource.data([]);
+            kendoAlert("Please fill the mandatory fields!!!");
+            return false;
+        } else {
+            load_master_code();
+            In_product_desc_list = grid_comboScreen_mastercodes("PRODCTNAME");
+            In_uomtype_desc_list = grid_comboScreen_mastercodes("QCD_UOM_TYPE");
+
+        }
+        debugger;
+        if ($("#hdispaid").val() == "true") {
+            this.closeCell();
+        }
+    }
+
+    function fetch_Inward_payment(inward_rowid) {
+        debugger;
+        var data_fetch = {};
+        data_fetch.context = getContext();
+        var Context = data_fetch.context;
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, invoice_rowid: inward_rowid }),
+            url: "/InWard/InwardPaymentfetch",
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                debugger;
+                if (response.context != null) {
+                    if (response.context.Detail.length > 0) {
+                        $("#hdispaid").val("true");
+                    }
+                }
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+
+        });
+    }
+</script>
+<script>
+    function GridTax(data) {
+
+        try {
+            $("#grid_tax").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                In_product_category: { type: "string" },
+                                In_product_sub_category: { type: "string" },
+                                In_product_code: { type: "string" },
+                                In_product_desc: { type: "string" },
+                                In_product_name: { type: "string" },
+                                In_hsn_code: { type: "string" },
+                                In_hsn_desc: { type: "string" },
+                                In_cgst_rate: { type: "string" },
+                                In_sgst_rate: { type: "string" },
+                                In_ugst_rate: { type: "string" },
+                                In_sugst_rate: { type: "string" },
+                                In_igst_rate: { type: "string" },
+                                In_tax_rate: { type: "string" },
+                                In_taxable_amount: { type: "string" },
+                                In_tax_amount: { type: "string" },
+                                In_mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        },
+                        parse: function (data) {
+                            return $.map(data, function (item) {
+                                item.In_cgst_rate = parseFloat(item.In_cgst_rate).toFixed(2);
+                                item.In_sgst_rate = parseFloat(item.In_sgst_rate).toFixed(2);
+                                item.In_ugst_rate = parseFloat(item.In_ugst_rate).toFixed(2);
+                                item.In_tax_amount = parseFloat(item.In_tax_amount).toFixed(2);
+                                item.In_taxable_amount = parseFloat(item.In_taxable_amount).toFixed(2);
+                                item.In_sugst_rate = parseFloat(item.In_sgst_rate).toFixed(2) + parseFloat(item.In_ugst_rate).toFixed(2);
+                                return item;
+                            });
+                        }
+                    }
+                },
+                height: 250,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+
+                    {
+                        field: "In_product_code",
+                        title: "Product Code",
+                        width: 100,
+
+                    },
+                    {
+                        field: "In_product_name",
+                        title: "Product Name",
+                        width: 100,
+                    },
+                    {
+                        field: "In_product_desc",
+                        title: "grn_no",
+                        hidden: true,
+                    },
+                    {
+                        field: "In_hsn_code",
+                        title: "HSN CODE",
+                        width: 100
+                    },
+                    {
+                        field: "In_hsn_desc",
+                        title: "HSN Description",
+                        width: 100,
+                    },
+
+                    {
+                        field: "In_cgst_rate",
+                        title: "CGST %",
+                        width: 100,
+                        editor: function (container, options) {
+                            item_rate(container, options.field, '4', '2');
+                        },
+                        template: "<div class='ra'>#= In_cgst_rate #</div>"
+                    },
+                    {
+                        field: "In_sgst_rate",
+                        title: "sgst_rate",
+                        editor: function (container, options) {
+                            item_rate(container, options.field, '4', '2');
+                        },
+                        hidden: true
+                    },
+                    {
+                        field: "In_ugst_rate",
+                        title: "ugst_rate",
+                        editor: function (container, options) {
+                            item_rate(container, options.field, '4', '2');
+                        },
+                        hidden: true
+                    },
+                    {
+                        field: "In_sgst_rate",
+                        title: "SGST % / UGST %",
+                        width: 100,
+                        editor: function (container, options) {
+                            item_rate(container, options.field, '4', '2');
+                        },
+                        attributes: { style: "text-align:right;" },
+                    },
+                    {
+                        field: "In_igst_rate",
+                        title: "IGST %",
+                        width: 100,
+                        editor: function (container, options) {
+                            item_rate(container, options.field, '4', '2');
+                        },
+                        template: "<div class='ra'>#= In_igst_rate #</div>"
+                    },
+                    {
+                        field: "In_tax_rate",
+                        title: "Tax Rate",
+                        width: 100,
+                        template: "<div class='ra'>#= In_tax_rate #</div>",
+                        hidden: true
+                    }
+                    , {
+                        field: "In_taxable_amount",
+                        title: "Taxable Amount",
+                        width: 100,
+                        template: "<div class='ra'>#= In_taxable_amount #</div>"
+                    },
+
+                    {
+                        field: "In_tax_amount",
+                        title: "Tax Amount",
+                        width: 100,
+                        template: "<div class='ra'>#= In_tax_amount #</div>"
+                    }
+                ],
+                editable: false
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+</script>
+
+<script>
+    function grid_Discount_details(data) {
+        try {
+            $("#grid_discount").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                In_inwardOtherCost_rowid: { type: "int" },
+                                In_inwarddtl_rowid: { type: "int" },
+                                In_product_code: { type: "string" },
+                                In_OtherCostCode: { type: "string" },
+                                In_OtherCostType: { type: "string" },
+                                In_OtherCostOn: { type: "string" },
+                                In_OtherCostAmount: { type: "number", defaultValue: 0.00 },
+                                In_mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+                toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 250,
+                groupable: false,
+                dataBinding: setDefaultValues,
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_discount').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                edit: OnDiscountEdit,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [{
+                    command: [
+                        {
+                            name: "Delete",
+                            id: "Delete",
+                            imageClass: "fa fa-close",
+                            click: function (e) {
+                                var grid = $("#grid_discount").data("kendoGrid");
+                                var dataItem = $("#grid_discount").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                                DeleteWindowEvent(e, dataItem, grid);
+                                e.stopImmediatePropagation()
+                            }
+                        },
+                    ], title: "", width: "35px",
+
+                },
+                {
+                    field: "In_inwardOtherCost_rowid",
+                    title: "rowid",
+                    hidden: true,
+                },
+                {
+                    field: "In_inwarddtl_rowid",
+                    title: "rowid",
+                    hidden: true,
+                },
+                {
+                    field: "In_product_code", //Product Names selected in Main Inward Grid
+                    title: "Product Name",
+                    editor: function (container, options) {
+                        combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "", "grid_discount")
+                    },
+                },
+                {
+                    field: "In_OtherCostCode", //Discount Types
+                    title: "Other Cost Type",
+                    editor: function (container, options) {
+                        combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "", "grid_discount")
+                    },
+                },
+                {
+                    field: "In_OtherCostType", //Add or Less
+                    title: "Add / Less",
+                    editor: function (container, options) {
+                        combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "", "grid_discount")
+                    },
+                },
+                {
+                    field: "In_OtherCostOn", //Base Price or Non Base Price
+                    title: "Other Cost On",
+                    editor: function (container, options) {
+                        combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "", "grid_discount")
+                    },
+                },
+                {
+                    field: "In_OtherCostAmount", //Other Cost Amount
+                    title: "Other Cost Amount",
+                    width: 100,
+                    format: "{0:n2}",
+                    attributes: { style: "text-align:right;" },
+                    editor: function (container, options) {
+                        numeric_editor_dot(container, options.field, '9', '3');
+                    },
+                },
+                //{
+                //    field: "OverAllOthercast",
+                //    title: "Over All Other cost",
+                //    hidden: true,
+                //},
+                {
+                    field: "In_mode_flag",
+                    title: "Mode",
+                    hidden: true
+                },
+                ],
+                editable: true
+            });
+            In_product_code_list = getlocalStorage("disctype");
+            In_OtherCostType_list = getlocalStorage("AddLessarr");
+            In_OtherCostOn_list = getlocalStorage("CostOnarr");
+            In_OtherCostCode_list = getlocalStorage("DiscountTypeArr");
+        }
+        catch (err) {
+            alert(err);
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    };
+
+    function OnDiscountEdit(e) {
+        setDefaultValues(e);
+        debugger;
+        if ($("#hdispaid").val() == "true") {
+            this.closeCell();
+        }
+    }
+</script>
+<script>
+    function GridSerial(data) {
+        try {
+            $("#grid_Serial").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                fields: {
+                                    In_slno_row_id: { type: "int" },
+                                    In_slno: { type: "string" },
+                                    In_no_of_bags: { type: "string" },
+                                    In_grn_no: { type: "string" },
+                                    In_product_code: { type: "string" },
+                                    In_product_desc: { type: "string" },
+                                    In_mode_flag: { type: "string", defaultValue: "I" }
+                                }
+                            }
+                        }
+                    }
+                },
+                toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 250,
+                groupable: false,
+                dataBinding: setDefaultValues,
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_Serial').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                edit: OnSerialEdit,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [{
+                    command: [
+                        {
+                            name: "Delete",
+                            id: "Delete",
+                            imageClass: "fa fa-close",
+                            click: function (e) {
+
+                                var grid = $("#grid_Serial").data("kendoGrid");
+                                var dataItem = $("#grid_Serial").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                                DeleteWindowEvent(e, dataItem, grid);
+                                e.stopImmediatePropagation()
+                            }
+                        },
+                    ], title: "", width: "35px",
+
+                },
+                {
+                    field: "In_inwardslno_rowid",
+                    title: "rowid",
+                    hidden: true,
+                },
+                {
+                    field: "In_inwarddtl_rowid",
+                    title: "rowid",
+                    hidden: true,
+                },
+
+                {
+                    field: "In_product_code",
+                    title: "Product Name",
+                    editor: function (container, options) {
+                        combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "", "grid_Serial")
+                    },
+                },
+                {
+                    field: "In_slno",
+                    title: "Sl No.",
+                },
+                {
+                    field: "In_no_of_bags",
+                    title: "No Of Bags",
+
+                },
+                {
+                    field: "In_grn_no",
+                    title: "Grn No",
+                    hidden: true,
+                },
+
+                {
+                    field: "In_product_catg_code",
+                    title: "Product cat code",
+                    hidden: true,
+                },
+                {
+                    field: "In_product_subcatg_code",
+                    title: "In_product_subcatg_code",
+                    hidden: true,
+                },
+                {
+                    field: "In_product_name",
+                    title: "Product Name",
+                    hidden: true,
+                },
+                {
+                    field: "In_status_code",
+                    title: "Code",
+                    hidden: true
+                },
+                {
+                    field: "In_mode_flag",
+                    title: "Mode",
+                    hidden: true
+                },
+                ],
+                editable: true
+            });
+
+
+        }
+        catch (err) {
+            alert(err);
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    };
+    In_product_code_list = getlocalStorage("SInoP");
+
+
+    function OnSerialEdit(e) {
+        setDefaultValues(e);
+        debugger;
+        if ($("#hdispaid").val() == "true") {
+            this.closeCell();
+        }
+    }
+</script>
+<script>
+    function generate_OtherInputs_details(data) {
+
+        var grid_val = JSON.stringify($("#grid_inward").data().kendoGrid._data);
+        var Bind = {};
+        Bind = grid_val;
+        var result = JSON.parse(Bind);
+        var grid_validate_msg = "";
+        var disctype = [];
+        $.each(result, function (key, value) {
+            var list = {};
+            if (value != null) {
+                list.code = value.In_product_code;
+                list.desc = value.In_product_desc;
+            }
+            disctype.push(list);
+        });
+        setlocalStorage("disctype", disctype);
+        grid_OtherInputs_details(data);
+    }
+    function grid_OtherInputs_details(data) {
+
+        try {
+            $("#grid_otherInput").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                In_inwardOtherinput_rowid: { type: "int" },
+                                In_inwarddtl_rowid: { type: "int" },
+                                In_product_code: { type: "string" },
+                                In_NoOfLoosePack: {
+                                    type: "int", validation: {
+                                        required: true, maxlength: "4"
+                                    }
+                                },
+                                In_CartonVolume: {
+                                    type: "int", validation: {
+                                        required: true, maxlength: "4"
+                                    }
+                                },
+                                In_Type: { type: "string" },
+                                In_ManufactureDate: { type: "date", defaultValue: "" },
+                                In_ExpDate: { type: "date", defaultValue: "" },
+                                In_Mrp: { type: "number", defaultValue: 0.00 },
+                                In_mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+                toolbar: "<a class='k-grid-add' id='btnOtherInput' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 250,
+                groupable: false,
+                dataBinding: setDefaultValues,
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_otherInput').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                edit: OnOtherInputEdit,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [{
+                    command: [
+                        {
+                            name: "Delete",
+                            id: "Delete",
+                            imageClass: "fa fa-close",
+                            click: function (e) {
+
+                                var grid = $("#grid_otherInput").data("kendoGrid");
+                                var dataItem = $("#grid_otherInput").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                                DeleteWindowEvent(e, dataItem, grid);
+                                e.stopImmediatePropagation()
+                            }
+                        },
+                    ], title: "", width: "35px",
+
+                },
+                {
+                    field: "In_inwardOtherinput_rowid",
+                    title: "rowid",
+                    hidden: true,
+                },
+                {
+                    field: "In_inwarddtl_rowid",
+                    title: "inwarddtlrowid",
+                    hidden: true,
+                },
+                {
+                    field: "In_product_code", // Product Names selected in Main Inward Grid
+                    title: "Product Name",
+                    editor: function (container, options) {
+                        combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "", "grid_otherInput")
+                    },
+                },
+                {
+                    field: "In_NoOfLoosePack", // In_NoOfLoosePack
+                    title: "No. of Loose Pack",
+                    width: 120,
+                    attributes: { style: "text-align:right;" },
+                    format: "{0:n2}",
+                    editor: function (container, options) {
+                        item_rate(container, options.field, '9', '0');
+                    },
+                },
+                {
+                    field: "In_CartonVolume", // In_CartonVolume
+                    title: "Carton Volume",
+                    width: 120,
+                    attributes: { style: "text-align:right;" },
+                    format: "{0:n2}",
+                    editor: function (container, options) {
+                        item_rate(container, options.field, '9', '0');
+                    },
+                },
+                {
+                    field: "In_Type", //In_Type
+                    title: "Type",
+                },
+                {
+                    field: "In_ManufactureDate", //In_ManufactureDate
+                    title: "Manufatcure Date",
+                    width: 100,
+                    format: "{0:dd/MM/yyyy}"
+                },
+                {
+                    field: "In_ExpDate",
+                    title: "Expiry Date",
+                    width: 100,
+                    format: "{0:dd/MM/yyyy}"
+                },
+                {
+                    field: "In_Mrp",
+                    title: "MRP",
+                    width: 100,
+                    format: "{0:n2}",
+                    attributes: { style: "text-align:right;" },
+                    editor: function (container, options) {
+                        numeric_editor_dot(container, options.field, '9', '3');
+                    },
+                },
+                {
+                    field: "In_mode_flag",
+                    title: "Mode",
+                    hidden: true
+                },
+                ],
+                editable: true
+            });
+            In_product_code_list = getlocalStorage("disctype");
+        }
+        catch (err) {
+            //alert(err);
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    };
+    function OnOtherInputEdit(e) {
+        setDefaultValues(e);
+
+        e.container.find("input[name='In_ManufactureDate']").kendoDatePicker({
+            max: new Date(), // sets max date to Jan 1st, 2013
+            format: "dd/MM/yyyy"
+        });
+        e.container.find("input[name='In_ExpDate']").kendoDatePicker({  //Ramya 03 Jun 21
+            min: e.model.In_ManufactureDate, // sets max date to Jan 1st, 2013
+            format: "dd/MM/yyyy"
+        });
+        e.container.find("input[name='In_product_code']").focusout(function () {
+            var gridInput = $("#grid_otherInput").data("kendoGrid");
+            var gridData = gridInput.dataSource.view();
+            if (gridData.length > 1) {
+                var currentProductName = e.model.In_product_code;
+                if (currentProductName != "") {
+                    var grid = $("#grid_otherInput").data("kendoGrid");
+                    var data = grid.dataSource.data();
+                    for (var i = 1; i < data.length; i++) {
+                        if (data[i].In_product_code == currentProductName) {
+                            e.preventDefault();
+                            kendoAlert("Duplicate Product not allowed");
+                            e.model.In_product_code = "";
+                            return false;
+
+                        }
+                    }
+                }
+            }
+
+
+        });
+        if ($("#hdispaid").val() == "true") {
+            this.closeCell();
+        }
+    }
+</script>
+
+<script>
+
+    function save() {
+        try {
+            save_Image();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function save_Image() {
+        try {
+            var xhr = new XMLHttpRequest();
+            var fd = new FormData();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var value = JSON.parse(xhr.responseText);
+                    if (value.result != undefined) {
+                        $("#txtImageHidden").val(value.result);
+                    }
+                    save_inward();
+                }
+            };
+
+
+            fd.append("file", document.getElementById('Billfile').files[0]);
+            fd.append("userID", $('#txtUserId').val());
+            xhr.open("POST", "/UserDefinition/User/", true);
+            xhr.send(fd);
+            xhr.addEventListener("load", function (event) {
+            }, false);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function save_inward() {
+
+        try {
+            var date = $('#txtic_inwarddate').val();
+            $('#txtValidity').val(date);
+            if (date == "" || date == null || date == undefined) {
+                kendoAlert("Kindly fill the GRN date");
+                return false;
+            }
+            var mandatory_check = true;
+            if ($("#txt_inward_rowid").val() == "") {
+                $("#txt_inward_rowid").val(0);
+            }
+            if ($("#txt_grn_sts").val() == "") {
+                $("#txt_grn_sts").val(' ');
+            }
+            var transport_amt = parseFloat($("#txt_transamt").val()).toFixed(0);
+            $('#txt_transamt').val(parseFloat(transport_amt).toFixed(0));
+
+            var grid = $("#grid_inward").data("kendoGrid");
+            var gridData = grid.dataSource.view();
+            var net_amt = 0;
+            for (var i = 0; i < gridData.length; i++) {
+                if (gridData[i].In_net_amount != '') {
+                    net_amt += gridData[i].In_net_amount != undefined ? parseFloat(gridData[i].In_net_amount) : parseFloat(0);
+                }
+            }
+
+            $('#hdn_tot_amt').val(parseFloat(net_amt).toFixed(2));
+
+            var formval = form_Serialize("Inwardentry_form");
+            var obj_val = JSON.parse(formval);
+            if (obj_val.hasOwnProperty('In_grn_date')) {
+                if (obj_val.In_grn_date != '')
+                    obj_val.In_grn_date = getFormated_StringDate(obj_val.In_grn_date);
+            }
+            var rowtime_date = new Date();
+
+            if (obj_val.In_row_timestamp == undefined || obj_val.In_row_timestamp == "") {
+                obj_val.In_row_timestamp = rowtime_date;
+            }
+            var Remarks = $("#TextArea1").val();
+            obj_val.In_Remarks = Remarks;
+            if ($("#cmb_filter").val() == '' || $("#cmb_filter").val() == undefined) {
+                kendoAlert('Please IC Name');
+            }
+            obj_val.In_grn_no = $("#txtGRN_NO").val();
+            if ($("#ic_code").val() == "") {
+                obj_val.In_ic_code = $("#cmb_filter").val();
+            } else {
+                obj_val.In_ic_code = $("#ic_code").val();
+            }
+            var In_transport_amount = parseInt(obj_val.In_transport_amount);
+            obj_val.In_transport_amount = In_transport_amount;
+            var In_others = parseInt(obj_val.In_others);
+            obj_val.In_others = In_others;
+            var In_loading_unloading_cost = parseInt(obj_val.In_loading_unloading_cost);
+            obj_val.In_loading_unloading_cost = In_loading_unloading_cost;
+            var In_local_transport_cost = parseInt(obj_val.In_local_transport_cost);
+            obj_val.In_local_transport_cost = In_local_transport_cost;
+            var In_local_loading_unloading_cost = parseInt(obj_val.In_local_loading_unloading_cost);
+            obj_val.In_local_loading_unloading_cost = In_local_loading_unloading_cost;
+            var In_roundoff = 0;
+            obj_val.In_roundoff = In_roundoff;
+            var mode = obj_val.In_mode_flag;
+            if (mode != "D" && mode != "I") {
+                obj_val.In_mode_flag = "S";
+            }
+            mode = obj_val.In_mode_flag;
+            if (mode == "S") {
+                obj_val.In_mode_flag = "U";
+            }
+            var grid_val = JSON.stringify($("#grid_inward").data().kendoGrid._data);
+            var Bind = {};
+            Bind = grid_val;
+            var result = JSON.parse(Bind);
+            var grid_validate_msg = "";
+
+            if (result.length == 0) {
+                kendoAlert("Atleast one record needs to be entered");
+                mandatory_check = false;
+                return false;
+            }
+            //Ramya added
+            var griddisc_val;
+            var griddothin_val;
+            try {
+
+                griddisc_val = JSON.stringify($("#grid_discount").data().kendoGrid._data);
+                var Binddisc = {};
+                Binddisc = griddisc_val;
+                var resultdisc = JSON.parse(Binddisc);
+
+                if (resultdisc.length > 0) {
+                    $.each(resultdisc, function (key, value) {
+                        if (value.In_product_code == "" || value.In_product_code == undefined) {
+                            grid_validate_msg += "Product Category cannot be blank in Discount Grid<br>";
+                            mandatory_check = false;
+                        }
+                        if (value.In_OtherCostCode == "" || value.In_OtherCostCode == undefined) {
+                            grid_validate_msg += "Other Cost Type cannot be blank <br>";
+                            mandatory_check = false;
+                        }
+                        if (value.In_OtherCostType == "" || value.In_OtherCostType == undefined) {
+                            grid_validate_msg += "Add/Less cannot be blank <br>";
+                            mandatory_check = false;
+                        }
+                        if (value.In_OtherCostOn == "" || value.In_OtherCostOn == undefined) {
+                            grid_validate_msg += "Other Cost On cannot be blank <br>";
+                            mandatory_check = false;
+                        }
+                        if (value.In_OtherCostAmount == "" || value.In_OtherCostAmount == undefined) {
+                            grid_validate_msg += "Other Cost Amount cannot be blank <br>";
+                            mandatory_check = false;
+                        }
+                    });
+                }
+            }
+            catch (e) {
+
+            }
+            $.each(result, function (key, value) {
+                if (value.In_product_catg_desc == "" || value.In_product_catg_desc == undefined) {
+                    grid_validate_msg += "Product Category  cannot be blank <br>";
+                    mandatory_check = false;
+                }
+                if (value.In_uomtype_code == "" || value.In_uomtype_code == undefined) {
+                    grid_validate_msg += "Selling UOM cannot be blank <br>";
+                    mandatory_check = false;
+                }
+                if (value.In_received_qty == "" || value.In_received_qty == undefined) {
+                    grid_validate_msg += "Received Qty cannot be blank <br>";
+                    mandatory_check = false;
+                }
+                if (value.In_product_amount == "" || value.In_product_amount == undefined) {
+                    grid_validate_msg += "Rate cannot be blank <br>";
+                    mandatory_check = false;
+                }
+                if (value.In_tax_amount == "" || value.In_tax_amount == undefined) {
+                    grid_validate_msg += "Tax cannot be blank <br>";
+                    mandatory_check = false;
+                }
+                if (value.In_net_amount == "" || value.In_net_amount == undefined) {
+                    grid_validate_msg += "Cost cannot be blank <br>";
+                    mandatory_check = false;
+                }
+                if (mandatory_check == false) {
+                    kendoAlert(grid_validate_msg);
+                    return false;
+                }
+            });
+
+            //Ramya added
+            var resultothin = "";
+            try {
+                griddothin_val = JSON.stringify($("#grid_otherInput").data().kendoGrid._data);
+                var Bindothin = {};
+                Bindothin = griddothin_val;
+                resultothin = JSON.parse(Bindothin);
+
+                if (resultothin.length > 0) {
+                    $.each(resultothin, function (key, value) {
+                        if (value.In_product_code == "" || value.In_product_code == undefined) {
+                            grid_validate_msg += "Product Category cannot be blank in Other Input Grid<br>";
+                            mandatory_check = false;
+                        }
+                        if (value.In_NoOfLoosePack == "" || value.In_NoOfLoosePack == undefined) {
+                            grid_validate_msg += "No of Loose Pack cannot be blank <br>";
+                            mandatory_check = false;
+                        }
+                        if (value.In_CartonVolume == "" || value.In_CartonVolume == undefined) {
+                            grid_validate_msg += "Carton Volume cannot be blank <br>";
+                            mandatory_check = false;
+                        }
+                        if (value.In_Type == "" || value.In_Type == undefined) {
+                            grid_validate_msg += "Type cannot be blank <br>";
+                            mandatory_check = false;
+                        }
+                        if (value.In_ManufactureDate == "" || value.In_ManufactureDate == undefined) {
+                            grid_validate_msg += "Manufacture Date cannot be blank <br>";
+                            mandatory_check = false;
+                        }
+                        if (value.In_ExpDate == "" || value.In_ExpDate == undefined) {
+                            grid_validate_msg += "Expiry Date cannot be blank <br>";
+                            mandatory_check = false;
+                        }
+                        if (value.In_Mrp == "" || value.In_Mrp == undefined) {
+                            grid_validate_msg += "MRP cannot be blank <br>";
+                            mandatory_check = false;
+                        }
+                        if (value.In_ExpDate < value.In_ManufactureDate) { //Ramya 03 Jun 21
+                            grid_validate_msg += "Expiry Date should not be less than Manufacture Date!<br>";
+                            mandatory_check = false;
+                        }
+                    });
+                }
+            }
+            catch (e) {
+                //alert(e);
+            }
+
+            var resultSIno;
+            try {
+                var gridsl_val = JSON.stringify($("#grid_Serial").data().kendoGrid._data);
+                var Bindsl = {};
+                Bindsl = gridsl_val;
+                var resultSIno = JSON.parse(Bindsl);
+                if (resultSIno.length > 0) {
+                    $.each(resultSIno, function (key, value) {
+                        if (value.In_product_code == "" || value.In_product_code == undefined) {
+                            grid_validate_msg += "Product name please select<br>";
+                            mandatory_check = false;
+                        }
+                        if (value.In_slno == "" || value.In_slno == undefined) {
+                            grid_validate_msg += "Serial number cannot be blank <br>";
+                            mandatory_check = false;
+                        }
+                        if (value.In_no_of_bags == "" || value.In_no_of_bags == undefined) {
+                            grid_validate_msg += "Number of bags cannot be blank <br>";
+                            mandatory_check = false;
+                        }
+
+                    });
+                }
+            }
+            catch (e) { }
+            if (mandatory_check == true) {
+
+                $.each(result, function (index, value) {
+                    try {
+                        resultdisc = JSON.parse(Binddisc);
+                    }
+                    catch (e) {
+                    }
+                    try {
+                        resultSIno = JSON.parse(Bindsl);
+                    }
+                    catch (e) {
+                    }
+                    try {
+                        resultothin = JSON.parse(Bindothin);
+                    }
+                    catch (e) {
+                    }
+
+                    var row_id = value.In_inwarddtl_rowid;
+                    var mode = value.In_mode_flag;
+                    if (row_id == undefined) {
+                        result[index].In_inwarddtl_rowid = 0;
+                    }
+                    else if (mode != "D" && mode != "I") {
+                        result[index].In_mode_flag = "S";
+                    }
+                    var In_received_qty = parseFloat(value.In_received_qty);
+                    result[index].In_received_qty = In_received_qty;
+                    var In_product_amount = parseFloat(value.In_product_amount);
+                    result[index].In_product_amount = In_product_amount;
+                    var In_transport_amount = parseFloat(value.In_transport_amount);
+                    result[index].In_transport_amount = In_transport_amount;
+                    var In_tax_amount = parseFloat(value.In_tax_amount);
+                    result[index].In_tax_amount = In_tax_amount;
+                    var In_discount = parseFloat(value.In_discount);
+                    result[index].In_discount = In_discount;
+                    var In_net_amount = parseFloat(value.In_net_amount);
+                    result[index].In_tax_amount = In_tax_amount;
+
+                    var mode = value.In_mode_flag;
+
+                    if (mode == "S") {
+                        result[index].In_mode_flag = "U";
+                        $('#divEdit #btnSaveEd').prop('disabled', true);
+                    }
+                    else {
+                        $('#divCreate #btnSave').prop('disabled', true);
+                    }
+                    var inward = value.In_inward_code;
+                    if (inward == undefined) {
+                        result[index].In_inward_code = "";
+                    }
+                    var grn = value.In_grn_no;
+                    if (grn == undefined) {
+                        result[index].In_grn_no = "";
+                    }
+                    var batch = value.In_batch_no;
+                    if (batch == undefined) {
+                        result[index].In_batch_no = "";
+                    }
+                    result[index].In_status_code = "A";
+                    try {
+                        var flag = false;
+                        var inwarddiscmapped = resultdisc.filter(function (entry) {
+                            return entry.In_product_code === result[index].In_product_desc;
+                        });
+
+                        resultdisc = inwarddiscmapped;
+                        $.each(resultdisc, function (ind, val) {
+                            //if (result[index].In_product_desc == val.In_product_code) {
+                            flag = true;
+                            var row_id = val.In_inwardOtherCost_rowid;
+                            var dtlrow_id = parseInt(val.In_inwarddtl_rowid);
+                            var mode = val.In_mode_flag;
+                            resultdisc[ind].In_product_code = val.In_product_code;
+                            resultdisc[ind].In_OtherCostCode = val.In_OtherCostCode; // Types
+                            resultdisc[ind].In_OtherCostType = val.In_OtherCostType;// Add/Less
+                            resultdisc[ind].In_OtherCostOn = val.In_OtherCostOn;// Base or Non Base Price
+                            if (row_id == undefined) {
+                                resultdisc[ind].In_inwardOtherCost_rowid = "0";
+                            }
+                            else {
+                                resultdisc[ind].In_inwardOtherCost_rowid = row_id;
+                            }
+                            if (dtlrow_id == undefined) {
+                                resultdisc[ind].In_inwarddtl_rowid = 0;
+                            }
+                            var OtherCostAmount = val.In_OtherCostAmount;
+                            resultdisc[ind].In_OtherCostAmount = OtherCostAmount;
+                            if (mode != "D" && mode != "I") {
+                                resultdisc[ind].In_mode_flag = "S";
+                            }
+
+                            var mode = val.In_mode_flag;
+
+                            if (mode == "S") {
+                                resultdisc[ind].In_mode_flag = "U";
+                            }
+                            resultdisc[ind].In_status_code = "A";
+                            //}
+                            //else {
+                            //    resultdisc.splice(ind, 1);
+                            //    ind = ind - 1;
+                            //}
+
+                        });
+
+                        if (flag == true) {
+                            result[index].OtherCostInfo = resultdisc;
+                        }
+                        else {
+                            result[index].OtherCostInfo = null;
+                        }
+                    }
+                    catch (e) {
+                        //alert(e);
+                        result[index].OtherCostInfo = null;
+                    }
+                    try {
+                        //Other Inputs Grid
+                        var flagoth = false;
+                        var inwardothmapped = resultothin.filter(function (entry) {
+                            return entry.In_product_code === result[index].In_product_desc;
+                        });
+
+                        resultothin = inwardothmapped;
+                        $.each(resultothin, function (indo, valo) {
+                            //if (value.In_product_desc == valo.In_product_code) {
+                            flagoth = true;
+                            var row_id = valo.In_inwardOtherinput_rowid;
+                            var dtlrow_id = parseInt(valo.In_inwarddtl_rowid);
+                            var mode = valo.In_mode_flag;
+                            resultothin[indo].In_product_code = valo.In_product_code;
+                            resultothin[indo].In_NoOfLoosePack = parseInt(valo.In_NoOfLoosePack); //  NoOfLoosePack
+                            resultothin[indo].In_CartonVolume = parseInt(valo.In_CartonVolume);// CartonVolume
+                            resultothin[indo].In_Type = valo.In_Type;//  Type
+                            if (row_id == undefined) {
+                                resultothin[indo].In_inwardOtherinput_rowid = "0";
+                            }
+                            else {
+                                resultothin[indo].In_inwardOtherinput_rowid = row_id;
+                            }
+                            if (dtlrow_id == undefined) {
+                                resultothin[indo].In_inwarddtl_rowid = 0;
+                            }
+                            if (valo.In_ManufactureDate != '') {
+                                var mandate = valo.In_ManufactureDate.substring(0, 10);
+                                var d = mandate.split("-");
+                                //var date = new Date(Date.parse(mandate));
+                                //date = date.getDate() + 1;
+                                //var d = date.split("-");
+                                resultothin[indo].In_ManufactureDate = d[0] + "/" + d[1] + "/" + d[2];
+                            }
+                            if (valo.In_ExpDate != '') {
+                                var expdate = valo.In_ExpDate.substring(0, 10);
+                                var d = expdate.split("-");
+                                resultothin[indo].In_ExpDate = d[0] + "/" + d[1] + "/" + d[2];
+                            }
+                            resultothin[indo].In_Mrp = parseFloat(valo.In_Mrp);
+                            if (mode != "D" && mode != "I") {
+                                resultothin[indo].In_mode_flag = "S";
+                            }
+
+                            var mode = valo.In_mode_flag;
+
+                            if (mode == "S") {
+                                resultothin[indo].In_mode_flag = "U";
+                            }
+                            //}
+
+                        });
+
+                        if (flagoth == true) {
+                            result[index].OtherInputInfo = resultothin;
+                        }
+                        else {
+                            result[index].OtherInputInfo = null;
+                        }
+                    }
+
+                    catch (e) {
+                        result[index].OtherInputInfo = null;
+                    }
+
+                    try {
+                        //Serial no Grid
+                        var flagSl_no = false;
+                        var inwardslnomapped = resultSIno.filter(function (entry) {
+                            return entry.In_product_code === result[index].In_product_desc;
+                        });
+                        resultSIno = inwardslnomapped;
+                        $.each(resultSIno, function (indexSlno, valSIno) {
+                            //if (value.In_product_desc == valSIno.In_product_code) {
+                            flagSl_no = true;
+                            var row_id = valSIno.In_inwardslno_rowid;
+                            var dtlrow_id = parseInt(valSIno.In_inwarddtl_rowid);
+                            result[indexSlno].In_inwardslno_rowid = dtlrow_id;
+                            var mode = valSIno.In_mode_flag;
+                            resultSIno[indexSlno].In_slno = valSIno.In_slno;
+                            resultSIno[indexSlno].In_no_of_bags = valSIno.In_no_of_bags;
+                            resultSIno[indexSlno].In_grn_no = "";
+                            resultSIno[indexSlno].In_product_catg_code = "";
+                            resultSIno[indexSlno].In_product_subcatg_code = "";
+                            resultSIno[indexSlno].In_product_code = valSIno.In_product_code;
+                            if (row_id == undefined) {
+                                resultSIno[indexSlno].In_inwardslno_rowid = 0;
+                            }
+                            if (dtlrow_id == undefined) {
+                                resultSIno[indexSlno].In_inwarddtl_rowid = 0;
+                            }
+                            if (mode == undefined) {
+                                resultSIno[indexSlno].In_mode_flag = "I";
+                            }
+
+                            if (resultSIno[indexSlno].In_inwardslno_rowid != 0 && resultSIno[indexSlno].In_inwardslno_rowid != undefined) {
+                                resultSIno[indexSlno].In_mode_flag = "U";
+                            }
+                            else {
+                                resultSIno[indexSlno].In_mode_flag = "I";
+
+                            }
+                            //if (mode != "D" && mode != "I") {
+
+                            //    resultSIno[indexSlno].In_mode_flag = "S";
+                            //}
+
+
+                            //if (mode != "I") {
+                            //    resultSIno[indexSlno].In_mode_flag = "U";
+                            //}
+                            resultSIno[indexSlno].In_status_code = "A";
+                            //}
+
+                        });
+
+                        if (flagSl_no == true) {
+                            result[index].Slnoinfo = resultSIno;
+                        }
+                        else {
+                            result[index].Slnoinfo = null;
+                        }
+                    }
+
+                    catch (e) {
+                        result[index].Slnoinfo = null;
+                    }
+                });
+
+
+                var obj_grid_val = result;
+                var data = {};
+                var transport_amt = parseFloat($("#txt_transamt").val()).toFixed(0);
+                var others = parseFloat($("#txt_others").val()).toFixed(0);
+                var org = ""
+                if ($("#ic_code").val() != "") {
+                    org = $("#ic_code").val();
+                } else {
+                    org = $("#cmb_filter").val();
+                }
+
+                data.context = getContext();
+                data.context.orgnId = org;
+                data.context.Header = obj_val;
+                data.context.Detail = obj_grid_val;
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({
+                        userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId,
+                        Header: Context.Header, Detail: Context.Detail
+                    }),
+                    url: "/InWard/InwardSave",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        console.log(response)
+                        var Res = JSON.parse(response);
+                        if (Res != null) {
+                            var mode = $("#txtMode").val();
+                            if (mode == "I") {
+                                kendoAlert("Stockinward Details saved successfully");
+                                get_Stockinward_details(Res.context.header);
+                            }
+                            else if (mode == "D") {
+                                kendoAlert("Stockinward Details inactivate successfully");
+                                get_Stockinward_details(Res.context.header);
+                            }
+                            else {
+                                kendoAlert("Stockinward Details Updated successfully");
+                                get_Stockinward_details(Res.context.header);
+                            }
+                        }
+                        else {
+                            kendoAlert("Save error!");
+                        }
+                    },
+                    error: function (er) {
+                        alert(er)
+                        console.log(er)
+                    }
+                });
+            }
+            else {
+                kendoAlert(grid_validate_msg);
+            }
+        }
+        catch (err) {
+
+            console.log(err)
+            //javascript_log4j_generate_TaxInvoiceproduct_listroot(arguments.callee.name, err);
+        }
+    }
+    function Inactive() {
+        try {
+            var mandatory_check = true;
+            if ($("#txt_inward_rowid").val() == "") {
+                $("#txt_inward_rowid").val(0);
+            }
+            if ($("#txt_grn_sts").val() == "") {
+                $("#txt_grn_sts").val(' ');
+            }
+            var transport_amt = $("#txt_transamt").val();
+            $('#txt_transamt').val(parseFloat(transport_amt).toFixed(0));
+
+            var grid = $("#grid_inward").data("kendoGrid");
+            var gridData = grid.dataSource.view();
+            var net_amt = 0;
+            for (var i = 0; i < gridData.length; i++) {
+                if (gridData[i].In_net_amount != '') {
+                    net_amt += gridData[i].In_net_amount != undefined ? parseFloat(gridData[i].In_net_amount) : parseFloat(0);
+                }
+            }
+
+            $('#hdn_tot_amt').val(parseFloat(net_amt).toFixed(2));
+
+            var formval = form_Serialize("Inwardentry_form");
+            var obj_val = JSON.parse(formval);
+            if (obj_val.hasOwnProperty('In_grn_date')) {
+                if (obj_val.In_grn_date != '')
+                    obj_val.In_grn_date = getFormated_StringDate(obj_val.In_grn_date);
+            }
+            var rowtime_date = new Date();
+
+            if (obj_val.In_row_timestamp == undefined || obj_val.In_row_timestamp == "") {
+                obj_val.In_row_timestamp = rowtime_date;
+            }
+            obj_val.In_grn_no = $("#inward #txtGRN_NO").val();
+            var grid_val = JSON.stringify($("#grid_inward").data().kendoGrid._data);
+            var Bind = {};
+            Bind = grid_val;
+            var result = JSON.parse(Bind);
+            var grid_validate_msg = "";
+
+            if (result.length == 0) {
+                kendoAlert("Atleast one record needs to be entered");
+                mandatory_check = false;
+                return false;
+            }
+
+
+            $.each(result, function (key, value) {
+                if (value.In_product_catg_desc == "" || value.In_product_catg_desc == undefined) {
+                    grid_validate_msg += "Product Category  cannot be blank <br>";
+                    mandatory_check = false;
+                }
+
+                if (value.In_uomtype_code == "" || value.In_uomtype_code == undefined) {
+                    grid_validate_msg += "Selling UOM cannot be blank <br>";
+                    mandatory_check = false;
+                }
+                if (value.In_received_qty == "" || value.In_received_qty == undefined) {
+                    grid_validate_msg += "Received Qty cannot be blank <br>";
+                    mandatory_check = false;
+                }
+                if (value.In_product_amount == "" || value.In_product_amount == undefined) {
+                    grid_validate_msg += "Rate cannot be blank <br>";
+                    mandatory_check = false;
+                }
+                if (value.In_tax_amount == "" || value.In_tax_amount == undefined) {
+                    grid_validate_msg += "Tax cannot be blank <br>";
+                    mandatory_check = false;
+                }
+                if (value.In_net_amount == "" || value.In_net_amount == undefined) {
+                    grid_validate_msg += "Cost cannot be blank <br>";
+                    mandatory_check = false;
+                }
+                if (mandatory_check == false) {
+                    kendoAlert(grid_validate_msg);
+                    return false;
+                }
+            });
+            if (mandatory_check == true) {
+                $.each(result, function (index, value) {
+                    var row_id = value.In_inwarddtl_rowid;
+                    if (row_id == undefined) {
+                        result[index].In_inwarddtl_rowid = 0;
+                    }
+                    else {
+                        result[index].In_mode_flag = "S";
+                    }
+                    var mode = value.In_mode_flag;
+                    if (mode == "") {
+                        result[index].In_mode_flag = "I";
+                    }
+                    if (mode == "S") {
+                        result[index].In_mode_flag = "U";
+                    }
+                    var inward = value.In_inward_code;
+                    if (inward == undefined) {
+                        result[index].In_inward_code = "";
+                    }
+                    var grn = value.In_grn_no;
+                    if (grn == undefined) {
+                        result[index].In_grn_no = "";
+                    }
+                    var batch = value.In_batch_no;
+                    if (batch == undefined) {
+                        result[index].In_batch_no = "";
+                    }
+                    result[index].In_status_code = "I";
+                });
+
+
+                var obj_grid_val = result;
+                var data = {};
+                var transport_amt = parseFloat($("#txt_transamt").val()).toFixed(0);
+                var others = parseFloat($("#txt_others").val()).toFixed(0);
+                var org = ""
+                if ($("#ic_code").val() != "") {
+                    org = $("#ic_code").val();
+                } else {
+                    org = $("#cmb_filter").val();
+                }
+
+                data.context = getContext();
+                data.context.orgnId = org;
+                data.context.Header = obj_val;
+                data.context.Detail = obj_grid_val;
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, Header: Context.Header, Detail: Context.Detail }),
+                    url: "/InWard/InwardSave",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        console.log(response)
+                        var Res = JSON.parse(response);
+                        //  if (Res.context != null) {
+                        // var mode = $("#txtMode").val();
+                        //if (mode == "I") {
+                        //    kendoAlert("Stockinward Details saved successfully");
+                        //    get_Stockinward_details(Res.context.Header);
+                        //}
+                        //else if (mode == "D") {
+                        //    kendoAlert("Stockinward Details inactivate successfully");
+                        //    get_Stockinward_details(Res.context.Headers);
+                        //}
+                        //else {
+                        //    kendoAlert("Stockinward Details Updated successfully");
+                        //  get_Stockinward_details(Res.context.Header);
+                        //  }
+                        // }
+                        // else {
+                        //    kendoAlert(Res.ApplicationException.errorDescription);
+                        //  }
+                    },
+                    error: function (er) {
+                        alert(er)
+                        console.log(er)
+                    }
+                });
+            }
+        }
+        catch (err) {
+            javascript_log4j_generate_TaxInvoiceproduct_listroot(arguments.callee.name, err);
+        }
+    }
+    function generate_Stockinward_header(res) {
+        try {
+            loadicdcenter();
+            setTimeout(function () {
+
+                $("#txt_inward_rowid").val(res.IOU_inward_rowid);
+                setlocalStorage("procrowid", res.IOU_inward_rowid);
+                $("#inward #txtGRN_NO").val(res.In_grn_no);
+                $('#cmb_filter').data("kendoComboBox").value(res.In_ic_code);
+                $("#ic_code").val(res.In_ic_code);
+                $("#cmb_filter").attr("readonly", "");
+                $("#txtSupplier").val(res.In_supplier_name);
+                $("#txtSupplierloc").val(res.In_supplier_location);
+                $("#TextArea1").val(res.In_Remarks);
+                $("#inward #txtic_inwarddate").val(res.In_grn_date);
+                $("#txt_inward_code").val(res.In_inward_code);
+                $("#txt_status_code").val(res.In_status_code);
+                $('#cmb_state').data("kendoComboBox").value(res.In_from_state);       //ramya commentted on 10 jun 21 since displaying QCD Code
+                // $('#cmb_state').data("kendoComboBox").value(res.In_supplier_location);  //ramya added on 10 jun 21 since displaying QCD Code
+                $("#inward #DocStat").val(res.In_process_status);
+                $("#txtMode").val(res.In_mode_flag);
+                $("#txtImageHidden").val(res.In_bill_image);
+                var profiledata = res.In_bill_image;
+                try {
+                    if (profiledata != "")
+                        document.getElementById("Bill_img").src = "data:image/png;base64," + profiledata;
+                    else
+                        document.getElementById("Bill_img").src = "/images/noimage.png";
+                }
+                catch (e) { }
+                $("#txt_transamt").val(parseFloat(res.In_transport_amount).toFixed(0));
+                $("#txt_others").val(parseFloat(res.In_others).toFixed(0));
+                $("#txtloadunloading").val(parseFloat(res.In_loading_unloading_cost).toFixed(0));
+                $("#txtlocaltransport").val(parseFloat(res.In_local_transport_cost).toFixed(0));
+                $("#txtlocalloadunload").val(parseFloat(res.In_local_loading_unloading_cost).toFixed(0));
+                $("#txtroundoff").val(parseFloat(res.In_roundoff).toFixed(0));
+            }, 2000);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_Stockinward_detail(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                for (var i = 0; i < data.length; i++) {
+                    var netamount = data[i].In_net_amount;
+                    //var transportamount = data[i].In_transport_amount;
+                    var taxamount = data[i].In_tax_amount;
+                    var Rate = data[i].In_product_amount;
+                    var Rec_Qty = data[i].In_received_qty;
+                    data[i].In_amount = (parseFloat(Rate) * parseFloat(Rec_Qty)).toFixed(2); ////// Prema Changed due to edit mode Discount is not working //////////
+                    data[i].In_received_qty = (parseFloat(data[i].In_received_qty)).toFixed(2);
+                    data[i].In_rate = (parseFloat(data[i].In_rate)).toFixed(2);
+                    data[i].In_cgst_rate = (parseFloat(data[i].In_cgst_rate)).toFixed(2);
+                    data[i].In_sgst_rate = (parseFloat(data[i].In_sgst_rate)).toFixed(2);
+                    data[i].In_ugst_rate = (parseFloat(data[i].In_ugst_rate)).toFixed(2);
+                    data[i].In_sugst_rate = (parseFloat(data[i].In_sugst_rate)).toFixed(2);
+                    data[i].In_igst_rate = (parseFloat(data[i].In_igst_rate)).toFixed(2);
+                    data[i].In_tax_rate = (parseFloat(data[i].In_tax_rate)).toFixed(2);
+                    data[i].In_discount = (parseFloat(data[i].In_discount)).toFixed(2);
+                    data[i].In_product_amount = (parseFloat(data[i].In_product_amount)).toFixed(2);
+                    data[i].In_tax_amount = (parseFloat(data[i].In_tax_amount)).toFixed(2);
+                    data[i].In_net_amount = (parseFloat(data[i].In_net_amount)).toFixed(2);
+                    data[i].In_taxable_amount = (parseFloat(data[i].In_net_amount) - parseFloat(data[i].In_tax_amount)).toFixed(2);
+                    data[i].In_gross_amount = (parseFloat(data[i].In_net_amount)).toFixed(2);
+                }
+                GridInward(data);
+            }
+            else {
+                GridInward([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_Stockinward_slnodlts(res) {
+        if (res != null) {
+            var data = changedataType(res);
+            GridSerial(data);
+        }
+        else {
+            GridSerial([]);
+        }
+    }
+    function get_Stockinward_details(res) {
+
+        $("#txt_inward_rowid").val(res.ioU_inward_rowid);
+        $("#inward #txtGRN_NO").val(res.In_grn_no);
+
+        var data = getlocalStorage("ls_pageList");
+
+        var formval = form_Serialize("Inwardentry_form");
+        var obj_val = JSON.parse(formval);
+        //obj_val.orgn_code = res.In_ic_code;
+        obj_val.orgn_code = obj_val.orgid;
+        obj_val.inward_rowid = res.ioU_inward_rowid;
+        $("#txt_inward_rowid").val(res.ioU_inward_rowid);
+        $("#txtMode").val("U");
+        $("#inward #txtGRN_NO").val(res.grn_no);
+        var data = {};
+        data.context = getContext();
+        data.context.orgnId = obj_val.orgid;
+        data.context.Header = obj_val;
+        var Context = data.context;
+
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, inward_rowid: Context.Header.IOU_inward_rowid }),
+            url: "/Inward/Inwardfetch",
+            timeout: 10000000,
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+
+                if (response.context != null) {
+                    generate_Stockinward_header(response.context.Header);
+                    generate_Stockinward_detail(response.context.Detail);
+                    generate_Stockinward_slnodlts(response.context.Slno);
+                    Bind_Discount_Grid(response.context.OtherCostInfo);
+                    generate_OtherInputs_details(response.context.OtherInputs);
+                    UpdateInwardwithDiscount();
+                    TotalAmount();
+
+                }
+                else {
+
+                }
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+
+        });
+    }
+    function TotalAmount() {
+
+        var grid = $("#grid_inward").data("kendoGrid");
+        var gridData = grid.dataSource.view();
+        var net_amt = 0;
+        var transport_amt = 0;
+        var others = 0;
+        for (var i = 0; i < gridData.length; i++) {
+            if (gridData[i].In_net_amount != '') {
+                net_amt += gridData[i].In_net_amount != undefined ? parseFloat(gridData[i].In_net_amount) : parseFloat(0);
+            }
+        }
+
+        transport_amt = parseFloat($("#txt_transamt").val()).toFixed(0);
+        others = parseFloat($("#txt_others").val()).toFixed(0);
+        loadunload = parseFloat($("#txtloadunloading").val()).toFixed(0);
+        localtransport = parseFloat($("#txtlocaltransport").val()).toFixed(0);
+        localloadunload = parseFloat($("#txtlocalloadunload").val()).toFixed(0);
+        var total = (transport_amt != undefined ? parseFloat(transport_amt) : parseFloat(0))
+            + (others != undefined ? parseFloat(others) : parseFloat(0))
+            + (loadunload != undefined ? parseFloat(loadunload) : parseFloat(0))
+            + (localtransport != undefined ? parseFloat(localtransport) : parseFloat(0))
+            + (localloadunload != undefined ? parseFloat(localloadunload) : parseFloat(0))
+            + (net_amt != undefined ? parseFloat(net_amt) : parseFloat(0))
+            - $('#txtroundoff').val();
+        var others = (transport_amt != undefined ? parseFloat(transport_amt) : parseFloat(0))
+            + (others != undefined ? parseFloat(others) : parseFloat(0));
+        var rounoff = $('#txtroundoff').val();
+        if (rounoff > total) {
+            kendoAlert("Round Off Greater than Total AMount");
+            $('#txtroundoff').val(0)
+        } else {
+            $('#txt_total').val(parseFloat(total).toFixed(2));
+            $('#txt_totamt').val(parseFloat(net_amt).toFixed(2))
+            $('#txt_others').val(parseFloat(others).toFixed(2))
+        }
+    }
+    function save_disable() {
+        $('#divCreate #btnSave').hide();
+    }
+    function generate_Invoiceproduct_list(res) {
+        var dataItem = $("#grid_inward").data("kendoGrid").dataSource.data()[0];
+
+        dataItem.set("In_product_catg_code", res[0].In_productcategory);
+        dataItem.set("In_product_catg_desc", res[0].In_productcategory_desc);
+        dataItem.set("In_product_subcatg_code", res[0].In_productsubcategory);
+        dataItem.set("In_product_subcatg_desc", res[0].In_productsubcategory_desc);
+        dataItem.set("In_product_code", res[0].In_product_code);
+        dataItem.set("In_product_desc", res[0].In_product_name);
+        dataItem.set("In_uomtype_code", res[0].In_uomtype_code);
+        dataItem.set("In_uomtype_desc", res[0].In_uomtype_code_desc);
+        dataItem.set("In_current_qty", res[0].In_current_qty);
+        dataItem.set("In_base_price", res[0].In_base_price);
+        dataItem.set("In_hsn_code", $("#hdn_hsn_code").val());
+        dataItem.set("In_tax_rate", $("#tax_rate").val());
+        dataItem.set("In_mode_flag", "I");
+
+
+
+    }
+    function generate_TaxInvoiceproduct_list(res) {
+
+        var gridTax1 = $("#grid_tax").data("kendoGrid");
+        var grid = $("#grid_inward").data("kendoGrid");
+        var datavalue = grid.dataItem(grid.select());
+        var gridData = gridTax1.dataSource.view();
+
+        for (var i = 0; i < gridData.length; i++) {
+            if (gridData[i].In_product_code == datavalue.In_product_code) {
+                var array = gridTax1.dataSource.data();
+                gridTax1.dataSource.remove(array[i]);
+            }
+        }
+        $("#g_tx_div").empty();
+        $("#g_tx_div").append("<div id='grid_tax'></div>");
+        var gridTax = $("#grid_tax").data("kendoGrid");
+
+        if (gridTax) {
+            var dataSource_Tax = gridTax.dataSource;
+            dataSource_Tax.insert(
+                {
+                    In_product_code: res[0].In_product_code,
+                    In_product_name: res[0].In_product_name,
+                    //  In_product_name: res[0].In_product_desc,
+                    //  In_hsn_code: res[0].In_hsn_code,
+                    In_hsn_code: res[0].In_status_desc,
+                    In_hsn_desc: res[0].In_hsn_desc,
+                    In_cgst_rate: res[0].In_cgst_rate,
+                    In_sgst_rate: res[0].In_sgst_rate,
+                    In_ugst_rate: res[0].In_ugst_rate,
+                    In_sugst_rate: res[0].In_sgst_rate,
+                    In_igst_rate: res[0].In_igst_rate,
+                    In_tax_rate: res[0].In_tax_rate,
+                    In_taxable_amount: "",
+                    In_tax_amount: res[0].In_tax_amount
+                });
+            $("#tax_rate").val(res[0].In_tax_rate);
+            $("#hdn_hsn_code").val(res[0].In_hsn_code);
+            $("#hdn_hsn_code_desc").val(res[0].In_hsn_desc);
+        }
+    }
+</script>
+<script>
+    function fetch_grid() {
+
+        var dataSource = $("#grid_inward").data("kendoGrid").dataSource.data();
+        console.log(dataSource);
+        var taxgrid = $('#grid_tax').data('kendoGrid');
+        GridTax([]);
+        var ds = {};
+        if (dataSource.length > 0) {
+            for (var i = 0; i < dataSource.length; i++) {
+                //if (dataSource[i].In_transport_amount == "") {
+                //    dataSource[i].In_transport_amount = "0";
+                //}
+                ds.In_product_code = dataSource[i].In_product_code
+                ds.In_product_name = dataSource[i].In_product_desc
+                ds.In_product_desc = dataSource[i].In_product_desc
+                ds.In_hsn_code = dataSource[i].In_hsn_code
+                ds.In_hsn_desc = dataSource[i].In_hsn_desc
+                ds.In_cgst_rate = (parseFloat(dataSource[i].In_cgst_rate)).toFixed(2);
+                ds.In_sgst_rate = (parseFloat(dataSource[i].In_sgst_rate)).toFixed(2);
+                ds.In_ugst_rate = (parseFloat(dataSource[i].In_ugst_rate)).toFixed(2);
+                ds.In_sugst_rate = (parseFloat(dataSource[i].In_sugst_rate)).toFixed(2);
+                ds.In_igst_rate = (parseFloat(dataSource[i].In_igst_rate)).toFixed(2);
+                ds.In_tax_rate = (parseFloat(dataSource[i].In_tax_rate)).toFixed(2);
+                ds.In_tax_amount = (parseFloat(dataSource[i].In_tax_amount)).toFixed(2);
+                ds.In_discount = (parseFloat(dataSource[i].In_discount)).toFixed(2);
+                //ds.In_taxable_amount = (parseFloat(dataSource[i].In_net_amount)) - (parseFloat(dataSource[i].In_tax_amount)).toFixed(2); //// Prema Changed due to edit mode discount calculation////
+                ds.In_taxable_amount = (parseFloat(dataSource[i].In_taxable_amount)).toFixed(2);
+                taxgrid.dataSource.add(ds);
+            }
+            taxgrid.refresh();
+        }
+        ds = {};
+
+    }
+</script>
+<script>
+
+    //look up functions
+
+    function grid_control() {
+        try {
+
+            var control_Name = [
+                { "dataCol": "", "grid_row_col": "In_inwarddtl_rowid" },
+                { "dataCol": "productcategory", "grid_row_col": "In_product_catg_code" },
+                { "dataCol": "productcategory_desc", "grid_row_col": "In_product_catg_desc" },
+                { "dataCol": "productsubcategory_desc", "grid_row_col": "In_product_subcatg_desc" },
+                { "dataCol": "productsubcategory", "grid_row_col": "In_product_subcatg_code" },
+                { "dataCol": "product_name", "grid_row_col": "In_product_desc" },
+                { "dataCol": "product_code", "grid_row_col": "In_product_code" },
+                { "dataCol": "uomtype_code", "grid_row_col": "In_uomtype_code" },
+                { "dataCol": "uomtype_code_desc", "grid_row_col": "In_uomtype_desc" },
+                { "dataCol": "", "grid_row_col": "In_received_qty" },
+                { "dataCol": "", "grid_row_col": "In_product_amount" },
+                { "dataCol": "", "grid_row_col": "In_tax_amount" },
+                { "dataCol": "", "grid_row_col": "In_net_amount" },
+                { "dataCol": "", "grid_row_col": "In_amount" },
+                { "dataCol": "", "grid_row_col": "In_mode_flag" },
+                { "dataCol": "cgst_rate", "grid_row_col": "In_cgst_rate" },
+                { "dataCol": "sgst_rate", "grid_row_col": "In_sgst_rate" },
+                { "dataCol": "igst_rate", "grid_row_col": "In_igst_rate" },
+                { "dataCol": "ugst_rate", "grid_row_col": "In_ugst_rate" },
+                { "dataCol": "tax_rate", "grid_row_col": "In_tax_rate" },
+                { "dataCol": "sugst_rate", "grid_row_col": "In_sugst_rate" },
+                { "dataCol": "hsn_code", "grid_row_col": "In_hsn_code" },
+                { "dataCol": "hsn_desc", "grid_row_col": "In_hsn_desc" },
+                { "dataCol": "", "grid_row_col": "uid" }
+            ];
+            return control_Name
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function form_control() {
+        var control_Name = [
+            { "dataCol": "Supplier_code", "controlId": "txtSupplier", "type": "Text" },
+            { "dataCol": "Supplier_name", "controlId": "txtSupplier", "type": "Text" },
+            //{ "dataCol": "village_ll_desc", "controlId": "combo_village1_1", "type": "Text" },
+            //{ "dataCol": "orgn_village", "controlId": "combo_mst_village", "type": "Text" },
+
+            { "dataCol": "Suplier_location", "controlId": "txtSupplierloc", "type": "Text" },
+            //{ "dataCol": "hamlet_ll_desc", "controlId": "txtaddress2In", "type": "Text" },
+            //{ "dataCol": "orgn_hamlet", "controlId": "combo_mst_hamlet", "type": "Text" },
+
+            { "dataCol": "Suplier_state", "controlId": "cmb_state", "type": "Text" },
+            //{ "dataCol": "grampan_ll_desc", "controlId": "combo_grampanchayat2_1", "type": "Text" },
+            //{ "dataCol": "orgn_grampan", "controlId": "combo_mst_grampanchayat", "type": "Text" },
+
+            // { "dataCol": "orgn_taluk_desc", "controlId": "combo_taluk_1", "type": "Text" },
+            //{ "dataCol": "taluk_ll_desc", "controlId": "combo_taluk1_1", "type": "Text" },
+            //{ "dataCol": "orgn_taluk", "controlId": "combo_mst_taluk", "type": "Text" },
+
+            //{ "dataCol": "orgn_dist_desc", "controlId": "combo_district_1", "type": "Text" },
+            //{ "dataCol": "dist_ll_desc", "controlId": "combo_district1_1", "type": "Text" },
+            //{ "dataCol": "orgn_dist", "controlId": "combo_mst_district", "type": "Text" },
+        ];
+        return control_Name
+    }
+    function controlName() {
+        try {
+            var control_Name = [
+            ];
+            return control_Name
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function trans_input_data() {
+        try {
+            var org = ""
+            //if ($("#ic_code").val() != "") {
+            //    org = $("#ic_code").val();
+            //    $("#txtic_code").val(org);
+            //} else {
+            //    org = $("#cmb_filter").val();
+            //    $("#txtic_code").val(org);
+            //}
+            var orgncode = getlocalStorage('org_id');
+            var trans_coll = [
+                { "trasfer": "Yes", "dataCol": "orgn_code", "controlId": "txtagg_code", "grid_id": "", "grid_row_col": "" },
+                { "trasfer": "Yes", "dataCol": "Provider_Location", "controlId": "cmb_state", "grid_id": "grid_inward", "grid_row_col": "" },
+                { "trasfer": "Yes", "dataCol": "In_product_catg_desc", "controlId": "", "grid_id": "grid_inward", "grid_row_col": "" },
+                { "trasfer": "Yes", "dataCol": "In_product_subcatg_desc", "controlId": "", "grid_id": "grid_inward", "grid_row_col": "" }
+
+            ];
+            return trans_coll;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+
+<script src="~/CommonScripts/HelpFile.js"></script>
+
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+
+    .k-grid .ra,
+    .k-numerictextbox .k-input {
+        text-align: right;
+    }
+</style>

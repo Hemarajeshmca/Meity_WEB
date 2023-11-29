@@ -1,0 +1,1094 @@
+﻿@{
+    ViewBag.Form = "Receipt Updation";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+<form id="paymentupdation_form" class="form-horizontal">
+    <div class="row">
+        <section class="col-md-12">
+            <div id="tab_list" class="col-md-12">
+                <ul class="nav nav-tabs">
+
+                    <li class="active">
+                        <a href="#Booking" id="" role="tab" data-toggle="tab">
+                            Booking Details
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane fade active in" id="Booking">
+                        <div class="panel panel-default">
+
+                            <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+                                <div class="row" style="padding-bottom:5px">
+                                    <div class="col-xs-3">
+                                        <div class=" form-group">
+                                            <label for="txtcust_code" class=" col-sm-5 control-label">Customer Code</label>
+                                            <div class=" col-sm-6">
+                                                <input type="text" id="txtcust_code" name="customer_code" class="form-control" maxlength="50" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <div class=" form-group">
+                                            <label for="txtcust_name" class=" col-sm-5 control-label">Customer Name</label>
+                                            <div class=" col-sm-6">
+                                                <input type="text" id="txtcust_name" name="customer_name" class="form-control" maxlength="50" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <div class=" form-group">
+                                            <label for="txtbkng_id" class=" col-sm-5 control-label">Booking ID</label>
+                                            <div class=" col-sm-6">
+                                                <input type="text" id="txtbkng_id" name="booking_no" class="form-control" maxlength="50" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class=" form-group">
+                                            <label for="txt_equipment" class=" col-sm-5 control-label">Equipment</label>
+                                            <div class=" col-sm-6">
+                                                <input type="text" id="txt_equipment" name="equipment_name" class="form-control" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="padding-bottom:5px">
+                                    <div class="col-xs-3">
+                                        <div class=" form-group">
+                                            <label for="txtbkng_date" class=" col-sm-5 control-label">Booking Date</label>
+                                            <div class=" col-sm-6">
+                                                <input class="cusDate" type="date" data-role='datepicker' readonly onkeypress="return date_validate(event)" id="txtbkng_date" data-checkdate-msg="Enter Valid Date" name="booking_date" style="width:100%" />
+                                                <span data-for='valid' class='k-invalid-msg'></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <div class=" form-group">
+                                            <label for="cmb_uom" class=" col-sm-5 control-label">UOM Type</label>
+                                            <div class=" col-sm-2">
+                                                <input id="cmb_uom" class="form-control" name="uom_type" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xs-3">
+                                        <div class=" form-group">
+                                            <label for="txtbkngfrom_date" class=" col-sm-5 control-label">Period From</label>
+                                            <div class=" col-sm-6">
+                                                <input class="cusDate" type="date" data-role='datepicker' readonly onkeypress="return date_validate(event)" id="txtbkngfrom_date" data-checkdate-msg="Enter Valid Date" name="period_from" style="width:100%" />
+                                                <span data-for='valid' class='k-invalid-msg'></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <div class=" form-group">
+                                            <label for="txtbkngto_date" class=" col-sm-5 control-label">Period To</label>
+                                            <div class=" col-sm-6">
+                                                <input class="cusDate" type="date" data-role='datepicker' readonly onkeypress="return date_validate(event)" id="txtbkngto_date" data-checkdate-msg="Enter Valid Date" name="period_to" style="width:100%" />
+                                                <span data-for='valid' class='k-invalid-msg'></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row" style="padding-bottom:5px">
+                                    <div class="col-xs-3">
+                                        <div class=" form-group">
+                                            <label for="txtbkng_rate" class=" col-sm-5 control-label">Rate</label>
+                                            <div class=" col-sm-6">
+                                                <input type="text" id="txtbkng_rate" name="rate" class="form-control" maxlength="8" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <div class=" form-group">
+                                            <label for="txtnet_amt" class=" col-sm-5 control-label">Net Amount</label>
+                                            <div class=" col-sm-6">
+                                                <input type="text" id="txtnet_amt" name="net_amount" class="form-control" readonly maxlength="8" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <div class=" form-group">
+                                            <label for="cmb_eqstatus" class=" col-sm-3 control-label">Status</label>
+                                            <div class=" col-sm-6">
+                                                <input type="text" id="cmb_eqstatus" class="form-control" name="process_status_desc" maxlength="50" readonly>
+                                            </div>
+                                            <input type="hidden" id="booking_rowid" name="booking_rowid" />
+                                            <input type="hidden" id="txtMode" name="mode_flag" value="I">
+                                            <input type="hidden" id="status_code" name="status_code">
+                                            <input type="hidden" id="txtbalnce_amt">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+        </div>
+        <div class="col-sm-3" style="display:none;">
+            <a data-toggle="modal" id="aPay" role="button" href="~/PaymentUpdation/CcPayment" data-target="#ccAvenue_payment">RepaymentSchedule</a>
+            <input id="Button1" type="button" value="button" />
+        </div>
+    </div>
+    <div class="row">
+        <section class="col-md-12">
+            <div id="tab_list" class="col-md-12">
+                <ul class="nav nav-tabs">
+                    <li>
+                        <a href="#Receipt" id="" role="tab" data-toggle="tab">
+                            Receipt Updation
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane fade active in" id="Receipt">
+                        <div class="panel panel-default">
+                            <div class="panel-body" style="padding-bottom:5px">
+                                <div id="grid_payupdate"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="row">
+        <section class="col-md-12">
+            <div id="tab_list" class="col-md-12">
+                <ul class="nav nav-tabs">
+                    <li>
+                        <a href="#Terms" id="" role="tab" data-toggle="tab">
+                            Terms & Conditions
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane fade active in" id="terms">
+                        <div class="panel panel-default">
+                            <div class="panel-body" style="padding-bottom:5px">
+                                <div id="grid_terms_condition"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="row">
+        <section class="col-md-12">
+            <div id="tab_list" class="col-md-12">
+                <ul class="nav nav-tabs">
+                    <li>
+                        <a href="#History" id="" role="tab" data-toggle="tab">
+                            History
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane fade active in" id="History">
+                        <div class="panel panel-default">
+                            <div class="panel-body" style="padding-bottom:5px">
+                                <div id="grid_terms"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</form>
+<script>
+    click_act_name = "PaymentUpdationlist";
+    click_ctrl_name = "PaymentUpdation";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+<script src="~/API_Scripts/receipt_update_retrieveReceiptUpdation_APIClient.js"></script>
+<script src="~/API_Scripts/receipt_update_retrieveReceiptUpdationList_APIClient.js"></script>
+<script src="~/API_Scripts/receipt_update_saveReceiptUpdation_APIClient.js"></script>
+<script src="~/API_Scripts/retrieveReceiptUpdation_Model.js"></script>
+<script src="~/API_Scripts/retrieveReceiptUpdationList_Model.js"></script>
+<script src="~/API_Scripts/saveReceiptUpdation_Model.js"></script>
+<script src="~/API_Scripts/ReceiptUpdate.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script>
+    $(document).ready(function () {
+        kendodate_format();
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#paymentupdation_form");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        $("#bottom_menus").hide();
+        $(".file_attach").attr("hdrtitle", "HSN");
+        $(".notes").attr("hdrtitle", "HSN");
+        $("#lblForm_menuid").text("AEPSHSN");
+        $("#frmlayerdiv").hide();
+        //$("#divCreate").hide();
+        //$('#frmlayerdiv').hide();
+        //$('#divUserRole24').show();
+        //$("#divCreate").hide();
+        //$("#divEdit").hide();
+        //$("#divView").hide();
+        Screen_Id = "FALPAYUPD";
+        load_master_code();
+
+
+        gridterms([]);
+        grid_payupdate([]);
+        gridtermscondition([]);
+
+        //var EQ_Status = "";
+        //$("#cmb_eqstatus").empty();
+        //EQ_Status = grid_comboScreen_mastercodes("QCD_FL_BKGSTAUS");
+        //filter_combobox("cmb_eqstatus", EQ_Status);
+
+        var uom_type = "";
+        $("#cmb_uom").empty();
+        uom_type = grid_comboScreen_mastercodes("QCD_FL_EQUOMTYPE");
+        filter_combobox("cmb_uom", uom_type);
+
+        $('#txtbkng_rate').keypress(function (event) {
+            var $this = $(this);
+            if ((event.which != 46 || $this.val().indexOf('.') != -1) &&
+               ((event.which < 48 || event.which > 57) &&
+               (event.which != 0 && event.which != 8))) {
+                event.preventDefault();
+            }
+
+            var text = $(this).val();
+            if (text.indexOf('.') != -1) {
+                setTimeout(function () {
+                    if ($this.val().substring($this.val().indexOf('.')).length > 6) {
+                        $this.val($this.val().substring(0, $this.val().indexOf('.') + 6));
+                    }
+                }, 1);
+                if ((text.indexOf('.') != -1) &&
+               (text.substring(text.indexOf('.')).length > 2) &&
+               (event.which != 0 && event.which != 8) &&
+               ($(this)[0].selectionStart >= text.length - 2)) {
+                    event.preventDefault();
+                }
+            }
+            else {
+                if ($this.val().length > 2) {
+                    if (event.which != 46) {
+                        event.preventDefault();
+                    }
+                }
+            }
+
+        });
+
+        $('#txtbkng_rate').bind("paste", function (e) {
+            var text = e.originalEvent.clipboardData.getData('Text');
+            if ($.isNumeric(text)) {
+                if ((text.substring(text.indexOf('.')).length > 6) && (text.indexOf('.') > -1)) {
+                    e.preventDefault();
+                    $(this).val(text.substring(0, text.indexOf('.') + 6));
+                }
+            }
+            else {
+                e.preventDefault();
+            }
+        });
+
+        $("#txtbkng_date").kendoDatePicker({
+            max: new Date(),
+            format: "dd/MM/yyyy"
+        });
+        $("#txtbkngfrom_date").kendoDatePicker({
+            max: new Date(),
+            format: "dd/MM/yyyy"
+        });
+        $("#txtbkngto_date").kendoDatePicker({
+            min: new Date(),
+            format: "dd/MM/yyyy"
+        });
+
+        var container = $("#txtbkng_date");
+        kendo.init(container);
+        container.kendoValidator({
+            rules: {
+                checkdate: function (input) {
+                    if (input.attr("data-role") == "datepicker") {
+                        var res = isDate(input.val());
+                        return res;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+            }
+        });
+        setlocalStorage("payment_info", "");
+        if (getlocalStorage('btn_clk_val') == "Create") {
+            $('#divCreate #review').hide();
+            
+            $("#bottom_menus").hide();
+            $("#status_code").val("A");
+            $("#DocStat").val("New");
+        }
+        else if (getlocalStorage('btn_clk_val') == "Edit") {
+
+            if (getlocalStorage("ls_pageList") != undefined) {
+                $('#divUserRole24 #btngen').hide();
+                $('#divEdit #reviewEd').hide();
+                $('#divEdit #deactivate').hide();
+                $('#divEdit #btnApprove').hide();
+                $('#divEdit #btnReject').hide();
+                $('#frmlayerdiv #common_id').hide();
+                $('#div1 #txtcommon_id').hide();
+                setlocalStorage("row_id", "");
+                setlocalStorage('payment_status', "");
+                setlocalStorage("bal_amt", "");
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("MybookingForm");
+                var obj_val = JSON.parse(formval);
+                if (obj_val != undefined) {
+                    obj_val.booking_rowid = data.booking_rowid;
+                    $("#booking_rowid").val(data.booking_rowid);
+                    $("#txtcommon_id").val(data.booking_rowid);
+                    var data = {};
+                    data.context = WebAPIProxy.getContext();
+                    data.context.Header = obj_val;
+                    retrieve_Reciptupdation_details(data);
+                    $("#txtMode").val("U");
+                    $("#div_Comments").show();
+                    setlocalStorage('doc_no', $("#booking_rowid").val());
+                    localStorage.docno = $("#booking_rowid").val();
+                    setlocalStorage('doc_row_id', $("#booking_rowid").val());
+
+                }
+            }
+        }
+        else if (getlocalStorage('btn_clk_val') == "View") {
+           
+            $('#frmlayerdiv #common_id').hide();
+            $('#div1 #txtcommon_id').hide();
+
+            if (getlocalStorage("ls_pageList") != undefined) {
+                setlocalStorage("row_id", "");
+                setlocalStorage('payment_status', "");
+                setlocalStorage("bal_amt", "");
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("MybookingForm");
+                var obj_val = JSON.parse(formval);
+                if (obj_val != undefined) {
+                    obj_val.booking_rowid = data.booking_rowid;
+                    $("#booking_rowid").val(data.booking_rowid);
+                    $("#txtcommon_id").val(data.booking_rowid);
+                    var data = {};
+                    data.context = WebAPIProxy.getContext();
+                    data.context.Header = obj_val;
+                    retrieve_Reciptupdation_details(data);
+                    $("#txtMode").val("U");
+                    $("#div_Comments").show();
+                    setlocalStorage('doc_no', $("#booking_rowid").val());
+                    localStorage.docno = $("#booking_rowid").val();
+                    setlocalStorage('doc_row_id', $("#booking_rowid").val());
+
+                }
+            }
+        }
+        else if (getlocalStorage('btn_clk_val') == "Pay") {
+            if (getlocalStorage("row_id") != undefined) {
+                //$('#divUserRole24').show();
+                var dataPay = getlocalStorage("row_id");
+                var formvalPay = form_Serialize("MybookingForm");
+                var obj_valPay = JSON.parse(formvalPay);
+                if (obj_valPay != undefined) {
+                    obj_valPay.booking_rowid = dataPay.booking_rowid;
+                    $("#booking_rowid").val(dataPay.booking_rowid);
+                    $("#txtcommon_id").val(dataPay.booking_rowid);
+                    var dataPay = {};
+                    dataPay.context = WebAPIProxy.getContext();
+                    dataPay.context.Header = obj_valPay;
+                    retrieve_Reciptupdation_details(dataPay);
+                    $("#txtMode").val("U");
+                    $("#div_Comments").show();
+                    setlocalStorage('doc_no', $("#booking_rowid").val());
+                    localStorage.docno = $("#booking_rowid").val();
+                    setlocalStorage('doc_row_id', $("#booking_rowid").val());
+
+                    var today = new Date();
+                    var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+                    var dataItem = getlocalStorage("payment_status");
+                    var itemGrid = $("#grid_payupdate").data("kendoGrid");
+                    var ds = {
+                        paymentcollection_rowid: 0,
+                        payment_no: "",
+                        invoice_no: "",
+                        invoice_amount: $("#txtnet_amt").val(),
+                        payment_mode: "QCD_FL_PAYCARD",
+                        payment_mode_desc: "Online",
+                        booking_no: dataItem.order_id,
+                        process_status: "QCD_FL_INGEN",
+                        ref_no: dataItem.bank_ref_no,
+                        //receipt_date: dataItem.trans_date,
+                        receipt_date: date,
+                        payment_amount: dataItem.amount,
+                        balance_amount: dataItem.amount,
+                        mode_flag: 'I'
+                    };
+                    itemGrid.dataSource.add(ds);
+                    itemGrid.refresh();
+                    save();
+                    //$('#Button1').click(function () {
+                    setlocalStorage('btn_clk_val', "Edit");
+                    location.reload();
+                    //});
+                }
+            }
+            //alert(data);
+        }
+        var grid = $("#grid_payupdate").data("kendoGrid");
+        var gridData = grid.dataSource.view();
+        var accp_qty = 0;
+        for (var i = 0; i < gridData.length; i++) {
+            if (gridData[i].balance_amount != '') {
+                accp_qty = gridData[i].balance_amount != undefined ? parseFloat(gridData[i].balance_amount) : parseFloat(0);
+            }
+        }
+        $('#txtbalnce_amt').val(accp_qty);
+    });
+</script>
+<script>
+    function load_master_code() {
+        try {
+            var data = {};
+            data.screen_Id = "FALPAYUPD";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+
+<script>
+    function grid_payupdate(data) {
+        try {
+            $("#grid_payupdate").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                payment_mode: { type: "string" },
+                                manfaturer_name: { type: "string" },
+                                ref_no: { type: "string" },
+                                rate: { type: "string" },
+                                booking_no: { type: "string" },
+                                receipt_date: { type: "date" },
+                                payment_amount: { type: "string" },
+                                balance_amount: { type: "string",},
+                                mode_flag: { type: "string", defaultValue: "I" },
+                                paymentcollection_rowid:{ type: "string" }
+                            }
+                        }
+                    }
+                },
+                toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 200,
+                groupable: false,
+                dataBinding: setDefaultValues,
+                save: function (data) {
+                    //var netamt = $('#txtnet_amt').val();
+                    //netamt = netamt != undefined ? netamt : 0;
+                    //if (data.values.payment_amount) {
+                    //    //data.model.set("balance_amount", (parseFloat(netamt) - parseFloat(data.values.payment_amount)).toFixed(2));
+                    //    var grid = $("#grid_payupdate").data("kendoGrid");
+                    //    var gridData = grid.dataSource.view();
+                    //    var accp_qty = 0;
+                    //    for (var i = 0; i < gridData.length; i++) {
+                    //        if (gridData[i].payment_amount != '') {
+                    //            accp_qty += gridData[i].payment_amount != undefined ? parseFloat(gridData[i].payment_amount) : parseFloat(0);
+                    //        }
+                    //    }
+                    //    $('#txtbalnce_amt').val(accp_qty);
+                    //    data.model.set("balance_amount", (parseFloat(netamt) - parseFloat(accp_qty)).toFixed(2));
+                    //}
+                    
+                    if (data.values.payment_amount) {
+                        var bal = $('#txtbalnce_amt').val(); 
+                         //bal = bal != '' ? bal : 0;
+                        bal = ( bal == 0 ? $('#txtnet_amt').val() :bal);
+                        var netamt = data.values.paymentcollection_rowid != null ? $('#txtnet_amt').val() : data.values.balance_amount;
+                            //$('#txtnet_amt').val();
+                            //data.values.paymentcollection_rowid !== null ? $('#txtnet_amt').val() : data.values.balance_amount; // 
+                        netamt = netamt != undefined ? netamt : 0;
+                        var pay = data.values.payment_amount;
+                        pay = pay != undefined ? pay : 0;
+                        var paybal = parseFloat(bal)- parseFloat(pay);
+                        paybal = paybal != undefined ? paybal : 0;
+                        data.model.set("balance_amount", (parseFloat(paybal)).toFixed(2));
+                        $('#txtbalnce_amt').val(bal);
+                    }
+                    if (data.values.payment_mode_desc) {
+
+                        if (data.values.payment_mode_desc.code == "QCD_FL_PAYCARD") {
+                            var net_amt = $('#txtnet_amt').val();
+                            net_amt = net_amt != undefined ? net_amt : 0;
+                            var grid = $("#grid_payupdate").data("kendoGrid");
+                            var gridData = grid.dataSource.view();
+                            var pay_amt = 0;
+                            var bal_amt = 0;
+                            for (var i = 0; i < gridData.length; i++) {
+                                if (gridData[i].payment_amount != '') {
+                                    pay_amt += gridData[i].payment_amount != undefined ? parseFloat(gridData[i].payment_amount) : parseFloat(0);
+                                }
+                            }
+                            bal_amt = net_amt - pay_amt;
+                            setlocalStorage("bal_amt", bal_amt);
+                            callCcAvenue();
+                        }
+                    }
+                },
+                edit: OnEdit,
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_payupdate').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+
+                },
+
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+    {
+        command: [
+{
+    name: "Delete",
+    id: "Delete",
+    imageClass: "fa fa-close",
+    click: function (e) {
+        // e.preventDefault();
+        var grid = $("#grid_payupdate").data("kendoGrid");
+        var dataItem = $("#grid_payupdate").data("kendoGrid").dataItem($(e.target).closest("tr"));
+        DeleteWindowEvent(e, dataItem, grid);
+        e.stopImmediatePropagation()
+    }
+},
+        ], title: "", width: "15px",
+    },
+        {
+            field: "paymentcollection_rowid",
+            title: "ID",
+            hidden: true
+        },
+                    {
+                        field: "payment_no",
+                        title: "ID",
+                        hidden: true
+                    },
+                    {
+                        field: "invoice_no",
+                        title: "ID",
+                        hidden: true
+                    },
+                    {
+                        field: "invoice_amount",
+                        title: "ID",
+                        hidden: true
+                    },
+                    {
+                        field: "payment_mode",
+                        title: "ID",
+                        hidden: true
+                    },
+                    {
+                        field: "booking_no",
+                        title: "ID",
+                        hidden: true
+                    },
+                    {
+                        field: "process_status",
+                        title: "ID",
+                        hidden: true
+                    },
+                  {
+                      field: "payment_mode_desc",
+                      title: "Payment Type",
+                      editor: function (container, options) {
+                          combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "payment_mode", "grid_payupdate");
+                          //    //var grid = $("#grid_payupdate").data("kendoGrid");
+                          //    //var selectedItem = grid.dataItem(grid.select());
+                          //    //setlocalStorage("maskcmp", selectedItem);
+                          //    //var maskcmp_data = getlocalStorage("maskcmp");
+                          //    //if (maskcmp_data.payment_mode == 'QCD_FL_PAYCARD') {
+                          //    //    $(function () {
+                          //callCcAvenue();
+                          //    //    });
+                          //    //}
+                      },
+                      width: 100,
+                  },
+                 {
+                     field: "ref_no",
+                     title: "Receipt Ref No",
+                     width: 100,
+                 },
+                 {
+                     field: "receipt_date",
+                     title: "Receipt Date",
+                     width: 100,
+                     format: "{0:dd/MM/yyyy}"
+                 },
+                  {
+                      field: "payment_amount",
+                      title: "Amount Paid",
+                      width: 100,
+                      editor: function (container, options) {
+                          item_rate(container, options.field, '9', '2');
+                      },
+                      attributes: { style: "text-align:right;" }
+                  },
+
+                 {
+                     field: "balance_amount",
+                     title: "Bal. Amount",
+                     width: 100,
+                     editor: function (container, options) {
+                         item_rate(container, options.field, '9', '2');
+                     },
+                     attributes: { style: "text-align:right;" }
+                 },
+
+                {
+                    field: "mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }],
+
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+    load_master_code();
+    payment_mode_desc_list = grid_comboScreen_mastercodes("QCD_FL_recpay");
+    function OnEdit(e) {
+        setDefaultValues(e);
+        e.container.find("input[name='balance_amount']").attr('onkeypress', 'return false');
+        e.container.find("input[name='payment_amount']").focusout(function () {           
+            resultData = e.sender._data;
+            var rows = $('#grid_payupdate').data('kendoGrid').tbody.children();
+            setColor(rows, resultData);
+            var net_amt = $('#txtnet_amt').val();
+            net_amt = net_amt != undefined ? net_amt : 0;
+            var grid = $("#grid_payupdate").data("kendoGrid");
+            var gridData = grid.dataSource.view();
+            pay_amt = 0;
+            for (var i = 0; i < gridData.length; i++) {
+                if (gridData[i].payment_amount != '') {
+                    pay_amt += gridData[i].payment_amount != undefined ? parseFloat(gridData[i].payment_amount) : parseFloat(0);
+                    if (parseFloat(net_amt) < parseFloat(pay_amt)) {
+                        $('#grid_payupdate').data('kendoGrid').dataSource.read();
+                        $('#grid_payupdate').data('kendoGrid').refresh();
+                        kendoAlert('Payment amount should be less than or equal to net amount');
+                        return false;
+                    }
+                }
+            }
+
+        });
+
+    }
+
+    function callCcAvenue() {
+        //setlocalStorage('row_id', $("#booking_rowid").val());
+        var ls_pageList = getlocalStorage("ls_pageList");
+        setlocalStorage('row_id', ls_pageList);
+        $('#aPay')[0].click();
+    }
+</script>
+<script>
+    //var data = [];
+    function gridterms(data) {
+        try {
+            $("#grid_terms").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                termsandconditions_rowid: { type: "string" },
+                                sl_no: { type: "string" },
+                                termsandconditions: { type: "string" },
+                            }
+                        }
+                    }
+                },
+                height: 200,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                change: function (e) {
+                    $("#grid_terms tbody .k-state-selected").css({
+                        "background-color": "lightgreen"
+                    });
+                },
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_terms').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                     {
+                         field: "receiptupdationhistory_rowid",
+                         title: "ID",
+                         hidden: true
+                     },
+                     {
+                         field: "payment_mode",
+                         title: "Payment Type",
+                         width: 100,
+                     },
+                 {
+                     field: "ref_no",
+                     title: "Receipt Ref No",
+                     width: 120
+                 },
+                 {
+                     field: "booking_no",
+                     title: "ID",
+                     hidden: true
+                 },
+                 {
+                     field: "receipt_date",
+                     title: "Receipt Date",
+                     width: 60,
+                     format: "{0:dd/MM/yyyy}"
+                 },
+                  {
+                      field: "payment_amount",
+                      title: "Amount Paid",
+                      width: 60,
+                  },
+
+                 //{
+                 //    field: "gps_id",
+                 //    title: "Bal. Amount",
+                 //    width: 50
+                 //},
+
+                {
+                    field: "mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+
+</script>
+<script>
+    //var data = [];
+    function gridtermscondition(data) {
+        try {
+            $("#grid_terms_condition").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                sl_no: { type: "string", editable: false },
+                                termsandconditions: { type: "string", editable: false },
+                                status_desc: { type: "string", editable: false }
+
+                            }
+                        },
+
+                    }
+                },
+                height: 240,
+                groupable: false,
+                dataBinding: setDefaultValues,
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_terms_condition').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+
+                    {
+                        field: "termsandconditions_rowid",
+                        title: "ID",
+                        width: 100,
+                        hidden: true
+
+                    },
+                      {
+                          field: "sl_no",
+                          title: "Sl.No",
+                          width: 100,
+
+                      },
+                      {
+                          field: "termsandconditions",
+                          title: "Terms & Conditions",
+                          width: 100,
+                      },
+                      {
+                          field: "status_desc",
+                          title: "Status",
+                          width: 100,
+                      },
+
+                {
+                    field: "mode_flag",
+                    title: "mode_flag",
+                    hidden: true
+                },
+                {
+                    field: "status_code",
+                    title: "status_code",
+                    hidden: true
+                }],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+
+</script>
+<script>
+    function save() {
+        try {
+            if ($("#txtMode").val() == "S") {
+                $("#txtMode").val('U');
+            }
+            $("#txtbkng_id").removeAttr("disabled");
+
+            var formval = form_Serialize("paymentupdation_form");
+            var obj_val = JSON.parse(formval);
+            $("#txtbkng_id").attr("disabled", "disabled");
+            if ($("#booking_rowid").val() == undefined || $("#booking_rowid").val() == "") {
+                obj_val.booking_rowid = 0;
+            }
+            else {
+                obj_val.booking_rowid = $("#booking_rowid").val();
+            }
+
+            if (obj_val.customer_code == undefined || obj_val.customer_code == "") {
+                obj_val.customer_code = "0";
+            }
+            else {
+                obj_val.customer_code = obj_val.customer_code;
+            }
+
+            if (obj_val.booking_no == undefined || obj_val.booking_no == "") {
+                obj_val.booking_no = "0";
+            }
+            else {
+                obj_val.booking_no = obj_val.booking_no;
+            }
+            if (obj_val.period_from == undefined || obj_val.period_from == "") {
+                obj_val.period_from = "0";
+            }
+            else {
+                obj_val.period_from = getFormated_StringDate(obj_val.period_from);
+            }
+            if (obj_val.period_to == undefined || obj_val.period_to == "") {
+                obj_val.period_to = "0";
+            }
+            else {
+                obj_val.period_to = getFormated_StringDate(obj_val.period_to);
+            }
+
+            if (obj_val.status_code == undefined) {
+                obj_val.status_code = "A";
+            }
+            if (obj_val.row_timestamp == undefined) {
+                obj_val.row_timestamp = "0";
+            }
+            //receipt update
+            var grid_val = JSON.stringify($("#grid_payupdate").data().kendoGrid._data);
+            var Bind = {};
+            Bind = grid_val;
+            var result = JSON.parse(Bind);
+            $.each(result, function (index, value) {
+                var row_id = value.paymentcollection_rowid;
+                if (row_id == undefined || row_id == '') {
+                    result[index].paymentcollection_rowid = "0";
+                }
+                else {
+                    result[index].mode_flag = "S";
+                }
+                var mode = value.mode_flag;
+                if (mode == "") {
+                    result[index].mode_flag = "I";
+                }
+                if (mode == "S") {
+                    result[index].mode_flag = "U";
+                }
+                var pay_no = value.payment_no;
+                if (pay_no == undefined || pay_no == '') {
+                    result[index].payment_no = "0";
+                }
+                var invoice_no = value.invoice_no;
+                if (invoice_no == undefined || invoice_no == '') {
+                    result[index].invoice_no = "0";
+                }
+                var booking_no = value.booking_no;
+                if (invoice_no == undefined || invoice_no == '') {
+                    result[index].booking_no = obj_val.booking_no;
+                }
+                var invoice_amount = value.invoice_amount;
+                if (invoice_amount == undefined || invoice_amount == '') {
+                    result[index].invoice_amount = "0";
+                }
+
+                var process_status = value.process_status;
+                if (process_status == undefined || process_status == '') {
+                    result[index].process_status = "0";
+                }
+                var d = value.receipt_date;
+                var date = kendo.parseDate(d);
+                value = kendo.toString(date, "MM/dd/yyyy");
+                result[index].receipt_date = value;
+
+            });
+            var obj_grid_val = result;
+
+            var data_save = {};
+            data_save.context = WebAPIProxy.getContext();
+            data_save.context.Header = obj_val;
+            data_save.context.Receipt_Updation = obj_grid_val;
+            save_Reciptupdation_details(data_save);
+            setlocalStorage('btn_clk_val', "Edit");
+            //location.reload();
+            $("#btnSaveEd").prop("disabled", true);
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+<script>
+    function generate_Reciptupdation_header(res) {
+        if (res != null) {
+
+            $("#txtcust_code").val(res.customer_code);
+            $("#txtcust_name").val(res.customer_name);
+            $("#txtbkng_id").val(res.booking_no);
+            $("#txt_equipment").val(res.equipment_name);
+            $("#txtbkng_date").val(res.booking_date);
+            $("#booking_rowid").val(res.booking_rowid);
+            $("#txtbkngfrom_date").val(res.period_from);
+            $("#txtbkngto_date").val(res.period_to);
+            $("#txtnet_amt").val(res.net_amount);
+            $("#cmb_uom").data("kendoComboBox").value(res.uom_type);
+            $("#txtbkng_rate").val(res.rate);
+            $("#cmb_eqstatus").val(res.process_status_desc);
+            $("#mode_flag").val(res.mode_flag);
+            $("#DocStat").val(res.status_desc);
+            $("#status_code").val(res.status_code);          
+            $("#txtbalnce_amt").val(res.balance_amount);
+          
+            var formval = form_Serialize("paymentupdation_form");
+            var obj_val = JSON.parse(formval);
+            setlocalStorage("payment_info", obj_val);
+        }
+    }
+    function generate_Reciptupdation_Terms_and_Conditions(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                gridtermscondition(data);
+            }
+            else {
+                gridtermscondition([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function generate_Reciptupdation_Receipt_Updation(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                grid_payupdate(data);
+            }
+            else {
+                grid_payupdate([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function generate_Reciptupdation_History(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                gridterms(data);
+            }
+            else {
+                gridterms([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function get_Reciptupdation_details(res) {
+        var formvalres = form_Serialize("MybookingForm");
+        var obj_valres = JSON.parse(formvalres);
+        if (obj_valres != undefined) {
+            obj_valres.booking_rowid = res.booking_rowid;
+            $("#booking_rowid").val(res.booking_rowid);
+            $("#txtcommon_id").val(res.booking_rowid);
+            var datares = {};
+            datares.context = WebAPIProxy.getContext();
+            datares.context.Header = obj_val;
+            retrieve_Reciptupdation_details(datares);
+            $("#txtMode").val("U");
+            $("#div_Comments").show();
+            setlocalStorage('doc_no', $("#booking_rowid").val());
+            localStorage.docno = $("#booking_rowid").val();
+            setlocalStorage('doc_row_id', $("#booking_rowid").val());
+            //setlocalStorage('btn_clk_val', "Edit");
+            //location.reload();
+        }
+    }
+</script>
+
+
+

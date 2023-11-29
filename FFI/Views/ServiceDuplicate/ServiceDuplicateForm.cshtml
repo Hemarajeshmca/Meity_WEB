@@ -1,0 +1,742 @@
+﻿@{
+    ViewBag.Form = "Duplicate  Certificate Request";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+
+<form id="ServiceDuplicate" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="box-body" style="padding-top:6px;padding-bottom:2px;border-color:black;">
+            <div class="row" style="padding-top:10px; padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtmember_id" class="col-sm-5 control-label ">Member ID</label>
+                        <div class="col-sm-5" style="width:200px;">
+                            <input type="text" id="txtmember_id" name="In_fpomember_code" class="form-control" maxlength="50" readonly onchange="fetch_Duplicate()">
+
+                        </div>
+                        <div id="pay_help">
+                            <a class="HelpWindow fa fa-search fa-lg" role="button" id="pay_help1" data-toggle="modal" href="/HelpFilter/HelpFilter" hdrtitle="FPO Member" searchid="S05" data-target="#HelpModal" onclick=transfer(this,"form","","form_control"); title="Search" style="font-size: 19px; margin-left: 0px; margin-top: 10px;"></a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtfarmer_id" class=" col-sm-5 control-label">Farmer ID</label>
+                        <div class=" col-sm-7">
+                            <input type="text" id="txtfarmer_id" name="In_farmer_code" class="form-control" maxlength="50" readonly>
+                            <input type="hidden" id="request_type" name="request_type" value="QCD_FPOSERVICE_CERTDUP">
+                            <input type="hidden" id="mode_flag" name="In_mode_flag" />
+                            <input type="hidden" id="servicereq_rowid" name="IOU_servicereq_rowid" />
+                            <input type="hidden" id="chklist_status_flag" name="In_chklist_status_flag" />
+                            <input id="txtaggrorgn_code" name="fpoorgn_code" type="hidden" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="txtMode" class="col-sm-5 control-label">Mode</label>
+                        <div class="col-sm-7">
+                            <input id="txtMode" name="In_mode_flag" type="text" class="form-control" data-toggle="tooltip" data-placement="bottom" value="I">
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtfarmer_name" class="col-sm-5 control-label">Farmer Given Name</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtfarmer_name" name="member_name" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtsurname" class="col-sm-5 control-label ">Farmer Surname</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtsurname" name="member_sur_name" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="box-body" style="padding-top:6px;padding-bottom:2px">
+
+            <div class="row" style="padding-top:10px; padding-bottom:15px">
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtreason" class=" col-sm-5 control-label">Duplicate Certificate reason</label>
+                        <div class=" col-sm-7">
+                            <textarea id="txtreason" name="In_dup_certificate_reason" rows="2" cols="2" style="width:1045px;height:48px;" class="form-control" readonly></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            <div class="col-sm-12" id="default-example">
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="headingone">
+                        <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseone" aria-expanded="true" aria-controls="collapseone">
+                                <i class="more-less glyphicon glyphicon-plus"></i>
+                                Share Certificates Held
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseone" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingone">
+                        <div class="panel-body">
+                            <div class="col-sm-12">
+                                <div id="grid_share_cert"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12" id="default-example">
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="headingTwo">
+                        <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" class="collapsed">
+                                <i class="more-less glyphicon glyphicon-plus"></i>
+                                Service Request History
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                        <div class="panel-body">
+                            <div class="col-sm-12">
+                                <div id="grid_req_history"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <label> Comments</label>
+        <textarea id="txtComments" rows="4" cols="20" name="In_sr_comments" style="width:100%" class="form-control" readonly></textarea>
+    </div>
+
+</form>
+<script>
+    click_act_name = "ServiceDuplicateList";
+    click_ctrl_name = "ServiceDuplicate";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+<script src="~/Scripts/AccordianPan.js"></script>
+<link href="~/CSS/AccordianPan.css" rel="stylesheet" />
+<script src="~/API_Scripts/ServiceReqDuplicate.js"></script>
+<script src="~/API_Scripts/Service_Request_retrieveSRMemberDetail_APIClient.js"></script>
+<script src="~/API_Scripts/Service_Request_saveServiceRequestDuplicate_APIClient.js"></script>
+<script src="~/API_Scripts/Service_Request_retrieveServiceRequestList_APIClient.js"></script>
+<script src="~/API_Scripts/Service_Request_retrieveServiceRequestDuplicate_APIClient.js"></script>
+<script src="~/API_Scripts/Service_Request_retrieveServiceRequestDetail_APIClient.js"></script>
+<script src="~/API_Scripts/saveServiceRequestDuplicate_Model.js"></script>
+<script src="~/API_Scripts/retrieveServiceRequestDuplicate_Model.js"></script>
+<script src="~/API_Scripts/retrieveServiceRequestList_Model.js"></script>
+<script src="~/API_Scripts/retrieveSRMemberDetail_Model.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script>
+
+    var permission = "";
+    $(document).ready(function () {
+        kendodate_format();
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#ServiceDuplicate");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        var Reason = $('#txtreason').val();
+        var Farmerid = $('#txtfarmer_id').val();
+        var Farmername = $('#txtfarmer_name').val();
+        var Surname = $('#txtsurname').val();
+        if (Reason != "" && Reason != null && Farmerid != "" && Farmerid != null && Farmername != "" && Farmername != null && Surname != "" && Surname != null) {
+            $('#divCreate #btnSave').prop('disabled', true);
+            $('#divCreate #review').prop('disabled', false);
+        }
+        else {
+            $('#divCreate #btnSave').prop('disabled', false);
+            $('#divCreate #review').prop('disabled', true);
+        }
+        $(".file_attach").attr("hdrtitle", "ServiceRequest-Duplicate");
+        $(".notes").attr("hdrtitle", "ServiceRequest-Duplicate");
+        $("#lblForm_menuid").text("SRVDUP");
+        $("#common_id").text("Service Request No")
+        Screen_Id = "SRVDUP";
+        permission = sec_Permission(Screen_Id);
+        var org = getlocalStorage('org_id');
+        $('#txtaggrorgn_code').val(org);
+        grid_share_cert();
+        grid_req_history();
+        $(document).on('click', '#reviewEd', function (e) {
+            master_review();
+            $('#divEdit #reviewEd').prop('disabled', true);
+        });
+        $(document).on('click', '#review', function (e) {
+            debugger;
+            master_review();
+            $('#divCreate #review').prop('disabled', true);
+        });
+        if (getlocalStorage('btn_clk_val') == "Create") {
+            // $('#divCreate #review').hide();
+            $("#txtMode").val("I");
+            $("#bottom_menus").hide();
+            $("#DocStat").val("New");
+            $('#txtreason').removeAttr("readonly");
+        }
+        else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
+            field_enable();
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("ServiceDuplicate");
+                var obj_val = JSON.parse(formval);
+                if (data != undefined) {
+                    obj_val.IOU_fpomember_code = data.Out_fpomember_code;
+                    obj_val.IOU_request_type = data.Out_request_type;
+                    obj_val.IOU_servicereq_rowid = data.Out_servicereq_rowid;
+                    obj_val.IOU_servicereq_no = data.Out_servicereq_no;
+                    var data = {};
+                    data.context = WebAPIProxy.getContext();
+                    data.context.Header = obj_val;
+                    var Context = data.context;
+                    Singleretrieve_SerReqDuplicate_details(Context);
+                    SingleHistory_SerReqDuplicatedetail_details(Context);
+                    //retrieve_SerReqDuplicate_details(data);
+                    //retrieve_SerReqDuplicatedetail_details(data);
+                    $("#txtMode").val("U");
+                    $("#txtcommon_id").val(obj_val.IOU_servicereq_no);
+                    setlocalStorage('doc_no', $("#txtcommon_id").val());
+                    setlocalStorage('doc_row_id', $("#servicereq_rowid").val())
+                }
+            }
+        }
+
+        function field_enable() {
+            if (permission.auth == true || getlocalStorage('btn_clk_val') == "View") {
+                $("#ServiceDuplicate :input").attr("readonly", "");
+                $("#pay_help1").hide();
+                $("#txtComments").removeAttr("readonly");
+                $("#farmerfile").removeAttr("readonly");
+                $("#farmerfile").prop("disabled", true);
+
+
+            }
+            else {
+                $('#txtreason').removeAttr("readonly");
+            }
+        }
+
+
+        $('#HelpModal').on('hide.bs.modal', function (e) {
+            if ($("#txtmember_id").val() != undefined && $("#txtmember_id").val() != "") {
+                fetch_Duplicate();
+            }
+        });
+    });
+
+    function clear_val() {
+    }
+
+</script>
+<script>
+    function Singleretrieve_SerReqDuplicate_details(Context) {
+
+        debugger;
+        try {
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ orgnId: Context.orgnId, locnId: Context.locnId, userId: Context.userId, localeId: Context.localeId, Header: Context.Header }),
+                url: "/ServiceDuplicate/SingleServiceList",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    if (response.context != null) {
+                        generate_SerReqDuplicate_header(response.context.Header)
+
+                    }
+                    if (response.ApplicationException != null) {
+                        kendoAlert(response.ApplicationException.errorDescription);
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+
+    }
+    function SingleHistory_SerReqDuplicatedetail_details(Context) {
+        debugger;
+        try {
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ orgnId: Context.orgnId, locnId: Context.locnId, userId: Context.userId, localeId: Context.localeId, Header: Context.Header }),
+                url: "/ServiceDuplicate/SingleServiceDuplicateDetails",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    if (response.context.Header != null) {
+                        generate_SerReqDuplicate_Header(response.context.Header)
+
+                    }
+                    if (response.context.Share_certificate != null) {
+                        generate_SerReqDuplicate_share_certificate(response.context.Share_certificate)
+                    }
+                    if (response.context.Request_history != null) {
+                        generate_SerReqDuplicate_request_history(response.context.Request_history)
+                    }
+                    if (response.ApplicationException != null) {
+                        kendoAlert(response.ApplicationException.errorDescription);
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+
+    }
+    function grid_share_cert(data) {
+        $("#grid_share_cert").kendoGrid(
+            {
+                dataSource: {
+                    data: data,
+                },
+
+                height: 200,
+                sortable: true,
+                selectable: true,
+                //change: onChangeSelection,
+                selectable: "singl",   //  Grid Row Selection
+
+                navigatable: true,
+                groupable: false,
+
+                columns: [
+                    {
+                        field: "In_certificatedist_rowid",
+                        title: "certificatedist_rowid",
+                        width: 0,
+                        hidden: true
+
+                    },
+                    {
+                        field: "In_certificate_no",
+                        title: "Share Certificate No",
+                        width: 200,
+
+                    },
+                    {
+                        field: "In_dist_from",
+                        title: "Distinct From",
+                        width: 200,
+
+                    },
+                    {
+                        field: "In_dist_to",
+                        title: "Distinct to",
+                        width: 200,
+
+                    },
+                    {
+                        field: "In_issued_date",
+                        title: "Issued Date",
+                        width: 200,
+
+                    },
+
+                    {
+                        field: "In_status_code",
+                        title: "Status",
+                        width: 0,
+                        hidden: true
+                    },
+                    {
+                        field: "In_status_desc",
+                        title: "Status",
+                        width: 200,
+
+                    },
+
+                ]
+
+            });
+    }
+</script>
+<script>
+    function grid_req_history(data) {
+        $("#grid_req_history").kendoGrid({
+            dataSource: {
+                data: data,
+                schema: {
+                    model: {
+                        fields: {
+                            print_ref: { editable: false },
+                            certificate: { editable: false },
+                            print_date: { editable: false },
+                            certificates_print: { editable: false },
+
+                        }
+                    }
+                },
+            },
+
+            height: 200,
+            sortable: true,
+            columns: [
+                {
+                    field: "In_certificate_no",
+                    title: "Certificate No"
+                },
+                {
+                    field: "In_issued_date",
+                    title: "Issued Date"
+                },
+                {
+                    field: "In_servicereq_no",
+                    title: "Service Request No"
+                },
+                {
+                    field: "In_request_date",
+                    title: "Request Date"
+                },
+                {
+                    field: "In_request_type",
+                    title: "Request Type"
+                },
+
+                {
+                    field: "In_status_desc",
+                    title: "Status"
+                },
+
+
+            ]
+        });
+
+    }
+</script>
+
+<script>
+    function grid_control() {
+        var control_Name = [
+
+        ];
+        return control_Name;
+    }
+
+    function form_control() {
+        var control_Name = [
+            { "dataCol": "fpomember_code", "controlId": "txtmember_id", "type": "Text" },
+            { "dataCol": "farmer_code", "controlId": "txtfarmer_id", "type": "Text" },
+            { "dataCol": "member_name", "controlId": "txtfarmer_name", "type": "Text" },
+            { "dataCol": "member_sur_name", "controlId": "txtsurname", "type": "Text" },
+        ];
+        return control_Name;
+
+    }
+
+
+
+    function trans_input_data() {
+        var trans_coll = [
+            { "trasfer": "Yes", "dataCol": "fpofarmer_code", "controlId": "", "grid_id": "", "grid_row_col": "" },
+            { "trasfer": "Yes", "dataCol": "fpoorgn_code", "controlId": "txtaggrorgn_code", "grid_id": "", "grid_row_col": "" }
+        ];
+        return trans_coll;
+    }
+</script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+<script>
+    function save() {
+        debugger;
+        if (txtreason.value == "" || txtreason.value == undefined) {
+            kendoAlert("Duplicate Certificate reason Cannot Be Empty");
+            return;
+        }
+        if ($("#txtMode").val() == "S") {
+            $("#txtMode").val('U');
+
+        }
+        var formval = form_Serialize("ServiceDuplicate");
+        var obj_val = JSON.parse(formval);
+        if ($("#servicereq_rowid").val() == undefined || $("#servicereq_rowid").val() == "") {
+            obj_val.IOU_servicereq_rowid = 0;
+        }
+        else {
+            obj_val.IOU_servicereq_rowid = $("#servicereq_rowid").val();
+        }
+        if ($("#txtcommon_id").val() == undefined || $("#txtcommon_id").val() == "") {
+            obj_val.IOU_servicereq_no = "0";
+        }
+        else {
+            obj_val.IOU_servicereq_no = $("#txtcommon_id").val();
+        }
+        if (obj_val.In_status_code == undefined) {
+            obj_val.In_status_code = "A";
+        }
+        if (obj_val.In_row_timestamp == undefined) {
+            obj_val.In_row_timestamp = "0";
+        }
+        if ($("#chklist_status_flag").val() == undefined) {
+            obj_val.In_chklist_status_flag = 0;
+        }
+        else {
+            obj_val.In_chklist_status_flag = $("#chklist_status_flag").val();
+        }
+        if (obj_val.In_row_timestamp == undefined) {
+            obj_val.In_row_timestamp = "0";
+        }
+        if ($("#txtComments").val() == undefined || $("#txtComments").val() == "") {
+            obj_val.In_sr_comments = "";
+        }
+        else {
+            obj_val.In_sr_comments = $("#txtComments").val();
+        }
+
+        var save_data = {};
+        save_data.context = WebAPIProxy.getContext();
+        save_data.context.Header = obj_val;
+        var Context = save_data.context;
+
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({ orgnId: Context.orgnId, locnId: Context.locnId, userId: Context.userId, localeId: Context.localeId, Header: Context.Header }),
+            url: "/ServiceDuplicate/SaveReqDuplicate",
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                debugger;
+                var Res = JSON.parse(response);
+                if (Res != null) {
+                    debugger;
+                    var msg = Res.ApplicationException;
+                    //retrive_SingleFetch_Details(Res.context);
+                    if (Res.ApplicationException == null || Res.ApplicationException == "") {
+                        debugger;
+                        var mode = $("#txtMode").val();
+                        if (mode == "I") {
+                            kendoAlert("Duplicate Certificate Request Details saved successfully");
+                            $('#divCreate #btnSave').prop('disabled', true);
+                            $('#divCreate #review').prop('disabled', false);
+                            get_SerReqDuplicate_details(Res.context.header);
+                            $("#servicereq_rowid").val(Res.context.header.ioU_servicereq_rowid);
+                            localStorage.docno = Res.context.header.ioU_servicereq_rowid;
+                            $("#txtcommon_id").val(Res.context.header.ioU_servicereq_no);
+                        }
+                        else if (mode == "D") {
+                            kendoAlert("BDuplicate Certificate Request Details inactivate successfully");
+                            $('#divCreate #btnSave').prop('disabled', true);
+                            $('#divCreate #review').prop('disabled', false);
+                            get_SerReqDuplicate_details(Res.context.header);
+                            $("#servicereq_rowid").val(Res.context.header.ioU_servicereq_rowid);
+                            localStorage.docno = Res.context.header.ioU_servicereq_rowid;
+                            $("#txtcommon_id").val(Res.context.header.ioU_servicereq_no);
+                        }
+                        else if (mode == "R") {
+                            kendoAlert("Duplicate Certificate Request Details Send For Review");
+                            $('#divCreate #btnSave').prop('disabled', true);
+                            $('#divCreate #review').prop('disabled', true);
+                            get_SerReqDuplicate_details(Res.context.header);
+                            $("#servicereq_rowid").val(Res.context.header.ioU_servicereq_rowid);
+                            localStorage.docno = Res.context.header.ioU_servicereq_rowid;
+                            $("#txtcommon_id").val(Res.context.header.ioU_servicereq_no);
+                        }
+                        else if (mode == "J") {
+                            kendoAlert("Duplicate Certificate Request Details Rejected successfully");
+                           // $('#divCreate #btnSave').prop('disabled', true);
+                           /// $('#divCreate #review').prop('disabled', false);
+                            get_SerReqDuplicate_details(Res.context.header);
+                            $("#servicereq_rowid").val(Res.context.header.ioU_servicereq_rowid);
+                            localStorage.docno = Res.context.header.ioU_servicereq_rowid;
+                            $("#txtcommon_id").val(Res.context.header.ioU_servicereq_no);
+                        }
+                        else if (mode == "A") {
+                            kendoAlert("Duplicate Certificate Request Details Approved successfully");
+                           // $('#divCreate #btnSave').prop('disabled', true);
+                           // $('#divCreate #review').prop('disabled', false);
+                            get_SerReqDuplicate_details(Res.context.header);
+                            $("#servicereq_rowid").val(Res.context.header.ioU_servicereq_rowid);
+                            localStorage.docno = Res.context.header.ioU_servicereq_rowid;
+                            $("#txtcommon_id").val(Res.context.header.ioU_servicereq_no);
+                        }
+                        else {
+                            kendoAlert("Duplicate Certificate Request Details saved successfully");
+                          $('#divCreate #btnSave').prop('disabled', true);
+                        $('#divCreate #review').prop('disabled', false);
+                        get_SerReqDuplicate_details(Res.context.header);
+                        $("#servicereq_rowid").val(Res.context.header.ioU_servicereq_rowid);
+                        localStorage.docno = Res.context.header.ioU_servicereq_rowid;
+                        $("#txtcommon_id").val(Res.context.header.ioU_servicereq_no);
+                        }
+                        //kendoAlert("Duplicate Details Saved Successfully");
+                       // kendoAlert("Duplicate Certificate Request Details saved successfully");
+                        //$('#divCreate #btnSave').prop('disabled', true);
+                        //$('#divCreate #review').prop('disabled', false);
+                        //get_SerReqDuplicate_details(Res.context.header);
+                        //$("#servicereq_rowid").val(Res.context.header.ioU_servicereq_rowid);
+                        //localStorage.docno = Res.context.header.ioU_servicereq_rowid;
+                        //$("#txtcommon_id").val(Res.context.header.ioU_servicereq_no);
+
+                    }
+                    else {
+                        kendoAlert(Res.ApplicationException.errorDescription);
+                    }
+
+
+                }
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+
+        });
+        //save_SerReqDuplicate_details(save_data);
+    }
+
+    function fetch_Duplicate() {
+        var formval = form_Serialize("ServiceDuplicate");
+        var obj_val = JSON.parse(formval);
+        if (obj_val != undefined) {
+            obj_val.IOU_fpomember_code = $("#txtmember_id").val();
+            obj_val.IOU_request_type = "QCD_FPOSERVICE_CERTDUP";
+            obj_val.IOU_servicereq_rowid = "0";
+            obj_val.IOU_servicereq_no = "0";
+            var data_fetch = {};
+            data_fetch.context = WebAPIProxy.getContext();
+            data_fetch.context.Header = obj_val;
+            var Context = data_fetch.context;
+            Singleretrieve_SerReqDuplicate_details(Context);
+            SingleHistory_SerReqDuplicatedetail_details(Context);
+            //retrieve_SerReqDuplicate_details(data_fetch);
+            //retrieve_SerReqDuplicatedetail_details(data_fetch);
+        }
+    }
+    function generate_SerReqDuplicate_Header(res) {
+        if (res != null) {
+            if (getlocalStorage('btn_clk_val') != "Create") {
+
+                $("#txtfarmer_id").val(res.In_farmer_code);
+                $("#txtfarmer_name").val(res.In_farmer_name);
+                $("#txtsurname").val(res.In_sur_name);
+                //$("#txtgiven_name").val(res.farmer_name);
+                //$("#txtsurname").val(res.sur_name);
+            }
+        }
+    }
+
+    function generate_SerReqDuplicate_share_certificate(res) {
+        if (res != null) {
+            var data = changedataType(res);
+            grid_share_cert(data);
+        }
+        else {
+            grid_share_cert([]);
+        }
+    }
+    function generate_SerReqDuplicate_request_history(res) {
+        if (res != null) {
+            var data = changedataType(res);
+            grid_req_history(data);
+        }
+        else {
+            grid_req_history([]);
+        }
+    }
+
+    function generate_SerReqDuplicate_header(res) {
+        if (res != null) {
+            $("#txtcommon_id").val(res.IOU_servicereq_no);
+            if (getlocalStorage('btn_clk_val') != "Create") {
+                $("#txtmember_id").val(res.IOU_fpomember_code);
+                $("#txtfarmer_id").val(res.In_farmer_code);
+                $("#txtfarmer_name").val(res.farmer_name);
+                $("#txtsurname").val(res.sur_name);
+                $("#txtreason").val(res.In_dup_certificate_reason);
+                $("#servicereq_rowid").val(res.IOU_servicereq_rowid);
+                $("#mode_flag").val(res.In_mode_flag);
+                $("#DocStat").val(res.In_status_desc);
+                $("#txtComments").val(res.In_sr_comments);
+                localStorage.docno = res.IOU_servicereq_rowid;
+                if (res.status_desc == "Approved") {
+                    $('#divEdit #btnSaveEd').prop('disabled', true);
+                    $('#divEdit #reviewEd').prop('disabled', true);
+                }
+
+            }
+            else {
+                $("#txtreason").val(res.In_dup_certificate_reason);
+            }
+        }
+    }
+    function get_SerReqDuplicate_details(res) {
+        var formval = form_Serialize("ServiceDuplicate");
+        var obj_val = JSON.parse(formval);
+        if (obj_val != undefined) {
+            obj_val.IOU_fpomember_code = $("#txtmember_id").val();
+            obj_val.IOU_request_type = "QCD_FPOSERVICE_CERTDUP";
+            obj_val.IOU_servicereq_rowid = res.ioU_servicereq_rowid;
+            obj_val.IOU_servicereq_no = res.ioU_servicereq_no;
+            var data_res = {};
+            data_res.context = WebAPIProxy.getContext();
+            data_res.context.Header = obj_val;
+            var Context = data_res.context;
+            Singleretrieve_SerReqDuplicate_details(Context);
+            SingleHistory_SerReqDuplicatedetail_details(Context);
+            //retrieve_SerReqDuplicate_details(data_res);
+            //retrieve_SerReqDuplicatedetail_details(data_res);
+        }
+    }
+    function review() {
+        $("#txtMode").val('R');
+        save();
+    }
+
+    function approve() {
+        $("#txtMode").val('A');
+        save();
+    }
+
+    function reject() {
+        $("#txtMode").val('J');
+        save();
+    }
+</script>
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>

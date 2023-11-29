@@ -1,0 +1,295 @@
+﻿
+@{
+    ViewBag.Form = "FL-Cash Receipts & Deposit Slips";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+<form id="Master_form" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-5">
+                    <div class="form-group">
+                        <label for="txtselect_rep" class="col-sm-4 control-label ">Receipts</label>
+                        <div class="col-sm-7">
+                            <input id="cmbselec_rep" data-role="filtercombo" style="width:100%">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtreport_run" class=" col-sm-5 control-label">Run Date</label>
+                        <div class=" col-sm-4">
+                            <input class="cusDate" data-role='datepicker' id="txtValidity" data-checkdate-msg="Enter Valid Date" name="valid_until" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtins_mon" class=" col-sm-5 control-label">Instalment Month</label>
+                        <div class=" col-sm-4">
+                            <input class="cusDate" data-role='datepicker' id="txtValidity" data-checkdate-msg="Enter Valid Date" name="valid_until" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="panel panel-default">
+                <fieldset>
+                    <legend>CASH RECEIPTS</legend>
+                    <div class="row" style="padding-bottom:15px">
+                        <div class="col-sm-12">
+                            <div id="grid_farmer_Instal"></div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="panel panel-default">
+                <fieldset>
+                    <legend>DEPOISTS SLIPS</legend>
+                    <div class="row" style="padding-bottom:15px">
+                        <div class="col-sm-12">
+                            <div id="grid_farmer_pdc"></div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    click_act_name = "HOME";
+    click_ctrl_name = "HOME";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        kendodate_format();
+        master_sanction();
+        $(".file_attach").attr("hdrtitle", "FL-Instalment Dues Generation");
+        $(".notes").attr("hdrtitle", "FL-Instalment Dues Generation");
+        $("#lblForm_menuid").text("FARMER_LOANINS");
+        
+        var combo_data = [{ code: 1, desc: "Cash Receipts" },
+                { code: 1, desc: " Deposit Slips" }];
+        filter_combobox("cmbselec_rep", combo_data);
+        gridFLnach();
+        gridFLLoan();
+        gridFLpdc();
+    });
+</script>
+<script>
+    //var data = [];
+    function gridFLLoan(data) {
+        try {
+            $("#grid_farmer_Instal").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+
+                                member_id: { type: "string" },
+                                farmer_name: { type: "string" },
+                                fl_scheme: { type: "string" },
+                                instalment_no: { type: "string" },
+                                instalment_amount: { type: "string" },
+                                instalment_date: { type: "string" },
+                                paymode: { type: "string" },
+
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+
+                height: 150,
+                groupable: false,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                    {
+                        field: "member_id",
+                        title: "Member Id",
+                        width: 100
+                    },
+                {
+                    field: "farmer_name",
+                    title: "Farmer Name",
+                    width: 100
+                },
+                                {
+                                    field: "fl_scheme",
+                                    title: "FL Scheme",
+                                    width: 100
+                                },
+                  {
+                      field: "instalment_no",
+                      title: "Instalment No",
+                      width: 100
+                  },
+                   {
+                       field: "instalment_amount",
+                       title: "Instalment Amount",
+                       width: 100
+                   },
+                    {
+                        field: "instalment_date",
+                        title: "Instalment Date",
+                        width: 100
+                    },
+                    {
+                        field: "paymode",
+                        title: "Paymode",
+                        width: 100
+                    },
+                {
+                    field: "mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+
+</script>
+<script>
+    //var data = [];
+    function gridFLpdc(data) {
+        try {
+            $("#grid_farmer_pdc").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                member_id: { type: "string" },
+                                farmer_name: { type: "string" },
+                               
+                                instalment_amount: { type: "string" },
+                             
+                                account_no: { type: "string" },
+                                bank_name: { type: "string" },
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+                height: 150,
+                groupable: false,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                     {
+                         field: "member_id",
+                         title: "Member Id",
+                         width: 100
+                     },
+                {
+                    field: "farmer_name",
+                    title: "Farmer Name",
+                    width: 100
+                },
+                  
+                   {
+                       field: "instalment_amount",
+                       title: "Instalment Amount",
+                       width: 100
+                   },
+                    
+                    {
+                        field: "bank_name",
+                        title: "Bank Name",
+                        width: 100
+                    },
+                    {
+                        field: "account_no",
+                        title: "Bank_Account_No",
+                        width: 100
+                    },
+                {
+                    field: "mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+</script>
+<script>
+    //var data = [];
+    function gridFLnach(data) {
+        try {
+            $("#grid_farmer_nach").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                date_prenset: { type: "string" },
+                                instal_amt: { type: "string" },
+                                debit_acc_no: { type: "string" },
+                                credit_acc: { type: "string" },
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+
+                height: 150,
+                groupable: false,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                    {
+                        field: "date_prenset",
+                        title: "Date Of Presentation",
+                        width: 100
+                    },
+                {
+                    field: "instal_amt",
+                    title: "Instalment Amount",
+                    width: 100
+                },
+                  {
+                      field: "debit_acc_no",
+                      title: "Debit Account No",
+                      width: 100
+                  },
+
+                    {
+                        field: "credit_acc",
+                        title: "Credit Account",
+                        width: 100
+                    },
+                 {
+                    field: "mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+</script>
+

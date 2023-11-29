@@ -1,0 +1,410 @@
+﻿@{
+    ViewBag.Form = "Subvention refund update";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+<form id="Subvention_refund_form" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="cmb_update" class="col-sm-3 control-label required">Status</label>
+                        <div class="col-sm-4">
+                            <input id="cmb_update" name="refund_status_code" data-role="filtercombo" style="width:100%" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="txtRoleDesc" class=" col-md-3 control-label">Run Date</label>
+                        <div class=" col-sm-4">
+                            <input class="cusDate" data-role='datepicker' id="txtValidity" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="run_date" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                        <button title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button" onclick="listLoad()" data-original-title="Refresh"> <span class="glyphicon glyphicon-refresh"></span></button>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-xs-12">
+                    <div id="sub_grid">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+<script>
+    click_act_name = "home";
+    click_ctrl_name = "home";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+<script src="~/API_Scripts/subvention_master_save_subvention_refund_APIClient.js"></script>
+<script src="~/API_Scripts/subvention_master_retrievesubvention_refund_APIClient.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/API_Scripts/save_subvention_refund_Model.js"></script>
+<script src="~/API_Scripts/retrievesubvention_refund_Model.js"></script>
+<script src="~/API_Scripts/SubVentionRefund.js"></script>
+<script>
+    $(document).ready(function () {
+
+        // $("#form_design").css("padding-top", "95px");
+        master_milkmap();
+        kendodate_format();
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#Subvention_refund_form");
+        kendo.init(container);
+        container.kendoValidator({
+            rules: {
+                checkdate: function (input) {
+                    if (input.attr("data-role") == "datepicker") {
+                        var res = isDate(input.val());
+                        return res;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+            }
+        });
+
+
+        Screen_Id = "SUBUPDST";
+        load_master_code();
+
+
+
+
+        $(".txtValidity").kendoDatePicker();
+
+        var combo_data = "";
+        $("#cmb_update").empty();
+        combo_data = grid_comboScreen_mastercodes("QCD_FL_SubUpSts");
+        filter_combobox("cmb_update", combo_data);
+
+
+        var data = [];
+        gridsub(data);
+        $("#cmb_update").change(function () {
+            if(this.value=="QCD_FL_ReUpdated")
+            {
+                $(':input[type="submit"]').prop('disabled', true);
+            }
+            else
+            {
+                $(':input[type="submit"]').prop('disabled', false);
+            }
+        });
+    });
+
+
+</script>
+<script>
+    function load_master_code() {
+
+        var data = {};
+        data.screen_Id = "SUBUPDST";
+        var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+
+    }
+</script>
+<script>
+    function gridsub(data) {
+        try {
+            $("#sub_grid").kendoGrid(
+               {
+                   dataSource: {
+                       data: data,
+                       schema: {
+                           model: {
+                               fields: {
+
+                                   member_id: { type: "string", editable: false },
+                                   farmer_name: { type: "string", editable: false },
+                                   fl_scheme: { type: "string", editable: false },
+                                   period_from: { type: "string", editable: false },
+                                   period_to: { type: "string", editable: false },
+                                   int_amt: { type: "string", editable: false },
+                                   refund_ref_no: { type: "string", editable: false },
+                                   loan_acc_no: { type: "string", editable: false },
+                                   subvention_code: { type: "string", editable: false },
+                                   refund_advice_no: { type: "string", editable: false },
+                                   refund_amount: { type: "string", editable: false },
+                                   refund_date: { type: "date" },
+                                   bank_ref_no: { type: "string" },
+                                   refund_status: { type: "string" },
+                                   refund_status_desc: { type: "string" },
+                                   mode_flag: { type: "string", defaultValue: "I" }
+                               }
+                           }
+                       }
+                   },
+
+                   dataBound: onDataBound,
+                   height: 400,
+                   sortable: true,
+                   selectable: true,
+                   //change: onChangeSelection,
+                   selectable: "singl",   //  Grid Row Selection
+
+                   navigatable: true,
+                   groupable: false,
+                   columns: [{
+
+
+                       title: "Selected",
+
+                       template: "<input type='checkbox' name='sel_flag' class='checkbox' />",
+                       width: 60
+                   },
+                {
+                    field: "loansubvention_rowid",
+                    title: "loansubvention_rowid",
+                    width: 100,
+                    hidden: true
+                },
+                       {
+                           field: "farmer_code",
+                           title: "Member ID",
+                           width: 100,
+                       },
+
+
+                        {
+                            field: "farmer_name",
+                            title: "Farmer Name",
+                            width: 100,
+                        },
+
+                         {
+                             field: "subvention_code",
+                             title: "FL Scheme",
+                             width: 100,
+                         },
+
+                           {
+                               field: "loan_acc_no",
+                               title: "Loan Account No.",
+                               width: 100,
+                           },
+
+
+                   {
+                       field: "refund_amount",
+                       title: "Refund Amount",
+                       width: 100,
+                   },
+
+                   {
+                       field: "refund_advice_no",
+                       title: "Refund Advice No.",
+                       width: 100,
+                   },
+                   {
+                       field: "refund_date",
+                       title: "Refund Date",
+                       width: 100,
+                       format: "{0:dd/MM/yyyy}",
+                   },
+                   {
+                       field: "bank_ref_no",
+                       title: "Bank Ref. No.",
+                       width: 100,
+                   },
+
+                   {
+                       field: "refund_status",
+                       title: "refund_status",
+                       width: 100,
+                       hidden: true
+                   },
+                    {
+                        field: "refund_status_desc",
+                        title: "Refund Status",
+                        editor: function (container, options) {
+                            combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "refund_status", "sub_grid")
+                        },
+                        width: 100
+
+                    },
+
+                    {
+                        field: "mode_flag",
+                        title: "mode_flag",
+                        width: 100,
+                        hidden: true
+
+                    },
+
+                   ],
+                   editable: true
+               });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+
+        //$(".k-dropdown-operator").css('display', 'none');
+        //$("#FPOGrid .k-input").attr('disabled', 'false');
+    }
+    load_master_code();
+    refund_status_desc_list = grid_comboScreen_mastercodes("QCD_FL_RefUpdate");
+    function onDataBound(e) {
+
+        $(".checkbox").bind("change", function (e) {
+            $(e.target).closest("tr").toggleClass("k-state-selected");
+        });
+    }
+    function selectRow() {
+        try {
+            var grid = $("#sub_grid").data("kendoGrid");
+            var selectedItem = grid.dataItem(grid.select());
+            setlocalStorage("ls_pageList", selectedItem);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>
+    function listLoad() {
+        try {
+            var formval = form_Serialize("Subvention_refund_form");
+            var obj_val = JSON.parse(formval);
+            var c = $('#cmb_update');
+            if ($('#cmb_update').data("kendoComboBox").value() == "") {
+                kendoAlert("Status cannot be blank");
+                return;
+            }
+            if (c.data('kendoComboBox').value() != "" && c.data('kendoComboBox').value() != undefined) {
+                obj_val.refund_status_code = c.data('kendoComboBox').value();
+
+            }
+            else {
+                obj_val.refund_status_code = "0";
+            }
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Header = obj_val;
+            retrieve_SubVentionRefund_details(data);
+            var colCount = $("#sub_grid").find('.k-grid-header colgroup > col').length;
+
+            //If There are no results place an indicator row
+            if ($("#sub_grid").data("kendoGrid").dataSource._view.length == 0) {
+                $("#sub_grid").find('.k-grid-content tbody')
+                     .append('<tr class="kendo-data-row"><td colspan="' +
+                         colCount +
+                    '" style="text-align:center; padding-top:10px;background-color:#AFE4FA"><b>No Records on Refund Status</b></td></tr>');
+            }
+            return false;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>
+    function generate_SubVentionRefundGen_Header(res) {
+
+    }
+    function get_SubVentionRefundGen_details(res) {
+        try {
+            var formval = form_Serialize("Subvention_refund_form");
+            var obj_val = JSON.parse(formval);
+            var c = $('#cmb_update');
+            if ($('#cmb_update').data("kendoComboBox").value() == "") {
+                kendoAlert("Status cannot be blank");
+                return;
+            }
+            if (c.data('kendoComboBox').value() != "" && c.data('kendoComboBox').value() != undefined) {
+                obj_val.refund_status_code = c.data('kendoComboBox').value();
+
+            }
+            else {
+                obj_val.refund_status_code = "0";
+            }
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Header = obj_val;
+            retrieve_SubVentionRefund_details(data);
+            return false;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_SubVentionRefundGen_Detail(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                gridsub(data);
+            }
+            else {
+                gridsub([]);
+            }
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>
+    function save() {
+        try {
+            var formval = form_Serialize("Subvention_refund_form");
+            var obj_val = JSON.parse(formval);
+            var grid_val = JSON.stringify($("#sub_grid").data().kendoGrid._data);
+            var Bind = {};
+            Bind = grid_val;
+            var result = JSON.parse(Bind);
+            $.each(result, function (index, value) {
+
+                if ((result[index].refund_date == null) || (result[index].refund_date == "")) {
+                    var d1 = new Date();
+                    var date1 = kendo.parseDate(d1);
+                    value = kendo.toString(date1, "MM/dd/yyyy");
+                    result[index].refund_date = value
+                }
+                else {
+                    var d = value.refund_date;
+                    var date = kendo.parseDate(d);
+                    value = kendo.toString(date, "MM/dd/yyyy");
+                    result[index].refund_date = value;
+                }
+
+                var mmode = result[index].mode_flag;
+                if (mmode == "S") {
+                    result[index].mode_flag = "U";
+                }
+                //if (value.instalment_no == null || value.instalment_no == undefined) {
+                //    result[index].instalment_no = '0';
+                //}
+            });
+            var obj_val1 = result;
+            var data_save = {};
+            data_save.context = WebAPIProxy.getContext();
+            data_save.context.Header = obj_val;
+            data_save.context.Detail = obj_val1;
+            save_SubVentionRefundGen_details(data_save);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+
+
+
+
+
+
+
+
+

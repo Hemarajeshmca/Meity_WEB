@@ -1,0 +1,691 @@
+﻿@{
+    ViewBag.Form = "Update Service Request";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+<form id="Updateservice_form" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-12">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="cmb_Update" class="col-sm-4 control-label required">Service Request Status:</label>
+                            <div class="col-sm-7">
+                                <input id="cmb_Update" name="In_process_status" data-role="filtercombo" style="width:100%" />
+                            </div>
+                            <button title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button" data-original-title="Refresh" onclick="mandatory()"> <span class="glyphicon glyphicon-refresh"></span></button>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label for="txtValidity" class=" col-md-4 control-label">Board Approval Date:</label>
+                            <div class=" col-sm-4">
+                                <input class="cusDate" type="date" data-role='datepicker' id="txtValidity" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="In_Approval_date" style="width:100%" />
+                                <span data-for='valid' class='k-invalid-msg'></span>
+                            </div>
+                            <div class=" col-sm-4">
+                                <input type="checkbox" id="apply_all" checked> Apply to all
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group" style="display:none;">
+                            <label for="txt_fpo_code" class="col-sm-5 control-label ">fpoorgn_code</label>
+                            <div class="col-sm-4">
+                                <input type="text" id="txt_fpo_code" name="In_fpoorgn_code" class="form-control" maxlength="10">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <div id="Update_ser_req_grid">
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script>
+    $(document).ready(function () {
+        debugger;
+        kendodate_format();
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#Updateservice_form");
+        kendo.init(container);
+        container.kendoValidator({
+            rules: {
+                checkdate: function (input) {
+                    if (input.attr("data-role") == "datepicker") {
+                        var res = isDate(input.val());
+                        return res;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+            }
+        });
+        master_userRoleNew2();
+
+        $("#RIform").hide();
+        $("#FPOform").hide();
+        gridUpdate([]);
+        load_master_code();
+
+        $("#txtValidity").kendoDatePicker({
+            max: new Date(),// sets max date to Jan 1st, 2013
+            format: "dd/MM/yyyy"
+        });
+
+        var UpdateSerReq = "";
+        $("#cmb_Update").empty();
+        UpdateSerReq = grid_comboScreen_mastercodes("QCD_UPD_REQ_STATUS");
+        filter_combobox("cmb_Update", UpdateSerReq);
+
+        $("#txtValidity").kendoDatePicker({
+            max: new Date(), // sets max date to Jan 1st, 2013
+            format: "dd/MM/yyyy"
+        });
+
+        var org_id = getlocalStorage('org_id');
+        $('#txt_fpo_code').val(org);
+    });
+
+
+</script>
+<script>
+    $(function () {
+        $("#cmb_Update").change(function () {
+            console.log(this.value);
+            if (this.value != "U") {
+                $("#divUserRole3 #btnnew").prop('disabled', true);
+            }
+            else {
+                $("#divUserRole3 #btnnew").prop('disabled', false);
+            }
+        });
+    });
+</script>
+<script>
+    function load_master_code() {
+        var data = {};
+        data.screen_Id = "SRVUPSR";
+        var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+    }
+</script>
+<script>
+    //var data = [];
+    function gridUpdate(data) {
+        try {
+            $("#Update_ser_req_grid").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+
+                                In_servicereq_no: { type: "string", editable: false },
+                                In_servicereq_date: { type: "string", editable: false }, 
+                                In_request_type: { type: "string" },
+                                In_farmer_name: { type: "string", editable: false },
+                                In_certificate_sno: { type: "string", editable: false },
+                                In_Approvaldate: { type: "date", editable: true },
+                                In_process_status_desc: { type: "string", editable: true },
+                                In_reject_comments: { type: "string", editable: true },
+                                In_mode_flag: { type: "string", defaultValue: "I" },
+                                In_processstatus: { type: "string" }
+                            }
+                        }
+                    }
+                },
+                height: 400,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#Update_ser_req_grid').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+
+                sortable: true,
+                selectable: true,
+
+                navigatable: true,
+                columns: [
+                    {
+                        field: "In_servicereq_rowid",
+                        title: "servicereq_rowid",
+                        width: 100,
+                        hidden: true
+                    },
+                     {
+                         field: "In_servicereq_no",
+                         title: "Service Request No",
+                         width: 100
+                    },
+                    {
+                        field: "In_servicereq_date",
+                        title: "Request Date",
+                        width: 100
+                    },
+
+
+                {
+                    field: "In_request_type",
+                    title: "Request Type",
+                    width: 100, hidden: true
+                },
+                {
+                    field: "In_request_type_desc",
+                    title: "Request Type",
+                    editor: function (container, options) {
+                        combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "", "Update_ser_req_grid")
+                    },
+                    width: 100,
+                },
+                {
+                    field: "In_requestsub_type",
+                    title: "requestsub_type",
+                    width: 100, hidden: true
+                },
+
+                  {
+                      field: "In_farmer_name",
+                      title: "Applicant Name",
+                      width: 100
+                  },
+                   {
+                       field: "In_sur_name",
+                       title: "sur_name",
+                       width: 100, hidden: true
+                   },
+
+                   {
+                       field: "In_certificate_sno",
+                       title: "Shares Certificate",
+                       width: 100
+
+                   },
+                    {
+                        field: "In_Approvaldate",
+                        title: "Board Approval Date",
+                        width: 100,
+                        format: "{0:dd/MM/yyyy}",
+                        editor: function (container, options) {
+                            $('<input data-text-field="' + options.field + '" data-value-field="' + options.field + '" data-bind="value:' + options.field + '" data-format="' + options.format + '"/>')
+                            .appendTo(container)
+                            .kendoDatePicker({
+                                max: new Date()
+                            });
+                        }
+
+                    },
+                    {
+                        field: "In_processstatus",
+                        title: "processstatus",
+                        hidden: true
+                    },
+                    {
+                        field: "In_process_status_desc",
+                        title: "Request Status",
+                        editor: function (container, options) {
+                            combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "In_processstatus", "Update_ser_req_grid")
+                        },
+                        width: 100
+
+                    },
+                    {
+                        field: "In_reject_comments",
+                        title: "Reject Comments",
+                        width: 100
+
+                    },
+                    {
+                        field: "In_status_code",
+                        title: "status_code",
+                        width: 100, hidden: true
+                    },
+                    {
+                        field: "In_status_desc",
+                        title: "status_desc",
+                        width: 100, hidden: true
+                    },
+                     {
+                         field: "In_row_timestamp",
+                         title: "row_timestamp",
+                         width: 100, hidden: true
+                     },
+                      {
+                          field: "In_chklist_status_flag",
+                          title: "chklist_status_flag",
+                          width: 100, hidden: true
+                      },
+                      {
+                          field: "In_sr_comments",
+                          title: "sr_comments",
+                          width: 100, hidden: true
+                      },
+                {
+                    field: "In_mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+        load_master_code();
+        In_process_status_desc_list = grid_comboScreen_mastercodes("QCD_UPD_REQ_STATUS");
+    }
+
+</script>
+<script>
+
+    function listLoad() {
+        //fetch_validate();
+        debugger;
+
+        var formval = form_Serialize("Updateservice_form");
+        var obj_val = JSON.parse(formval);
+        var c = $('#cmb_Update');
+        if (c.data('kendoComboBox').value() != "" && c.data('kendoComboBox').value() != undefined) {
+            obj_val.In_process_status = c.data('kendoComboBox').value();
+
+        }
+        else {
+            obj_val.In_process_code = "0";
+        }
+        if (obj_val.hasOwnProperty('In_Approval_date')) {
+            if (obj_val.In_Approval_date != '') {
+                obj_val.In_Approval_date = getFormated_StringDate(obj_val.In_Approval_date);
+            }
+            else {
+                obj_val.In_Approval_date = "0";
+            }
+
+        }
+        var org_id = getlocalStorage('org_id');
+        obj_val.In_fpoorgn_code = org_id;
+        var data = {};
+        data.context = WebAPIProxy.getContext();
+        data.context.Header = obj_val;
+        //retrieve_UpdateserviceReq_details(data);
+
+        var Context = data.context;
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, Header: Context.Header }),
+            url: "/UpdateService/FetchServiceList",
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                debugger;
+                if (response.context.Detail != null) {
+                    generate_UpdateserviceReq_detail(response.context.Detail)
+                    //listgrid(response.context.List);
+                    //SetPager(response.context.Filter.out_record_count)
+                }
+                else {
+                    gridUpdate([]);
+                }
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+
+        });
+        var colCount = $("#Update_ser_req_grid").find('.k-grid-header colgroup > col').length;
+
+        //If There are no results place an indicator row
+        if ($("#Update_ser_req_grid").data("kendoGrid").dataSource._view.length == 0) {
+            $("#Update_ser_req_grid").find('.k-grid-content tbody')
+                .append('<tr class="kendo-data-row"><td colspan="' +
+                    colCount +
+                    '" style="text-align:center; padding-top:10px;background-color:#AFE4FA"><b> No records available for the selected status; please try later!!!</b></td></tr>');
+        }
+
+     
+
+        //return false;
+    }
+
+    function mandatory() {
+        try {
+            var mandatory_check = true;
+
+            var grid_validate_msg = "";
+
+            if ($('#cmb_Update').data("kendoComboBox").value() == "") {
+                grid_validate_msg += "Service request status cannot be blank<br>";
+                mandatory_check = false;
+            }
+            if ($('#txtValidity').val() == "") {
+                grid_validate_msg += "Approval Date cannot be blank<br>";
+                mandatory_check = false;
+            }
+
+            if (mandatory_check == false) {
+                kendoAlert(grid_validate_msg);
+                return false;
+            }
+            else {
+                return listLoad();
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_UpdateserviceReq_detail(res) {
+        debugger;
+        if ($("#txtValidity").val() != "") {
+            var date = $("#txtValidity").val();
+            var code = date.split("/");
+            var applydate = code[1] + '/' + code[0] + '/' + code[2];
+        }
+        if (res != null) {
+            if ($('#apply_all').is(':checked')) {
+                if (applydate != "" && applydate != undefined) {
+
+                    //var grid_val = JSON.stringify($("#grid_Drop_list").data().kendoGrid._data);
+                    //var Bind = {};
+                    //Bind = grid_val;
+                    //var result = JSON.parse(Bind);
+                    var result = changedataType(res);
+                    $.each(result, function (index, value) {
+
+                        var date = kendo.parseDate(applydate);
+                        value = kendo.toString(date, "MM/dd/yyyy");
+                        result[index].In_Approvaldate = value;
+                    });
+                    if (result.length == 0) {
+                        var data = changedataType(res);
+                        gridUpdate(data);
+                    }
+                    else {
+                        gridUpdate(result);
+                    }
+                }
+
+                else {
+
+                    var data = changedataType(res);
+                    $.each(data, function (index, value) {
+
+                        var d1 = value.In_Approvaldate;
+                        var code = d1.split("/");
+                        var approvedate = code[1] + '/' + code[0] + '/' + code[2];
+
+                        var date = kendo.parseDate(approvedate);
+                        value = kendo.toString(date, "MM/dd/yyyy");
+                        data[index].In_Approvaldate = value;
+                    });
+                    gridUpdate(data);
+                }
+
+            }
+            else {
+
+                var data = changedataType(res);
+                $.each(data, function (index, value) {
+
+                    var d = value.In_Approvaldate;
+                    //var fncode = d.split("/");
+                    //var correctdate = fncode[1] + '/' + fncode[0] + '/' + fncode[2];
+                    var date = kendo.parseDate(d);
+                    value = kendo.toString(date, "MM/dd/yyyy");
+                    data[index].In_Approvaldate = value;
+                });
+                gridUpdate(data);
+            }
+        }
+        else {
+            gridUpdate([]);
+        }
+
+    }
+</script>
+<script>
+    $('#apply_all').click(function () {
+        if ($(this).is(':checked')) {
+            if ($("#txtValidity").val() != "") {
+                var date = $("#txtValidity").val();
+                var code = date.split("/");
+                var applydate = code[1] + '/' + code[0] + '/' + code[2];
+            }
+
+            if (applydate != "" && applydate != undefined) {
+
+                var grid_val = JSON.stringify($("#Update_ser_req_grid").data().kendoGrid._data);
+                var Bind = {};
+                Bind = grid_val;
+                var res = JSON.parse(Bind);
+                var result = changedataType(res);
+                $.each(result, function (index, value) {
+
+                    var date = kendo.parseDate(applydate);
+                    value = kendo.toString(date, "MM/dd/yyyy");
+                    result[index].Approvaldate = value;
+                });
+                if (result.length == 0) {
+                    var data = changedataType(res);
+                    gridUpdate(data);
+                }
+                else {
+                    gridUpdate(result);
+                }
+            }
+
+            else {
+
+                var data = changedataType(res);
+                $.each(data, function (index, value) {
+
+                    var d1 = value.Approvaldate;
+                    //var fncode1 = d1.split("/");
+                    //var correctdate1 = fncode1[1] + '/' + fncode1[0] + '/' + fncode1[2];
+
+                    var date = kendo.parseDate(d1);
+                    value = kendo.toString(date, "MM/dd/yyyy");
+                    data[index].Approvaldate = value;
+                });
+                gridUpdate(data);
+            }
+
+        }
+    });
+    function gridvalidation() {
+        var count = 0;
+        var grid_val = JSON.stringify($("#Update_ser_req_grid").data().kendoGrid._data);
+        var Bind = {};
+        Bind = grid_val;
+        var res = JSON.parse(Bind);
+        var result = changedataType(res);
+        $.each(result, function (index, value) {
+            if ((result[index].Approvaldate == "")) {
+                count++;
+            }
+
+        });
+
+        if (count > 0) {
+            kendoAlert("Approval date should not be blank");
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+</script>
+<script>
+    function save() {
+        debugger;
+        //if (gridvalidation()) {
+        var formval = form_Serialize("Updateservice_form");
+        var obj_val = JSON.parse(formval);
+        var org_id = getlocalStorage('org_id');
+        obj_val.In_fpoorgn_code = org_id;
+        var grid = $("#Update_ser_req_grid").data("kendoGrid");
+        var gridData = grid.dataSource.view();
+        for (var i = 0; i < gridData.length; i++) {
+            if (gridData[i].In_process_status_desc  == "") {
+                kendoAlert("Request Status should be select");
+                return false;
+            }
+            if (gridData[i].In_processstatus == "C_QCD_UPD_REQ_STATUS" && gridData[i].In_reject_comments == "" ) {
+                kendoAlert("Reject Comments should not be empty");
+                return false;
+            }
+        }
+        var grid_val = JSON.stringify($("#Update_ser_req_grid").data().kendoGrid._data);
+        var Bind = {};
+        Bind = grid_val;
+        var result = JSON.parse(Bind);
+
+        $.each(result, function (index, value) {
+            console.log(value.In_Approvaldate);
+            if ((result[index].In_Approvaldate == null) || (result[index].In_Approvaldate == "")) {
+                var d1 = new Date();
+                var date1 = kendo.parseDate(d1);
+                value = kendo.toString(date1, "MM/dd/yyyy");
+                result[index].In_Approvaldate = value;
+            }
+            else
+                {
+                var d = value.In_Approvaldate;
+                var date = kendo.parseDate(d);
+                value = kendo.toString(date, "MM/dd/yyyy");
+                result[index].In_Approvaldate = value;
+            }
+           
+            var servicereq_rowid = result[index].In_servicereq_rowid;
+            if (servicereq_rowid == undefined || servicereq_rowid == "") {
+                result[index].In_servicereq_rowid = "0";
+            }
+            var mmode = result[index].In_mode_flag;
+            if (mmode == "S") {
+                result[index].In_mode_flag = "U";
+            }
+        });
+        var grid_val = result;
+
+        var data_save = {};
+        data_save.context = WebAPIProxy.getContext();
+        data_save.context.Header = obj_val;
+        data_save.context.Detail = grid_val;
+        var Context = data_save.context;
+
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({ orgnId: Context.orgnId, locnId: Context.locnId, userId: Context.userId, localeId: Context.localeId, Header: Context.Header, Detail: Context.Detail }),
+            url: "/UpdateService/SaveServiceReq",
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                debugger;
+                var Res = JSON.parse(response);
+                if (Res != null) {
+                    var msg = Res.ApplicationException;
+                    //retrive_SingleFetch_Details(Res.context);
+                    if (Res.ApplicationException == null || Res.ApplicationException == "") {
+                        kendoAlert("Update service Req details saved successfully");
+                        get_UpdateserviceReq_details();
+                    }
+                    else {
+                        kendoAlert(Res.ApplicationException.errorDescription);
+                    }
+
+
+                }
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+
+        });
+        //save_UpdateserviceReq_details(data_save);
+        //}
+        //else {
+        //    return false;
+        //}
+    }
+    function get_UpdateserviceReq_details() {
+        //fetch_validate();
+        var formval = form_Serialize("Updateservice_form");
+        var obj_val = JSON.parse(formval);
+        var c = $('#cmb_Update');
+        if (c.data('kendoComboBox').value() != "" && c.data('kendoComboBox').value() != undefined) {
+            obj_val.In_process_status = c.data('kendoComboBox').value();
+
+        }
+        else {
+            obj_val.In_process_status = "0";
+        }
+        if (obj_val.hasOwnProperty('In_Approval_date')) {
+            if (obj_val.In_Approval_date != '') {
+                obj_val.In_Approval_date = getFormated_StringDate(obj_val.In_Approval_date);
+            }
+            else {
+                obj_val.In_Approval_date = "0";
+            }
+
+        }
+        var org_id = getlocalStorage('org_id');
+        obj_val.fpoorgn_code = org_id;
+        var data = {};
+        data.context = WebAPIProxy.getContext();
+        data.context.Header = obj_val;
+        var Context = data.context;
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, Header: Context.Header }),
+            url: "/UpdateService/FetchServiceList",
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                debugger;
+                if (response.context.Detail != null) {
+                    generate_UpdateserviceReq_detail(response.context.Detail)
+                    //listgrid(response.context.List);
+                    //SetPager(response.context.Filter.out_record_count)
+                }
+                else {
+                    gridUpdate([]);
+                }
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+
+        });
+        //retrieve_UpdateserviceReq_details(data);
+        return false;
+
+        //var formval = form_Serialize("Updateservice_form");
+        //var obj_val = JSON.parse(formval);
+        //var c = $('#cmb_Update');
+        //obj_val.process_status = c.data('kendoComboBox').value();
+        //retrieve_UpdateserviceReq_details(obj_val);
+    }
+</script>
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>
+

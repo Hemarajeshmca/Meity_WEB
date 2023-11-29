@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<UserDetails>
+  <User>
+    <UserId>1</UserId>
+    <UserName>Vinoth</UserName>
+  </User>
+  <User>
+    <UserId>2</UserId>
+    <UserName>Sugumar</UserName>
+  </User>
+  <User>
+    <UserId>3</UserId>
+    <UserName>Muthu</UserName>
+  </User>
+  <belong>Organization </belong>
+  <belong>Organization1 </belong>
+<belong>Organization2 </belong>
+<belong>Organization3 </belong>
+ 
+  <b>Bank1</b>
+  <b>Bank2</b>
+  <dep>certificate</dep>
+  <dep>Non-certificate</dep>
+</UserDetails>

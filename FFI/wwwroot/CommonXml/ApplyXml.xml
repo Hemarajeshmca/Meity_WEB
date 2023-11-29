@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <row>
+    <method>Cash</method>
+   <method>Cheque</method>
+    <method>DD</method>
+    <status>Paid</status>
+   <status>Pending</status>
+  </row>
+</root>

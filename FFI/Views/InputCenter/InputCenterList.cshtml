@@ -1,0 +1,450 @@
+﻿@{
+    ViewBag.List = "Input Center";
+    Layout = "~/Views/Shared/ListViewLayout.cshtml";
+}
+<form id="frm_input_center" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="gd_ic">
+                <div id="IC_grid"></div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    click_act_name = "InputCenterForm";
+    click_ctrl_name = "InputCenter";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+        $(".adv_filter").attr("hdrtitle", "Input Center List Record");
+        $(".adv_filter").attr("fltid", "ic");
+        $(".Export").attr("hdrtitle", "Input Center");
+        $(".Export").attr("SubTreeId", "Input_Center");
+        list_grid_id = "IC_grid";
+        Screen_Id = "ICDIC";
+        permission = sec_Permission(Screen_Id);
+        //icgrid([]);
+        page_load_list_permission(permission);
+        listpageloadfetch();
+        setlocalStorage("ls_pageList", "");
+        filterhover();
+    });
+</script>
+
+<script>
+    function listpageloadfetch() {
+        try {
+            icgrid([]);
+            var formval = form_Serialize("frm_input_center");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_FromValue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_FromValue = ".";
+            }
+            obj_val.FilterBy_ToValue = ".";
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Filter = obj_val;
+            var Context = data.context;
+            $.ajax({
+                type: "POST",
+                url: '/InputCenter/InputListfetch',
+                dataType: 'json',
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, FilterBy_Option: Context.Filter.FilterBy_Option, FilterBy_Code: Context.Filter.FilterBy_Code, FilterBy_FromValue: Context.Filter.FilterBy_FromValue, FilterBy_ToValue: Context.Filter.FilterBy_Tovalue }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    //var list = JSON.parse(response);
+                    if (response.context != null) {
+                        generate_InputCenter_list(response.context.List);
+                    }
+                    else {
+                        icgrid([]);
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });               
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    var status_Priority = [];
+    function icgrid(data) {
+        try {
+            $.each(data, function (index, value) {
+                var flag = false;
+                $.each(status_Priority, function (sindex, svalue) {
+                    if (svalue == value.status_desc) {
+                        flag = true;
+                    }
+                });
+                if (flag == false) {
+                    status_Priority.push(value.status_desc);
+                }
+            });
+            $("#IC_grid").kendoGrid(
+             {
+                 dataSource: {
+                     data: data,
+                     pageSize: 20,
+                     change: function (e) {
+                         setTimeout(function () {
+                             var gd = $("#IC_grid").data("kendoGrid");
+                             filter_row(gd);
+                             $('.k-i-close').css('display', 'none');
+                             $('button.k-button-icon').css('display', 'none');
+                             $('#IC_grid .k-input').prop('disabled', false);
+                             $('#IC_grid .k-input').prop('readonly', true);
+
+                         }, 1);
+                     },
+                 },
+                 toolbar: "<button type= 'button' id = 'Exportclick' class = 'k-grid-excel' style = 'display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                 excelExport: function (e) {
+                     debugger;
+                     var gd = $("#IC_grid").data("kendoGrid");
+                     var len = gd.dataSource._data.length;
+                     var chkall = $('#chkall').is(':checked');
+                     var chkfilter = $('#chkfilter').is(':checked');
+                     var chktemp = $('#chktemp').is(':checked');
+                     var twokendobox = true;
+                     gd.dataSource.pageSize(len);
+                     if (e.sender.dataSource._data.length == len) {
+                         var test = e.sender.dataSource._data;
+                         for (i = 0; i < test.length ; i++) {
+                             delete test[i]["Out_ic_rowid"];
+                             delete test[i]["Out_version_no"];
+                             delete test[i]["Out_orgn_cin"];
+                             delete test[i]["Out_primary_lang_code"];
+                             delete test[i]["Out_status_desc"];
+                             delete test[i]["Out_orgn_level"];
+                             delete test[i]["Out_orgn_level_desc"];
+                             delete test[i]["Out_orgn_subtype"];
+                             delete test[i]["Out_orgn_subtype_desc"];
+                             delete test[i]["Out_orgn_logo"];
+                             delete test[i]["Out_row_timestamp"];
+                             delete test[i]["Out_orgn_auth_sign"];
+                             delete test[i]["Out_orgn_type"];
+                             delete test[i]["Out_status_desc"];
+                             delete test[i]["Out_secondary_lang_code"];
+                             delete test[i]["Out_orgn_code"];
+                             delete test[i]["Out_orgn_type_desc"];
+                             delete test[i]["Out_status_code"];
+                             
+                         }
+                         e.sender.dataSource._data = test;
+                         twokendobox = false;
+                         exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                     }
+                     else {
+                         exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                     }
+                     gd.dataSource.pageSize('10');
+                     return false;
+                 },
+                 filterable: {
+                     enabled: true,
+                     delay: 1500,
+                     mode: "menu, row",
+                     height: 200,
+                     click: function (e) {
+                         var gd = $("#IC_grid").data("kendoGrid");
+                         filter_row(gd);
+                     }
+                 },
+                 filterMenuInit: function (e) {
+                     var gd = $("#IC_grid").data("kendoGrid");
+                     filter_row(gd);
+                 },
+                 change: selectRow,
+                 height: 450,
+                 sortable: true,
+                 selectable: true,
+                 selectable: "singl",   //  Grid Row Selection
+                 pageable: {
+                     refresh: false,
+                     pageSizes: true,
+                     buttonCount: 5
+                 },
+                 navigatable: true,
+                 groupable: false,
+                 columns: [
+                       {
+                         field: "Out_ic_rowid",
+                           title: "ic_rowid",
+                           width: 1,
+                           hidden: true,
+                       },
+
+                     {
+                         field: "Out_ic_code",
+                         title: "Input Center Code",
+                         filterable: {
+                             cell: {
+                                 operator: "contains",
+                                 inputWidth: 1500
+                             }
+                         }
+                     },
+                     {
+                         field: "Out_orgn_type_desc",
+                         title: "Input Center Type",
+                         filterable: {
+                             cell: {
+                                 operator: "contains",
+                                 inputWidth: 1500
+                             }
+                         }
+                     },
+                      {
+                          field: "Out_ic_name",
+                          title: "Input Center Name",
+                          filterable: {
+                              cell: {
+                                  operator: "contains",
+                                  inputWidth: 1500
+                              }
+                          }
+                      },                      
+                       
+                       {
+                           field: "Out_orgn_ll_name",
+                           title: "orgn_ll_name",
+                           width: 1,
+                           hidden: true,
+                       },
+                      {
+                          field: "Out_version_no",
+                          title: "version_no",
+                          width: 1,
+                          hidden: true,
+                      },
+                      {
+                          field: "Out_orgn_cin",
+                          title: "orgn_cin",
+                          width: 1,
+                          hidden: true,
+                      },
+                     {
+                         field: "Out_orgn_name",
+                         title: "Fpo Name",
+                         filterable: {
+                             cell: {
+                                 operator: "contains",
+                                 inputWidth: 1500
+                             }
+                         },
+                        
+                     },
+                     {
+                         field: "Out_parent_code",
+                         title: "Fpo Name",
+                         filterable: {
+                             cell: {
+                                 operator: "contains",
+                                 inputWidth: 1500
+                             }
+                         },
+                          hidden: true,
+                     },
+                     {
+                         field: "Out_primary_lang_code",
+                         title: "primary_lang_code",
+                         width: 1,
+                         hidden: true,
+                     },
+
+                     {
+                         field: "Out_orgn_level",
+                         title: "orgn_level",
+                         width: 1,
+                         hidden: true,
+                     },
+              {
+                  field: "Out_orgn_level_desc",
+                  title: "orgn_level_desc",
+                  width: 1,
+                  hidden: true,
+              },
+              {
+                  field: "Out_orgn_type",
+                  title: "orgn_type",
+                  width: 1,
+                  hidden: true,
+              },
+              {
+                  field: "Out_orgn_subtype",
+                  title: "orgn_subtype",
+                  width: 1,
+                  hidden: true,
+              },
+              {
+                  field: "Out_orgn_code",
+                  title: "orgn_code",
+                  width: 1,
+                  hidden: true,
+              },
+              {
+                  field: "Out_orgn_subtype_desc",
+                  title: "orgn_subtype_desc",
+                  width: 1,
+                  hidden: true,
+              },
+              {
+                  field: "Out_secondary_lang_code",
+                  title: "secondary_lang_code",
+                  width: 1,
+                  hidden: true,
+              },
+
+          {
+              field: "Out_row_timestamp",
+              title: "row_timestamp",
+              width: 1,
+              hidden: true,
+          }, {
+              field: "Out_orgn_logo",
+              title: "orgn_logo",
+              width: 1,
+              hidden: true,
+          },
+                        {
+                            field: "Out_orgn_auth_sign",
+                            title: "orgn_auth_sign",
+                            width: 1,
+                            hidden: true,
+                        },
+                        {
+                            field: "Out_status_code",
+                            title: "status_code",
+                            width: 1,
+                            hidden: true,
+                        },
+                {
+                    field: "Out_status_desc",
+                    title: "Status",
+                    filterable: {
+                        cell: {
+                            operator: "contains",
+                            inputWidth: 1500
+                        }
+                    }
+                },
+                 ]
+
+             });
+
+            $(".k-dropdown-operator").css('display', 'none');
+            $("#IC_grid .k-input").attr('disabled', 'false');
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function statusFilter(element) {    // Dropdown list functionality
+        element.kendoDropDownList({
+            dataSource: status_Priority,
+            optionLabel: "--Select Value--"
+        });
+    }
+
+    function selectRow() {
+        try {
+            var grid = $("#IC_grid").data("kendoGrid");
+            var selectedItem = grid.dataItem(grid.select());
+            setlocalStorage("ls_pageList", selectedItem);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+
+
+<script>
+    $("#btn_Edit").bind("click", function () {
+        getSerializedSelectedRows('edit');
+    });
+
+    $("#btn_View").bind("click", function () {
+        getSerializedSelectedRows('view');
+    });
+
+    $("#btn_new").bind("click", function () {
+        btn_onClick('Create');
+        location.href = "../InputCenter/InputCenterForm";
+    });
+
+    function getSerializedSelectedRows(mode) {
+        try {
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var items = getlocalStorage("ls_pageList");
+                if (items.length == 0) {
+                    kendoAlert("Please select records");
+                }
+
+                else {
+                    if (mode == "edit") {
+                        btn_onClick('Edit');
+                        location.href = "../InputCenter/InputCenterForm";
+                    }
+                    else if (mode == "view") {
+                        btn_onClick('View');
+                        location.href = "../InputCenter/InputCenterForm";
+                    }
+                }
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>
+    function generate_InputCenter_list(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                $("#gd_ic").empty();
+                $("#gd_ic").append("<div id='IC_grid'></div>");
+                icgrid(data);
+            }
+            else {
+                icgrid([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function listRefresh() {
+        try {
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+
+
+

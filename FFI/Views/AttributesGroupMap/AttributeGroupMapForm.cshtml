@@ -1,0 +1,573 @@
+﻿@{
+    ViewBag.Form = "Attributes Group Mapping";
+    ViewBag.helpName = "AttributeGroupMapForm.html";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+<form id="Attribute_MapNew" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="cmb_menu" class="col-sm-5 control-label required ">Activity/Screen Name:</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_menu" name="In_activity_code" style="width: 100%" data-role="filtercombo">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="txt_entitygrp_rowid" class="col-sm-5 control-label">entitygrp_rowid:</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txt_entitygrp_rowid" name="In_entitygrpacitivity_rowid" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <div id="grid_Drop_list">
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    click_act_name = "AttributesGroupMaplist";
+    click_ctrl_name = "AttributesGroupMap";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".file_attach").attr("hdrtitle", "Attributes Group Mapping");
+        $(".notes").attr("hdrtitle", "Attributes Group Mapping");
+        $("#lblForm_menuid").text("ATTRIBUTE_MAP");
+
+
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#Attribute_MapNew");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+
+        Screen_Id = "ATTR_GRP_MAP";
+        permission = sec_Permission(Screen_Id);
+
+        var map_in = "";
+        $("#cmb_menu").empty();
+        map_in = grid_comboScreen_mastercodes("ACTIVITY");
+        filter_combobox("cmb_menu", map_in);
+
+        setlocalStorage("status", "Active");
+        gridFilter([]);
+
+
+        $("#ststus").css("display", "none");
+        $("#DocStat").css("display", "none");
+        $('#modevalue').css("display", "none")
+        $('#frmlayerdiv').hide();
+        if (getlocalStorage('btn_clk_val') == "Create") {
+            $('#divCreate #review').hide();
+            $("#bottom_menus").hide();
+        }
+
+        else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
+            debugger;
+            $('#divEdit #reviewEd').hide();
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("Attribute_MapNew");
+                var obj_val = JSON.parse(formval);
+                obj_val.In_activity_code = data.Out_activity_code;
+
+                obj_val.entitygrpacitivity_rowid = data.Out_entitygrpacitivity_rowid;
+                $('#cmb_menu').data("kendoComboBox").value(data.Out_activity_code);
+                $('#cmb_menu').data("kendoComboBox").enable(false);
+                $("#txt_entitygrp_rowid").val(data.Out_entitygrpacitivity_rowid);
+                $("#DocStat").val(data.Out_status_desc);
+                var data = {};
+                data.context = WebAPIProxy.getContext();;
+                data.context.Header = obj_val;
+                var Context = data.context;
+
+
+                var data = { userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, activity_code: Context.Header.In_activity_code  };
+              $.ajax({
+          url: '@Url.Action("AttributeGroupfetch", "AttributesGroupMap")',
+         type: "post",
+        contentType: 'application/x-www-form-urlencoded',
+         data: data,
+        success: function (response1) {
+                debugger;
+                if (response1 != null) {
+                    generate_AttrGroupActivity_header(response1.context.Header);
+                    generate_AttrGroupActivity_detail(response1.context.Detail);
+                }
+
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+        });
+
+
+
+
+
+
+
+                // HTTP GET Api Purpose Commented by Venkat 10-9-2020 START
+                //$.ajax({
+                //    type: "POST",
+                //    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, activity_code: Context.Header.In_activity_code }),
+                //    url: "/AttributesGroupMap/AttributeGroupfetch",
+                //    dataType: "json",
+                //    contentType: 'application/json; charset=utf-8',
+                //    success: function (response) {
+                //        debugger;
+                //        if (response.context != null) {
+                //            generate_AttrGroupActivity_header(response.context.Header);
+                //            generate_AttrGroupActivity_detail(response.context.Detail);
+                //            //SetPager(response.context.Filter.out_record_count)
+                //        }
+                //        else {
+                //            grid_role([]);
+                //        }
+                //    },
+                //    error: function (er) {
+                //        alert(er)
+                //        console.log(er)
+                //    }
+
+                //});
+                //// HTTP GET Api Purpose Commented by Venkat 10-9-2020 END
+
+                $("#txt_entitygrp_rowid").val(obj_val.entitygrpacitivity_rowid);
+
+
+                setlocalStorage('doc_no', $("#cmb_menu").val());
+                setlocalStorage('doc_row_id', $("#txt_entitygrp_rowid").val());
+            }
+        }
+
+    });
+
+
+
+    function clear_val() {
+        try {
+            $('#cmb_menu').data("kendoComboBox").value('');
+            gridFilter([]);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function get_AttrGroupActivity_details(id) {
+        debugger;
+        try {
+            var formval = form_Serialize("Attribute_MapNew");
+            var obj_val = JSON.parse(formval);
+            obj_val.In_activity_code = id;
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Header = obj_val;
+            var Context = data.context;
+
+            var data = { userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, activity_code: Context.Header.In_activity_code  };
+              $.ajax({
+          url: '@Url.Action("AttributeGroupfetch", "AttributesGroupMap")',
+         type: "post",
+        contentType: 'application/x-www-form-urlencoded',
+         data: data,
+        success: function (response1) {
+                debugger;
+                if (response1 != null) {
+                    generate_AttrGroupActivity_header(response1.context.Header);
+                    generate_AttrGroupActivity_detail(response1.context.Detail);
+                }
+
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+        });
+
+
+
+
+            // Http Get API Purpose commented by venkat 10-09-2020
+            //$.ajax({
+            //    type: "POST",
+            //    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, activity_code: Context.Header.In_activity_code }),
+            //    url: "/AttributesGroupMap/AttributeGroupfetch",
+            //    dataType: "json",
+            //    contentType: 'application/json; charset=utf-8',
+            //    success: function (response) {
+            //        debugger;
+            //        if (response.context != null) {
+            //            generate_AttrGroupActivity_header(response.context.Header);
+            //            generate_AttrGroupActivity_detail(response.context.Detail);
+            //            //SetPager(response.context.Filter.out_record_count)
+            //        }
+            //        else {
+            //            grid_role([]);
+            //        }
+            //    },
+            //    error: function (er) {
+            //        alert(er)
+            //        console.log(er)
+            //    }
+
+            //});
+            //HTTP GET API Purpose Commented by venkat 10-09-2020 End
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+</script>
+
+<script>
+    function load_master_code() {
+        try {
+            debugger;
+            var data = {};
+            var context = WebAPIProxy.getContext();
+            data.userId = context.userId
+            data.orgnId = context.orgnId
+            data.locnId = context.locnId
+            data.localeId = context.localeId
+            data.screen_Id = "ATTR_GRP_MAP";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<script>
+    //fech the grid
+    $("#cmb_menu").change(function () {
+        var c = $('#cmb_menu');
+        var formval = form_Serialize("Attribute_MapNew");
+        var obj_val = JSON.parse(formval);
+        obj_val.In_activity_code = c.data('kendoComboBox').value();
+        var data = {};
+        data.context = WebAPIProxy.getContext();;
+        data.context.Header = obj_val;
+        var Context = data.context;
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, activity_code: Context.Header.In_activity_code }),
+            url: "/AttributesGroupMap/AttributeGroupfetch",
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                debugger;
+                if (response.context != null) {
+                    generate_AttrGroupActivity_header(response.context.Header);
+                    generate_AttrGroupActivity_detail(response.context.Detail);
+                    //SetPager(response.context.Filter.out_record_count)
+                }
+                else {
+                    grid_role([]);
+                }
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+
+        });
+    });
+</script>
+
+<script>
+    var entitygrp_name_list = "";
+    var status_desc_list = "";
+    function gridFilter(data) {
+        try {
+            $("#grid_Drop_list").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                In_entitygrpacitivity_rowid: { type: "number" },
+                                In_row_slno: { type: "number" },
+                                In_entitygrp_code: { type: "string" },
+                                In_entitygrp_name: { type: "string" },
+                                In_status_code: { type: "string", defaultValue: "A" },
+                                In_status_desc: { type: "string", defaultValue: getlocalStorage('status'),editable:false },
+                                In_mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+                toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 400,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_Drop_list').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                edit: function (e) {
+                    var fieldName = e.container.find("input").attr("name");
+                    if (fieldName == 'row_slno' && e.model.mode_flag != 'I') { this.closeCell(); }
+                },
+
+                edit: OnEdit,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [{
+                    command: [
+                    {
+                        name: "Delete",
+                        id: "Delete",
+                        imageClass: "fa fa-close",
+                        click: function (e) {
+                            // e.preventDefault();
+                            var grid = $("#grid_Drop_list").data("kendoGrid");
+                            var dataItem = $("#grid_Drop_list").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                            DeleteWindowEvent(e, dataItem, grid);
+                            e.stopImmediatePropagation()
+                        }
+                    },
+                    ], title: "&nbsp;", width: "25px",
+                },
+                {
+                    field: "In_entitygrpacitivity_rowid",
+                    title: "entitygrpacitivity_rowid",
+                    hidden: true,
+                },
+                 {
+                     field: "In_row_slno",
+                     title: "Sl No",
+                     width: 40,
+                     editor: function (container, options) {
+                         item_rate(container, options.field, '9', '2');
+                     },
+                 },
+                   {
+                       field: "In_entitygrp_code",
+                       title: "entitygrp_code",
+                       hidden: true,
+                       width: 300,
+                   },
+                {
+                    field: "In_entitygrp_name",
+                    title: "Attribute Group",
+                    editor: function (container, options) {
+                        combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "In_entitygrp_code", "grid_Drop_list")
+                    },
+                    width: 300,
+                },
+                {
+                    field: "In_status_code",
+                    title: "Status",
+                    hidden: true,
+                    width: 300,
+                },
+                {
+                    field: "In_status_desc",
+                    title: "Status",
+                    editor: function (container, options) {
+                        combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "In_status_code", "grid_Drop_list")
+                    },
+                    width: 300,
+                    // editor: nonEditor
+                },
+                {
+                    field: "In_mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }],
+                editable: true,
+
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+
+        }
+    }
+    load_master_code();
+    In_entitygrp_name_list = grid_comboScreen_mastercodes("ATTGROUP");
+    In_status_desc_list = grid_comboScreen_mastercodes("STATUS");
+    function OnEdit(e) {
+        setDefaultValues(e);
+        e.container.find("input[name='In_entitygrp_name']").attr("disabled", "disabled");
+
+
+    }
+</script>
+
+<script>
+    function save() {
+        try {
+            var mandatory_check = true;
+            $('#cmb_menu').data("kendoComboBox").enable(true);
+            var formval = form_Serialize("Attribute_MapNew");
+            var obj_val = JSON.parse(formval);
+            var grid_val = JSON.stringify($("#grid_Drop_list").data().kendoGrid._data);
+            var Bind = {};
+            Bind = grid_val;
+            var result = JSON.parse(Bind);
+
+            var grid_validate_msg = "";
+
+            if (result.length == 0) {
+                kendoAlert("Atleast one record needs to be entered");
+                mandatory_check = false;
+                return false;
+            }
+            $.each(result, function (key, value) {
+                if (value.In_row_slno == "" || value.In_row_slno == undefined) {
+                    grid_validate_msg += "Sl no cannot be blank <br>";
+                    mandatory_check = false;
+                }
+                if (value.In_entitygrp_name == "") {
+                    grid_validate_msg += "Attribute Group cannot be blank <br>";
+                    mandatory_check = false;
+                }
+                if (value.In_status_desc == "") {
+                    grid_validate_msg += "Status cannot be blank <br>";
+                    mandatory_check = false;
+                }
+                if (mandatory_check == false) {
+                    kendoAlert(grid_validate_msg);
+                    return false;
+                }
+            });
+
+            if (mandatory_check == true) {
+               
+                $.each(result, function (index, value) {
+                    var row_id = value.In_entitygrpacitivity_rowid;
+                    //var row_code = value.entitygrp_code;
+                    if (row_id == undefined) {
+                        result[index].In_entitygrpacitivity_rowid = "0";
+                    }
+                    //if (row_code == undefined) {
+                    //    result[index].entitygrp_code = "0";
+                    //}
+                    var mode = value.In_mode_flag;
+                    if (mode == "S") {
+                        result[index].In_mode_flag = "U";
+                    }
+
+
+                });
+                var obj_grid_val = result;
+                var data = {};
+                data.context = WebAPIProxy.getContext(); 
+                data.context.Header = obj_val;
+                data.context.Detail = obj_grid_val;
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, Header: Context.Header, Detail: Context.Detail }),
+                    url: "/AttributesGroupMap/AttributeGroupSave",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        debugger;
+                        console.log(response)
+                        var Res = JSON.parse(response);
+                        if (Res.context != null) {
+                            var mode = $("#txtMode").val();
+                            if (mode == "I") {
+                                kendoAlert("Attributes Group Mapping  Details saved successfully");
+                                get_AttrGroupActivity_details($('#cmb_menu').data("kendoComboBox").value());
+                            }
+                            else if (mode == "D") {
+                                kendoAlert("Attributes Group Mapping  Details inactivate successfully");
+                                get_AttrGroupActivity_details($('#cmb_menu').data("kendoComboBox").value());
+                            }
+                            else {
+                                kendoAlert("Attributes Group Mapping Details saved successfully");
+                                //retrieve_AttrGroupactivity_list();
+                                get_AttrGroupActivity_details($('#cmb_menu').data("kendoComboBox").value());
+                            }
+                        }
+                        else {
+                            kendoAlert(Res.ApplicationException.errorDescription);
+                        }
+                    },
+                    error: function (er) {
+                        alert(er)
+                        console.log(er)
+                    }
+
+                });
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function DeleteDetails() {
+        try {
+            $("#txtMode").val('D');
+            save();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function generate_AttrGroupActivity_header(res) {
+
+
+    }
+
+    function generate_AttrGroupActivity_detail(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                gridFilter(data);
+
+            }
+            else {
+
+                gridFilter([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+</script>
+
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>
+
+

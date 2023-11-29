@@ -1,0 +1,12 @@
+﻿<root>
+  <row>
+    <report_rowid>1</report_rowid>
+    <report_code>RPT-GETMASTER</report_code>
+    <report_name>Get Master</report_name>
+    <report_type>RPT-SP</report_type>
+    <report_source>pr_core_get_master</report_source>
+    <status_code>Active</status_code>
+    <row_timestamp>2016-11-28T11:56:56.077</row_timestamp>
+    <date>2-12-2016</date>
+  </row>
+</root>

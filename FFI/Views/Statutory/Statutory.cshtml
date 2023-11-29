@@ -1,0 +1,170 @@
+﻿@{
+    ViewBag.Form = "Statutory Reports";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+<form id="Master_form" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-12">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="txtValidity" class="col-md-5 control-label">From Date:</label>
+                            <div class=" col-sm-7">
+
+                                <input class="cusDate" data-role='datepicker' id="txtValidity" data-checkdate-msg="Enter Valid Date" name="valid_until" style="width:100%" />
+                                <span data-for='valid' class='k-invalid-msg'></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="txtValidity" class="col-md-5 control-label">To Date:</label>
+                            <div class=" col-sm-7">
+
+                                <input class="cusDate" data-role='datepicker' id="txtValidity" data-checkdate-msg="Enter Valid Date" name="valid_until" style="width:100%" />
+                                <span data-for='valid' class='k-invalid-msg'></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="txtValidity" class="col-md-5 control-label">Report Run Date:</label>
+                            <div class=" col-sm-7">
+
+                                <input class="cusDate" data-role='datepicker' id="txtValidity" data-checkdate-msg="Enter Valid Date" name="valid_until" style="width:100%" />
+                                <span data-for='valid' class='k-invalid-msg'></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="cmb_statutory " class="col-md-5 control-label ">Select Report To Run</label>
+                            <div class="col-sm-7">
+                                <input id="cmb_statutory" name="Active_id" data-role="filtercombo" style="width:200%" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-xs-12">
+                    <div id="grid_Drop_list">
+                    </div>
+                </div>
+            </div>
+            @*<div class="row" style="padding-bottom:15px">
+                <div class="col-xs-12">
+                    <div>
+                        <textarea id="TextArea1" rows="4" cols="20" style="width:1180px;height:77px;font-size:20px;" class="form-control">Comments:</textarea>
+                    </div>
+                </div>
+            </div>*@
+        </div>
+      </div>
+    </form>
+<script>
+    $(document).ready(function () {
+
+        // $("#form_design").css("padding-top", "95px");
+        master_userRoleNew1();
+        kendodate_format();
+        gridFilter();
+        $(".txtValidity").kendoDatePicker();
+        var passdata = "";
+        var GetRoleData = ajaxcall_param("../Statutory/Xmlcmb_Localbind", JSON.stringify(passdata));
+        var GetRoleDatajson = JSON.parse(GetRoleData);
+        var i;
+        var combo_data = [];
+        var items = {};
+        for (i = 0; i < GetRoleDatajson.length; i++) {
+            items[i] = GetRoleDatajson[i].Orgl
+            combo_data.push({ code: i, desc: items[i] });
+        }
+        filter_combobox("cmb_statutory", combo_data);
+    });
+    </script>
+<script>
+    var data = [{report_ref_no:"AL-REP-021",report_name:"Index To Members",report_date:"11/01/2017",records_processed:"950"}];
+   
+            $("#grid_Drop_list").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+
+                                report_ref_no: { type: "string" },
+                                report_name: { type: "string" },
+                                report_date: { type: "string" },
+                                records_processed: { type: "string" },
+
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+
+                height: 400,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_Drop_list').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+
+
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [{
+                    command: [
+            {
+                name: "View",
+                id: "View",
+                
+            },
+                    ], title: "Action", width: "25px",
+                }, {
+
+
+                    field: "report_ref_no",
+                    title: "Report Reference No",
+                    width: 100
+
+                },
+
+                {
+                    field: "report_name",
+                    title: "Report Name",
+                    width: 100
+
+                },
+                 {
+                     field: "report_date",
+                     title: "Report Date",
+                     width: 100
+
+                 },
+                  {
+                      field: "records_processed",
+                      title: "Records Processed",
+                      width: 100
+
+                  },
+
+
+                {
+                    field: "mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }],
+                editable: true
+            });
+       
+</script>
+

@@ -1,0 +1,272 @@
+﻿
+@{
+    ViewBag.List = "Downloadable Templates";
+    Layout = "~/Views/Shared/ListViewLayout.cshtml";
+}
+<div class="row">
+    <div class="col-xs-12">
+        <div id="temp_grid">
+            <div id="Template_Grid"></div>
+        </div>
+    </div>
+</div>
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+        menuId = getlocalStorage("MenuId");
+        $(".adv_filter").attr("hdrtitle", "Template List Record");
+        $(".adv_filter").attr("fltid", "TmplStp");
+        $(".Export").attr("hdrtitle", "Templates");
+        $(".Export").attr("SubTreeId", "DOWN_TMPL");
+        $("#hide_div").hide();
+        Screen_Id = "TEMPLATES";
+        permission = sec_Permission(Screen_Id);
+        page_load_list_permission(permission);       
+    });
+    click_act_name = "DownloadableTemplateForm";
+    click_ctrl_name = "DownloadableTemplate";
+    form_list_url = '/' + click_ctrl_name + '/' + click_act_name;
+</script>
+<script>
+    var gridRowID = -1;
+    function sel_checkbox() {
+        gridRowID++;
+        return '<input id="chk_sel_' + gridRowID + '" class="checkbox" type="checkbox" />';
+    }
+
+    function listgrid(data) {
+        try {
+            gridRowID = -1;
+            data = addRandomNum(data);
+            $("#Template_Grid").kendoGrid({
+                dataSource: {
+                    data: data,
+                    pageSize: 10,
+                    schema: {
+                        model: {
+                            fields: {
+                                menu_rowid: { type: "string" },
+                                menu_name: { type: "string" },
+                                tmpl_rowid: { type: "string" },
+                                type_code: { type: "string" },
+                                type_desc: { type: "string" },
+                                seq_no: { type: "string" },
+                                template_name: { type: "string" },
+                                note: { type: "string" },
+                                file_path: { type: "string" },
+                            }
+                        }
+                    },
+                   
+                },
+                dataBound: function (o) {
+                    reset_Selected_GridRows("Template_Grid", o);
+                },
+                toolbar: "<button type= 'button' id = 'Exportclick' class = 'k-grid-excel' style = 'display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                excelExport: function (e) {
+                    var gd = $("#Template_Grid").data("kendoGrid");
+                    var len = gd.dataSource._data.length;
+
+                    var chkall = $('#chkall').is(':checked');
+                    var chkfilter = $('#chkfilter').is(':checked');
+                    var chktemp = $('#chktemp').is(':checked');
+                    var twokendobox = true;
+                    gd.dataSource.pageSize(len);
+                    if (e.sender.dataSource._data.length == len) {
+                        twokendobox = false;
+                        exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                    }
+                    else {
+                        exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                    }
+                    gd.dataSource.pageSize('10');
+                    return false;
+                },
+                filterable: {
+                    enabled: true,
+                    delay: 1500,
+                    mode: "menu, row",
+                    height: 200,
+                    click: function (e) {
+                        var gd = $("#Template_Grid").data("kendoGrid");
+                        filter_row(gd);
+                    }
+                },
+                filterMenuInit: function (e) {
+                    var gd = $("#Template_Grid").data("kendoGrid");
+                    filter_row(gd);
+                },
+                height: 470,
+                scrollable: true,
+                selectable:true,
+                sortable: {
+                    mode: "multiple",
+                    dir: "asc"
+                },
+                pageable: {
+                    refresh: false,
+                    pageSizes: true,
+                    buttonCount: 5
+                },
+                change: selectRow,
+                navigatable: true,
+                groupable: false,
+                columns: [
+                     {
+                         field: "tmpl_rowid",
+                         title: "Menu name",
+                         hidden: false,
+                         width: 200,
+                         hidden:true,
+                     },
+                    {
+                        field: "menu_name",
+                        title: "Menu name",
+                        hidden: false,
+                        width: 200,
+                        filterable: {
+                            cell: {
+                                operator: "contains",
+                                inputWidth: 1500
+                            }
+                        },
+                    },
+                {
+                    field: "type_desc",
+                    title: "Type desc",
+                    hidden: false,
+                    width: 100,
+                    filterable: {
+                        cell: {
+                            operator: "contains",
+                            inputWidth: 1500
+                        }
+                    },
+                },
+                 {
+                     field: "template_name",
+                     title: "Template name",
+                     hidden: false,
+                     width: 200,
+                     filterable: {
+                         cell: {
+                             operator: "contains",
+                             inputWidth: 1500
+                         }
+                     },
+                 },
+                 {
+                     field: "note",
+                     title: "Note",
+                     hidden: false,
+                     width: 100,
+                     filterable: {
+                         cell: {
+                             operator: "contains",
+                             inputWidth: 1500
+                         }
+                     },
+                 }]
+            });
+
+            $(".k-dropdown-operator").css('display', 'none');
+
+            $("#Template_Grid .k-input").attr('disabled', 'false');          
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    $("#btn_Edit").bind("click", function (e) {
+        getSerializedSelectedRows('edit');        
+    });
+
+    $("#btn_View").bind("click", function (e) {
+        getSerializedSelectedRows('view');       
+    });
+
+    $("#btn_new").bind("click", function () {
+        btn_onClick('Create');
+        location.href = "../DownloadableTemplate/DownloadableTemplateForm";
+    });
+   
+    function selectRow() {
+        var grid = $("#Template_Grid").data("kendoGrid");
+        var selectedItem = grid.dataItem(grid.select());
+        setlocalStorage("ls_pageList", selectedItem);
+    }
+
+    function getSerializedSelectedRows(mode) {
+        try {
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var items = getlocalStorage("ls_pageList");
+                if (items.length == 0) {
+                    kendoAlert("Please select records");
+                }
+                else {
+                    if (mode == "edit") {
+                        btn_onClick('Edit');
+                        location.href = "../DownloadableTemplate/DownloadableTemplateForm";
+                    }
+                    else if (mode == "view") {
+                        btn_onClick('View');
+                        location.href = "../DownloadableTemplate/DownloadableTemplateForm";
+                    }
+                }
+            }
+        }
+        catch (err) {
+        }
+    }
+
+   
+
+    function listpageloadfetch(status_code) {
+        try {
+            var data = {};
+            data.status = "";
+            var Document_detail = ajaxcall_param_new("/DownloadableTemplate/fetch_TemlateList", data);
+            if (Document_detail != undefined) {
+                var Document_data = JSON.parse(Document_detail);
+                var data = JSON.parse(Document_data.result);
+                if (Document_data.success == true) {
+                    $("#temp_grid").empty();
+                    $("#temp_grid").append("<div id='Template_Grid'></div>");
+                    if (data == null) {
+                        listgrid([]);
+                    }
+                    else {
+                        listgrid(data);
+                    }
+                }
+                else {
+                    var message = Document_data.msg;
+                    kendoAlert(message);
+                    listgrid([]);
+                }
+            }
+            else {
+                listgrid([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function listRefresh() {
+        try {
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<script src="~/CommonScripts/AdvanceFilter.js"></script>

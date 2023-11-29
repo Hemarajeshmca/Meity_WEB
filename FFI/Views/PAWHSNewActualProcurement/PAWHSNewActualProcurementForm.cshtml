@@ -1,0 +1,927 @@
+﻿
+@{
+    ViewBag.Form = "Purchase Entry";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+<form id="NewActualProc_form" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:20px;padding-bottom:20px">
+            <div class="row" style="padding-bottom:1px">
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label for="txt_produ_cate" class=" col-sm-5 control-label">Lot No.</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_LotNo" name="IOU_lotno1" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+                @*<div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_pro_name" class=" col-sm-5 control-label">Farmer Code</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_Farmer_Code" name="In_farmer_code" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>*@
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label for="txt_hsn_code" class=" col-sm-5 control-label">Farmer Name</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_Farmer_Name" name="In_farmer_name" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label for="txt_hsn_code" class=" col-sm-5 control-label">FHW Name</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_FHW_Name" name="In_FHW_Name" class="form-control" maxlength="50" readonly="readonly">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:1px">
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label for="txt_produ_cate" class=" col-sm-5 control-label">Farmer Village</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_Village" name="In_Village" class="form-control" maxlength="50" readonly="readonly">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label for="txt_hsn_code" class=" col-sm-5 control-label">Farmer Taluk</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_Taluk" name="In_Taluk" class="form-control" maxlength="50" readonly="readonly">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label for="txt_hsn_code" class=" col-sm-5 control-label">Farmer Mobile No</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_MobileNo" name="In_MobileNo" class="form-control" maxlength="50" readonly="readonly">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:1px">
+
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_pro_cde" class=" col-sm-5 control-label">Member Type</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_Member_Type" name="In_member_type" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+
+                @*<div class="col-xs-4">
+                        <div class=" form-group">
+                            <label for="txt_pro_cde" class=" col-sm-5 control-label">Item Code</label>
+                            <div class=" col-sm-6">
+                                <input type="text" id="txt_Item_Code" name="In_item_code" class="form-control" maxlength="50">
+                            </div>
+                        </div>
+                    </div>*@
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_produ_sub_cate" class=" col-sm-5 control-label">Crop Name</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_Item_Name" name="In_item_name" class="form-control" maxlength="50">
+                            <input type="hidden" id="txtact_rowid" name="IOU_act_rowid1">
+                            <input type="hidden" id="txtMode" name="In_mode_flag" class="form-control" maxlength="10" value="I">
+                            <input type="hidden" id="txt_row_timestamp" name="In_row_timestamp" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_produ_sub_cate" class=" col-sm-5 control-label">Quantity procure( in Quintal)</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_Actual_Qty" name="In_actual_qty" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" style="padding-bottom:1px">
+
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_produ_sub_cate" class=" col-sm-5 control-label">Purchase Rate( for Quintal)</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_Actual_Price" name="In_actual_price" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_produ_sub_cate" class=" col-sm-5 control-label">Total Amount( for Quintal)</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_Actual_Value" name="In_actual_value" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_produ_sub_cate" class=" col-sm-5 control-label">No.of Bags</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_bags" name="In_no_of_bags" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:1px">
+                @*<div class="col-xs-4">
+                        <div class=" form-group">
+                            <label for="txt_produ_sub_cate" class=" col-sm-5 control-label">Advance Amount</label>
+                            <div class=" col-sm-6">
+                                <input type="text" id="txt_Advance_amt" name="in_advance_amt" class="form-control" maxlength="50">
+                            </div>
+                        </div>
+                    </div>*@
+
+                <div class="col-xs-4" style="display:none">
+                    <div class=" form-group">
+                        <label for="txt_vehicletype" class=" col-sm-5 control-label">Vehicle Type</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_vehicletype" name="in_vehicle_type" class="form-control" maxlength="225">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4"  style="display:none">
+                    <div class=" form-group">
+                        <label for="txt_vehicleno" class=" col-sm-5 control-label">Vehicle No</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_vehicleno" name="In_Vehicle_no" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4"  style="display:none">
+                    <div class=" form-group">
+                        <label for="txt_qcperson_name" class=" col-sm-5 control-label">Quality Person Name</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_qcperson_name" name="In_Qcperson_name" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:1px">
+
+                <div class="col-xs-4"  style="display:none">
+                    <div class=" form-group">
+                        <label for="txt_qcperson_name" class=" col-sm-5 control-label">Destination</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_destination" name="in_destination" class="form-control" maxlength="225">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4" style="display:none">
+                    <div class=" form-group">
+                        <label for="txt_pro_cde" class=" col-sm-5 control-label">Buyer Name</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_buyer_name" name="In_Buyer_name" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4" style="display:none">
+                    <div class=" form-group">
+                        <label for="txt_qcperson_name" class=" col-sm-5 control-label">LRP Name</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_Lrpname" name="in_LRP_Name" class="form-control" maxlength="225">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4" style="display:none">
+                    <div class=" form-group">
+                        <label for="txt_qcperson_name" class=" col-sm-5 control-label">LRP Mobile no</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_LRP_Mobile_no" name="in_LRP_Mobile_no" class="form-control" maxlength="225">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:1px">
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_date" class=" col-sm-5 control-label">Date</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_date" name="In_actual_date" class="form-control" maxlength="225">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_season" class=" col-sm-5 control-label">Season</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_season" name="In_season" class="form-control" maxlength="225">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_year" class=" col-sm-5 control-label">Year</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_year" name="" class="form-control" maxlength="225">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-4" style="display:none">
+                    <div class=" form-group">
+                        <label for="txt_produ_sub_cate" class=" col-sm-5 control-label">Approver Remarks</label>
+                        <div class=" col-sm-6">
+                            <textarea class="form-control" id="txt_approved_remarks" name="in_approved_remarks" rows="3" cols="5" style="margin: 0px 1.82813px 0px 0px;width: 195px;height: 40px;"></textarea>
+                            @*<input type="text" id="txt_approved_remarks" name="in_approved_remarks" class="form-control" maxlength="50">*@
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4" style="display:none">
+                    <div class=" form-group">
+                        <label for="txt_produ_sub_cate" class=" col-sm-5 control-label">Aggregator Remarks</label>
+                        <div class=" col-sm-6">
+                            <textarea class="form-control" id="txt_Pick_Remarks" name="in_pickup_remarks" rows="3" cols="5" style="margin: 0px 1.82813px 0px 0px;width: 195px;height: 40px;"></textarea>
+                            @*<input type="text" id="txt_Pick_Remarks" name="in_pickup_remarks" class="form-control" maxlength="50">*@
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4" style="display:none">
+                    <div class=" form-group">
+                        <label for="txt_produ_sub_cate" class=" col-sm-5 control-label">Warehouse Maker Remarks</label>
+                        <div class=" col-sm-6">
+                            <textarea class="form-control" id="txt_wr_Remarks" name="in_wr_remarks" rows="3" cols="5" style="margin: 0px 1.82813px 0px 0px;width: 195px;height: 40px;"></textarea>
+                            @*<input type="text" id="txt_wr_Remarks" name="in_wr_remarks" class="form-control" maxlength="50">*@
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_produ_sub_cate" class=" col-sm-5 control-label">Actual Remarks</label>
+                        <div class=" col-sm-6">
+                            <textarea class="form-control" id="txt_Actual_remarks" name="in_actual_remarks" rows="3" cols="5" style="margin: 0px 1.82813px 0px 0px;width: 195px;height: 40px;"></textarea>
+                            @*<input type="text" id="txt_Actual_remarks" name="in_actual_remarks" class="form-control" maxlength="50">*@
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <div class=" col-sm-6">
+                            <button type="button" id="txt_billimage" onclick="AttachmentFile()" style="background-color: #3c8dbc;">View Image</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <section class="col-md-12">
+                    <div id="tab_list" class="col-md-12">
+                        <ul class="nav nav-tabs">
+                            <li class="active">
+                                <a href="#Quantity" id="data1" role="tab" onclick="qtytab()" data-toggle="tab">
+                                    Quality
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#Serial" id="data2" role="tab" onclick="serialtab()" data-toggle="tab">
+                                    Bag Serial Numbers
+                                </a>
+                            </li>
+                            <li style="display:none">
+                                <a href="#Othercost" role="tab" onclick="Other()" id="data3" data-toggle="tab">
+                                    Other Cost
+                                </a>
+                            </li>
+                            @*<li>
+                                    <a href="#Attachment" id="data2" role="tab" onclick=" AttachmentFile()" data-toggle="tab">
+                                        Attachment
+                                    </a>
+                                </li>*@
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane fade active in" id="Quantity">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div id="grid_Quantity">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="Serial">
+                                <div class="panel panel-default">
+                                    <div class="panel-body" style="overflow:auto">
+                                        <div id="grid_Serial"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade  active in" id="Othercost" style="display:none">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div id="grid_Othercost"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="Bill Image">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div id="grid_Attachment"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="txtagg_code" name="Out_agg_code">
+    <div id="dialogFileAttachment">
+        @*<div class="form-group
+                <a id="imgchnge" download="farmer_img.jpg" href="~/images/NoImage.png" title="ImageName">
+                    Download
+                    <img id="farmer_img" src="~/images/NoImage.png" class="col-sm-3 img-bordered profileImg1" alt="Bill Image"; />
+                </a>
+            </div>*@
+        <div class="form-group">
+            @*<button type="button" id="btnDownload" style="margin-left:18px;margin-top:-7px" class="btn btn-info" onclick="downloadImage()"><span class="glyphicon glyphicon-ok"></span> Download</button>*@
+            <div class="geeks">
+                @*<img id="farmer_img" src="~/images/NoImage.png" class="col-sm-3 img-bordered profileImg1" alt="Bill Image" dow style="height:auto;left: 35%" ; />*@
+                <a id="imgchnge" download="farmer_img.jpg" href="~/images/NoImage.png" title="ImageName">
+                    Download
+                    <img id="farmer_img" src="~/images/NoImage.png" class="col-sm-3 img-bordered profileImg1" alt="Bill Image" dow style="height:100%;left: 35%;" ; />
+                </a>
+                @*<img class="zoom-img" id="farmer_img" src="images/NoImage.jpg" data-zoom-image="images/large/image1.jpg" width="411" />*@
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    click_act_name = "PAWHSNewActualProcurementList";
+    click_ctrl_name = "PAWHSNewActualProcurement";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/CommonScripts/common.js"></script>
+<script src="~/CommonScripts/tamil.js"></script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+<script>
+    var imgstring = null;
+    $(document).ready(function () {
+        kendodate_format();
+        $("#bottom_menus").hide();
+        //$("#divCreate").hide();
+        //$("#divEdit").hide();
+        //$("#divView").show();
+        //$('#frmlayerdiv').hide();
+        //$('#divUserRole8').show();
+        //$('#divUserRole8 #review').hide();
+        $("#hide_div").hide();
+        //$("#divScreen").hide();
+        $("#dialogFileAttachment").hide();
+        New_grid_Quantity_details([]);
+        New_grid_Serial_details([]);
+        New_grid_Othercost_details([]);
+
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#NewActualProc_form");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        Screen_Id = "PWNEWACTPRO";
+        permission = sec_Permission(Screen_Id);
+
+        var org_id = getlocalStorage('org_id');
+        var org_type = getlocalStorage('org_type');
+        var orgtname = getlocalStorage('orgtname');
+        var org = getlocalStorage('org');
+        //   $('#txtagg_code').val(org_id);
+
+        if (getlocalStorage('btn_clk_val') == "View") {
+            debugger;
+            $("#bottom_menus").hide();
+            //$('#frmlayerdiv').show();
+            //$('#divEdit #reviewEd').hide();
+            //$('#divEdit #deactivate').hide();
+            //$("#bottom_menus li:nth-child(1)").hide();
+            //$("#bottom_menus li:nth-child(3)").hide();
+            //$('#divUserRole8 #review').hide();
+            //$('#divUserRole8 #btnSave').hide();
+            $("#hide_div").hide();
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("NewActualProc_form");
+                var obj_val = JSON.parse(formval);
+                obj_val.IOU_act_rowid1 = data.Out_act_rowid;
+                obj_val.IOU_lotno1 = data.Out_lotno;
+                obj_val.Out_agg_code = data.Out_agg_code;
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                //Item Master Edit Binding  start 18-05-2020
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({
+                        userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId,
+                        IOU_act_rowid: Context.Header.IOU_act_rowid1,
+                        IOU_lotno: Context.Header.IOU_lotno1,
+                        IOU_agg_code: Context.Header.Out_agg_code,
+                    }),
+                    // IOU_act_rowid: Context.Header.IOU_act_rowid1, IOU_agg_code: Context.Header.Out_agg_code, IOU_lotno: Context.Header.IOU_lotno1 }),
+                    url: "/PAWHSNewActualProcurement/ActualProcurementfetch",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        debugger;
+                        if (response.context != null) {
+                            generate_ActualProcurement_header(response.context.Header);
+                            grid_Quantity_details(response.context.QtyDetail);
+                            grid_Serial_details(response.context.SlnoDetail);
+                            grid_Othercost_details(response.context.OtherDetail1);
+                            qtytab();
+                        }
+                        else {
+                            console.log(response);
+                        }
+                    },
+                    error: function (er) {
+                        alert(er);
+                        console.log(er);
+                    }
+
+                });
+
+                //$("#txtMode").val("U");
+                //$("#DocStat").val("Active");
+            }
+        }
+        viewdisable();
+    });
+    function downloadImage() {
+        var data = { base64: imgstring };
+        $.ajax({
+          url: '@Url.Action("DownloadImage", "PAWHSNewActualProcurement")',
+          type: "post",
+          contentType: 'application/x-www-form-urlencoded',
+          data: data,
+           success: function (response) {
+            },
+            error: function (er) {
+                alert(er);
+                console.log(er);
+            }
+        });
+    }
+    function AttachmentFile() {
+        debugger
+        $("#dialogFileAttachment").kendoWindow();
+        var dialog = $("#dialogFileAttachment").data("kendoWindow");
+        dialog.open().element.closest(".k-window").css({
+            top: 121,
+            left: 300, height: 400, width: 900
+        });
+        dialog.title("Bill Image");
+        //var imagedata = res.in_actual_attach
+        //if (imagedata != "")
+        //    document.getElementById("farmer_img").src = "data:image/png;base64," + imagedata;
+        //else
+        //    document.getElementById("farmer_img").src = "/images/noimage.png";
+    }
+
+    function generate_ActualProcurement_header(res) {
+        try {
+            if (res != null) {
+                $("#txtMode").val("U");
+                $("#DocStat").val("Active");
+                $("#txtact_rowid").val(res.IOU_act_rowid);
+                $("#txtagg_code").val(res.IOU_agg_code);
+                $("#txt_LotNo").val(res.IOU_lotno);
+                $("#txt_Farmer_Code").val(res.In_farmer_code);
+                $("#txt_Farmer_Name").val(res.In_farmer_name);
+                $("#txt_Member_Type").val(res.In_member_type);
+                $("#txt_Item_Code").val(res.In_item_code);
+                $("#txt_Item_Name").val(res.In_item_name);
+                $("#txt_Actual_Qty").val(res.In_actual_qty);
+                $("#txt_Actual_Price").val(res.In_actual_price);
+                $("#txt_Actual_Value").val(res.In_actual_value);
+                $("#txt_bags").val(res.In_no_of_bags);
+                $("#txt_vehicleno").val(res.In_vehicle_no);
+                $("#txt_qcperson_name").val(res.In_qcperson_name);
+                $("#txt_Actual_remarks").val(res.in_actual_remarks);
+                $("#txt_approved_remarks").val(res.in_approved_remarks);
+                $("#txt_Pick_Remarks").val(res.in_pickup_remarks);
+                $("#txt_wr_Remarks").val(res.in_wr_remarks);
+                $("#txt_Advance_amt").val(res.in_advance_amt);
+                $("#txt_vehicletype").val(res.in_vehicle_type);
+                $("#txt_destination").val(res.in_destination);
+                $("#txt_Lrpname").val(res.in_LRP_Name);
+                $("#txt_buyer_name").val(res.In_Buyer_name);
+                $("#txt_LRP_Mobile_no").val(res.in_LRP_Mobile_no);
+                $("#txt_date").val(res.In_actual_date);
+                $("#txt_season").val(res.In_season);
+
+                $("#txt_FHW_Name").val(res.In_FHW_Name);
+                $("#txt_Village").val(res.In_Village);
+                $("#txt_Taluk").val(res.In_Taluk);
+                $("#txt_MobileNo").val(res.In_MobileNo);
+
+                var imagedata = res.In_actual_attach;
+                imgstring = res.In_actual_attach;
+                if (imagedata != "") {
+                    document.getElementById("farmer_img").src = "data:image/png;base64," + imagedata;
+                    $("#imgchnge").attr("href", "data: image / png; base64," + imagedata);
+                }
+                else {
+                    document.getElementById("farmer_img").src = "/images/noimage.png";
+                    $("#imgchnge").attr("href", "data/images/noimage.png");
+                }
+                // $("#txt_Status").val(res.in_status);
+                var dateautual = $("#txt_date").val();
+                var year1 = dateautual.split('-');
+                $("#txt_year").val(year1[2]);
+                $("#txt_year").attr("disabled", true);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<script>
+    function New_grid_Quantity_details(data) {
+        try {
+            $("#grid_Quantity").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                In_qty_row_id: { type: "int" },
+                                In_agg_code: { type: "string" },
+                                In_lotno: { type: "string" },
+                                In_item_code: { type: "string" },
+                                In_qty_code: { type: "string" },
+                                In_qty_range: { type: "string" },
+                                In_qty_unit: { type: "string" },
+                                In_actual_value: { type: "double" },
+                                In_wr_qty_value: { type: "double" },
+                                In_qty_code: { type: "string" },
+                                Out_mode_flag: { type: "string" }
+                            }
+                        }
+                    }
+                },
+                //  toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 250,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_Quantity').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                    {
+                        field: "In_qty_row_id",
+                        title: "quantity_rowid",
+                        hidden: true
+                    },
+                    {
+                        field: "In_agg_code",
+                        title: "Agg Code",
+                        hidden: true
+                    },
+                    {
+                        field: "In_lotno",
+                        title: "Lot No",
+                        hidden: true
+                    },
+                    {
+                        field: "In_item_code",
+                        title: "Product Code",
+                        hidden: true
+                    },
+                    {
+                        field: "In_qty_code",
+                        title: "Quality Code",
+                        hidden: true
+                    },
+                    {
+                        field: "In_qty_name",
+                        title: "Quality Name",
+
+                    },
+                    {
+                        field: "In_qty_range",
+                        title: "Quality Range",
+
+                    },
+                    {
+                        field: "In_qty_unit",
+                        title: "Quality Unit",
+
+                    },
+                    {
+                        field: "In_actual_value",
+                        title: "Actual Value",
+                        attributes: { style: "text-align:right;" }
+                    },
+                    {
+                        field: "In_wr_qty_value",
+                        title: "Wr Qty Value",
+                        hidden: true
+                    },
+
+                    {
+                        field: "Out_mode_flag",
+                        title: "orgn_dist",
+                        hidden: true
+                    }
+                ],
+                editable: false
+            });
+            $("#grid_Quantity .k-input").attr('disabled', 'false');
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function New_grid_Serial_details(data) {
+        try {
+            $("#grid_Serial").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                In_slno_row_id: { type: "int" },
+                                In_agg_code: { type: "string" },
+                                In_lotno: { type: "string" },
+                                In_slno: { type: "string" },
+                                In_mode_flag: { type: "string" },
+                                //In_temp1: { type: "string" },
+                                //In_temp2: { type: "double" }
+                            }
+                        }
+                    }
+                },
+                //  toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 250,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_Serial').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                    {
+                        field: "In_slno_row_id",
+                        title: "rowid",
+                        hidden: true,
+                    },
+                    {
+                        field: "In_agg_code",
+                        title: "Agg code",
+                        hidden: true
+                    },
+                    {
+                        field: "In_lotno",
+                        title: "Lot No",
+                        hidden: true
+                    },
+                    {
+                        field: "In_slno",
+                        title: "Sl No.",
+                    },
+                    {
+                        field: "In_qty",
+                        title: "Qty",
+                        attributes: { style: "text-align:right;" },
+                    },
+
+                    {
+                        field: "In_mode_flag",
+                        title: "Mode",
+                        hidden: true
+                    }
+                ],
+                editable: false
+            });
+            $("#grid_Serial .k-input").attr('disabled', 'false');
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function New_grid_Othercost_details(data) {
+        try {
+            $("#grid_Othercost").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+
+                                In_lotno: { type: "string" },
+                                In_type: { type: "string" },
+                                In_value: { type: "double" },
+                            }
+                        }
+                    }
+                },
+                //  toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 250,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_Othercost').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                    {
+                        field: "In_lotno",
+                        title: "Lot No",
+                        hidden: true
+                    },
+                    {
+                        field: "In_type",
+                        title: "Type"
+                    },
+                    {
+                        field: "In_value",
+                        title: "Cost",
+                        attributes: { style: "text-align:right;" }
+                    }
+
+
+                ],
+                editable: false
+            });
+            $("#grid_Othercost .k-input").attr('disabled', 'false');
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    //$("#btn_qtyView").bind("click", function () {
+    //    getSerializedSelectedRows('view');
+    //});
+    function qtytab() {
+        try {
+            $("div#Quantity").toggleClass('tab-pane fade active in');
+            $("div#Quantity").show();
+            $("div#Othercost").hide();
+            $("div#Serial").hide();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function serialtab() {
+        try {
+            $("div#Serial").toggleClass('tab-pane fade active in');
+            $("div#Serial").show();
+            $("div#Quantity").hide();
+            $("div#Othercost").hide();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function Other() {
+        try {
+            $("div#Othercost").toggleClass('tab-pane fade active in');
+            $("div#Othercost").show();
+            $("div#Quantity").hide();
+            $("div#Serial").hide();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function grid_Quantity_details(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                //$("#gd_product").empty();
+                //$("#gd_product").append("<div id='grid_Quantity'></div>");
+                New_grid_Quantity_details(data);
+            }
+            else {
+                New_grid_Quantity_details([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function grid_Serial_details(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                //$("#gd_product").empty();
+                //$("#gd_product").append("<div id='grid_Quantity'></div>");
+                New_grid_Serial_details(data);
+            }
+            else {
+                New_grid_Serial_details([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function grid_Othercost_details(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                //$("#gd_product").empty();
+                //$("#gd_product").append("<div id='grid_Quantity'></div>");
+                New_grid_Othercost_details(data);
+            }
+            else {
+                New_grid_Othercost_details([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function viewdisable() {
+        $("#txt_LotNo").attr("disabled", true);
+        $("#txt_Farmer_Code").attr("disabled", true);
+        $("#txt_Farmer_Name").attr("disabled", true);
+        $("#txt_Member_Type").attr("disabled", true);
+        $("#txt_Item_Code").attr("disabled", true);
+        $("#txt_Item_Name").attr("disabled", true);
+        $("#txtMode").attr("disabled", true);
+        $("#txt_row_timestamp").attr("disabled", true);
+        $("#txt_Actual_Qty").attr("disabled", true);
+        $("#txt_Actual_Price").attr("disabled", true);
+        $("#txt_Actual_Value").attr("disabled", true);
+        $("#txt_Advance_amt").attr("disabled", true);
+        $("#txt_bags").attr("disabled", true);
+        $("#txt_Actual_remarks").attr("disabled", true);
+        $("#txt_approved_remarks").attr("disabled", true);
+        $("#txt_Pick_Remarks").attr("disabled", true);
+        $("#txt_qcperson_name").attr("disabled", true);
+        $("#txt_Lrpname").attr("disabled", true);
+        $("#txt_LRP_Mobile_no").attr("disabled", true);
+        $("#txt_date").attr("disabled", true);
+        $("#txt_season").attr("disabled", true);
+        $("#txt_destination").attr("disabled", true);
+        $("#txt_vehicleno").attr("disabled", true);
+        $("#txt_vehicletype").attr("disabled", true);
+        $("#txt_wr_Remarks").attr("disabled", true);
+        $("#txt_buyer_name").attr("disabled", true);
+
+
+    }
+</script>
+<style>
+        .geeks {
+            width: 900px;
+            height: 400px;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+
+            .geeks img {
+                /* width: 100%;*/
+                transition: 0.5s all ease-in-out;
+            }
+
+        /*  .geeks:hover img {
+                transform: scale(1.5);
+            }
+    */
+
+</style>

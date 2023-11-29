@@ -1,0 +1,353 @@
+﻿@{
+    ViewBag.List = "Bill Entries ";
+    Layout = "~/Views/Shared/ListViewLayout.cshtml";
+}
+<form id="frm_bill" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="gd_billgrid">
+                <div id="Bill_grid"></div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script src="~/API_Scripts/Bill_Entry_retretrieveBillEntryList_APIClient.js"></script>
+<script src="~/API_Scripts/Bill_Entry_retrieveBillEntry_APIClient.js"></script>
+<script src="~/API_Scripts/Bill_Entry_retrieveBillSessionDtl_APIClient.js"></script>
+<script src="~/API_Scripts/Bill_Entry_saveBillEntry_APIClient.js"></script>
+<script src="~/API_Scripts/BillEntry.js"></script>
+<script src="~/API_Scripts/retretrieveBillEntryList_Model.js"></script>
+<script src="~/API_Scripts/retrieveBillEntry_Model.js"></script>
+<script src="~/API_Scripts/retrieveBillSessionDtl_Model.js"></script>
+<script src="~/API_Scripts/saveBillEntry_Model.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+        $(".adv_filter").attr("hdrtitle", "Bill Entry List");
+        $(".adv_filter").attr("fltid", "BillEntries");
+        $(".Export").attr("hdrtitle", "Bill Entry List");
+        $(".Export").attr("SubTreeId", "MLKBILL");
+        list_grid_id = "Bill_grid";
+
+        listpageloadfetch();
+
+        Screen_Id = "MLKBILL";
+        permission = sec_Permission(Screen_Id);
+        page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+        filterhover();
+    });
+</script>
+
+<script>
+    function listpageloadfetch() {
+        try {
+            var formval = form_Serialize("frm_bill");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_Fromvalue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_Fromvalue = ".";
+            }
+            obj_val.FilterBy_Tovalue = ".";
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Filter = obj_val;
+            retrieve_billentry_list(data);
+
+            setlocalStorage('flt_condition', "");
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    var status_Priority = [];
+    var status_Priority = [];
+    function listgrid(data) {
+        try {
+            $.each(data, function (index, value) {
+                var flag = false;
+                $.each(status_Priority, function (sindex, svalue) {
+                    if (svalue == value.status_desc) {
+                        flag = true;
+                    }
+                });
+                if (flag == false) {
+                    status_Priority.push(value.status_desc);
+                }
+            });
+            $("#Bill_grid").kendoGrid(
+             {
+                 dataSource: {
+                     data: data,
+                     pageSize: 20,
+                     change: function (e) {
+                         setTimeout(function () {
+                             var gd = $("#Bill_grid").data("kendoGrid");
+                             filter_row(gd);
+                             $('.k-i-close').css('display', 'none');
+                             $('button.k-button-icon').css('display', 'none');
+                             $('#Ratecard_grid .k-input').prop('disabled', false);
+                             $('#Ratecard_grid .k-input').prop('readonly', true);
+
+                         }, 1);
+                     },
+                 },
+                 toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                 excelExport: function (e) {
+                     var gd = $("#Bill_grid").data("kendoGrid");
+                     var len = gd.dataSource._data.length;
+                     var chkall = $('#chkall').is(':checked');
+                     var chkfilter = $('#chkfilter').is(':checked');
+                     var chktemp = $('#chktemp').is(':checked');
+                     var twokendobox = true;
+                     gd.dataSource.pageSize(len);
+                     if (e.sender.dataSource._data.length == len) {
+                         twokendobox = false;
+                         exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                     }
+                     else {
+                         exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                     }
+                     gd.dataSource.pageSize('10');
+                     return false;
+                 },
+                 filterable: {
+                     enabled: true,
+                     delay: 1500,
+                     mode: "menu, row",
+                     height: 200,
+                     click: function (e) {
+                         var gd = $("#Bill_grid").data("kendoGrid");
+                         filter_row(gd);
+                     }
+                 },
+                 filterMenuInit: function (e) {
+                     var gd = $("#Bill_grid").data("kendoGrid");
+                     filter_row(gd);
+                 },
+                 change: selectRow,
+                 height: 450,
+                 sortable: true,
+                 selectable: true,
+                 selectable: "singl",   //  Grid Row Selection
+                 pageable: {
+                     refresh: false,
+                     pageSizes: true,
+                     buttonCount: 5
+                 },
+                 navigatable: true,
+                 groupable: false,
+                 columns: [
+
+                        {
+                            field: "ccbill_rowid",
+                            title: "Bill Row ID",
+                            width: 1,
+                            hidden: true,
+                        },
+                     {
+                         field: "ccbill_no",
+                         title: "Bill ID",
+                         width: 150,
+                         filterable: {
+                             cell: {
+                                 operator: "contains",
+                                 inputWidth: 1500
+                             }
+                         }
+                     },
+
+                      {
+                          field: "cc_aggrloc_desc",
+                          title: "CP Code",
+                          width: 100,
+                          filterable: {
+                              cell: {
+                                  operator: "contains",
+                                  inputWidth: 1500
+                              }
+                          }
+                      },
+                      {
+                          field: "cc_aggrloc_code",
+                          title: "CC Code",
+                          width: 100,
+                          filterable: {
+                              cell: {
+                                  operator: "contains",
+                                  inputWidth: 1500
+                              }
+                          }
+                      },
+                     {
+                         field: "period_from",
+                         title: "Milk Supplied From",
+                         width: 150,
+                         filterable: {
+                             cell: {
+                                 operator: "contains",
+                                 inputWidth: 1500
+                             }
+                         }
+                     },
+                  {
+                      field: "period_to",
+                      title: "Milk Supplied To",
+                      width: 150,
+                      filterable: {
+                          cell: {
+                              operator: "contains",
+                              inputWidth: 1500
+                          }
+                      }
+                  },
+                  {
+                      field: "process_status",
+                      title: "Process code",
+                      width: 1,
+                      hidden: true,
+                  },
+                  {
+                      field: "process_status_desc",
+                      title: "Process Desc.",
+                      width: 200,
+                      filterable: {
+                          cell: {
+                              operator: "contains",
+                              inputWidth: 1500
+                          }
+                      }
+                  },
+                {
+                    field: "status_code",
+                    title: "STATUS Id",
+                    width: 1,
+                    hidden: true,
+                },
+                {
+                    field: "status_desc",
+                    title: "Status",
+                    width: 100,
+                    filterable: {
+
+                        cell: {
+                            operator: "contains",
+                            inputWidth: 1500
+                        }
+                    }
+                },
+                 ]
+
+             });
+            $(".k-dropdown-operator").css('display', 'none');
+            $("#Bill_grid .k-input").attr('disabled', 'false');
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function statusFilter(element) {    // Dropdown list functionality
+        element.kendoDropDownList({
+            dataSource: status_Priority,
+            optionLabel: "--Select Value--"
+        });
+    }
+    function selectRow() {
+        try {
+            var grid = $("#Bill_grid").data("kendoGrid");
+            var selectedItem = grid.dataItem(grid.select());
+            setlocalStorage("ls_pageList", selectedItem);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+
+<script>
+    $("#btn_Edit").bind("click", function () {
+        getSerializedSelectedRows('edit');
+    });
+
+    $("#btn_View").bind("click", function () {
+        getSerializedSelectedRows('view');
+    });
+
+    $("#btn_new").bind("click", function () {
+        btn_onClick('Create');
+        location.href = "../BillEntries/BillEntrieForm";
+    });
+
+    function getSerializedSelectedRows(mode) {
+        try {
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var items = getlocalStorage("ls_pageList");
+                if (items.length == 0) {
+                    kendoAlert("Please select records");
+                }
+                else {
+                    if (mode == "edit") {
+                        if (getlocalStorage("ls_pageList") != undefined) {
+                            var data = getlocalStorage("ls_pageList");
+                            if (data.process_status == 'QCD_BILL_PROCESSED') {
+                                kendoAlert("Payment Advice was Generated for this bill, you cannot modify the bill details");
+                            }
+                            else {
+                                btn_onClick('Edit');
+                                location.href = "../BillEntries/BillEntrieForm";
+                            }
+                        }
+                    }
+                    else if (mode == "view") {
+                        btn_onClick('View');
+                        location.href = "../BillEntries/BillEntrieForm";
+                    }
+                }
+            }
+        }
+        catch (err) {
+        }
+    }
+</script>
+
+<script>
+    function generate_billentry_list(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                listgrid(data);
+            }
+            else {
+                listgrid([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function listRefresh() {
+        try {
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+
+

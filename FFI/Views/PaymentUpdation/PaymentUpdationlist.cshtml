@@ -1,0 +1,369 @@
+﻿@{
+    ViewBag.List = "Receipt Updation";
+    Layout = "~/Views/Shared/ListViewLayout.cshtml";
+}
+
+<form id="frm_receipt_upt" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="gd_paymentupdate">
+                <div id="paymentupdate"></div>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="~/API_Scripts/receipt_update_retrieveReceiptUpdation_APIClient.js"></script>
+<script src="~/API_Scripts/receipt_update_retrieveReceiptUpdationList_APIClient.js"></script>
+<script src="~/API_Scripts/receipt_update_saveReceiptUpdation_APIClient.js"></script>
+<script src="~/API_Scripts/retrieveReceiptUpdation_Model.js"></script>
+<script src="~/API_Scripts/retrieveReceiptUpdationList_Model.js"></script>
+<script src="~/API_Scripts/saveReceiptUpdation_Model.js"></script>
+<script src="~/API_Scripts/ReceiptUpdate.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script>
+    click_act_name = "PaymentUpdationform";
+    click_ctrl_name = "PaymentUpdation";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+
+
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+        $(".adv_filter").attr("hdrtitle", "Receipt Updation List Record");
+        $(".adv_filter").attr("fltid", "Receipt");
+        $(".Export").attr("hdrtitle", "Receipt List");
+        $(".Export").attr("SubTreeId", "FALPAYUPD");
+        list_grid_id = "paymentupdate";
+
+        listpageloadfetch();
+        $("#btn_new").hide();
+        Screen_Id = "FALPAYUPD";
+        permission = sec_Permission(Screen_Id);
+        page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+        filterhover();
+    });
+</script>
+
+<script>
+    function listpageloadfetch() {
+        try{
+            var formval = form_Serialize("frm_receipt_upt");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_FromValue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_FromValue = ".";
+            }
+            obj_val.FilterBy_ToValue = ".";
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Filter = obj_val;        
+            retrieve_Reciptupdation_list(data);           
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    var status_Priority = [];
+    function receipt_update(data) {
+        try{
+            $.each(data, function (index, value) {
+                var flag = false;
+                $.each(status_Priority, function (sindex, svalue) {
+                    if (svalue == value.status_desc) {
+                        flag = true;
+                    }
+                });
+                if (flag == false) {
+                    status_Priority.push(value.status_desc);
+                }
+            });
+    $("#paymentupdate").kendoGrid(
+        {
+           
+            dataSource: {
+                data: data,
+                pageSize: 20,
+                change: function (e) {
+                    setTimeout(function () {
+                        var gd = $("#paymentupdate").data("kendoGrid");
+                        filter_row(gd);
+                        $('.k-i-close').css('display', 'none');
+                        $('button.k-button-icon').css('display', 'none');
+                        $('#paymentupdate .k-input').prop('disabled', false);
+                        $('#paymentupdate .k-input').prop('readonly', true);
+
+                    }, 1);
+                },
+            },
+            toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+            excelExport: function (e) {
+                var gd = $("#paymentupdate").data("kendoGrid");
+                var len = gd.dataSource._data.length;
+                var chkall = $('#chkall').is(':checked');
+                var chkfilter = $('#chkfilter').is(':checked');
+                var chktemp = $('#chktemp').is(':checked');
+                var twokendobox = true;
+                gd.dataSource.pageSize(len);
+                if (e.sender.dataSource._data.length == len) {
+                    twokendobox = false;
+                    exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                }
+                else {
+                    exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                }
+                gd.dataSource.pageSize('10');
+                return false;
+            },
+            filterable: {
+                enabled: true,
+                delay: 1500,
+                mode: "menu, row",
+                height: 200,
+                click: function (e) {
+                    var gd = $("#paymentupdate").data("kendoGrid");
+                    filter_row(gd);
+                }
+            },
+            filterMenuInit: function (e) {
+                var gd = $("#paymentupdate").data("kendoGrid");
+                filter_row(gd);
+            },
+            change: selectRow,
+            height: 450,
+            sortable: true,
+            selectable: true,
+            selectable: "singl",   //  Grid Row Selection
+            pageable: {
+                refresh: false,
+                pageSizes: true,
+                buttonCount: 5
+            },
+            navigatable: true,
+            groupable: false,
+            columns: [
+             
+                     {
+                         field: "booking_rowid",
+                         title: "booking_rowid",
+                         width: 1,
+                         hidden: true,
+                     },
+                       {
+                           field: "customer_code",
+                           title: "Customer Code",
+                           width: 200,
+                           filterable: {
+                               cell: {
+                                   operator: "contains",
+                                   inputWidth: 1500
+                               }
+                           }
+                       },
+
+                        {
+                            field: "customer_name",
+                            title: "Customer Name",
+                            width: 200,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                       {
+                           field: "booking_no",
+                           title: "Booking ID",
+                           width: 200,
+                           filterable: {
+                               cell: {
+                                   operator: "contains",
+                                   inputWidth: 1500
+                               }
+                           }
+                       },
+                        {
+                            field: "equipment_code",
+                            title: "equipment_code",
+                            width: 1,
+                            hidden: true,
+                        },
+                       {
+                           field: "equipment_name",
+                           title: "Equipment",
+                           width: 200,
+                           filterable: {
+                               cell: {
+                                   operator: "contains",
+                                   inputWidth: 1500
+                               }
+                           }
+                       },
+                       {
+                           field: "booking_date",
+                           title: "Date of Booking",
+                           width: 200,
+                           filterable: {
+                               cell: {
+                                   operator: "contains",
+                                   inputWidth: 1500
+                               }
+                           }
+                       },
+                           {
+                               field: "effective_from",
+                               title: "Period From",
+                               width: 200,
+                               filterable: {
+                                   cell: {
+                                       operator: "contains",
+                                       inputWidth: 1500
+                                   }
+                               }
+                           },
+                           {
+                               field: "effective_to",
+                               title: "Period To",
+                               width: 200,
+                               filterable: {
+                                   cell: {
+                                       operator: "contains",
+                                       inputWidth: 1500
+                                   }
+                               }
+                           },
+                   {
+                       field: "status_desc",
+                       title: "Payment Status",
+                       width: 200,
+                       filterable: {
+                           cell: {
+                               operator: "contains",
+                               inputWidth: 1500
+                           }
+                       }
+                   },
+                ]
+
+    });
+
+
+    $(".k-dropdown-operator").css('display', 'none');
+    $("#paymentupdate .k-input").attr('disabled', 'false');
+}
+    catch (err) {
+        javascript_log4j_root(arguments.callee.name, err);
+    }
+}
+function statusFilter(element) {    // Dropdown list functionality
+    element.kendoDropDownList({
+        dataSource: status_Priority,
+        optionLabel: "--Select Value--"
+    });
+}
+
+function selectRow() {
+    try {
+        var grid = $("#paymentupdate").data("kendoGrid");
+        var selectedItem = grid.dataItem(grid.select());
+        setlocalStorage("ls_pageList", selectedItem);
+    }
+    catch (err) {
+        javascript_log4j_root(arguments.callee.name, err);
+    }
+}
+</script>
+
+
+<script>
+    $("#btn_Edit").bind("click", function () {
+        getSerializedSelectedRows('edit');
+    });
+
+    $("#btn_View").bind("click", function () {
+        getSerializedSelectedRows('view');
+    });
+
+    $("#btn_new").bind("click", function () {
+        btn_onClick('Create');
+        location.href = "../PaymentUpdation/PaymentUpdationform";
+    });
+
+    function getSerializedSelectedRows(mode) {
+        try {
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var items = getlocalStorage("ls_pageList");
+                if (items.length == 0) {
+                    kendoAlert("Please select a record to modify / view");
+                }
+
+                else {
+                    if (mode == "edit") {
+                        btn_onClick('Edit');
+                        location.href = "../PaymentUpdation/PaymentUpdationform";
+                    }
+                    else if (mode == "view") {
+                        btn_onClick('View');
+                        location.href = "../PaymentUpdation/PaymentUpdationform";
+                    }
+                }
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    </script>
+
+    <script>
+        function generate_Reciptupdation_list(res) {
+            debugger;
+            try {
+                    if (res != null) {
+                        for (var i = res.length - 1; i >= 0; i--) {
+                            var dob = res[i].booking_date;
+                            let reversed = "";
+                            dobarr = dob.split('-');
+                            var accDob = dobarr[2] + '/' + dobarr[1] + '/' + dobarr[0];
+                            res[i].booking_date = accDob;
+                 
+                        }
+                        var data = changedataType(res);
+                        $("#gd_paymentupdate").empty();
+                        $("#gd_paymentupdate").append("<div id='paymentupdate'></div>");
+                        receipt_update(data);
+                    }
+
+                else {
+                    receipt_update([]);
+                }
+            }
+            catch (err) {
+                javascript_log4j_root(arguments.callee.name, err);
+            }
+        }
+    function listRefresh() {
+        try {
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    </script>
+
+   
+
+
+
+

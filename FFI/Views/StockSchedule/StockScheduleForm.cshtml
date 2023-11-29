@@ -1,0 +1,259 @@
+﻿@{
+    ViewBag.Form = "Generate Stock ledger";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+<form id="stock_ledger_form" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-xs-4" style="display:none">
+                    <div class=" form-group">
+                        <label for="txthsn_code" class=" col-sm-5 control-label">Input Centre Name</label>
+                        <div class=" col-sm-6">
+                            <input type="text" class="form-control" name="user_id" id="txthsn_code" maxlength="10" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="cmb_scdule_text" class=" col-sm-4 control-label required">Status</label>
+                        <div class=" col-sm-6">
+                            <input id="cmb_scdule_text" style="width: 100%">
+                        </div>
+                        @*<button title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button" data-original-title="Refresh" onclick="fetch_griddata()"> <span class="glyphicon glyphicon-refresh"></span></button>*@
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="cmb_month" class=" col-sm-5 control-label">Month</label>
+                        <div class=" col-sm-6">
+                            <input id="cmb_month" style="width: 100%">
+                        </div>
+                    </div>
+                    <button title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button" data-original-title="Refresh" onclick="fetch_griddata()"> <span class="glyphicon glyphicon-refresh"></span></button>
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <div id="grid_Drop_list">
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="~/CommonScripts/report.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script>
+    $(document).ready(function () {
+        master_stockscedule();
+        kendodate_format();
+        $("#bottom_menus").hide();
+        Screen_Id = "ICDSL";
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#stock_ledger_form");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        var griddata = [];
+        gridFilter(griddata);
+        $(".file_attach").attr("hdrtitle", "HSN");
+        $(".notes").attr("hdrtitle", "HSN");
+        $("#lblForm_menuid").text("AEPSHSN");
+        var combo_data1 = [{ code: 1, desc: "To Be Generated" },
+              { code: 1, desc: "Already Generated" }];
+        filter_combobox("cmb_scdule_text", combo_data1);
+        var combo_data2 = [{ code: 1, desc: "May-2017" },
+            { code: 1, desc: "June-2017" }, { code: 1, desc: "July-2017" }];
+        filter_combobox("cmb_month", combo_data2);
+        $('#btnReport').click(function () {
+
+        });
+
+    });
+</script>
+<script>
+    function gridFilter(data) {
+        try {
+            $("#grid_Drop_list").kendoGrid({
+                dataSource: {
+                    type: "json",
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                ic_code: { type: "string" },
+                                ic_name: { type: "string" },
+                                adjustment_month: { type: "string" },
+                                adjustment_year: { type: "string" },
+                                status_desc: { type: "string" },
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        },
+                        parse: function (data) {
+                            return $.map(data, function (item) {
+                                item.adjustment_month = item.adjustment_month + "-" + item.adjustment_year;
+                                return item;
+                            });
+                        }
+                    }
+                },
+
+                height: 250,
+                change: function (e) {
+                    $("#grid_Drop_list tbody .k-state-selected").css({
+                        "background-color": "lightgreen"
+
+
+                    });
+                },
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_Drop_list').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                groupable: false,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                 {
+                     field: "ic_code",
+                     title: "ic_code",
+                     hidden: true
+                 },
+                 {
+                     field: "ic_name",
+                     title: "Input Center Name ",
+                     width: 100,
+                 },
+                 {
+                     field: "adjustment_month",
+                     title: "Adjustment Month",
+                     width: 100,
+                 },
+                 {
+                     field: "adjustment_year",
+                     title: "Adjustment Year",
+                     hidden: true
+                 },
+                 {
+                     field: "status_desc",
+                     title: "Status",
+                     width: 100,
+
+                 },
+                 //{
+                 //    title: "&nbsp;", width: "30px",
+                 //    editor: '<span class="input-group-btn" style="padding-right: 150px;"><a class="HelpWindow fa fa-search fa-lg" data-toggle="modal" href="/Reportlist/Report" hdrtitle="Details" searchid="S21" data-target="#HelpModal"  title="Search" style="font-size: 15px; padding-left: 10px;"></a> </span>',
+                 //    //template: '<span class="input-group-btn" style="padding-right: 150px;"><a class="HelpWindow fa fa-search fa-lg" data-toggle="modal" href="/HelpFilter/HelpFilter" hdrtitle="Details" searchid="S21" data-target="#HelpModal"  title="Search" style="font-size: 15px; padding-left: 10px;"></a> </span>',
+                 //    //editor: clicked,
+                 //},
+                {
+                    field: "mode_flag",
+                    title: "Download",
+                    width: 40,
+                    editor: '<span class="input-group-btn" style="padding-right: 150px;"><a class="HelpWindow fa fa-download" data-toggle="modal" href="/Reportlist/Report" hdrtitle="Details" searchid="S21" data-target="#HelpModal"  title="Search" style="font-size: 15px; padding-left: 10px;"></a> </span>',
+                    //template:"<span class='input-group-btn' style='padding-right: 150px;'><a class='HelpWindow fa fa-search fa-lg' data-toggle='modal' href='/Reportlist/Report' hdrtitle='Details' searchid='S21' data-target='#HelpModal'  title='Search' style='font-size: 15px; padding-left: 10px;'></a> </span>",
+                },            
+   
+                ],
+                editable: true
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+
+        }
+    } 
+
+    function clicked(container, options) {
+        $(" <a data-toggle='modal' id='btnReport' type='button' class='Export btn btn-sm btn-info' href='/Reportlist/Report' data-target='#ReportModal'><span class='glyphicon glyphicon-print'> DownLoad </span></a>").appendTo(container);
+    }
+
+    //function showDetails(e)
+    //{
+    //    e.preventDefault();
+    //    var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+    //    console.log(dataItem.month);
+    //    $.ajax({
+    //        url:" <a data-toggle='modal'  type='button' class='Export btn btn-sm btn-info' href='/Reportlist/Report'><span class='glyphicon glyphicon-print'> DownLoad </span></a>",
+    //        type: "Get",
+    //        data:{month: dataItem.month},
+    //        dataType: "json",
+    //        traditional: true,
+    //        contentType: "application/json; charset=utf-8",
+    //        success: function (data) {
+    //            console.log(data);
+    //            if (data.status == "Success") {
+
+    //                alert("Done");
+
+    //            } else {
+    //                alert("Error occurs on the Database level!");
+    //            }
+    //        },
+    //        error: function () {
+    //            alert("An error has occured!!!");
+    //        }
+    //    });
+    //}
+    //attribute_group_list = getGridComboList(combo_data);
+    //var combo_data = [{ code: 1, description: "Active" }, { code: 1, description: "InActive" }, ];
+    //status_list = getGridComboList(combo_data);
+
+    function fetch_griddata() {
+        //debugger;
+        try {
+            //var data = {};
+            //var griddata = {};
+            //var context = WebAPIProxy.getContext();
+            //data.month = $("#cmb_month").data('kendoComboBox').value();
+            //data.ic_code = context.orgnId;
+            //data.locnid = context.locnId;
+            //data.userid = context.userId;
+            //data.localeid = context.localeId;
+            //var ledger_values = ajaxcall_param_new("/StockSchedule/Stocklist", data);
+            //if (ledger_values != undefined) {
+            //    var res = JSON.parse(ledger_values);
+            //    var result = JSON.parse(res);
+            //    var gdata = {
+            //        list: []
+            //    };
+
+            //    for (var i in result) {
+            //        var item = result[i];
+            //        gdata.list.push({
+            //            "ic_code": item.ic_code,
+            //            "ic_name": item.ic_name,
+            //            "adjustment_month": item.adjustment_month,
+            //            "adjustment_year": item.adjustment_year,
+            //            "status_code": item.status_code,
+            //            "status_desc": item.status_desc,
+            //            mode_flag: 'I'
+            //        });
+            //    }
+            //    //console.log(gdata);
+            //    gridFilter(gdata.list);
+            //}
+            var data = [{ ic_name: "UTR", adjustment_month: "May-2017", status_desc: "To Be Generated" }, { ic_name: "UTR", adjustment_month: "june-2017", status_desc: "To Be Generated" }];
+            gridFilter(data);
+        }
+        catch (e) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+
+
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>
+
+

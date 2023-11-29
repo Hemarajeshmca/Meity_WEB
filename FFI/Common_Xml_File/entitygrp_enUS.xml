@@ -1,0 +1,86 @@
+﻿<root>
+  <row>
+    <entitygrp_code>EC-BANK</entitygrp_code>
+    <description>Bank</description>
+    <lang_code>en-US</lang_code>
+    <multiline_flag>Y</multiline_flag>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <entitygrp_code>EC-KYC</entitygrp_code>
+    <description>KYC</description>
+    <lang_code>en-US</lang_code>
+    <multiline_flag>Y</multiline_flag>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <entitygrp_code>EC-PER-FARMER</entitygrp_code>
+    <description>Personal Details</description>
+    <lang_code>en-US</lang_code>
+    <multiline_flag>Y</multiline_flag>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <entitygrp_code>EC-FAMILYDET</entitygrp_code>
+    <description>Family Details</description>
+    <lang_code>en-US</lang_code>
+    <multiline_flag>Y</multiline_flag>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <entitygrp_code>EC-LOANDET</entitygrp_code>
+    <description>Loan Details</description>
+    <lang_code>en-US</lang_code>
+    <multiline_flag>Y</multiline_flag>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <entitygrp_code>EC-LANDDET</entitygrp_code>
+    <description>Land Details</description>
+    <lang_code>en-US</lang_code>
+    <multiline_flag>Y</multiline_flag>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <entitygrp_code>EC-LIVESTOCKDET</entitygrp_code>
+    <description>Live Stock Details</description>
+    <lang_code>en-US</lang_code>
+    <multiline_flag>Y</multiline_flag>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <entitygrp_code>EC-ASSET</entitygrp_code>
+    <description>Asset Details</description>
+    <lang_code>en-US</lang_code>
+    <multiline_flag>Y</multiline_flag>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <entitygrp_code>EC-FIG</entitygrp_code>
+    <description>FIG(s)/Farmer Club(s)</description>
+    <lang_code>en-US</lang_code>
+    <multiline_flag>Y</multiline_flag>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <entitygrp_code>EC-OFFPEAR</entitygrp_code>
+    <description>Office Bearers</description>
+    <lang_code>en-US</lang_code>
+    <multiline_flag>Y</multiline_flag>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <entitygrp_code>EC-ADDR</entitygrp_code>
+    <description>Address</description>
+    <lang_code>en-US</lang_code>
+    <multiline_flag>Y</multiline_flag>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <entitygrp_code>EC-USER</entitygrp_code>
+    <description>User</description>
+    <lang_code>en-US</lang_code>
+    <multiline_flag>Y</multiline_flag>
+    <status_code>Active</status_code>
+  </row>
+</root>

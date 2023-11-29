@@ -1,0 +1,629 @@
+﻿@{
+    ViewBag.Form = "Financial Year";
+    ViewBag.helpName = "Financial_Year.html";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+
+<form id="finyear_form" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row">
+                <div class="col-md-4">
+                    <div id="grid_finyear_list">
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-xs-5">
+                            <div class="form-group">
+                                <label for="txt_finyear_code" class="col-sm-5 control-label required">FY Code :</label>
+                                <div class=" col-sm-7">
+                                    <input type="text" class="form-control" name="finyear_code" id="txt_finyear_code" maxlength="10">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-5">
+                            <div class="form-group">
+                                <label for="txt_finyear_desc" class="col-sm-5 control-label required">Description :</label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control" name="finyear_desc" id="txt_finyear_desc" maxlength="125">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-5">
+                            <div class=" form-group">
+                                <label for="txt_finyear_st_dt" class=" col-sm-5 control-label required">Start :</label>
+                                <div class=" col-sm-7">
+                                    <input class="cusDate" data-role='datepicker' id="txt_finyear_st_dt"onchange="datechange()" data-required-msg="Date cannot be blank" data-checkdate-msg="Enter Valid Date" name="finyear_start_date" style="width:100%" onkeypress="return date_validate(event)" />
+                                    @*<span data-for='valid' class='k-invalid-msg'></span>*@
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-5">
+                            <div class="form-group">
+                                <label for="txt_finyear_end_dt" class=" col-sm-5 control-label required">End :</label>
+                                <div class=" col-sm-7">
+                                    @*<input class="cusDate" data-role='datepicker' id="txt_finyear_end_dt" data-required-msg="Date cannot be blank" data-checkdate-msg="Enter Valid Date" name="finyear_end_date" style="width:100%" onkeypress="return date_validate(event)" />*@
+                                    <input class="cusDate" data-role='datepicker' readonly id="txt_finyear_end_dt" data-required-msg="Date cannot be blank" name="finyear_end_date" style="width:100%" />
+                                    @*<span data-for='valid' class='k-invalid-msg'></span>*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-5">
+                            <div class="form-group">
+                                <label for="txtEm" class=" col-sm-5 control-label">Narration:</label>
+                                <div class=" col-sm-7">
+                                    <textarea id="txt_desc" rows="10" cols="20" name="finyear_narration" style="width:521px;height:243px;" class="form-control"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-5" style="display:none">
+                    <div class="form-group">
+                        <label for="txt_finyear_rowid" class="col-sm-5 control-label">Financial Row Id:</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txt_finyear_rowid" name="finyear_rowid" class="form-control" maxlength="125">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-5" style="display:none">
+                    <div class="form-group">
+                        <label for="txt_timestamp" class="col-sm-5 control-label">Timestamp:</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txt_timestamp" name="row_timestamp" class="form-control" maxlength="125">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-5" style="display:none">
+                    <div class="form-group">
+                        <label for="txt_status_code" class="col-sm-5 control-label">Status Code:</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txt_status_code" name="status_code" class="form-control" maxlength="125">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3" style=" display:none">
+                    <div class="form-group" style=" display:none">
+                        <label for="txtMode" class="col-sm-5 control-label">Mode Flag</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtMode" name="mode_flag" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!-- Main content -->
+<script src="~/API_Scripts/Fin_Year_retrieveFinYear_APIClient.js"></script>
+<script src="~/API_Scripts/Fin_Year_retrieveFinYearList_APIClient.js"></script>
+<script src="~/API_Scripts/Fin_Year_saveFinYear_APIClient.js"></script>
+<script src="~/API_Scripts/saveFinYear_Model.js"></script>
+<script src="~/API_Scripts/retrieveFinYearList_Model.js"></script>
+<script src="~/API_Scripts/retrieveFinYear_Model.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/API_Scripts/Financial_Year.js"></script>
+<script>
+    $(document).ready(function () {
+        kendodate_format();
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#finyear_form");
+        kendo.init(container);
+        container.kendoValidator({
+            rules: {
+                checkdate: function (input) {
+                    if (input.attr("data-role") == "datepicker") {
+                        var res = isDate(input.val());
+                        return res;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+            }
+        });
+
+        //var presentDate = new Date();
+        //$(function () {
+        //    var datepicker = $('#txt_finyear_end_dt').kendoFinanciarDatePicker({
+        //        // value: presentDate,
+        //        min: presentDate,
+        //        //format: "dd/MM/yyyy",
+        //    }).data('kendoDatePicker');
+        //});
+        Screen_Id = "FINYEAR";
+        permission = sec_Master_Permission(Screen_Id);
+
+        master_userRoleNew();
+        grid_finyear([]);
+        $("#txtcommon_id").hide();
+        $("#common_id").hide();
+
+        listpageloadfetch();
+        setlocalStorage('flt_condition', "");
+    });
+
+    function datechange() {
+        debugger;
+        var test = "";
+
+        date = $("#txt_finyear_st_dt").val();
+            if (date != "" || date != undefined) {
+                var d = date.split("/");
+                if (d == "") {
+
+                }
+               else
+                if (d[0] == 01 && d[1] == 04)
+                {
+                    var yete = (parseInt(d[2]) + 1);
+                    test =31 + "/" + 03 + "/" + yete;
+                    $('#txt_finyear_end_dt').val(test);
+                }
+                else
+                {
+                    kendoAlert("Select Correct date and month");
+                    $('#txt_finyear_end_dt').val("");
+                    $("#txt_finyear_st_dt").val("");
+                }
+        }
+
+    }
+    function listpageloadfetch() {
+        debugger;
+        try {
+            var formval = form_Serialize("finyear_form");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_Fromvalue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_Fromvalue = ".";
+            }
+            obj_val.FilterBy_Tovalue = ".";
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Filter = obj_val;
+            var Context = data.context;
+
+            var data = { user: Context.userId, org: Context.orgnId, locn: Context.locnId, lang: Context.localeId, filterby_option: Context.Filter.FilterBy_Option, filterby_code: Context.Filter.FilterBy_Code, filterby_fromvalue: Context.Filter.FilterBy_Fromvalue, filterby_tovalue: Context.Filter.FilterBy_Tovalue };
+
+          $.ajax({
+          url: '@Url.Action("Financial_YearList", "Financial_Year")',
+         type: "post",
+        contentType: 'application/x-www-form-urlencoded',
+            data: data,
+            success: function (response1) {
+                debugger;
+                if (response1 != null) {
+                    generate_fin_year_list(response1.context.List);
+                }
+                else {
+                    grid_finyear([]);
+                }
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+        });
+
+
+
+
+
+
+            //HttpGet APi Purpose Commented by Venkat 09-09-2020 start
+            //$.ajax({
+            //    type: "POST",
+            //    url: '/Financial_Year/Financial_YearList',
+            //    dataType: 'json',
+            //    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, FilterBy_Option: Context.Filter.FilterBy_Option, FilterBy_Code: Context.Filter.FilterBy_Code, FilterBy_Fromvalue: Context.Filter.FilterBy_Fromvalue, FilterBy_Tovalue: Context.Filter.FilterBy_Tovalue }),
+            //    contentType: 'application/json; charset=utf-8',
+            //    success: function (response) {
+            //        //var list = JSON.parse(response);
+            //        if (response.context.List != null) {
+            //            generate_fin_year_list(response.context.List);
+            //        }
+            //        else {
+            //            grid_finyear([]);
+            //        }
+            //    },
+            //    error: function (er) {
+            //        alert(er)
+            //        console.log(er)
+            //    }
+
+            //});
+            //HttpGet APi Purpose Commented by Venkat 09-09-2020 End
+
+
+            setlocalStorage('flt_condition', "");
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+
+    function grid_finyear(data) {
+        try {
+            $("#grid_finyear_list").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                status_code: { type: "string", defaultValue: "A" },
+                                status_desc: { type: "string" },
+                                row_timestamp: { type: "string" },
+                                locallang_flag: { type: "string" },
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+                height: 470,
+                sortable: true,
+                selectable: true,
+                change: onChangeSelection,
+                selectable: "singl",   //  Grid Row Selection
+                navigatable: true,
+                columns: [{
+                    field: "finyear_code",
+                    title: "FY Code"
+                },
+                {
+                    field: "finyear_desc",
+                    title: "FY Description"
+                },
+                {
+                    field: "finyear_start_date",
+                    title: "Fin Date",
+                    hidden: true,
+                    width: 30
+                },
+                {
+                    field: "finyear_end_date",
+                    title: "Fin Date",
+                    hidden: true,
+                    width: 30
+                },
+                {
+                    field: "finyear_narration",
+                    title: "Fin Narration",
+                    hidden: true,
+                    width: 30
+                },
+                {
+                    field: "finyear_rowid",
+                    title: "Fin rowId",
+                    hidden: true,
+                    width: 30
+                },
+                {
+                    field: "status_desc",
+                    title: "Status Descripition",
+
+                },
+                {
+                    field: "status_code",
+                    title: "Status",
+                    hidden: true,
+                    width: 30
+                },
+                {
+                    field: "row_timestamp",
+                    title: "Timestamp",
+                    hidden: true
+                },
+                {
+                    field: "mode_flag",
+                    title: "Mode",
+                    hidden: true
+
+                }]
+            });
+        }
+
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>
+    function generate_fin_year_list(res) {
+        try {
+
+            if (res == null) {
+                grid_finyear([]);
+            }
+            else {
+                var data = changedataType(res);
+                grid_finyear(data);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_fin_year_header(res) {
+        try {
+            $("#txt_finyear_code").val(res.finyear_code);
+            $("#txt_finyear_code").attr("readonly", "");
+            $("#txt_finyear_desc").val(res.finyear_desc);
+            $("#txt_finyear_st_dt").val(res.finyear_start_date);
+            $("#txt_finyear_end_dt").val(res.finyear_end_date);
+            $("#txt_desc").val(res.finyear_narration);
+            $("#txt_status_code").val(res.status_code);
+            $("#DocStat").val(res.status_desc);
+            $("#txtMode").val(res.mode_flag);
+            $("#txt_finyear_rowid").val(res.finyear_rowid);
+            $("#txt_timestamp").val(res.row_timestamp);
+            $("#modevalue").text("Edit Mode");
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function create_new() {
+        try {
+            clear_val();
+            listpageloadfetch();
+            $("#txt_finyear_code").attr("readonly", false);
+            $("#txtMode").val("I");
+            $("#modevalue").text("New Mode");
+            $("#DocStat").val("New");
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function clear_val() {
+        try {
+            $("#txtcode").val('');
+            $("#txt_finyear_code").val('');
+            $("#txt_finyear_desc").val('');
+            $("#txt_finyear_st_dt").val('');
+            $("#txt_finyear_end_dt").val('');
+            $("#txt_desc").val('');
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function save(mode) {
+        debugger;
+        try {
+            if ($("#DocStat").val() == "Active") {
+                $("#txtMode").val('U');
+            }
+            if ($("#DocStat").val() == "New" || $("#DocStat").val() == "" ) {
+                $("#txtMode").val('I');
+            }
+
+            if ($("#txt_finyear_rowid").val() == "") {
+                $("#txt_finyear_rowid").val('0');
+            }
+            if (mode != undefined) {
+                $("#txtMode").val('D');
+            }
+
+            var formval = form_Serialize("finyear_form");
+            var obj_val = JSON.parse(formval);
+            if (mode == "D") {
+                if (obj_val.hasOwnProperty('finyear_start_date')) {
+                    if (obj_val.finyear_start_date != '')
+                        obj_val.finyear_start_date = obj_val.finyear_start_date; //getFormated_StringDate(obj_val.finyear_start_date);
+                }
+                if (obj_val.hasOwnProperty('finyear_end_date')) {
+                    if (obj_val.finyear_end_date != '')
+                        obj_val.finyear_end_date = obj_val.finyear_end_date; //getFormated_StringDate(obj_val.finyear_end_date);
+                }
+            }
+            else {
+                if (obj_val.hasOwnProperty('finyear_start_date')) {
+                    if (obj_val.finyear_start_date != '')
+                        obj_val.finyear_start_date = getFormated_StringDate(obj_val.finyear_start_date);
+                }
+                if (obj_val.hasOwnProperty('finyear_end_date')) {
+                    if (obj_val.finyear_end_date != '')
+                        obj_val.finyear_end_date = getFormated_StringDate(obj_val.finyear_end_date);
+                }
+            }
+
+            var grid_val = JSON.stringify($("#grid_finyear_list").data().kendoGrid._data);
+            var Bind = {};
+            Bind = grid_val;
+            var result = JSON.parse(Bind);
+
+
+            $.each(result, function (index, value) {
+                var row_id = value.finyear_rowid;
+                if (row_id == undefined || row_id == "") {
+                    result[index].finyear_rowid = "0";
+                }
+
+
+                var mode = value.mode_flag;
+                if (mode == "" || mode == undefined) {
+                    result[index].mode_flag = "I";
+                }
+                if (mode == "S") {
+                    result[index].mode_flag = "U";
+                }
+
+            });
+            var obj_grid_val = result;
+            //     save_fin_year_details(obj_val);
+
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_val;
+            var Header = data.context.Header;
+            var Context = data.context;
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, Header: Context.Header, Detail: Context.Detail }),
+                url: "/Financial_Year/Financial_YearSave",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    var Res = JSON.parse(response);
+                    if (Res.context != null) {
+                        var mode = $("#txtMode").val();
+                        if (mode == "I") {
+                            kendoAlert("Financial Year  Details saved successfully");
+                            listpageloadfetch();
+                            clear_val()
+
+                        }
+                        else if (mode == "D") {
+                            kendoAlert("Financial Year  Details inactivate successfully");
+                            listpageloadfetch();
+                            clear_val()
+                        }
+                        else {
+                            kendoAlert("Financial Year  Details saved successfully");
+                            listpageloadfetch();
+                            clear_val()
+                        }
+                    }
+
+                    else {
+                        kendoAlert(Res.ApplicationException.errorDescription);
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function onChangeSelection() {
+        debugger;
+        try {
+            var grid = $("#grid_finyear_list").data("kendoGrid");
+            var selectedItem = grid.dataItem(grid.select());
+            var formval = form_Serialize("finyear_form");
+            var obj_val = JSON.parse(formval);
+            obj_val.finyear_rowid = selectedItem.finyear_rowid;
+
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Header = obj_val;
+            var Context = data.context;
+            var data = { user: Context.userId, org: Context.orgnId, locn: Context.locnId, lang: Context.localeId, finyear_rowid: Context.Header.finyear_rowid };
+              $.ajax({
+          url: '@Url.Action("FetchFinancialYear", "Financial_Year")',
+         type: "post",
+        contentType: 'application/x-www-form-urlencoded',
+         data: data,
+       success: function (response1) {
+                debugger;
+                if (response1 != null) {
+                    generate_fin_year_header(response1.context.Header);
+                }
+              
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+        });
+
+                //HttpGet APi Purpose Commented by Venkat 09-09-2020 start
+            //$.ajax({
+            //    type: "POST",
+            //    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, finyear_rowid: Context.Header.finyear_rowid }),
+            //    url: "/Financial_Year/GetFinancial_Year",
+            //    dataType: "json",
+            //    contentType: 'application/json; charset=utf-8',
+            //    success: function (response) {
+            //        debugger;
+            //        if (response.context != null) {
+            //            generate_fin_year_header(response.context.Header);
+            //            //SetPager(response.context.Filter.out_record_count)
+            //        }
+
+            //    },
+            //    error: function (er) {
+            //        alert(er)
+            //        console.log(er)
+            //    }
+
+            //});
+            //HttpGet APi Purpose Commented by Venkat 09-09-2020 End
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function get_fin_year_details(id) {
+        try {
+            var formval = form_Serialize("finyear_form");
+            var obj_val = JSON.parse(formval);
+            obj_val.finyear_rowid = id;
+
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Header = obj_val;
+            retrieve_fin_year_details(obj_val);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function DeleteDetails() {
+        try {
+            $("#txtMode").val('D');
+            save("D");
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+
+<style>
+    #grid_finyear_list input[type=checkbox] {
+        margin: 4px 37px 0;
+    }
+
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>
+
+

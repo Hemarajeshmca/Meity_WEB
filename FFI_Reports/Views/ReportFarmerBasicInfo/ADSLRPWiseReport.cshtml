@@ -1,0 +1,149 @@
+﻿@{
+    ViewBag.List = "Farmer ADS LRP";
+    Layout = "~/Views/Shared/ListViewLayout.cshtml";
+}
+<form id="adslrp_rpt">
+    <div class="col-xs-12">
+        <div id="gd-adslrp">
+            <div id="ADSLRP_grid">
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    $(document).ready(function () {
+        LoadReport();
+    });
+
+    function LoadReport() {
+        $.ajax({
+            type: "POST",
+            // data: '',
+            url: "/FarmerADSLRP/LoadLRPBasedADS",
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                $('#lblprog').hide();
+                if (response != null) {
+                    console.log(response);
+                    $("#gd_adslrp").empty();
+                    $("#gd_adslrp").append("<div id='AdsLRP_grid'></div>");
+                    FarmerADSLRPGrid(response);
+                }
+            },
+            error: function (er) {
+                $('#lblprog').hide();
+                console.log(er)
+            }
+        });
+    };
+
+    //function FarmerADSLRPGrid(data) {
+    //    try {
+    //        $("#AdsLRP_grid").kendoGrid(
+    //            {
+    //                dataSource: {
+    //                    data: data,
+    //                    schema: {
+    //                        model: {
+    //                            fields: {
+    //                                lrp_name: { type: "string" },
+    //                                no_of_total: { type: "string" },
+    //                                no_of_completed: { type: "string" },
+    //                                no_of_incomplete: { type: "string" },
+    //                            }
+    //                        }
+    //                    },
+    //                },
+    //                filterable: true,
+    //                height: 300,
+    //                scrollable: true,
+    //                sortable: true,
+    //                pageable: {
+    //                    refresh: false,
+    //                    pageSizes: true,
+    //                    previousNext: true,
+    //                    buttonCount: 8,
+    //                    pageSize: 20,
+    //                },
+    //                columns: [
+    //                    {
+    //                        field: "lrp_name",
+    //                        title: "LRP NAME",
+    //                        width: 100,
+    //                    },
+    //                    {
+    //                        field: "no_of_total",
+    //                        title: "Total No of Records",
+    //                        width: 100,
+    //                    },
+    //                    {
+    //                        field: "no_of_completed",
+    //                        title: "Completed Records",
+    //                        width: 100,
+    //                    },
+    //                    {
+    //                        field: "no_of_incomplete",
+    //                        title: "InComplete Records",
+    //                        width: 100,
+    //                    },
+    //                ]
+    //            });
+    //        $(".k-dropdown-operator").css('display', 'none');
+    //        $("#AdsLRP_grid .k-input").attr('disabled', 'false');
+    //    }
+    //    catch (err) {
+    //        javascript_log4j_root(arguments.callee.name, err);
+    //    }
+    //};
+
+    //function ExportButtonClick() {
+    //    var grid = $("#Expenses_grid").data("kendoGrid");
+    //    if (grid.dataSource.total() == 0) {
+    //        kendoAlert('No records available in the Grid to Export!!!');
+    //    }
+    //    else {
+    //        grid.bind("excelExport", function (e) {
+    //            debugger;
+    //            e.workbook.fileName = "Bank Details and KYC.xlsx";
+    //            var rows1 = e.workbook.sheets[0];
+
+    //            var sheet = e.workbook.sheets[0];
+    //            var gd = $("#Expenses_grid").data("kendoGrid");
+    //            var gd_fi = $("#Expenses_grid").data("kendoGrid").dataSource;
+    //            var filters = gd_fi.filter();
+    //            var allData = gd_fi.data();
+    //            var query = new kendo.data.Query(allData);
+    //            var data = query.filter(filters).data;
+    //            var data_tt = gd.dataSource.data();
+    //            var sheet = e.workbook.sheets[0];
+    //            var gridColumns = gd.columns;
+
+    //            var columnCells = [];
+    //            for (var c = 0; c < gridColumns.length; c++) {
+    //                var fieldName = gd.columns[c].hidden;
+    //                if (typeof (fieldName) === "undefined") {
+    //                    var cellValue = gridColumns[c].title ? gridColumns[c].title : gridColumns[c].field;
+    //                    columnCells.push({ value: cellValue, autoWidth: true, background: "#7a7a7a", color: "#fff" });
+    //                }
+    //            }
+    //            var rows = [{ cells: columnCells, type: "header" }];
+    //            for (var i = 0; i < data.length; i++) {
+    //                var rowCells = [];
+    //                for (var j = 0; j < gridColumns.length; j++) {
+
+    //                    var fieldName = gd.columns[j].hidden;
+    //                    if (typeof (fieldName) === "undefined") {
+    //                        var cellValue = data[i][gridColumns[j].field];
+    //                        rowCells.push({ value: cellValue });
+    //                    }
+    //                }
+    //                rows.push({ cells: rowCells, type: "data" });
+    //            }
+    //            sheet.rows = rows;
+    //        });
+    //        grid.saveAsExcel();
+    //        kendoAlert('Exported Sucessfully');
+    //    }
+    //};
+</script>

@@ -1,0 +1,100 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AdvanceFilter</title>
+    @*<style>
+         .k-grid td {
+            padding: 0.3em 0.3em;
+            font-size: 12px;
+        }
+
+        .k-grid th.k-header, .k-grid-header .k-grid th.k-header {
+            font-size: 13px;
+            background: #CECEF6;
+            color: black;
+            text-overflow: ellipsis;
+            text-align: center;
+            height: 20px;
+        }
+
+        .k-grid .k-grouping-header {
+            height: 20px;
+            font-size: 12px;
+        }
+
+        .k-grouping-header .k-group-indicator, .k-pivot-toolbar .k-button {
+            height: 20px;
+        }
+
+        .k-grid th.k-header,
+        .k-grid th.k-header .k-link {
+            color: black;
+        }
+
+        .k-grid-content > table > tbody > tr {
+            background: #FAFAFA;
+        }
+
+        .k-grid table tr.k-state-selected {
+            background: #D8D8D8;
+            color: #fff;
+        }
+
+        .k-grid-content > table > tbody > .k-alt {
+            background: #E0E6F8;
+            line-height: 1px;
+        }
+
+        /*.ui-state-disabled {
+                opacity: initial;
+            }*/
+        </style >
+        <script src="~/CommonScripts/AdvanceFilter.js"></script>*@
+</head>
+<body>
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 id="advhdr" class="modal-title"></h4>
+    </div>			<!-- /modal-header -->
+    <div class="modal-body" style="height:300px; overflow-y:auto;">
+        <div id="filter">
+            <div id="gridFilter">
+            </div>
+        </div>
+    </div>			<!-- /modal-body -->
+    <div class="modal-footer">
+        <div class="form-group">
+            <textarea id="textserarch" class="form-control" rows="5" readonly></textarea>
+        </div>
+        <div class=" row">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-6">
+                <div class="col-sm-3">
+                    <a href="#" class="btn btn-block btn-primary " id="btn_select" onclick="onselect_filter();" style="font-size:13px; width:70px;margin-left: -75px;">
+                        Search
+                    </a>
+                </div>
+                <div class="col-sm-6">
+                    <div class="col-sm-3">
+                        <a href="#" class="btn btn-block btn-primary " id="btn_clear" onclick="onclear_filter();" style="font-size:13px; width:70px;">
+                            Clear
+                        </a>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="col-sm-3">
+                        <a href="#" class="btn btn-block btn-primary " id="btn_close" onclick="oncancel_filter();" style="font-size:13px; width:70px;margin-top: -32px;margin-left: -11px;">
+                            Close
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>			<!-- /modal-footer -->
+</body>
+</html>

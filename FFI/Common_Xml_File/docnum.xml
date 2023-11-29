@@ -1,0 +1,14 @@
+<root>
+  <row>
+    <docnum_rowid>1</docnum_rowid>
+    <activity_code>ACT-FAR-REG</activity_code>
+    <activity_desc>Farmer Details Registration</activity_desc>
+    <created_date>2016-11-21T00:00:00</created_date>
+    <finyear_code>All FYs</finyear_code>
+    <docnum_preview>0000000001</docnum_preview>
+    <orgn_rowid>1</orgn_rowid>
+    <orgn_name>Flexicode</orgn_name>
+    <orgn_type>ORG-PF</orgn_type>
+    <status_code>Active</status_code>
+  </row>
+</root>

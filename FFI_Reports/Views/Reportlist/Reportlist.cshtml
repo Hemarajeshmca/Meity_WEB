@@ -1,0 +1,529 @@
+﻿@{
+    ViewBag.List = "Reports";
+    Layout = "~/Views/Shared/ActionLayout.cshtml";
+}
+
+@* Venkat Comment Existing Code 08-05-2020 start*@
+@*<form id="frm_Reportslist" class="form-horizontal" data-role="validator" novalidate="novalidate">
+        <div class="row">
+            <div class="col-xs-12">
+                <div id="Repors_grid"></div>
+            </div>
+        </div>
+    </form>*@
+@* Venkat Comment Existing Code 08-05-2020 end *@
+<style>
+    .loading {
+        background-image: url('http://www.fotos-lienzo.es/media/aw_searchautocomplete/default/loading.gif');
+        background-repeat: no-repeat;
+    }
+
+        .loading:after {
+            content: "Processing...PleaseWait...";
+            text-align: right;
+            color :red;
+            padding-left: 25px;
+        }
+</style>
+
+<form id="frm_Reportslist" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:5px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="cmb_menu" class="col-sm-5 control-label required ">Report Name</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_filter" name="module_code" style="width: 100%" data-role="filtercombo" onchange="setfinyear()">
+                            <a id="downloadpath" download href=""></a>
+                        </div>
+                    </div>
+
+                    <div class="form-group display: none" id="divfin">
+                        <label for="cmb_menu" class="col-sm-5 control-label required ">Financial Year</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_finyear" name="module_code" style="width: 100%" data-role="filtercombo">
+                            <a id="downloadpath" download href=""></a>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        @*<button class="btn btn-sm btn-secondary order-button " onclick="location.href='@Url.Action("Rpt_Fast_Mst_Farmer", "Rpt_Fast_Mst_Farmer")'">Submit</button><br /><br />*@
+                        @*<input type="button" class="addYourCSSClassHere" value="GetReport" onclick="window.location= '@Url.Action( "Rpt_Fast_Mst_Farmer", "Rpt_Fast_Mst_Farmer")'" />*@
+                        @*<input type="button" class="addYourCSSClassHere" value="GetReport" onclick="return GetReportName()" />*@
+                        <input id="myButton1" type="button" style="width:30%;height:31px;background-color:#00c0ef;margin: 4px 10px;border-radius: 15px;" value="GetReport" onclick="return GetReportName()" />
+<div class="load"></div>
+                        @*<label for="txt_fromdate" class="col-sm-5 control-label">Register From Date</label>*@
+
+                        @*<div class="col-sm-7">
+                                <input class="cusDate" data-role='datepicker' id="txt_fromdate" onkeypress="return date_validate(event)" onkeydown="return false;" data-checkdate-msg="Enter Valid Date" name="From_date" style="width:100%" />
+                                <span data-for='valid' class='k-invalid-msg'></span>
+                            </div>*@
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script>
+    click_act_name = "ReportForm";
+    click_ctrl_name = "Reportlist";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+
+    function setfinyear() {
+        if ($("#cmb_filter").val() == "RPTADR" || $("#cmb_filter").val() == "RPTARM" || $("#cmb_filter").val() == "RPTART") {
+            $("#divfin").show();
+        }
+        else {
+            $("#divfin").hide();
+        }
+
+    }
+    function getfinyear() {
+        $.ajax({
+            type: "POST",
+            data: {},
+            url: "/Reportlist/finyear",
+            dataType: "json",
+            contentType: 'application/json; charset-utf-8;',
+            success: function (response) {
+                debugger;
+                if (response != null) {
+                    debugger;
+                    var url_path = (response);
+                    var itemArr = [];
+                    for (var i = 0; i < response.length; i++) {
+                        var list = {};
+                        list.id = response[i].finyear_rowid;
+                        list.code = response[i].finyear_code;
+                        list.desc = response[i].finyear_code;
+                        itemArr.push(list);
+                    }
+                    filter_combobox("cmb_finyear", itemArr);
+                }
+            },
+            error: function (er) {
+                alert(er);
+                console.log(er);
+            }
+        });
+    }
+    function GetReportName() {
+        debugger;
+		 $('#myButton1').hide();
+        $('.load').addClass('loading');
+        var selected_value = $("#cmb_filter").val();
+        var param_value = $("#cmb_finyear").val();
+        //console.log(selected_value);
+        var data = {};
+        data.context = WebAPIProxy.getContext();
+        var Context = data.context;
+        if ($("#cmb_filter").val() == "RPTADR" || $("#cmb_filter").val() == "RPTARM" || $("#cmb_filter").val() == "RPTART") {
+            if (param_value == "") {
+                kendoAlert("Please select Financial Year");
+                return;
+            }
+        }
+        if (selected_value != "") {
+            //window.location = "/FarmerRegRpt/FarmerRegRpt?id=" + selected_value;
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ cmbrptname: selected_value, userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, cmbparam: param_value }),
+                url: "/Reportlist/GetReport",
+                dataType: "json",
+                contentType: 'application/json; charset-utf-8;',
+                success: function (response) {
+                    debugger;
+                    $('.load').removeClass('loading');
+                    selected_value = '';
+                    $("#cmb_filter").val('');
+                    $('#myButton1').show();
+
+                    if (response != null) {
+                        debugger;
+                        var url_path = (response);
+                        $("#downloadpath").attr("href", url_path.path);
+                        document.getElementById("downloadpath").click();
+                    }
+                },
+                error: function (er) {
+                    alert(er);
+                    console.log(er);
+                }
+            });
+        }
+        else {
+            kendoAlert("Please select Report Name");
+        }
+
+        //Introduced by Venkat Reportlist page  Download Excel  End
+    }
+</script>
+
+
+
+
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+        debugger;
+        //  $(".adv_filter").attr("hdrtitle", "Reports configuration List Record");
+        //  $(".adv_filter").attr("fltid", "ReportConfig");
+        //  $(".Export").attr("hdrtitle", "Reports configuration");
+        // $(".Export").attr("SubTreeId", "RPT_CONFIG");
+        //  list_grid_id = "Repors_grid";
+        $("#trackeup").hide();
+        var formval = form_Serialize("frm_Reportslist");
+        var obj_val = JSON.parse(formval);
+        obj_val.FilterBy_Option = getlocalStorage('ModuleId');
+        obj_val.FilterBy_Code = ".";
+        if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+            obj_val.FilterBy_FromValue = getlocalStorage('flt_condition');
+        }
+        else {
+            obj_val.FilterBy_FromValue = ".";
+        }
+        obj_val.FilterBy_ToValue = ".";
+
+        var data = {};
+        data.context = WebAPIProxy.getContext();
+        data.context.Filter = obj_val;
+
+
+        //Report  List Loaded start 22-05-2020
+        var Context = data.context;
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, filterby_option: Context.Filter.FilterBy_Option, filterby_code: Context.Filter.FilterBy_Code, filterby_fromvalue: Context.Filter.FilterBy_FromValue, filterby_tovalue: Context.Filter.FilterBy_ToValue }),
+            url: "/Reportlist/fetchReportlist",
+            dataType: "json",
+            contentType: 'application/json; charset-utf-8;',
+            success: function (response) {
+                debugger;
+                if (response.context.List != null) {
+                    debugger;
+                    var itemArr = [];
+                    for (var i = 0; i < response.context.List.length; i++) {
+                        var list = {};
+                        list.id = response.context.List[i].Out_report_rowid
+                        list.code = response.context.List[i].Out_report_code;
+                        list.desc = response.context.List[i].Out_report_name;
+                        itemArr.push(list);
+                    }
+                    filter_combobox("cmb_filter", itemArr);
+
+                }
+                else {
+                    $("#cmb_filter").empty();
+                }
+            },
+            error: function (er) {
+                alert(er);
+                console.log(er);
+            }
+        });
+
+        //Stock  List Loaded End 22-05-2020
+
+
+
+        //  $("#btn_run").show();
+        //Screen_Id = "REPORTS";
+        // permission = sec_Permission(Screen_Id);
+        //page_load_list_permission(permission);
+        //$('#btn_new').attr("disabled", true);
+        //$('#btn_Edit').attr("disabled", true);
+        //setlocalStorage("ls_pageList", "");
+        //filterhover();
+
+
+        getfinyear();
+        $("#divfin").hide();
+    });
+
+
+</script>
+
+<script>
+    function listpageloadfetch() {
+        var formval = form_Serialize("frm_Reportslist");
+        var obj_val = JSON.parse(formval);
+        obj_val.FilterBy_Option = getlocalStorage('ModuleId');
+        obj_val.FilterBy_Code = ".";
+        if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+            obj_val.FilterBy_FromValue = getlocalStorage('flt_condition');
+        }
+        else {
+            obj_val.FilterBy_FromValue = ".";
+        }
+        obj_val.FilterBy_ToValue = ".";
+
+        var data = {};
+        data.context = WebAPIProxy.getContext();
+        data.context.Filter = obj_val;
+        retrieve_ReportsConfig_list(data);
+
+        setlocalStorage('flt_condition', "");
+    }
+    var status_Priority = [];
+    function Reportlist(data) {
+        $.each(data, function (index, value) {
+            var flag = false;
+            $.each(status_Priority, function (sindex, svalue) {
+                if (svalue == value.status_desc) {
+                    flag = true;
+                }
+            });
+            if (flag == false) {
+                status_Priority.push(value.status_desc);
+            }
+        });
+        $("#Repors_grid").kendoGrid(
+            {
+                dataSource: {
+                    data: data,
+                    pageSize: 20,
+                    change: function (e) {
+                        setTimeout(function () {
+                            var gd = $("#Repors_grid").data("kendoGrid");
+                            filter_row(gd);
+                            $('.k-i-close').css('display', 'none');
+                            $('button.k-button-icon').css('display', 'none');
+                            $('#Repors_grid .k-input').prop('disabled', false);
+                            $('#Repors_grid .k-input').prop('readonly', true);
+
+                        }, 1);
+                    },
+                },
+                toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                excelExport: function (e) {
+                    var gd = $("#Repors_grid").data("kendoGrid");
+                    var len = gd.dataSource._data.length;
+                    var chkall = $('#chkall').is(':checked');
+                    var chkfilter = $('#chkfilter').is(':checked');
+                    var chktemp = $('#chktemp').is(':checked');
+                    var twokendobox = true;
+                    gd.dataSource.pageSize(len);
+                    if (e.sender.dataSource._data.length == len) {
+                        twokendobox = false;
+                        exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                    }
+                    else {
+                        exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                    }
+                    gd.dataSource.pageSize('10');
+                    return false;
+                },
+                //filterable: {
+                //    enabled: true,
+                //    delay: 1500,
+                //    mode: "menu, row",
+                //    height: 200,
+                //    click: function (e) {
+                //        var gd = $("#Repors_grid").data("kendoGrid");
+                //        filter_row(gd);
+                //    }
+                //},
+
+                filterable: true,
+                resizable: true, 
+                filterMenuInit: function (e) {
+                    var gd = $("#Repors_grid").data("kendoGrid");
+                    filter_row(gd);
+                },
+
+                height: 450,
+                sortable: true,
+                selectable: true,
+                change: selectRow,
+                selectable: "singl",   //  Grid Row Selection
+                pageable: {
+                    refresh: false,
+                    pageSizes: true,
+                    buttonCount: 5
+                },
+                navigatable: true,
+                groupable: false,
+
+                columns: [
+
+                    {
+                        field: "report_rowid",
+                        title: "report rowid", 
+                        hidden: true,
+                    },
+                    {
+                        field: "module_code",
+                        title: "module code", 
+                        hidden: true,
+                    },
+
+                    {
+                        field: "module_name",
+                        title: "Module", 
+                        hidden: true
+                    },
+
+                    {
+                        field: "report_code",
+                        title: "Report Code",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        },
+                        width:150
+                    },
+                    {
+                        field: "report_type",
+                        title: "report type", 
+                        hidden: true,
+                    },
+
+                    {
+                        field: "report_name",
+                        title: "Report Name",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        },
+                        width:150
+                    },
+                    {
+                        field: "report_source",
+                        title: "Report Filename",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        },
+                        width: 150
+                    },
+
+                    {
+                        field: "report_type_desc",
+                        title: "report_source", 
+                        hidden: true,
+                    },
+                    {
+                        field: "status_code",
+                        title: "status code", 
+                        hidden: true,
+                    },
+                    {
+                        field: "status_desc",
+                        title: "Status",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        },
+                        width: 150
+                    },
+                ]
+
+            });
+
+
+
+        $(".k-dropdown-operator").css('display', 'none');
+        $("#Repors_grid .k-input").attr('disabled', 'false');
+    }
+
+    function statusFilter(element) {    // Dropdown list functionality
+        element.kendoDropDownList({
+            dataSource: status_Priority,
+            optionLabel: "--Select Value--"
+        });
+    }
+
+    function selectRow() {
+        var grid = $("#Repors_grid").data("kendoGrid");
+        var selectedItem = grid.dataItem(grid.select());
+        setlocalStorage("ls_pageList", selectedItem);
+    }
+
+</script>
+<script>
+    $("#btn_Edit").bind("click", function () {
+        getSerializedSelectedRows('edit');
+    });
+
+    $("#btn_View").bind("click", function () {
+        getSerializedSelectedRows('view');
+    });
+
+    $("#btn_new").bind("click", function () {
+        btn_onClick('Create');
+        location.href = "../Reportlist/ReportForm";
+    });
+
+    function getSerializedSelectedRows(mode) {
+        try {
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var items = getlocalStorage("ls_pageList");
+                if (items.length == 0) {
+                    kendoAlert("Please select records");
+                }
+                else {
+                    if (mode == "edit") {
+                        btn_onClick('Edit');
+                        location.href = "../Reportlist/ReportForm";
+                    }
+                    else if (mode == "view") {
+                        btn_onClick('View');
+                        location.href = "../Reportlist/ReportForm";
+                    }
+                }
+            }
+        }
+        catch (err) {
+        }
+    }
+
+
+</script>
+@*<script>
+        function generate_ReportsConfig_list(res) {
+            if (res != null) {
+                var data = changedataType(res);
+                $("#gd_reportconfig").empty();
+                $("#gd_reportconfig").append("<div id='Repors_grid'></div>");
+                Reportlist(data);
+            }
+            else {
+                Reportlist([]);
+            }
+        }
+
+        function listRefresh() {
+            listpageloadfetch();
+        }
+    </script>*@
+
+
+
+
+
+
+

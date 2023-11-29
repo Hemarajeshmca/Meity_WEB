@@ -1,0 +1,1166 @@
+﻿@{
+    ViewBag.Form = "Farmer Loan Scheme";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+
+<form id="Farmer_Loan_Scheme_form" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="cmbloan_type" class=" col-sm-5 control-label required">Loan Type</label>
+                        <div class="col-sm-6">
+                            <input id="cmbloan_type" data-role="filtercombo" style="width:100%" name="loan_type">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="cmbfpo_loan" class=" col-sm-5 control-label required">FPO Loan No</label>
+                        <div class="col-sm-6">
+                            <input id="cmbfpo_loan" data-role="filtercombo" style="width:100%" name="fpoloan_no">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtbal_amount" class=" col-sm-5 control-label">Balance Amount</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txtbal_amount" class="form-control" maxlength="50" readonly name="lend_balance_amount">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtallot_amount" class=" col-sm-5 control-label required">Allotted Amount</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txtallot_amount" class="form-control" maxlength="50" name="allotted_amount">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtEffFrom" class=" col-sm-5 control-label required">Effective From</label>
+                        <div class=" col-sm-6">
+                            <input class="cusDate" data-role='datepicker' id="txtEffFrom" data-checkdate-msg="Enter Valid Date" name="effective_from" style="width:100%" onkeypress="return date_validate(event)" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtEffTo" class=" col-sm-5 control-label required">Effective To</label>
+                        <div class=" col-sm-6">
+                            <input class="cusDate" data-role='datepicker' id="txtEffTo" data-checkdate-msg="Enter Valid Date" name="effective_to" style="width:100%" onkeypress="return date_validate(event)" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtbase_rate" class=" col-sm-5 control-label">Base Rate</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txtbase_rate" class="form-control" maxlength="50" readonly name="base_rate">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtfpomargin_rate" class=" col-sm-5 control-label">FPO Margin Rate</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txtfpomargin_rate" class="form-control" maxlength="50" name="fpo_margin_rate" onchange="intrestcalc()">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtfigmargin_rate" class=" col-sm-5 control-label">FIG Margin Rate</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txtfigmargin_rate" class="form-control" maxlength="50" name="fig_margin_rate">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtinterest_rate" class=" col-sm-5 control-label">Interest Rate</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txtinterest_rate" class="form-control" name="interest_rate" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="cmbrepay_freq" class="col-sm-5 control-label  required">Repayment Frequency</label>
+                        <div class="col-sm-6">
+                            <input id="cmbrepay_freq" data-role="filtercombo" style="width:100%" name="repayment_freq">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtrepay_tenure" class=" col-sm-5 control-label required">Repayment Tenure</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txtrepay_tenure" class="form-control" maxlength="50" name="repayment_in_yrs">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtint_period" class=" col-sm-5 control-label">Int & Principal Holiday Period</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txtint_period" class="form-control" maxlength="50" name="principle_interest_holiday_period">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtmin_amount" class=" col-sm-5 control-label required">Min Amount</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txtmin_amount" class="form-control" name="min_loan_amount" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtmax_amount" class=" col-sm-5 control-label required">Max Amount</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txtmax_amount" class="form-control" name="max_loan_amount" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="cmbthird_party" class=" col-sm-5 control-label required">Third Party Beneficiary</label>
+                        <div class="col-sm-6">
+                            <input id="cmbthird_party" data-role="filtercombo" name="tp_beneficiary_flag" style="width:100%">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtCreationDate" class=" col-sm-5 control-label required">Creation Date</label>
+                        <div class=" col-sm-6">
+                            <input class="cusDate" data-role='datepicker' id="txtCreationDate" data-checkdate-msg="Enter Valid Date" name="creation_date" style="width:100%" onkeypress="return date_validate(event)" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                        <input type="hidden" id="loanscheme_name" name="loanscheme_name">
+                        <input type="hidden" name="loanscheme_rowid" id="loanscheme_rowid">
+                        <input type="hidden" id="received_amount" name="received_amount">
+                        <input type="hidden" id="lend_amount" name="lend_amount">
+                        <input type="hidden" name="loanscheme_code" id="loanscheme_code">
+                        <input type="hidden" id="" name="interest_amount">
+                        <input type="hidden" id="" name="interest_amount">
+                        <input type="hidden" id="subvention_amount" name="subvention_amount">
+                        <input type="hidden" id="refund_amount" name="refund_amount">
+                        <input type="hidden" id="emi_start_month" name="emi_start_month">
+                        <input type="hidden" id="status_code" name="status_code">
+                        <input type="hidden" id="status_desc" name="status_desc">
+                        <input type="hidden" id="row_timestamp" name="row_timestamp">
+                        <input type="hidden" id="mode_flag" name="mode_flag">
+                        <input type="hidden" id="fpoorgn_code" name="fpoorgn_code" />
+                        <input type="hidden" id="repayment_in_months" name="repayment_in_months">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="cmbint_type" class=" col-sm-5 control-label required">Interest Type</label>
+                        <div class="col-sm-6">
+                            <input id="cmbint_type" data-role="filtercombo" name="interest_type" style="width:100%">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <section class="col-md-12">
+                <div id="tab_list" class="col-md-12">
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a href="#Subvention" id="" role="tab" data-toggle="tab">
+                                Subvention
+                            </a>
+                        </li>
+
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade active in" id="Subvention">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+
+                                    <div class="col-xs-12">
+                                        <div id="grid_fpo_Subvention">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</form>
+<script>
+    click_act_name = "FarmerLoanList";
+    click_ctrl_name = "FarmerLoan";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+<script src="~/API_Scripts/FarmerLoan_Schema_Setup.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/API_Scripts/saveSetupFarmerLoanScheme_Model.js"></script>
+<script src="~/API_Scripts/retrieveSetupFarmerLoanScheme_Model.js"></script>
+<script src="~/API_Scripts/Farmer_Loan_retrieveSetupFLScheme_APIClient.js"></script>
+<script src="~/API_Scripts/Farmer_Loan_saveSetupFLScheme_APIClient.js"></script>
+<script src="~/API_Scripts/FPOLoan.js"></script>
+<script src="~/API_Scripts/FPOLoan_retrieveFPOLoan_APIClient.js"></script>
+<script src="~/API_Scripts/retrieveFPOLoan_Model.js"></script>
+<script>
+    var permission = "";
+    $(document).ready(function () {
+        $("#lblForm_menuid").text("FLSCH");
+        kendodate_format();
+        $("#common_id").text("FL Scheme");
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#Farmer_Loan_Scheme_form");
+        kendo.init(container);
+        Screen_Id = "FLSCH";
+        permission = sec_Permission(Screen_Id);
+
+        var data = [];
+        gridFpoSubvention(data);
+        load_master_code();
+        //fpo loan no
+        var loan_no = "";
+        $("#cmbfpo_loan").empty();
+        loan_no = grid_comboScreen_mastercodes("FPOLOAN");
+        filter_combobox("cmbfpo_loan", loan_no);
+
+        //loan status
+        var loan_repay = "";
+        $("#cmbrepay_freq").empty();
+        loan_repay = grid_comboScreen_mastercodes("QCD_REPAY");
+        filter_combobox("cmbrepay_freq", loan_repay);
+
+        //loan type
+        var loan_type = "";
+        $("#cmbloan_type").empty();
+        loan_type = grid_comboScreen_mastercodes("QCD_LOANTYPE");
+        filter_combobox("cmbloan_type", loan_type);
+
+        //third party
+        var loan_tparty = "";
+        $("#cmbthird_party").empty();
+        loan_tparty = grid_comboScreen_mastercodes("QCD_YESNO");
+        filter_combobox("cmbthird_party", loan_tparty);
+
+        //interest type
+        var interest_type = "";
+        $("#cmbint_type").empty();
+        interest_type = grid_comboScreen_mastercodes("QCD_FL_INTTYPE");
+        filter_combobox("cmbint_type", interest_type);
+
+        $(".file_attach").attr("hdrtitle", "Farmer Loan Scheme");
+        $(".notes").attr("hdrtitle", "Farmer Loan Scheme");
+        $("#txtfpomargin_rate").bind("propertychange change keyup paste input", function () {
+            intrestcalc();
+        });
+        $("#txtfigmargin_rate").bind("propertychange change keyup paste input", function () {
+            intrestcalc();
+        });
+        $("#txtmin_amount").bind("propertychange change paste input", function () {
+            minlimitchk();
+        });
+
+        $("#txtmax_amount").change(function () { maxlimitchk(); });
+        $("#txtallot_amount").change(function () { allotchk(); });
+
+
+        $('#txtfpomargin_rate').keypress(function (event) {
+            var $this = $(this);
+            if ((event.which != 46 || $this.val().indexOf('.') != -1) &&
+               ((event.which < 48 || event.which > 57) &&
+               (event.which != 0 && event.which != 8))) {
+                event.preventDefault();
+            }
+
+            var text = $(this).val();
+            if (text.indexOf('.') != -1) {
+                setTimeout(function () {
+                    if ($this.val().substring($this.val().indexOf('.')).length > 3) {
+                        $this.val($this.val().substring(0, $this.val().indexOf('.') + 3));
+                    }
+                }, 1);
+                if ((text.indexOf('.') != -1) &&
+               (text.substring(text.indexOf('.')).length > 2) &&
+               (event.which != 0 && event.which != 8) &&
+               ($(this)[0].selectionStart >= text.length - 2)) {
+                    event.preventDefault();
+                }
+            }
+            else {
+                if ($this.val().length > 2) {
+                    if (event.which != 46) {
+                        event.preventDefault();
+                    }
+                }
+            }
+
+        });
+        $('#txtrepay_tenure').keypress(function (event) {
+            var $this = $(this);
+            if ((event.which != 46 || $this.val().indexOf('.') != -1) &&
+               ((event.which < 48 || event.which > 57) &&
+               (event.which != 0 && event.which != 8))) {
+                event.preventDefault();
+            }
+
+            var text = $(this).val();
+            if (text.indexOf('.') != -1) {
+                setTimeout(function () {
+                    if ($this.val().substring($this.val().indexOf('.')).length > 3) {
+                        $this.val($this.val().substring(0, $this.val().indexOf('.') + 3));
+                    }
+                }, 1);
+                if ((text.indexOf('.') != -1) &&
+               (text.substring(text.indexOf('.')).length > 2) &&
+               (event.which != 0 && event.which != 8) &&
+               ($(this)[0].selectionStart >= text.length - 2)) {
+                    event.preventDefault();
+                }
+            }
+            else {
+                if ($this.val().length > 2) {
+                    if (event.which != 46) {
+                        event.preventDefault();
+                    }
+                }
+            }
+
+        });
+
+        $('#txtrepay_tenure').bind("paste", function (e) {
+            var text = e.originalEvent.clipboardData.getData('Text');
+            if ($.isNumeric(text)) {
+                if ((text.substring(text.indexOf('.')).length > 3) && (text.indexOf('.') > -1)) {
+                    e.preventDefault();
+                    $(this).val(text.substring(0, text.indexOf('.') + 3));
+                }
+            }
+            else {
+                e.preventDefault();
+            }
+        });
+        $('#txtfpomargin_rate').bind("paste", function (e) {
+            var text = e.originalEvent.clipboardData.getData('Text');
+            if ($.isNumeric(text)) {
+                if ((text.substring(text.indexOf('.')).length > 3) && (text.indexOf('.') > -1)) {
+                    e.preventDefault();
+                    $(this).val(text.substring(0, text.indexOf('.') + 3));
+                }
+            }
+            else {
+                e.preventDefault();
+            }
+        });
+        $('#txtfigmargin_rate').keypress(function (event) {
+            var $this = $(this);
+            if ((event.which != 46 || $this.val().indexOf('.') != -1) &&
+               ((event.which < 48 || event.which > 57) &&
+               (event.which != 0 && event.which != 8))) {
+                event.preventDefault();
+            }
+
+            var text = $(this).val();
+            if (text.indexOf('.') != -1) {
+                setTimeout(function () {
+                    if ($this.val().substring($this.val().indexOf('.')).length > 3) {
+                        $this.val($this.val().substring(0, $this.val().indexOf('.') + 3));
+                    }
+                }, 1);
+                if ((text.indexOf('.') != -1) &&
+               (text.substring(text.indexOf('.')).length > 2) &&
+               (event.which != 0 && event.which != 8) &&
+               ($(this)[0].selectionStart >= text.length - 2)) {
+                    event.preventDefault();
+                }
+            }
+            else {
+                if ($this.val().length > 2) {
+                    if (event.which != 46) {
+                        event.preventDefault();
+                    }
+                }
+            }
+
+        });
+        $('#txtallot_amount').keypress(function (event) {
+            var $this = $(this);
+            if ((event.which != 46 || $this.val().indexOf('.') != -1) &&
+               ((event.which < 48 || event.which > 57) &&
+               (event.which != 0 && event.which != 8))) {
+                event.preventDefault();
+            }
+
+            var text = $(this).val();
+            if (text.indexOf('.') != -1) {
+                if ((text.indexOf('.') != -1) &&
+               (text.substring(text.indexOf('.')).length > 2) &&
+               (event.which != 0 && event.which != 8) &&
+               ($(this)[0].selectionStart >= text.length - 2)) {
+                    event.preventDefault();
+                }
+            }
+            else {
+                if ($this.val().length > 17) {
+                    if (event.which != 46) {
+                        event.preventDefault();
+                    }
+                }
+            }
+
+        });
+        $('#txtallot_amount').bind("paste", function (e) {
+            var text = e.originalEvent.clipboardData.getData('Text');
+            if ($.isNumeric(text)) {
+                if ((text.substring(text.indexOf('.')).length > 3) && (text.indexOf('.') > -1)) {
+                    e.preventDefault();
+                    $(this).val(text.substring(0, text.indexOf('.') + 3));
+                }
+            }
+            else {
+                e.preventDefault();
+            }
+        });
+        $('#txtint_period').keypress(function (event) {
+            var $this = $(this);
+            if ((event.which != 46 || $this.val().indexOf('.') != -1) &&
+               ((event.which < 48 || event.which > 57) &&
+               (event.which != 0 && event.which != 8))) {
+                event.preventDefault();
+            }
+
+            var text = $(this).val();
+            if (text.indexOf('.') != -1) {
+                if ((text.indexOf('.') != -1) &&
+               (text.substring(text.indexOf('.')).length > 2) &&
+               (event.which != 0 && event.which != 8) &&
+               ($(this)[0].selectionStart >= text.length - 2)) {
+                    event.preventDefault();
+                }
+            }
+            else {
+                if ($this.val().length > 17) {
+                    if (event.which != 46) {
+                        event.preventDefault();
+                    }
+                }
+            }
+
+        });
+        $('#txtint_period').bind("paste", function (e) {
+            var text = e.originalEvent.clipboardData.getData('Text');
+            if ($.isNumeric(text)) {
+                if ((text.substring(text.indexOf('.')).length > 3) && (text.indexOf('.') > -1)) {
+                    e.preventDefault();
+                    $(this).val(text.substring(0, text.indexOf('.') + 3));
+                }
+            }
+            else {
+                e.preventDefault();
+            }
+        });
+
+        $('#txtfigmargin_rate').bind("paste", function (e) {
+            var text = e.originalEvent.clipboardData.getData('Text');
+            if ($.isNumeric(text)) {
+                if ((text.substring(text.indexOf('.')).length > 3) && (text.indexOf('.') > -1)) {
+                    e.preventDefault();
+                    $(this).val(text.substring(0, text.indexOf('.') + 3));
+                }
+            }
+            else {
+                e.preventDefault();
+            }
+        });
+
+        $('#txtmin_amount').keypress(function (event) {
+            var $this = $(this);
+            if ((event.which != 46 || $this.val().indexOf('.') != -1) &&
+               ((event.which < 48 || event.which > 57) &&
+               (event.which != 0 && event.which != 8))) {
+                event.preventDefault();
+            }
+
+            var text = $(this).val();
+            if (text.indexOf('.') != -1) {
+                if ((text.indexOf('.') != -1) &&
+               (text.substring(text.indexOf('.')).length > 2) &&
+               (event.which != 0 && event.which != 8) &&
+               ($(this)[0].selectionStart >= text.length - 2)) {
+                    event.preventDefault();
+                }
+            }
+            else {
+                if ($this.val().length > 17) {
+                    if (event.which != 46) {
+                        event.preventDefault();
+                    }
+                }
+            }
+
+        });
+        $('#txtmin_amount').bind("paste", function (e) {
+            var text = e.originalEvent.clipboardData.getData('Text');
+            if ($.isNumeric(text)) {
+                if ((text.substring(text.indexOf('.')).length > 3) && (text.indexOf('.') > -1)) {
+                    e.preventDefault();
+                    $(this).val(text.substring(0, text.indexOf('.') + 3));
+                }
+            }
+            else {
+                e.preventDefault();
+            }
+        });
+
+        $('#txtmax_amount').keypress(function (event) {
+            var $this = $(this);
+            if ((event.which != 46 || $this.val().indexOf('.') != -1) &&
+               ((event.which < 48 || event.which > 57) &&
+               (event.which != 0 && event.which != 8))) {
+                event.preventDefault();
+            }
+
+            var text = $(this).val();
+            if (text.indexOf('.') != -1) {
+                if ((text.indexOf('.') != -1) &&
+               (text.substring(text.indexOf('.')).length > 2) &&
+               (event.which != 0 && event.which != 8) &&
+               ($(this)[0].selectionStart >= text.length - 2)) {
+                    event.preventDefault();
+                }
+            }
+            else {
+                if ($this.val().length > 17) {
+                    if (event.which != 46) {
+                        event.preventDefault();
+                    }
+                }
+            }
+
+        });
+        $('#txtmax_amount').bind("paste", function (e) {
+            var text = e.originalEvent.clipboardData.getData('Text');
+            if ($.isNumeric(text)) {
+                if ((text.substring(text.indexOf('.')).length > 3) && (text.indexOf('.') > -1)) {
+                    e.preventDefault();
+                    $(this).val(text.substring(0, text.indexOf('.') + 3));
+                }
+            }
+            else {
+                e.preventDefault();
+            }
+        });
+
+        var startDate = $("#txtEffFrom").kendoDatePicker({
+            //change: checkDates,
+            format: "dd/MM/yyyy"
+        });
+        var toDate = $("#txtEffTo").kendoDatePicker({
+            change: checkminmaxdate,
+            format: "dd/MM/yyyy"
+        });
+        var endDate = $("#txtCreationDate").kendoDatePicker({
+            change: checkDates,
+            format: "dd/MM/yyyy"
+        });
+        $("#txtEffFrom").kendoDatePicker({
+            format: "dd/MM/yyyy"
+            , change: onchange
+        });
+        $("#txtEffTo").kendoDatePicker({
+            format: "dd/MM/yyyy"
+        });
+        $("#txtEffFrom").data("kendoDatePicker").trigger("change");
+        function onchange() {
+            var newDateTime = startDate.val().split('/');
+            var mindate = newDateTime[1] + '/' + newDateTime[0] + '/' + newDateTime[2];
+            $("#txtEffTo").kendoDatePicker({
+                format: "dd/MM/yyyy",
+                min: mindate
+            });
+            checkminmaxdate();
+            checkDates();
+        }
+        function checkminmaxdate() {
+            if (startDate.val() != '' && toDate.val() != '') {
+                if (Date.parse(startDate.val()) > Date.parse(toDate.val())) {
+                    kendoAlert('Effective From date should be lesser than or equal to the Effective To date');
+                    toDate.val(startDate.val());
+                }
+            }
+        }
+        function checkDates() {
+            if (startDate.val() != '' && endDate.val() != '') {
+                if (Date.parse(startDate.val()) < Date.parse(endDate.val())) {
+                    kendoAlert('Effective From date should be greater than or equal to the creation date');
+                    startDate.val(endDate.val());
+                    onchange();
+                }
+            }
+            if (startDate.val() != '' && toDate.val() != '') {
+                if (Date.parse(startDate.val()) > Date.parse(toDate.val())) {
+                    kendoAlert('Effective From date should be lesser than or equal to the Effective To date');
+                    toDate.val(startDate.val());
+                }
+            }
+        }
+
+        var container = $("#txtEffFrom");
+        container.kendoValidator({
+            rules: {
+                checkdate: function (input) {
+                    if (input.attr("data-role") == "datepicker") {
+                        var res = isDate(input.val());
+                        return res;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+            }
+        });
+
+        var container = $("#txtEffTo");
+        container.kendoValidator({
+            rules: {
+                checkdate: function (input) {
+                    if (input.attr("data-role") == "datepicker") {
+                        var res = isDate(input.val());
+                        return res;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+            }
+        });
+
+        var container = $("#txtCreationDate");
+        container.kendoValidator({
+            rules: {
+                checkdate: function (input) {
+                    if (input.attr("data-role") == "datepicker") {
+                        var res = isDate(input.val());
+                        return res;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+            }
+        });
+
+        if (getlocalStorage('btn_clk_val') == "Create") {
+            $('#divCreate #review').hide();
+            $("#mode_flag").val("I");
+            $("#bottom_menus").hide();
+            $("#DocStat").val("New");
+            $("#status_code").val("A");
+            var org_id = getlocalStorage('org_id');
+            $("#fpoorgn_code").val(org_id);
+        }
+        else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
+            $('#divEdit #reviewEd').hide();
+            $("#bottom_menus li:nth-child(1)").hide();
+            $("#bottom_menus li:nth-child(2)").hide();
+            $("#bottom_menus li:nth-child(3)").hide();
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("Farmer_Loan_Scheme_form");
+                var obj_val = JSON.parse(formval);
+                if (obj_val != undefined) {
+                    obj_val.fpoorgn_code = data.fpoorgn_code;
+                    obj_val.loanscheme_rowid = data.loanscheme_rowid;
+                    $("#loanscheme_rowid").val(data.loanscheme_rowid);
+                    $("#txtcommon_id").val(data.loanscheme_name);
+                    var data1 = {};
+                    data1.context = WebAPIProxy.getContext();
+                    data1.context.Header = obj_val;
+                    retrieve_farmer_loan_schema_details(data1);
+                    //$("#txtMode").val("U");
+                    //$("#txtcommon_id").val(obj_val.servicereq_no);
+                    setlocalStorage('doc_no', $("#txtcommon_id").val());
+                    setlocalStorage('doc_row_id', $("#loanscheme_rowid").val())
+                }
+            }
+        }
+    });
+</script>
+<script>
+    function load_master_code() {
+        try {
+            debugger;
+            var data = {};
+            var context = WebAPIProxy.getContext();
+            data.userId = context.userId
+            data.orgnId = context.orgnId
+            data.locnId = context.locnId
+            data.localeId = context.localeId
+            data.screen_Id = "FLSCH";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>
+    function gridFpoSubvention(data) {
+        try {
+            $("#grid_fpo_Subvention").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+
+                                sub_scheme: { type: "string" },
+                                vaild_from: { type: "string" },
+                                vaild_to: { type: "string" },
+                                interest: { type: "string" },
+                                refund_amount: { type: "string" },
+                                date_refund: { type: "string" },
+                                refund_status: { type: "string" },
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+
+                height: 400,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                    {
+                        field: "loansubvention_rowid",
+                        title: "loansubvention_rowid",
+                        hidden: true
+                    },
+
+                    {
+                        field: "subvention_code",
+                        title: "subvention_code",
+                        hidden: true
+                    },
+                    {
+                        field: "subvention_name",
+                        title: "Subvention Scheme",
+                        width: 100,
+
+                    },
+                 {
+                     field: "period_from",
+                     title: "Period From",
+                     width: 100,
+                 },
+                 {
+                     field: "period_to",
+                     title: "Period To",
+
+                     width: 100
+
+                 },
+                 {
+                     field: "subvention_rate",
+                     title: "Interest %",
+                     width: 100,
+                     editor: function (container, options) {
+                         item_rate(container, options.field, '9', '2');
+                     },
+                 },
+                 {
+
+                     field: "refund_amount",
+                     title: "Refund Amount",
+                     width: 100,
+                     editor: function (container, options) {
+                         item_rate(container, options.field, '9', '2');
+                     },
+
+                 },
+                  {
+                      field: "refund_date",
+                      title: "Refund Date",
+                      width: 100
+                  },
+                   {
+                       field: "refund_status",
+                       title: "refund_status",
+                       hidden: true
+                   },
+                   {
+                       field: "refund_status_desc",
+                       title: "Refund Status",
+
+                       width: 100
+                   },
+                   {
+                       field: "status_code",
+                       title: "status_code",
+                       hidden: true
+                   },
+                   {
+                       field: "status_desc",
+                       title: "Status",
+
+                       width: 100
+                   },
+                   {
+                       field: "row_timestamp",
+                       title: "row_timestamp",
+                       hidden: true
+                   },
+                {
+                    field: "mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }],
+                editable: true
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>
+    function generate_farmer_loan_schema_header(res) {
+        try {
+            if (res != null) {
+                if (res.loanscheme_code != '') {
+                    $("#txtcommon_id").val(res.loanscheme_name);
+                    $("#loanscheme_code").val(res.loanscheme_code);
+                    $('#cmbloan_type').data("kendoComboBox").value(res.loan_type);
+                    $('#cmbfpo_loan').data("kendoComboBox").value(res.fpoloan_no);
+                    $('#txtCreationDate').val(res.creation_date);
+                    $('#txtEffFrom').val(res.effective_from);
+                    $('#txtEffTo').val(res.effective_to);
+                    $('#txtbase_rate').val(res.base_rate);
+                    $('#txtfpomargin_rate').val(res.fpo_margin_rate);
+                    $('#txtfigmargin_rate').val(res.fig_margin_rate);
+                    $('#txtinterest_rate').val(res.interest_rate);
+                    $('#cmbint_type').data("kendoComboBox").value(res.interest_type);
+                    $('#cmbrepay_freq').data("kendoComboBox").value(res.repayment_freq);
+                    $('#txtrepay_tenure').val(res.repayment_in_yrs);
+                    $('#txtint_period').val(res.principle_interest_holiday_period);
+                    $('#txtmin_amount').val(res.min_loan_amount);
+                    $('#txtmax_amount').val(res.max_loan_amount);
+                    $('#cmbthird_party').data("kendoComboBox").value(res.tp_beneficiary_flag);
+                    $('#txtbal_amount').val(res.lend_balance_amount);
+                    $('#txtallot_amount').val(res.allotted_amount);
+                    $('#received_amount').val(res.received_amount);
+                    $('#lend_amount').val(res.lend_amount);
+                    $('#interest_amount').val(res.interest_amount);
+                    $('#subvention_amount').val(res.subvention_amount);
+                    $('#refund_amount').val(res.refund_amount);
+                    $('#emi_start_month').val(res.emi_start_month);
+                    $('#status_code').val(res.status_code);
+                    $('#status_desc').val(res.status_desc);
+                    $('#row_timestamp').val(res.row_timestamp);
+                    $('#mode_flag').val(res.mode_flag);
+                    $('#DocStat').val(res.status_desc);
+                    $('#repayment_in_months').val(res.repayment_in_months);
+                }
+                else {
+                    $("#txtbase_rate").val(res.interest_rate);
+                    $("#txtbal_amount").val(res.lend_balance_amount);
+                }
+
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function generate_farmer_loan_schema_subvention(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                gridFpoSubvention(data);
+            }
+            else {
+                gridFpoSubvention([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function save() {
+        try {
+
+            if ($('#mode_flag').val() == 'S') {
+                $('#mode_flag').val('U');
+            }
+            if ($("#mode_flag").val() == "" || $("#mode_flag").val() == undefined) {
+                $("#mode_flag").val('I');
+            }
+            var formval = form_Serialize("Farmer_Loan_Scheme_form");
+            var obj_val = JSON.parse(formval);
+            if ($("#loanscheme_rowid").val() == undefined || $("#loanscheme_rowid").val() == "") {
+                obj_val.loanscheme_rowid = "0";
+            }
+            if ($("#txtcommon_id").val() == undefined || $("#txtcommon_id").val() == "") {
+                obj_val.loanscheme_code = "0";
+            }
+            else {
+                obj_val.loanscheme_code = $("#loanscheme_code").val();
+            }
+            if ($("#repayment_in_months").val() == undefined || $("#repayment_in_months").val() == "") {
+                obj_val.repayment_in_months = "0";
+            }
+            if ($("#txtbase_rate").val() == undefined || $("#txtbase_rate").val() == "") {
+                obj_val.base_rate = "0";
+            }
+            if ($("#txtint_period").val() == undefined || $("#txtint_period").val() == "") {
+                obj_val.txtint_period = "0";
+            }
+            if ($("#txtfpomargin_rate").val() == undefined || $("#txtfpomargin_rate").val() == "") {
+                obj_val.fpo_margin_rate = "0";
+            }
+            if ($("#txtfigmargin_rate").val() == undefined || $("#txtfigmargin_rate").val() == "") {
+                obj_val.fig_margin_rate = "0";
+            }
+            if ($("#txtinterest_rate").val() == undefined || $("#txtinterest_rate").val() == "") {
+                obj_val.interest_rate = "0";
+            }
+            if ($("#txtrepay_tenure").val() == undefined || $("#txtrepay_tenure").val() == "") {
+                obj_val.repayment_in_yrs = "0";
+            }
+            if ($("#txtmin_amount").val() == undefined || $("#txtmin_amount").val() == "") {
+                obj_val.min_loan_amount = "0";
+            }
+            if ($("#txtmax_amount").val() == undefined || $("#txtmax_amount").val() == "") {
+                obj_val.max_loan_amount = "0";
+            }
+            if ($("#txtallot_amount").val() == undefined || $("#txtallot_amount").val() == "") {
+                obj_val.allotted_amount = "0";
+            }
+            if ($("#received_amount").val() == undefined || $("#received_amount").val() == "") {
+                obj_val.received_amount = "0";
+            }
+            if ($("#lend_amount").val() == undefined || $("#lend_amount").val() == "") {
+                obj_val.lend_amount = "0";
+            }
+            if ($("#txtbal_amount").val() == undefined || $("#txtbal_amount").val() == "") {
+                obj_val.lend_balance_amount = "0";
+            }
+            if ($("#interest_amount").val() == undefined || $("#interest_amount").val() == "") {
+                obj_val.interest_amount = "0";
+            }
+            if ($("#subvention_amount").val() == undefined || $("#subvention_amount").val() == "") {
+                obj_val.subvention_amount = "0";
+            }
+            if ($("#refund_amount").val() == undefined || $("#refund_amount").val() == "") {
+                obj_val.refund_amount = "0";
+            }
+            if ($("#txtint_period").val() == undefined || $("#txtint_period ").val() == "") {
+                obj_val.principle_interest_holiday_period = "0";
+            }
+            if ($("#emi_start_month").val() == undefined || $("#emi_start_month").val() == "") {
+                obj_val.emi_start_month = "0";
+            }
+            if (obj_val.hasOwnProperty('effective_from')) {
+                if (obj_val.effective_from != '')
+                    obj_val.effective_from = getFormated_StringDate(obj_val.effective_from);
+            }
+            if (obj_val.hasOwnProperty('effective_to')) {
+                if (obj_val.effective_to != '')
+                    obj_val.effective_to = getFormated_StringDate(obj_val.effective_to);
+            }
+            if (obj_val.hasOwnProperty('creation_date')) {
+                if (obj_val.creation_date != '')
+                    obj_val.creation_date = getFormated_StringDate(obj_val.creation_date);
+            }
+            obj_val.repayment_freq_desc = $('#cmbrepay_freq').data("kendoComboBox").text();
+            obj_val.loanscheme_name = $('#cmbloan_type').data("kendoComboBox").text();
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_val;
+            save_farmer_loan_schema_details(data);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function get_farmer_loan_schema_details(res) {
+        try {
+            if (res != null && res != undefined) {
+                var formval = form_Serialize("Farmer_Loan_Scheme_form");
+                var obj_val = JSON.parse(formval);
+                obj_val.fpoorgn_code = res.loanscheme_code;
+                obj_val.loanscheme_rowid = res.loanscheme_rowid;
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                retrieve_farmer_loan_schema_details(data);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>
+    var ddl = "";
+    $("#cmbfpo_loan").change(function () {
+        try {
+            var c = $('#cmbfpo_loan');
+            ddl = c.data('kendoComboBox').value();
+            if (ddl != "" && ddl != undefined) {
+                var formval = form_Serialize("Farmer_Loan_Scheme_form");
+                var obj_val = JSON.parse(formval);
+                var org_code = getlocalStorage('org_id');
+                obj_val.fpoorgn_code = org_code + ' ' + ddl;
+                obj_val.loanscheme_rowid = 0;
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                retrieve_farmer_loan_schema_details(data);
+            }
+            else {
+                gridFpoSubvention([]);
+                $("#txtbal_amount").val('');
+                $("#txtallot_amount").val('');
+                $("#txtEffFrom").val('');
+                $("#txtEffTo").val('');
+                $("#txtbase_rate").val('');
+                $("#txtfpomargin_rate").val('');
+                $("#txtfigmargin_rate").val('');
+                $("#txtinterest_rate").val('');
+                $("#txtrepay_tenure").val('');
+                $("#txtint_period").val('');
+                $("#txtmin_amount").val('');
+                $("#txtmax_amount").val('');
+                $("#txtCreationDate").val('');
+                $('#cmbrepay_freq').data("kendoComboBox").value('');
+                $('#cmbthird_party').data("kendoComboBox").value('');
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    });
+</script>
+<script>
+    function intrestcalc() {
+        try {
+            var fpo_rate = $('#txtfpomargin_rate').val() != '' ? parseFloat($('#txtfpomargin_rate').val()).toFixed(2) : 0;
+            var base_rate = $('#txtbase_rate').val() != '' ? parseFloat($('#txtbase_rate').val()).toFixed(2) : 0;
+            var fig_rate = $('#txtfigmargin_rate').val() != '' ? parseFloat($('#txtfigmargin_rate').val()).toFixed(2) : 0;
+            var intrest_rate = parseFloat(base_rate) + parseFloat(fpo_rate) + parseFloat(fig_rate);
+            $('#txtinterest_rate').val(intrest_rate.toFixed(2));
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function minlimitchk() {
+        try {
+            var min_amt = $('#txtmin_amount').val() != '' ? parseFloat($('#txtmin_amount').val()) : 0;
+            var max_amt = $('#txtmax_amount').val() != '' ? parseFloat($('#txtmax_amount').val()) : 0;
+            var alt_amt = $('#txtallot_amount').val() != '' ? parseFloat($('#txtallot_amount').val()) : 0;
+            var grid_validate_msg = "";
+            if (min_amt > alt_amt) {
+                $('#txtmin_amount').val(0);
+                grid_validate_msg = "Allotted amount should not lesser than Minimum amount";
+                kendoAlert(grid_validate_msg);
+            }
+            if (max_amt != 0 && (min_amt > max_amt)) {
+                $('#txtmin_amount').val(0);
+                grid_validate_msg = "Minimum amount should not greater than Maximum amount";
+                kendoAlert(grid_validate_msg);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function maxlimitchk() {
+        try {
+            var min_amt = $('#txtmin_amount').val() != '' ? parseFloat($('#txtmin_amount').val()) : 0;
+            var max_amt = $('#txtmax_amount').val() != '' ? parseFloat($('#txtmax_amount').val()) : 0;
+            var alt_amt = $('#txtallot_amount').val() != '' ? parseFloat($('#txtallot_amount').val()) : 0;
+            var grid_validate_msg = "";
+            if (max_amt > alt_amt) {
+                $('#txtmax_amount').val(0);
+                grid_validate_msg = "Maximum amount should not greater than Allotted amount";
+                kendoAlert(grid_validate_msg);
+            }
+            if (max_amt != 0 && min_amt > max_amt) {
+                $('#txtmin_amount').val(0);
+                grid_validate_msg = "Maximum amount should not less than Minimum amount";
+                kendoAlert(grid_validate_msg);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function allotchk() {
+        try {
+            var min_amt = $('#txtmin_amount').val() != '' ? parseFloat($('#txtmin_amount').val()) : 0;
+            var max_amt = $('#txtmax_amount').val() != '' ? parseFloat($('#txtmax_amount').val()) : 0;
+            var alt_amt = $('#txtallot_amount').val() != '' ? parseFloat($('#txtallot_amount').val()) : 0;
+            var bal_amt = $('#txtbal_amount').val() != '' ? parseFloat($('#txtbal_amount').val()) : 0;
+            var grid_validate_msg = "";
+            if (bal_amt < alt_amt && getlocalStorage('btn_clk_val') == "Create") {
+                $('#txtallot_amount').val(0);
+                grid_validate_msg = "Allotted amount should not greater than the Balance amount";
+                kendoAlert(grid_validate_msg);
+            }
+            var data = getlocalStorage("ls_pageList");
+            var allt_limit = bal_amt + parseFloat(data.allotted_amount);
+            if (alt_amt > allt_limit && getlocalStorage('btn_clk_val') != "Create") {
+                $('#txtallot_amount').val(data.allotted_amount);
+                grid_validate_msg = "Allotted amount exceeds the FPO Loan amount";
+                kendoAlert(grid_validate_msg);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>

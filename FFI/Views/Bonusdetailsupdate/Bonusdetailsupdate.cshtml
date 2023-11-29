@@ -1,0 +1,537 @@
+﻿@{
+    ViewBag.Form = "Bonus Details Update";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+<form id="BonusStatusupdate_form" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="cmb_payment_status" class="col-sm-5 control-label required"> Bonus Paid Status</label>
+                        <div class="col-sm-6">
+                            <input id="cmb_payment_status" name="payment_status" data-role="filtercombo" style="width:100%" />
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="cmb_payment" class="col-sm-4 control-label required"> Bonus for</label>
+                        <div class="col-sm-6">
+                            <input id="cmb_payment" name="bonus_for" style="width: 100%" data-role="filtercombo">
+                        </div>
+                        <button title="" data-placement="top" data-toggle="tooltip" style="float:right" class="btn btn-info" type="button" data-original-title="Refresh" onclick="mandatory()"> <span class="glyphicon glyphicon-refresh"></span></button>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtValidity" class=" col-md-4 control-label">Payment Date</label>
+                        <div class=" col-sm-4">
+                            <input class="cusDate" data-role='datepicker' id="txtValidity" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="bonus_date" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                            <input type="checkbox" id="apply_all" style="margin:10px 5px 0px 0px"> Apply to all
+                        </div>
+
+                        @*<div class="col-sm-4">
+                                <button title="" data-placement="top" data-toggle="tooltip" style="float:right" class="btn btn-info" type="submit" data-original-title="Refresh"> <span class="glyphicon glyphicon-refresh"></span></button>
+                            </div>*@
+
+                    </div>
+                </div>
+
+
+                @*<div class="form-group">
+                        <div class="col-sm-4">
+                            <input type="checkbox" id="apply_all"> Apply to all
+                        </div>
+                    </div>*@
+            </div>
+            <div class="col-xs-12">
+                <div id="grid_Drop_list">
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+<script src="~/API_Scripts/Bonus_Payment_retrieveBonusUpdate_APIClient.js"></script>
+<script src="~/API_Scripts/retrieveBonusUpdate_Model.js"></script>
+<script src="~/API_Scripts/Bonus_Payment_saveBonusUpdate_APIClient.js"></script>
+<script src="~/API_Scripts/saveBonusUpdate_Model.js"></script>
+<script src="~/API_Scripts/BonusPaymentUpdate.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script>
+    $(document).ready(function () {
+        kendodate_format();
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#BonusStatusupdate_form");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+
+        Screen_Id = "MBASTAUPD";
+        master_userRoleNew2();
+        load_master_code();
+
+        var a = getlocalStorage('org_type');
+        if (a == "AGGR_ORG_FINAL") {
+            //buyfrom
+            var FROM = "";
+            $("#cmb_payment").empty();
+            FROM = grid_comboScreen_mastercodes("Final_ORGINTER");
+            filter_combobox("cmb_payment", FROM);
+        }
+        else {
+            var FROM = "";
+            $("#cmb_payment").empty();
+            FROM = grid_comboScreen_mastercodes("INT_MILKMAN");
+            filter_combobox("cmb_payment", FROM);
+
+        }
+
+        var dtmap_paymentstatus = "";
+        $("#cmb_payment_status").empty();
+        dtmap_paymentstatus = grid_comboScreen_mastercodes("QCD_STAT_PYMT");
+        filter_combobox("cmb_payment_status", dtmap_paymentstatus);
+
+        var data = [];
+        gridFilter(data);
+    });
+</script>
+<script>
+    function load_master_code() {
+        try {
+            debugger;
+            var data = {};
+            var context = WebAPIProxy.getContext();
+            data.userId = context.userId
+            data.orgnId = context.orgnId
+            data.locnId = context.locnId
+            data.localeId = context.localeId
+            data.screen_Id = "MBASTAUPD";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+<script>
+    //var data = [];
+    function gridFilter(data) {
+
+        //var gridpaymentdate = $("#txtValidity").val();
+        //var checked = false;
+        //if($('#apply_all').attr('checked')){
+        //    checked = true;
+
+        //    }
+
+        //if (gridpaymentdate != "" && gridpaymentdate != undefined) {
+        //    if (checked) {
+        //        var grid = $("#grid_Drop_list").data("kendoGrid");
+
+        //        // Access the row that is selected
+        //        var select = grid.select();
+        //        // and now the data
+        //        var data = grid.dataItem(select);
+        //        // update the column `symbol` and set its value to `HPQ`
+        //        data.set("payment_date", gridpaymentdate);
+        //    }
+        //}
+
+        try {
+            $("#grid_Drop_list").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+
+                                milkman_code: { type: "string", editable: false },
+                                farmer_name: { type: "string", editable: false },
+                                payment_amount: { type: "string", editable: false },
+                                net_pay: { type: "string" },
+                                payment_date: { type: "date" },
+                                pay_method: { type: "string" },
+                                bank_ref_no: { type: "string" },
+                                pay_status: { type: "string" },
+                                remarks: { type: "string" },
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+
+                height: 400,
+                groupable: false,
+                //dataBound: function (e) {
+                //    //data.value.set("payment_date", applydate);
+                //    alert(applydate)
+                //},
+
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                save: function (data) {
+
+                    //if (data.values.accepted_qty) {
+                    //    data.model.set("net_pay", (parseInt(data.values.net_pay)).toFixed(2));
+                    //}
+                    //else {
+                    //    data.model.set("pay_date", data.model.pay_date);
+                    //}
+                },
+                selectable: true,
+                navigatable: true,
+                columns: [
+                    {
+                        field: "bonusdtl_rowid",
+                        title: "Row Id",
+                        width: 1,
+                        hidden: true,
+                    },
+                      {
+                          field: "bonus_no",
+                          title: "Payment Advice ID",
+                          width: 100,
+                          editable: false
+                      },
+
+                 {
+                     field: "milkman_code",
+                     title: "MilkMen ID",
+                     width: 100
+
+                 },
+
+    {
+        field: "farmer_code",
+        title: "Farmer Code",
+        width: 100,
+        hidden: true,
+
+    },
+    {
+        field: "farmer_name",
+        title: "Farmer Name",
+        width: 100,
+
+
+    },
+    {
+        field: "bonus_amount",
+        title: "Bonus Payable (Rs)",
+        width: 100
+
+    },
+
+    {
+        field: "payment_date",
+        title: "Payment Date",
+        width: 100,
+        format: "{0:dd/MM/yyyy}"
+
+    },
+
+
+     {
+         field: "payment_mode",
+         title: "payment_mode",
+         width: 1,
+         hidden: true,
+     },
+    {
+        field: "payment_mode_desc",
+        title: "Paymode Method",
+        editor: function (container, options) {
+            combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "payment_mode", "grid_Drop_list")
+        },
+        width: 100
+
+    },
+    {
+        field: "bank_ref_no",
+        title: "Bank Reference No",
+        width: 100,
+        
+    },
+     {
+         field: "payment_status",
+         title: "payment_status",
+         width: 1,
+         hidden: true,
+     },
+    {
+        field: "payment_status_desc",
+        title: "Payment Status",
+        editor: function (container, options) {
+            combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "payment_status", "grid_Drop_list")
+        },
+        width: 200
+
+    },
+    {
+        field: "payment_remark",
+        title: "Remarks",
+        width: 100,
+
+
+    },
+
+    {
+        field: "mode_flag",
+        title: "Mode",
+        hidden: true
+    }],
+                editable: true
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+
+        }
+    }
+
+    function check(acc, tf) {
+        if (acc >= tf) {
+            acc = "";
+        }
+    }
+
+    load_master_code();
+    payment_mode_desc_list = grid_comboScreen_mastercodes("QCD_PAYMENT_MODE");
+    payment_status_desc_list = grid_comboScreen_mastercodes("QCD_STAT_PYMT");
+
+</script>
+
+<script>
+
+    function listLoad() {
+        //fetch_validate();
+        try {
+            var formval = form_Serialize("BonusStatusupdate_form");
+            var obj_val = JSON.parse(formval);
+            var c = $('#cmb_payment_status');
+            if (c.data('kendoComboBox').value() != "" && c.data('kendoComboBox').value() != undefined) {
+                obj_val.bonus_status = c.data('kendoComboBox').value();
+
+            }
+            else {
+                obj_val.bonus_status = "0";
+            }
+            var b = $('#cmb_payment');
+            if (b.data('kendoComboBox').value() != "" && b.data('kendoComboBox').value() != undefined) {
+                obj_val.bonus_for = b.data('kendoComboBox').value();
+
+            }
+            else {
+                obj_val.bonus_for = "0";
+            }
+            if (obj_val != undefined) {
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                retrieve_BonuspaymentUpdate_list(data);
+            }
+            return false;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function generate_BonuspaymentUpdateApp_listDetail(res) {
+
+        try {
+           
+                        var data = changedataType(res);
+                        $.each(data, function (index, value) {
+
+                            var d1 = value.payment_date;
+                            //var fncode1 = d1.split("/");
+                            //var correctdate1 = fncode1[1] + '/' + fncode1[0] + '/' + fncode1[2];
+
+                            var date = kendo.parseDate(d1);
+                            value = kendo.toString(date, "MM/dd/yyyy");
+                            data[index].payment_date = value;
+                        });
+                        gridFilter(data);
+                    }
+
+              
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+
+    }
+
+    function generate_BonuspaymentUpdateApp_listHeader(res) {
+
+    }
+</script>
+<script>
+    $('#apply_all').click(function () {
+        if ($(this).is(':checked')) {
+            if ($("#txtValidity").val() != "") {
+                var date = $("#txtValidity").val();
+                var code = date.split("/");
+                var applydate = code[1] + '/' + code[0] + '/' + code[2];
+            }
+
+            if (applydate != "" && applydate != undefined) {
+
+                var grid_val = JSON.stringify($("#grid_Drop_list").data().kendoGrid._data);
+                var Bind = {};
+                Bind = grid_val;
+                var res = JSON.parse(Bind);
+                var result = changedataType(res);
+                $.each(result, function (index, value) {
+
+                    var date = kendo.parseDate(applydate);
+                    value = kendo.toString(date, "MM/dd/yyyy");
+                    result[index].payment_date = value;
+                });
+                if (result.length == 0) {
+                    var data = changedataType(res);
+                    gridFilter(data);
+                }
+                else {
+                    gridFilter(result);
+                }
+            }
+
+            else {
+
+                var data = changedataType(res);
+                $.each(data, function (index, value) {
+
+                    var d1 = value.payment_date;
+                    //var fncode1 = d1.split("/");
+                    //var correctdate1 = fncode1[1] + '/' + fncode1[0] + '/' + fncode1[2];
+
+                    var date = kendo.parseDate(d1);
+                    value = kendo.toString(date, "MM/dd/yyyy");
+                    data[index].payment_date = value;
+                });
+                gridFilter(data);
+            }
+
+        }
+    });
+</script>
+
+<script>
+    function save() {
+        try {
+            var grid_val = JSON.stringify($("#grid_Drop_list").data().kendoGrid._data);
+            var Bind = {};
+            Bind = grid_val;
+            var result = JSON.parse(Bind);
+            $.each(result, function (index, value) {
+                var d = value.payment_date;
+                var date = kendo.parseDate(d);
+                value = kendo.toString(date, "MM/dd/yyyy");
+                result[index].payment_date = value;
+
+                var paymentdtl_rowid = result[index].paymentdtl_rowid;
+                if (paymentdtl_rowid == undefined || paymentdtl_rowid == "") {
+                    result[index].paymentdtl_rowid = "0";
+                }
+                var mmode = result[index].mode_flag;
+                if (mmode == "S") {
+                    result[index].mode_flag = "U";
+                }
+            });
+            var obj_val = result;
+            var data_save = {};
+            data_save.context = WebAPIProxy.getContext();
+            data_save.context.BonusDtl = obj_val;
+            save_BonuspaymentUpdateApp_details(data_save);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function get_ProcessShareApp_Details() {
+        try {
+            //fetch_validate();
+            var formval = form_Serialize("BonusStatusupdate_form");
+            var obj_val = JSON.parse(formval);
+            var c = $('#cmb_payment_status');
+            if (c.data('kendoComboBox').value() != "" && c.data('kendoComboBox').value() != undefined) {
+                obj_val.bonus_status = c.data('kendoComboBox').value();
+
+            }
+            else {
+                obj_val.bonus_status = "0";
+            }
+            var b = $('#cmb_payment');
+            if (b.data('kendoComboBox').value() != "" && b.data('kendoComboBox').value() != undefined) {
+                obj_val.bonus_for = b.data('kendoComboBox').value();
+
+            }
+            else {
+                obj_val.bonus_for = "0";
+            }
+            if (obj_val != undefined) {
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                retrieve_BonuspaymentUpdate_list(data);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function get_ProcessShareApp_Header() {
+    }
+    function mandatory() {
+        try {
+            var mandatory_check = true;
+
+            var grid_validate_msg = "";
+
+            if ($('#cmb_payment_status').data("kendoComboBox").value() == "") {
+                grid_validate_msg += "Bonus payment status cannot be blank <br>";
+                mandatory_check = false;
+            }
+            if ($('#cmb_payment').data("kendoComboBox").value() == "") {
+                grid_validate_msg += "Bonus for cannot be blank <br>";
+                mandatory_check = false;
+            }
+
+
+            if (mandatory_check == false) {
+                kendoAlert(grid_validate_msg);
+                return false;
+            }
+            else {
+                return listLoad();
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>

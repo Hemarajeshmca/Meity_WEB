@@ -1,0 +1,233 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    <form class="form-horizontal" id="frm_invoice" data-role="validator" novalidate="novalidate">
+        <div class="modal-header">
+            @*<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>*@
+            <h4 class="modal-title">Payment</h4>
+        </div>
+        <div class="modal-header" style="height:49px">
+            <div class="col-sm-12" style="margin-top:-7px">
+                <div class="form-group" style="padding-bottom:10px">
+                    <div class="col-sm-3">
+                        <button type="button" class="btn btn-sm btn-primary" id="btnsave" onclick="fetch_Invoice_payment()" style="width:85px">
+                            View
+                        </button>
+                        <button type="button" class="btn btn-sm btn-primary" id="btnClose" onclick=closeModal(); style="width:85px">
+                            Close
+                        </button>
+                    </div>
+                    <div class="col-sm-10">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-body" style="height:500px">
+            <div class="row" style="padding-bottom:15px;padding-left:20px">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="txtProc_amt" class="col-sm-4 control-label ">Amount</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="txtProc_amt" class="form-control" maxlength="50" disabled>
+                                <input type="hidden" id="hdn_procrowid">
+                                <input type="hidden" id="hdn_procno">
+                                <input type="hidden" id="hdn_procdate">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="txtbal_amt" class="col-sm-4 control-label ">Balance Amount</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="txtbal_amt" class="form-control" name="balance_amount" maxlength="50" disabled>
+                                <input type="hidden" id="hdnbal_amt" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="cmb_pay" class="col-sm-4 control-label ">Paymode</label>
+                            <div class="col-sm-6">
+                                <input id="cmb_pay" style="width: 100%" name="payment_mode">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="txtRef_no" class="col-sm-4 control-label ">Reference No</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="txtRef_no" name="ref_no" class="form-control" maxlength="50">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="txtPay_date" class="col-sm-4 control-label ">Payment Date</label>
+                            <div class=" col-sm-6">
+                                <input class="cusDate" type="date" data-role='datepicker' onkeypress="return date_validate(event)" style="text-align:right" id="txtPay_date" data-checkdate-msg="Enter Valid Date" name="payment_date" style="width:100%" />
+                                <span data-for='valid' class='k-invalid-msg'></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="txtpay_amt" class="col-sm-4 control-label ">Payment Amount</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="txtpay_amt" name="payment_amount" class="form-control" onkeypress="return isNumberKey(event)" style="text-align:right" maxlength="50">
+                                <input type="hidden" id="hdn_status_code" name="status_code" value="A">
+                                <input type="hidden" id="hdn_row_timestamp" name="row_timestamp">
+                                <input type="hidden" id="hdn_mode_flag" name="mode_flag" value="I">
+                                <input type="hidden" id="hdn_proc" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" style="padding-bottom:20px">
+                    <div class="col-sm-12">
+                        <button type="button" class="btn btn-sm btn-primary" id="btnsave" onclick="mandatory()" style="width:85px;margin-left:330px">
+                            Save
+                        </button>
+                        <button type="button" class="btn btn-sm btn-primary" id="btnClose" onclick=closeModal(); style="width:85px;margin-left:10px">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-11">
+                        <div id="grid_Drop_list">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+    </form>
+</body>
+</html>
+<style>
+    .breadcrumb > li + li:before {
+        color: #E6E6E6;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        kendodate_format();
+        $('#raiseinvoice').on('show.bs.modal', function (e) {
+            gridFilter([]);
+        });
+
+        $('#raiseinvoice').on('loaded.bs.modal', function (e) {
+            gridFilter([]);
+        });
+
+        var combo_data1 = [{ code: 1, desc: "Online" },
+            { code: 1, desc: "Cash" }];
+        filter_combobox("cmb_pay", combo_data1);
+
+    });
+    $('#txtPay_date').attr("disabled", true);
+
+    function closeModal() {
+        $('#raiseinvoice').modal("hide");
+
+    }
+
+</script>
+<script>
+    //var data = [];
+    function gridFilter(data) {
+        try {
+            $("#grid_Drop_list").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                invoice_amount: { type: "string" },
+                                balance_amount: { type: "string" },
+                                Paymode: { type: "string" },
+                                Reference_No: { type: "string" },
+                                Payment_Date: { type: "string" },
+                                Payment_Amount: { type: "string" },
+
+                            }
+                        }
+                    }
+                },
+
+                height: 250,
+                groupable: false,
+
+
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                   {
+                       field: "invoice_amount",
+                       title: "Amount",
+                       width: 80
+
+                   },
+
+                {
+                    field: "balance_amount",
+                    title: "Balance Amount",
+                    width: 100,
+                    hidden: true
+
+                },
+                 {
+                     field: "Paymode",
+                     title: "Paymode",
+                     width: 100
+
+                 },
+                  {
+                      field: "Reference_No",
+                      title: "Reference No",
+                      width: 80
+
+                  },
+                  {
+                      field: "Payment_Date",
+                      title: "Payment Date",
+                      width: 80
+                  },
+                  {
+                      field: "Payment_Amount",
+                      title: "Paid Amount",
+                      width: 80
+                  },
+
+                ],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+</script>
+
+
+
+
+

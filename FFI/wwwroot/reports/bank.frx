@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="05/12/2020 18:20:58" ReportInfo.Modified="05/12/2020 18:22:11" ReportInfo.CreatorVersion="2020.1.0.0">
+  <Styles Name="Standard">
+    <Style Name="Title" Font="Arial, 12pt, style=Bold"/>
+    <Style Name="Header" Font="Arial, 10pt, style=Bold"/>
+    <Style Name="Group" Font="Arial, 10pt, style=Bold"/>
+    <Style Name="Data" Font="Arial, 10pt"/>
+    <Style Name="Footer" Font="Arial, 10pt"/>
+    <Style Name="EvenRows" Fill.Color="WhiteSmoke" Font="Arial, 10pt"/>
+  </Styles>
+  <Dictionary>
+    <MySqlDataConnection Name="Connection" ConnectionString="rijcmlqJ9ltPwNsYyX+2oAnmCElmGIz/SJ0vefyWJNqFvJ9CpVcxZe7+FQFpmKpxbZDWz0V6JezihMLHf9zFqtmqW5z1hGxTK1qG3y+qKOZscEh4zg=">
+      <TableDataSource Name="core_mst_tfarmerbank" DataType="System.Int32" Enabled="true" TableName="core_mst_tfarmerbank">
+        <Column Name="farmerbank_rowid" DataType="System.Int32"/>
+        <Column Name="farmer_code" DataType="System.String"/>
+        <Column Name="version_no" DataType="System.Int32"/>
+        <Column Name="bank_acc_no" DataType="System.String"/>
+        <Column Name="bank_acc_type" DataType="System.String"/>
+        <Column Name="bank_code" DataType="System.String"/>
+        <Column Name="ifsc_code" DataType="System.String"/>
+        <Column Name="dflt_dr_acc" DataType="System.String"/>
+        <Column Name="dflt_cr_acc" DataType="System.String"/>
+        <Column Name="status_code" DataType="System.String"/>
+        <Column Name="created_datetime" DataType="System.DateTime"/>
+        <Column Name="created_by" DataType="System.String"/>
+        <Column Name="modified_datetime" DataType="System.DateTime"/>
+        <Column Name="modified_by" DataType="System.String"/>
+      </TableDataSource>
+    </MySqlDataConnection>
+  </Dictionary>
+  <ReportPage Name="Page1" Landscape="true" PaperWidth="297" PaperHeight="210" Watermark.Font="Arial, 60pt">
+    <ReportTitleBand Name="ReportTitle1" Width="1047.06" Height="37.8">
+      <TextObject Name="Text1" Width="1047.06" Height="37.8" Dock="Fill" Text="core_mst_tfarmerbank" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold" Style="Title"/>
+    </ReportTitleBand>
+    <PageHeaderBand Name="PageHeader1" Top="41.8" Width="1047.06" Height="28.35">
+      <TextObject Name="Text3" Width="75.6" Height="18.9" Text="farmerbank_rowid" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text5" Left="75.6" Width="75.6" Height="18.9" Text="farmer_code" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text7" Left="151.2" Width="75.6" Height="18.9" Text="version_no" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text9" Left="226.8" Width="75.6" Height="18.9" Text="bank_acc_no" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text11" Left="302.4" Width="75.6" Height="18.9" Text="bank_acc_type" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text13" Left="378" Width="75.6" Height="18.9" Text="bank_code" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text15" Left="453.6" Width="75.6" Height="18.9" Text="ifsc_code" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text17" Left="529.2" Width="75.6" Height="18.9" Text="dflt_dr_acc" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text19" Left="604.8" Width="75.6" Height="18.9" Text="dflt_cr_acc" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text21" Left="680.4" Width="75.6" Height="18.9" Text="status_code" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text23" Left="756" Width="75.6" Height="18.9" Text="created_datetime" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text25" Left="831.6" Width="75.6" Height="18.9" Text="created_by" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text27" Left="907.2" Width="66.15" Height="18.9" Text="modified_datetime" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text29" Left="973.35" Width="66.15" Height="18.9" Text="modified_by" Font="Arial, 10pt, style=Bold" Style="Header"/>
+    </PageHeaderBand>
+    <DataBand Name="Data1" Top="74.15" Width="1047.06" Height="18.9" EvenStyle="EvenRows" DataSource="core_mst_tfarmerbank">
+      <TextObject Name="Text2" Width="75.6" Height="18.9" Text="[core_mst_tfarmerbank.farmerbank_rowid]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text4" Left="75.6" Width="75.6" Height="18.9" Text="[core_mst_tfarmerbank.farmer_code]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text6" Left="151.2" Width="75.6" Height="18.9" Text="[core_mst_tfarmerbank.version_no]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text8" Left="226.8" Width="75.6" Height="18.9" Text="[core_mst_tfarmerbank.bank_acc_no]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text10" Left="302.4" Width="75.6" Height="18.9" Text="[core_mst_tfarmerbank.bank_acc_type]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text12" Left="378" Width="75.6" Height="18.9" Text="[core_mst_tfarmerbank.bank_code]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text14" Left="453.6" Width="75.6" Height="18.9" Text="[core_mst_tfarmerbank.ifsc_code]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text16" Left="529.2" Width="75.6" Height="18.9" Text="[core_mst_tfarmerbank.dflt_dr_acc]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text18" Left="604.8" Width="75.6" Height="18.9" Text="[core_mst_tfarmerbank.dflt_cr_acc]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text20" Left="680.4" Width="75.6" Height="18.9" Text="[core_mst_tfarmerbank.status_code]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text22" Left="756" Width="75.6" Height="18.9" Text="[core_mst_tfarmerbank.created_datetime]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text24" Left="831.6" Width="75.6" Height="18.9" Text="[core_mst_tfarmerbank.created_by]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text26" Left="907.2" Width="66.15" Height="18.9" Text="[core_mst_tfarmerbank.modified_datetime]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text28" Left="973.35" Width="66.15" Height="18.9" Text="[core_mst_tfarmerbank.modified_by]" Font="Arial, 10pt" Style="Data"/>
+    </DataBand>
+    <PageFooterBand Name="PageFooter1" Top="97.05" Width="1047.06" Height="18.9">
+      <TextObject Name="Text30" Width="1047.06" Height="18.9" Dock="Fill" Text="[PageN]" HorzAlign="Right" Font="Arial, 10pt" Style="Footer"/>
+    </PageFooterBand>
+  </ReportPage>
+</Report>

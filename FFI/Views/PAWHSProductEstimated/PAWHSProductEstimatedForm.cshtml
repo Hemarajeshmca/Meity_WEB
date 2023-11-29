@@ -1,0 +1,486 @@
+﻿@{
+    ViewBag.Form = "Lot Idenification View";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+<style>
+    .img-bordered {
+        border: 3px solid #d2d6de;
+        padding: 3px;
+        width: 85%;
+    }
+</style>
+
+<form id="Product_form" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:20px;padding-bottom:20px">
+            <div class="row" style="padding-bottom:1px">
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label for="txt_produ_cate" class=" col-sm-5 control-label">Lot No.</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_LotNo" name="in_LotNo" class="form-control" maxlength="50">
+                        </div>
+                        @*<div id="pay_help1">
+                        <a class="HelpWindow fa fa-search fa-lg" role="button" id="pay_help1" data-toggle="modal" href="../HelpFilter/HelpFilter" hdrtitle="Product Category" searchid="S34" data-target="#HelpModal" onclick=transfer(this,"form","","form_control"); title="Search" style="font-size: 19px; margin-left: 0px; margin-top: 10px;"></a>
+                    </div>*@
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_pro_name" class=" col-sm-5 control-label">Farmer Code</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_Farmer_Code" name="in_Farmer_Code" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label for="txt_hsn_code" class=" col-sm-5 control-label">Farmer Name</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_Farmer_Name" name="in_Farmer_Name" class="form-control" maxlength="50">
+                        </div>
+                        @*<div id="pay_help1">
+                        <a class="HelpWindow fa fa-search fa-lg" role="button" id="pay_help2" data-toggle="modal" href="../HelpFilter/HelpFilter" hdrtitle="HSN Code" searchid="S119" data-target="#HelpModal" onclick=transfer(this,"form","","form_control1"); title="Search" style="font-size: 19px; margin-left: 0px; margin-top: 10px;"></a>
+                    </div>*@
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="row" style="padding-bottom:1px">
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_pro_cde" class=" col-sm-5 control-label">Member Type</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_Member_Type" name="in_Member_Type" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_pro_cde" class=" col-sm-5 control-label">Item Code</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_Item_Code" name="in_Item_Code" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_produ_sub_cate" class=" col-sm-5 control-label">Item Name</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_Item_Name" name="in_Item_Name" class="form-control" maxlength="50">
+                            <input type="hidden" id="txtMode" name="In_mode_flag" class="form-control" maxlength="10" value="I">
+                            <input type="hidden" id="txtEstm_rowid" name="in_Estm_rowid">
+                            <input type="hidden" id="txt_row_timestamp" name="In_row_timestamp" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" style="padding-bottom:1px">
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_produ_sub_cate" class=" col-sm-5 control-label">Variety Status</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_variety_status" name="in_variety_status" class="form-control" maxlength="225">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_produ_sub_cate" class=" col-sm-5 control-label">Estimated Qty</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_Estimated_Qty" name="in_Estimated_Qty" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_produ_sub_cate" class=" col-sm-5 control-label">Estimated Price</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_Estimated_Price" name="in_Estimated_Price" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row" style="padding-bottom:1px">
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_produ_sub_cate" class=" col-sm-5 control-label">Estimated Value</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_Estimated_Value" name="in_Estimated_Value" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_produ_sub_cate" class=" col-sm-5 control-label">Estimated Pickup Date</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_estimated_pickupdate" name="in_Estimated_PickDate" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_produ_sub_cate" class=" col-sm-5 control-label">LRP Name</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_Lrp_name" name="in_LRP_Name" class="form-control" maxlength="225">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_produ_sub_cate" class=" col-sm-5 control-label">LRP Mobile No</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_LRP_Mobile_no" name="in_LRP_Mobile_no" class="form-control" maxlength="225">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_produ_sub_cate" class=" col-sm-5 control-label">Remarks</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_Remarks" name="in_Remarks" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_produ_sub_cate" class=" col-sm-5 control-label">Estimated Status</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_estimated_status" name="in_Estimated_Status" class="form-control" maxlength="225">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <div class=" col-sm-6">
+                            <button type="button" id="txt_billimage" onclick="AttachmentFile()" style="background-color: #3c8dbc;">Bill Image</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <section class="col-md-12">
+                    <div id="tab_list" class="col-md-12">
+                        <ul class="nav nav-tabs">
+                            <li class="active">
+                                <a href="#Quantity" id="data1" role="tab" onclick="qtytab()" data-toggle="tab">
+                                    Quality
+                                </a>
+                            </li>                  
+                       
+                      
+                        </ul>
+                        <div class="tab-content">
+
+                            <div class="tab-pane fade active in" id="Quantity">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div id="grid_Quantity">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                 
+                         
+                           
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <div id="dialogFileAttachment">
+        <div class="form-group">
+            <div class="col-md-10">
+                <img id="farmer_img" src="~/images/NoImage.png" class="col-sm-5 img-bordered profileImg1" alt="User Image" style="height:auto;left: 11%" ; />
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    click_act_name = "PAWHSProductEstimatedList";
+    click_ctrl_name = "PAWHSProductEstimated";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+
+<script src="~/API_Scripts/StockAdjustment.js"></script>
+<script src="~/API_Scripts/stockAdjustment_master_getStockAdjustment_APIClient.js"></script>
+<script src="~/API_Scripts/stockAdjustment_master_getStockAdjustmentList_APIClient.js"></script>
+<script src="~/API_Scripts/stockAdjustment_master_saveStockAdjustment_APIClient.js"></script>
+<script src="~/API_Scripts/getStockAdjustment_Model.js"></script>
+<script src="~/API_Scripts/getStockAdjustmentList_Model.js"></script>
+<script src="~/API_Scripts/saveStockAdjustment_Model.js"></script>
+
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+<script src="~/CommonScripts/common.js"></script>
+
+<script>
+    $(document).ready(function () {
+        debugger;
+        kendodate_format();
+
+        $("#bottom_menus").hide();
+        //$("#divCreate").hide();
+        //$("#divEdit").hide();
+        //$("#divView").show();
+        //$('#frmlayerdiv').hide();
+        //$('#divUserRole8').show();
+        //$('#divUserRole8 #review').hide();
+        //$("#hide_div").hide();
+        //$("#divScreen").hide();
+        $("#dialogFileAttachment").hide();
+        $("#hide_div").hide();
+        New_grid_Quantity_details([]);
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#Product_form");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        Screen_Id = "PWNEWPEP";
+        permission = sec_Permission(Screen_Id);
+
+
+        $(".file_attach").attr("hdrtitle", "Estimated Purchase Form");
+        $(".notes").attr("hdrtitle", "Estimated Purchase Form");
+        $("#lblForm_menuid").text("PWNEWPEP");
+
+        var org_id = getlocalStorage('org_id');
+        var org_type = getlocalStorage('org_type');
+        var orgtname = getlocalStorage('orgtname');
+        var org = getlocalStorage('org');
+        $('#txtagg_code').val(org_id);
+
+        if (getlocalStorage('btn_clk_val') == "View") {
+            debugger;
+            $("#bottom_menus").hide();          
+            $("#hide_div").hide();         
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("Product_form");
+                var obj_val = JSON.parse(formval);
+                obj_val.in_Estm_rowid = data.Out_Estm_rowid;
+                obj_val.in_LotNo = data.Out_LotNo;
+                // obj_val.agg_code = data.Out_agg_code;
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                //Item Master Edit Binding  start 18-05-2020
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, in_Estm_rowid: Context.Header.in_Estm_rowid, in_LotNo: Context.Header.in_LotNo }),
+                    url: "/PAWHSProductEstimated/ProductEstimatedfetch",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        if (response.context != null) {
+                            debugger;
+                            generate_ProductEstimate_header(response.context.Header);
+                            grid_Quantity_details(response.context.QualityDt);
+                            qtytab();
+
+                        }
+                        else {
+                            console.log(response);
+                        }
+                    },
+                    error: function (er) {
+                        alert(er);
+                        console.log(er);
+                    }
+
+                });
+
+                $("#txtMode").val("U");
+                $("#DocStat").val("Active");
+
+            }
+        }
+
+    });
+
+    function AttachmentFile() {
+        debugger
+        $("#dialogFileAttachment").kendoWindow();
+        var dialog = $("#dialogFileAttachment").data("kendoWindow");
+        dialog.open().element.closest(".k-window").css({
+            top: 121,
+            left: 300, height: 400, width: 900
+        });
+        dialog.title("Bill Image");
+    
+    }
+    function qtytab() {
+        try {
+            $("div#Quantity").toggleClass('tab-pane fade active in');
+            $("div#Quantity").show();        
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function New_grid_Quantity_details(data) {
+        try {
+            $("#grid_Quantity").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                Out_qty_row_id: { type: "int" },
+                                Out_agg_code: { type: "string" },
+                                Out_lotno: { type: "string" },
+                                Out_qlt_code: { type: "string" },
+                                Out_Qlt_name: { type: "string" },
+                                Out_Qlt_value: { type: "string" }
+                               
+                            }
+                        }
+                    }
+                },
+                //  toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 250,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_Quantity').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                    {
+                        field: "Out_qty_row_id",
+                        title: "quantity_rowid",
+                        hidden: true
+                    },
+                    {
+                        field: "Out_agg_code",
+                        title: "Agg Code",
+                        hidden: true
+                    },
+                    {
+                        field: "Out_lotno",
+                        title: "Lot No",
+                        hidden: true
+                    },
+                 
+                    {
+                        field: "Out_qlt_code",
+                        title: "Quality Code",
+                        hidden: true
+                    },
+                    {
+                        field: "Out_Qlt_name",
+                        title: "Quality Name",
+
+                    },
+                    {
+                        field: "Out_Qlt_value",
+                        title: "Quality Value",
+
+                    }      
+                    
+                 
+
+                ],
+                editable: false
+            });
+            $("#grid_Quantity .k-input").attr('disabled', 'false');
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function grid_Quantity_details(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);              
+                New_grid_Quantity_details(data);
+            }
+            else {
+                New_grid_Quantity_details([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+<script>
+    function generate_ProductEstimate_header(res) {
+        try {
+            if (res != null) {
+                $("#txtMode").val("U");
+                $("#DocStat").val("Active");
+                $("#txtEstm_rowid").val(res.in_Estm_rowid);
+                $("#txt_LotNo").val(res.in_LotNo);
+                $("#txt_Farmer_Code").val(res.in_Farmer_Code);
+                $("#txt_Farmer_Name").val(res.in_Farmer_Name);
+                $("#txt_Member_Type").val(res.in_Member_Type);
+                $("#txt_Item_Code").val(res.in_Item_Code);
+                $("#txt_Item_Name").val(res.in_Item_Name);
+                $("#txt_variety_status").val(res.in_variety_status);
+                $("#txt_Estimated_Qty").val(res.in_Estimated_Qty);
+                $("#txt_Estimated_Price").val(res.in_Estimated_Price);
+                $("#txt_Estimated_Value").val(res.in_Estimated_Value);
+                $("#txt_estimated_pickupdate").val(res.in_Estimated_PickDate);
+                $("#txt_Remarks").val(res.in_Remarks);
+                $("#txt_Lrp_name").val(res.in_LRP_Name);
+                $("#txt_LRP_Mobile_no").val(res.in_LRP_Mobile_no);
+                $("#txt_estimated_status").val(res.in_Estimated_Status);
+                $("#txtImageHidden").val(res.in_Estimated_attach);
+              
+                $("#txtMode").val("U");
+                var Estinvoicedata = res.in_Estimated_attach
+                if (Estinvoicedata != "")
+                    document.getElementById("farmer_img").src = "data:image/png;base64," + Estinvoicedata;
+                else
+                    document.getElementById("farmer_img").src = "/images/noimage.png";             
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function viewdisable() {
+        debugger;
+
+        $("#txt_LotNo").attr("disabled", true);
+        $("#txt_Farmer_Code").attr("disabled", true);
+        $("#txt_Farmer_Name").attr("disabled", true);
+        $("#txt_Member_Type").attr("disabled", true);
+        $("#txt_Item_Code").attr("disabled", true);
+        $("#txt_Item_Name").attr("disabled", true);
+        $("#txt_Estimated_Qty").attr("disabled", true);
+        $("#txt_Estimated_Price").attr("disabled", true);
+        $("#txt_Estimated_Value").attr("disabled", true);
+        $("#txt_estimated_pickupdate").attr("disabled", true);
+        $("#txt_Remarks").attr("disabled", true);
+
+    }
+</script>
+
+
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>

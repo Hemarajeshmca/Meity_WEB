@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <row>
+    <param_type>Int</param_type>
+    <param_type>String</param_type>
+    <param_type>Date</param_type>
+  </row>
+</root>

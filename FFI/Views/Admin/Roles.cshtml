@@ -1,0 +1,237 @@
+﻿
+@{
+    ViewBag.FormName = "Roles";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+
+<form id="roles_form" class="form-horizontal" data-role="validator" novalidate="novalidate" style="padding-top:22px">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row">
+                <!-- Left col -->
+                <div class="col-lg-3">
+                    <!-- Custom tabs (Charts with tabs)-->
+                    <div id="grid_role"></div>
+                </div>
+                <div class="col-lg-9">
+                    <div class=" row">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label for="txtRoleId" class="col-sm-5 control-label required">Role Id:</label>
+                                <div class="col-sm-7">
+                                    <input type="text" id="txtRoleId" onchange=" return roleid_onchange();" name="role_id" class="form-control" maxlength="10">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label for="txtRoleDesc" class="col-sm-5 control-label required">RoleName:</label>
+                                <div class="col-sm-7">
+                                    <input type="text" id="txtRoleDesc" name="role_description" class="form-control" maxlength="125">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <div class="col-sm-2"></div>
+                                <div class="col-sm-8">
+                                    <button id="btnMap" class="btn btn-sm btn-primary " onclick=" return DefaultRoleClick()">
+                                        @*DefaultRoleClick()*@
+                                        Default Screen Map
+                                    </button>
+                                </div>
+                                <div class="col-sm-2"></div>
+                            </div>
+                        </div>
+                        @*<div class="col-sm-3">
+                                <div class="form-group">
+                                    <label for="txtStatus" class="col-sm-4 control-label">Status:</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="txtStatus" name="Status" class="form-control"  readonly>
+                                    </div>
+                                </div>
+                            </div>*@
+                        <div class="col-sm-3" style=" display:none">
+                            <div class="form-group" style=" display:none">
+                                <label for="txtMode" class="col-sm-5 control-label">Mode Flag</label>
+                                <div class="col-sm-7">
+                                    <input type="text" id="txtMode" name="mode_flag" class="form-control" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class=" col-md-12 ">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="active">
+                                    <a href="#permission" role="tab" data-toggle="tab">
+                                        Permission
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane fade active in" id="permission">
+                                    <div id="permission">
+                                        <div id="grid_role_list">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="~/API_Scripts/retrieveRoleActivity_Model.js"></script>
+<script src="~/API_Scripts/retrieveRoleActivityList_Model.js"></script>
+<script src="~/API_Scripts/Role_Activity_retrieveroleactivity_APIClient.js"></script>
+<script src="~/API_Scripts/Role_Activity_retrieveroleactivity_list_APIClient.js"></script>
+<script src="~/API_Scripts/Role_Activity_saveroleactivity_APIClient.js"></script>
+<script src="~/API_Scripts/saveRoleActivity_Model.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/API_Scripts/RoleScreen.js"></script>
+<script>
+    $(document).ready(function () {
+        retrieve_roleactivity_list();
+        grid_permission([]);
+        $("#form_design").css("padding-top", "80px");
+    });
+  
+</script>
+<script>
+    function grid_role(data) {
+        $("#grid_role").kendoGrid({
+            dataSource: {
+                data: data,
+            },
+            height: 470,
+            sortable: true,
+            selectable: true,
+        
+            selectable: "singl",   //  Grid Row Selection
+            navigatable: true,
+            columns: [{
+                field: "role_id",
+                title: "Role Id",
+                width: 30
+            }, {
+                field: "role_description",
+                title: "Role Name",
+                width: 30
+            }]
+        });
+    }
+
+    function grid_permission(role_data) {
+        $("#grid_role_list").kendoGrid({
+            dataSource: {
+                data: role_data,
+                // pageSize: 20,
+                schema: {
+                    model: {
+                        fields: {
+                            screen_name: { editable: false, validation: { required: true } },
+                            new_perm: { editable: false },
+                            mod_perm: { editable: false },
+                            del_perm: { editable: false },
+                            prn_perm: { editable: false },
+                            view_perm: { editable: false },
+                            deny_perm: { editable: false },
+                        }
+                    }
+                },
+            },
+            height: 380,
+            sortable: true,
+            //pageable: {
+            //    refresh: true,
+            //    pageSizes: true,
+            //    buttonCount: 5
+            //},
+            columns: [
+                {
+                    field: "screen_name",
+                    title: "Screen Name",
+                    width: 200,
+                    update: false,
+                    editable: false
+
+                }, {
+
+                    field: "new_perm",
+                    title: "New",
+                    template: '<input type="checkbox" #= new_perm == "1" ? "checked=checked" : "" # class="chkbx1" ></input>',
+                    update: true,
+                    width: 100
+                },
+            {
+                field: "mod_perm",
+                title: "Modify",
+                template: '<input type="checkbox" #= mod_perm == "1" ? "checked=checked" : "" # class="chkbx2" ></input>',
+                update: true,
+                width: 80
+            },
+            {
+                field: "del_perm",
+                title: "Delete",
+                template: '<input type="checkbox" #= del_perm == "1" ? "checked=checked" : "" # class="chkbx3" ></input>',
+                update: true,
+                width: 80
+            },
+            {
+                field: "prn_perm",
+                title: "Print",
+                template: '<input type="checkbox" #= prn_perm == "1" ? "checked=checked" : "" # class="chkbx4" ></input>',
+                update: true,
+                width: 80
+            },
+            {
+                field: "view_perm",
+                title: "View",
+                template: '<input type="checkbox" #= view_perm == "1" ? "checked=checked" : "" # class="chkbx5" ></input>',
+                update: true,
+                width: 80
+            },
+            {
+                field: "deny_perm",
+                title: "Deny",
+                template: '<input type="checkbox" #= deny_perm == "1" ? "checked=checked" : "" # class="chkbx6" ></input>',
+                update: true,
+                width: 80
+            }],
+
+            editable: true
+        });
+    }
+
+  
+</script>
+
+
+<script>
+    function generate_roleactivity_list(res) {
+        var data = changedataType(res);
+        grid_role(data);
+    }
+
+
+    function generate_roleactivity_header(res) {
+        $("#txtRoleId").val(res.role_id);
+        $("#txtRoleDesc").val(res.role_description);
+
+    }
+
+
+    function generate_roleactivity_detail(res) {
+        var data = changedataType(res);
+        grid_permission(data);
+    }
+
+
+</script>
+<style>
+    #grid_role_list input[type=checkbox] {
+        margin: 4px 37px 0;
+    }
+</style>
+

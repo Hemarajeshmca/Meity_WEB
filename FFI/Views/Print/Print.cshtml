@@ -1,0 +1,710 @@
+﻿@{
+    ViewBag.Form = "Print Share Certificates";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+<form id="certificateprint" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="cmb_update" class="col-sm-4 control-label required">Share Certificate To Print:</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_update" name="In_share_certificate" data-role="filtercombo" style="width:100%" />
+                            <a id="downloadpath" download href=""></a>
+                        </div>
+                                         </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="txtValidity" class="col-sm-4 control-label required">Print Date:</label>
+                        <div class=" col-sm-4">
+                            <input class="cusDate" data-role='datepicker' id="txtValidity" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="In_printeddate" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+
+                        </div>
+                        <button title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button" data-original-title="Refresh" onclick="mandatory()"> <span class="glyphicon glyphicon-refresh"></span></button>
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <div id="grid_Drop_list">
+                </div>
+            </div>
+            <div class="row" style="padding-top:10px; padding-bottom:15px">
+              
+            </div>
+            
+        </div>
+    </div>
+
+</form>
+
+<script src="~/API_Scripts/Share_App_retrieveShareCertificatePrint_APIClient.js"></script>
+<script src="~/API_Scripts/Share_App_saveShareCertificatePrint_APIClient.js"></script>
+<script src="~/API_Scripts/retrieveShareCertificatePrint_Model.js"></script>
+<script src="~/API_Scripts/saveShareCertificatePrint_Model.js"></script>
+<script src="~/API_Scripts/CertificatePrint.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/CommonScripts/report.js"></script>
+
+
+<script>
+    $(document).ready(function () {
+        debugger;
+        $("#lblForm_menuid").text("SHRPRN");
+        kendodate_format();
+        //master_service();
+        $("#divUserRole4 #btnReport").hide();
+        $("#divUserRole4 #btnReport1").hide();
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#certificateprint");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        Screen_Id = "SHRPRN";
+        master_userRoleNew3();
+
+        var data = [];
+        gridFilter(data);       
+        $("#RIform").hide();
+        $("#FPOform").hide();
+        load_master_code();
+        var container = $("#certificateprint");
+        kendo.init(container);
+        var CertificateType = "";
+        $("#cmb_update").empty();
+        CertificateType = grid_comboScreen_mastercodes("QCD_SHA_CERT_TYPE");
+        filter_combobox("cmb_update", CertificateType);
+        $("#txtValidity").kendoDatePicker({
+            value : new Date(),
+            max: new Date(), // sets max date to Jan 1st, 2013
+            format: "dd/MM/yyyy"
+        });
+
+        
+        if (localStorage.print_status=="true")
+        {
+            $('#cmb_update').data("kendoComboBox").value(localStorage.Certificatetype);
+            listLoad();
+            save();
+            localStorage.print_status = "";
+            window.parent.location.href = "Print/Print";
+        }    
+
+    });
+   
+</script>
+<script>
+    function gridFilter(data) {
+        try {
+            $("#grid_Drop_list").kendoGrid(
+                   {
+                       
+                       dataSource: {
+                           data:  data,                           
+                           schema: {
+                               model: {
+                                   fields: {
+                                       In_register_date: { type: "string" },
+                                       In_register_no: { type: "string" },
+                                       In_fpomember_code: { type: "string" },
+                                       In_member_name: { type: "string" },
+                                       In_applied_shares: { type: "string" },
+                                       In_status_desc: { type: "string" },
+                                       In_mode_flag: { type: "string", defaultValue: "I" }
+                                   }
+                               }
+                           }
+                       },                    
+                       height: 400,
+                       groupable: false,
+                       dataBinding: setDefaultValues,
+
+                       dataBound: function (e) {
+                           resultData = e.sender._data;
+                           var rows = $('#grid_Drop_list').data('kendoGrid').tbody.children();
+                           setColor(rows, resultData);
+                       },
+
+                       sortable: true,
+                       selectable: true,
+
+
+                       navigatable: true,
+                       columns: [
+                            {
+                               field: "In_register_rowid",
+                                title: "register_rowid",
+                                width: 100,
+                                hidden: true,
+                           },
+                         
+
+                            {
+                                field: "In_register_no",
+                                title: "Application No",
+                                width: 100,
+                                filterable: {
+                                    cell: {
+                                        operator: "contains",
+                                        inputWidth: 1000
+                                    }
+                                }
+
+                           },
+                           {
+                               field: "In_register_date",
+                               title: "Applied Date",
+                               width: 100,
+                               filterable: {
+                                   cell: {
+                                       operator: "contains",
+                                       inputWidth: 1000
+                                   }
+                               }
+
+                           },
+
+                             {
+                                 field: "In_farmer_code",
+                                 title: "farmer_code",
+                                 width: 100,
+                                 hidden: true,
+                           },
+
+                          {
+                              field: "In_fpomember_code",
+                              title: "Member ID",
+                              width: 100,
+                              filterable: {
+                                  cell: {
+                                      operator: "contains",
+                                      inputWidth: 1500
+                                  }
+                              }
+
+                          },
+                           {
+                               field: "In_member_name",
+                               title: "Applicant Name",
+                               width: 100,
+                               filterable: {
+                                   cell: {
+                                       operator: "contains",
+                                       inputWidth: 1500
+                                   }
+                               }
+                           },
+
+                           {
+                               field: "In_farmer_name",
+                               title: "farmer_name",
+                               width: 100,
+                               hidden: true,
+                           },
+
+                               {
+                                   field: "In_certificate_no",
+                                   title: "Share Certificate No",
+                                   width: 100,
+                                   filterable: {
+                                       cell: {
+                                           operator: "contains",
+                                           inputWidth: 1500
+                                       }
+                                   }
+                               },
+                               {
+                                   field: "In_folio_no",
+                                   title: "Folio No",
+                                   width: 100,
+                                   filterable: {
+                                       cell: {
+                                           operator: "contains",
+                                           inputWidth: 1500
+                                       }
+                                   }
+                               },
+
+
+                         {
+                             field: "In_applied_shares",
+                             title: "Shares Applied",
+                             width: 95,
+                             filterable: {
+                                 cell: {
+                                     operator: "contains",
+                                     inputWidth: 1500
+                                 }
+                             }
+                         },
+
+                         {
+                             field: "In_approved_shares",
+                             title: "Shares Approved",
+                             width: 95,
+                             filterable: {
+                                 cell: {
+                                     operator: "contains",
+                                     inputWidth: 1500
+                                 }
+                             }
+                         },
+
+                         {
+                             field: "In_rejected_shares",
+                             title: "Shares Rejected",
+                             width: 95,
+                             filterable: {
+                                 cell: {
+                                     operator: "contains",
+                                     inputWidth: 1500
+                                 }
+                             }
+                         },
+
+                           {
+                               field: "In_status_code",
+                               title: "Status",
+                               hidden: true,
+                               width: 100
+                           },
+                        {
+                            field: "In_status_desc ",
+                            title: "Status",
+                            width: 100,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                           },
+                           {
+                               command: [
+                                   {
+                                       name: "Print",
+                                       id: "Print",                                      
+                                       click: function (e) {
+                                           debugger;
+                                           var grid = $("#grid_Drop_list").data("kendoGrid");
+                                           var dataItem = $("#grid_Drop_list").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                                           //listLoad();
+                                           //save();
+                                           PrintWindowEvent(e, dataItem, grid);
+                                           e.stopImmediatePropagation()
+                                       }
+                                   },
+                               ],
+                               title: "Action",
+                               width: 100,
+                           },
+
+                          {
+                              field: "In_row_timestamp",
+                              title: "Timestamp",
+                              hidden: true
+                          },
+
+                       {
+                           field: "In_mode_flag",
+                           title: "Mode",
+                           hidden: true
+                       }
+                       ],
+                       editable: false,
+
+                   });
+
+
+
+            $(".k-dropdown-operator").css('display', 'none');
+            $("#grid_Drop_list.k-input").attr('disabled', 'false');
+
+            var gridRowID = -1;
+            function sel_checkbox() {
+                gridRowID++;
+                return '<input id="chk_sel_' + gridRowID + '" class="checkbox" type="checkbox" />';
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+</script>
+<script>
+    function PrintWindowEvent(e, dataItem, grid) {
+        debugger;
+        e.preventDefault();
+      
+        try {
+            if ($("#txtMode").val() == "S") {
+                $("#txtMode").val('U');
+
+            }
+            var formval = form_Serialize("certificateprint");
+            var obj_val = JSON.parse(formval);
+            var c = $('#cmb_update');
+            obj_val.In_share_certificate = c.data('kendoComboBox').value();
+            obj_val.In_fpoorgn_code = getlocalStorage('org_id');
+            obj_val.In_certi_date = $("#txtValidity").val();
+
+            //var grid_val = JSON.stringify($("#grid_Drop_list").data().kendoGrid._data);
+            //var Bind = {};
+            //Bind = grid_val;
+            //var result = JSON.parse(Bind);
+            ////var result = dataItem;
+            //if (result.length == 0) {
+            //    kendoAlert("Atleast one record needs to be entered");
+            //    return false;
+            //}
+            //$.each(result, function (index, value) {
+
+            //    var mmode = result[index].In_mode_flag;
+            //    if (mmode == "S") {
+            //        result[index].In_mode_flag = "U";
+            //    }
+            //});
+            var obj_grid_val = {}
+            ////var obj_grid_val = dataItem;
+            //var obj_grid_val = result;
+            obj_grid_val.In_register_rowid = dataItem.In_register_rowid;
+            obj_grid_val.In_register_no = dataItem.In_register_no;
+            obj_grid_val.In_farmer_code = dataItem.In_farmer_code;
+            obj_grid_val.In_farmer_name = dataItem.In_farmer_name;
+            obj_grid_val.In_fpomember_code = dataItem.In_fpomember_code;
+            obj_grid_val.In_member_name = dataItem.In_member_name;
+            obj_grid_val.In_certificate_no = dataItem.In_certificate_no;
+            obj_grid_val.In_folio_no = dataItem.In_folio_no;
+            obj_grid_val.In_applied_shares = dataItem.In_applied_shares;
+            obj_grid_val.In_approved_shares = dataItem.In_approved_shares;
+            obj_grid_val.In_rejected_shares = dataItem.In_rejected_shares;
+            obj_grid_val.In_status_code = dataItem.In_status_code;
+            obj_grid_val.In_status_desc = dataItem.In_status_desc;
+            if (dataItem.In_mode_flag == "S") {
+                obj_grid_val.In_mode_flag = "U";
+            }
+            else {
+                obj_grid_val.In_mode_flag = dataItem.In_mode_flag
+            }
+            obj_grid_val.In_row_timestamp = dataItem.In_row_timestamp;
+            //var result = JSON.parse(Bind);
+            // $.each(result, function (index, value) {
+
+            //    var mmode = result[index].In_mode_flag;
+            //    if (mmode == "S") {
+            //        result[index].In_mode_flag = "U";
+            //    }
+            //});
+            //var obj_grid_val = result;
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_val;
+            data.context.Detail = obj_grid_val;
+            var Context = data.context;
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, Header: Context.Header, Detail: Context.Detail }),
+                url: "/Print/PrintSave",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    var Res = JSON.parse(response);
+                    if (Res.context != null) {
+                        kendoAlert("Share Certificate PDF generated successfully");
+                        
+                        // get_Share_dispatch_details();
+                        listLoad()
+                        GetPdf();
+                    }
+                    else {
+                        kendoAlert(Res.ApplicationException.errorDescription);
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+            //  save_Certificateprint_details(data);
+
+
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    //Venkat Introduced for Pdf 15-07-2020  start 
+    function GetPdf(){
+        debugger;
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({}),
+            url: "/Print/Getpdf",
+            dataType: "json",
+            contentType: 'application/json; charset-utf-8;',
+            success: function (response) {
+                debugger;
+                if (response != null) {
+                    debugger;
+                    var url_path = (response);
+                    $("#downloadpath").attr("href", url_path.path);
+                    document.getElementById("downloadpath").click();
+                }
+            },
+            error: function (er) {
+                alert(er);
+                console.log(er);
+            }
+        });
+    }
+    //End
+
+
+
+
+
+    function mandatory() {
+        try {
+            var mandatory_check = true;
+
+            var grid_validate_msg = "";
+
+            if ($('#cmb_update').data("kendoComboBox").value() == "") {
+                grid_validate_msg += "Certificate Type Cannot Be Blank <br>";
+                mandatory_check = false;
+            }
+            if (mandatory_check == false) {
+                kendoAlert(grid_validate_msg);
+                return false;
+            }
+            else {
+                return listLoad();
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function listLoad() {
+        debugger;
+        try {           
+            var mandatory_check = true;
+
+            var grid_validate_msg = "";
+
+            if ($('#cmb_update').data("kendoComboBox").value() == "") {
+                grid_validate_msg += "Share Certificate cannot be blank <br>";
+                mandatory_check = false;
+            }
+            
+            if (mandatory_check == false) {
+                kendoAlert(grid_validate_msg);
+                return false;
+            }
+
+            var formval = form_Serialize("certificateprint");
+            var obj_val = JSON.parse(formval);
+            if (obj_val != undefined) {
+                var org_id = getlocalStorage('org_id');
+                obj_val.In_fpoorgn_code = org_id;
+                var c = $('#cmb_update');
+                obj_val.In_share_certificate = c.data('kendoComboBox').value()
+
+                obj_val.In_printeddate = $("#txtValidity").val();
+
+                if (obj_val.hasOwnProperty('In_printeddate')) {
+                    if (obj_val.In_printeddate != '') {
+                        obj_val.In_printeddate = getFormated_StringDate(obj_val.In_printeddate);
+                    }
+                    else {
+                        obj_val.In_printeddate = "0";
+                    }
+                }
+
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, share_certificate: Context.Header.In_share_certificate, fpoorgn_code: Context.Header.In_fpoorgn_code }),
+                    url: "/Print/Printfetch",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        debugger;
+                        if (response.context != null) {
+                            generate_certificate_detail(response.context.Header.Detail);
+                        }
+                        else {
+
+                        }
+                    },
+                    error: function (er) {
+                        alert(er)
+                        console.log(er)
+                    }
+
+                });
+            }
+
+            var colCount = $("#grid_Drop_list").find('.k-grid-header colgroup > col').length;
+
+            //If There are no results place an indicator row
+            if ($("#grid_Drop_list").data("kendoGrid").dataSource._view.length == 0) {
+                $("#grid_Drop_list").find('.k-grid-content tbody')
+                    .append('<tr class="kendo-data-row"><td colspan="' +
+                        colCount +
+                   '" style="text-align:center; padding-top:10px;background-color:#AFE4FA"><b>No pending Print Share Certificates Records.</b></td></tr>');
+            }
+            return false;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function generate_certificate_detail(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+
+                gridFilter(data);
+
+            }
+            else {
+                gridFilter([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function generate_certificate_Header(res) {
+
+    }
+    function generate_certificate_History(res) {
+
+    }
+
+</script>
+<script>
+    function save() {
+        debugger;
+        try {
+            if ($("#txtMode").val() == "S") {
+                $("#txtMode").val('U');
+
+            }
+            var formval = form_Serialize("certificateprint");
+            var obj_val = JSON.parse(formval);
+            var c = $('#cmb_update');
+            obj_val.In_share_certificate = c.data('kendoComboBox').value();
+            obj_val.In_fpoorgn_code = getlocalStorage('org_id');
+            obj_val.In_certi_date = $("#txtValidity").val();
+
+            var grid_val = JSON.stringify($("#grid_Drop_list").data().kendoGrid._data);
+            var Bind = {};
+            Bind = grid_val;
+            var result = JSON.parse(Bind);
+            if (result.length == 0) {
+                kendoAlert("Atleast one record needs to be entered");             
+                return false;
+            }
+            $.each(result, function (index, value) {
+
+                var mmode = result[index].In_mode_flag;
+                if (mmode == "S") {
+                    result[index].In_mode_flag = "U";
+                }
+            });
+            var obj_grid_val = result;
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_val;
+            data.context.Detail = obj_grid_val;   
+            var Context = data.context;
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, Header: Context.Header, Detail: Context.Detail }),
+                url: "/Print/PrintSave",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    var Res = JSON.parse(response);
+                    if (Res.context != null) {
+                        kendoAlert("Share Certificate PDF generated successfully");
+                        get_Share_dispatch_details();
+                    }
+                    else {
+                        kendoAlert(Res.ApplicationException.errorDescription);
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+          //  save_Certificateprint_details(data);
+
+            
+          
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function Savedata1()
+    {
+        alert(localStorage.Certificatetype);
+    }      
+    function get_certificateprint_details() {
+        try {
+           
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+<script>
+    function load_master_code() {
+        try {
+            var data = {};
+            data.screen_Id = "SHRPRN";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    
+</script>
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>

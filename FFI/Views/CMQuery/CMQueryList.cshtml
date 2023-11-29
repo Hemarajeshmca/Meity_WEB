@@ -1,0 +1,239 @@
+﻿@{
+    ViewBag.List = "CM Query";
+    Layout = "~/Views/Shared/ActionLayout.cshtml";
+}
+
+<form id="cmquery" class="form-horizontal">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="gd_cmquery">
+                <div id="grid_cmquery"></div>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="~/API_Scripts/CMQuery.js"></script>
+<script src="~/API_Scripts/CM_Query_getCMQueryList_APIClient.js"></script>
+<script src="~/API_Scripts/getCMQueryList_Model.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".adv_filter").attr("hdrtitle", "CM Query List");
+        $(".adv_filter").attr("fltid", "CMQuery");
+        $(".Export").attr("hdrtitle", "CM Query List");
+        $(".Export").attr("SubTreeId", "FALCMQ");
+        Screen_Id = "FALCMQ";
+        setlocalStorage("ls_pageList", "");
+        listpageloadfetch();        
+    });
+</script>
+<script>
+    function listpageloadfetch() {
+        try {
+            var formval = form_Serialize("cmquery");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_Fromvalue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_Fromvalue = ".";
+            }
+            obj_val.FilterBy_Tovalue = ".";
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Filter = obj_val;
+            retrieve_CMQuery_list(data);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function EQPgrid(data) {
+        try {
+            $("#grid_cmquery").kendoGrid(
+                {
+                    dataSource: {
+                        data: data,
+                        schema: {
+                            model: {
+                                fields: {
+                                    cmquery_rowid: { type: "string", editable: false },
+                                    customer_code: { type: "string", editable: false },
+                                    customer_name: { type: "string", editable: false },
+                                    query_id: { type: "string", editable: false },
+                                    date_of_query: { type: "string", editable: false },
+                                    status_code : { type: "string", editable: false },
+                                    status_desc: { type: "string" },
+                                    subject: { type: "string", editable: false },
+                                    Query_response: { type: "string", editable: false }
+                                }
+                            }
+                        },
+                        pageSize: 20,
+                        change: function (e) {
+                            setTimeout(function () {
+                                var gd = $("#grid_cmquery").data("kendoGrid");
+                                filter_row(gd);
+                                $('.k-i-close').css('display', 'none');
+                                $('button.k-button-icon').css('display', 'none');
+                                $('#grid_cmquery .k-input').prop('disabled', false);
+                                $('#grid_cmquery .k-input').prop('readonly', true);
+
+                            }, 1);
+                        },
+                    },
+                    toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                    excelExport: function (e) {
+                        var chkall = $('#chkall').is(':checked');
+                        var chkfilter = $('#chkfilter').is(':checked');
+                        var chktemp = $('#chktemp').is(':checked');
+                        var gd = $("#grid_cmquery").data("kendoGrid");
+                        var len = gd.dataSource._data.length;
+                        gd.dataSource.pageSize(len);
+                        exportfunction(e, chkall, chkfilter, chktemp);
+                        gd.dataSource.pageSize('10');
+                    },
+                    dataBound: function (e) {
+                        resultData = e.sender._data;
+                        var rows = $('#grid_cmquery').data('kendoGrid').tbody.children();
+                        setColor(rows, resultData);
+                    },
+                    change: function (e) {
+                        $("#grid_cmquery tbody .k-state-selected").css({
+                            "background-color": "lightgreen"
+                        });
+                        $('tr').find('[type=checkbox]').prop('checked', false);
+                        $('tr.k-state-selected').find('[type=checkbox]').prop('checked', true);
+
+                        var grid = $("#grid_cmquery").data("kendoGrid");
+                        var selectedItem = grid.dataItem(grid.select());
+                        setlocalStorage("ls_pageList", selectedItem);
+                    },                    
+                    height: 450,
+                    sortable: true,
+                    selectable: true,
+                    //selectable: "singl",   //  Grid Row Selection
+                    pageable: {
+                        refresh: false,
+                        pageSizes: true,
+                        buttonCount: 5
+                    },
+                    navigatable: true,
+                    groupable: false,
+
+                    columns: [
+                        {
+                            title: "Sel",
+                            width: 20,
+                            template: "<input type='checkbox' name='Id' class='checkbox' />",
+                        },
+                        {
+                            field: "cmquery_rowid",
+                            title: "cmquery_rowid",
+                            hidden: true
+                        },
+                        {
+                            field: "customer_code",
+                            title: "Customer Code",
+                            width: 100
+                        },
+                        {
+                            field: "customer_name",
+                            title: "Customer Name",
+                            width: 100
+                        },
+                        {
+                            field: "subject",
+                            title: "Subject",
+                            hidden: true
+                        },
+                        {
+                            field: "query_id",
+                            title: "Query",
+                            width: 100
+                        },
+                        {
+                            field: "date_of_query",
+                            title: "Date Of Query",
+                            width: 100
+                        },
+                        {
+                            field: "Query_response",
+                            title: "Query response",
+                            //hidden: true
+                            width: 100
+                        },
+                        {
+                            field: "status_code",
+                            title: "status_code",
+                            hidden: true
+                        },
+                        {
+                            field: "status_desc",
+                            title: "Status",
+                            width: 100,
+                            editor: '<div class="input-group input-group-sm"><input type="text"  name="status_desc" maxlength="10" style="width:100px;color:black"  onkeypress="return speical_char(event)" data-bind="value:status_desc"/><span class="input-group-btn"  style="padding-right: 150px;"><a class="fa fa-caret-square-o-down" role="button" data-toggle="modal" href="../CMQuery/CMQueryCopy" data-target="#CMQUERY"  style="font-size: 25px; padding-left: -10px;"></a> </span> </div>',
+                        }
+                    ],
+                    editable: true
+                });
+
+           
+
+            $(".k-dropdown-operator").css('display', 'none');
+            $("#grid_cmquery .k-input").attr('disabled', 'false');
+
+            function onDataBound(e) {
+                var selectedItem = [];
+                $(".checkbox").bind("change", function (e) {
+                    $(e.target).closest("tr").toggleClass("k-state-selected");           
+                });
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    var gridRowID = -1;
+    function sel_checkbox() {
+        gridRowID++;
+        return '<input id="chk_sel_' + gridRowID + '" class="checkbox" type="checkbox" />';
+    }
+    function statusFilter(element) {    // Dropdown list functionality
+        element.kendoDropDownList({
+            dataSource: status_Priority,
+            optionLabel: "--Select Value--"
+        });
+    }
+</script>
+<script>
+    function generate_CMQuerydetails_list(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                EQPgrid(data);
+            }
+            else {
+                EQPgrid([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function listRefresh() {
+        try {
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+<script src="~/CommonScripts/HelpFile.js"></script>

@@ -1,0 +1,525 @@
+﻿@{
+    ViewBag.Form = "Top 5 ESPs";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.min.js"></script>
+<form id="Dashbord_form" class="form-horizontal" style="padding-top:0px">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:12px;padding-bottom:1px">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="aggregator_code" class=" col-sm-4 control-label"> From Date </label>
+                        <div class=" col-sm-7">
+                            <input class="cusDate" type="date" data-role='datepicker' id="txtValidity1" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="from_date" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="aggregator_code" class=" col-sm-4 control-label"> To Date </label>
+                        <div class=" col-sm-7">
+                            <input class="cusDate" type="date" data-role='datepicker' id="txtValidity2" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="to_date" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <button title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button" data-original-title="Refresh" onclick="mandatory()"> <span class="glyphicon glyphicon-refresh"></span></button>
+                </div>
+                <div class="col-sm-2">
+                    <button type="button" style="background-color:skyblue" id="btnExport" class="Export btn btn-sm btn-info"><span class="glyphicon glyphicon-export"></span></button>
+                </div>
+
+                <div class="col-sm-4" style="display:none">
+                    <div class=" form-group">
+                        <label for="status" class=" col-sm-3 control-label"> Pay Mode </label>
+                        <div class=" col-sm-7">
+                            <input type="text" name="status" id="cmb_paymode" data-role="filtercombo" style="width:100%">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="display:none">
+                <div class="col-xs-8">
+                    <div id="grid_lease"></div>
+                </div>
+                @*<div class="col-xs-6">
+                        <div class="chart-responsive" style="padding-bottom:10px">
+                            @*<canvas id="canvas" height="100" width="100"></canvas>
+                            <div id="piechart"></div>
+                        </div>
+                    </div>*@
+            </div>
+
+            <div class="row" style="padding-bottom:10px; display:none">
+                <a href='' style="padding-left:18px"> TOP 5 ESPs </a>
+            </div>
+
+            <div class="row" style="padding-bottom:10px;">
+                <div class="col-xs-12">
+                    <div id="grid_esplist"></div>
+                </div>
+            </div>
+
+            <div class="row" style="padding-left:18px; padding-bottom:20px; display:none">
+                <a href=''>Slow Moving Equipment</a>
+            </div>
+
+            <div class="row" style="display:none">
+                <div class="col-xs-8">
+                    <div id="grid_slowmovingEquipmt"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="~/API_Scripts/equipmentReports_retrieveEquipmentReports_APIClient.js"></script>
+<script src="~/API_Scripts/FLDashboard.js"></script>
+<script src="~/API_Scripts/retrieveEquipmentReport_Model.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script>
+    $(document).ready(function () {
+        kendodate_format();
+        GridLease();
+        GridESP();
+        GridEquipment();
+        $("#Topsubheader").show();
+        $("#bottomFooter").show();
+        $("#btndiv").show();
+        $("#frmlayerdiv").hide();
+        $("#divCreate").hide();
+        $("#divEdit").hide();
+        $("#divView").show();
+        $("#DocStat").show();
+        $(".edtviw_item").show();
+        $(".create_item").hide();
+        //PIE();
+        //DoesColumnEqualOneHundred();
+        $("#form_design").css("padding-top", "50px");
+        $('#btnExport').hide();
+        //PIE();
+        //DoesColumnEqualOneHundred();
+        //var combo_data1 = [{ code: 1, desc: "Online" }, { code: 2, desc: "Cash" }];
+        //filter_combobox("cmb_paymode", combo_data1);
+
+        Screen_Id = "FLDASHBRD";
+        permission = sec_Permission(Screen_Id);
+        $("#btnExport").kendoButton({
+            click: function () {
+                $("#grid_esplist").data("kendoGrid").saveAsExcel();
+            }
+        })
+
+        $("#txtValidity1").kendoDatePicker({
+            max: new Date(),// sets max date
+            format: "dd/MM/yyyy"
+        });
+        $(".Export").attr("hdrtitle", "Top 5 ESPs");
+        $(".Export").attr("SubTreeId", "Top 5 ESPs");
+        $("#txtValidity2").kendoDatePicker
+        ({
+          
+            max: new Date(),// sets max date
+            format: "dd/MM/yyyy"
+        });
+        $('#txtValidity1').attr('disabled', true);
+        $('#txtValidity2').attr('disabled', true);
+    });
+</script>
+
+<script>
+    function GridLease(data) {
+        try {
+            $("#grid_lease").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                             
+                                of_lease: { type: "string" },
+                                lease_hours: { type: "string" },
+                                lease_revenue: { type: "string" },
+                                cash: { type: "string" },
+                                cashless: { type: "string" },
+                               
+                            }
+
+                        }
+                    }
+                },
+                height: 150,
+                groupable: false,
+
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                    {
+                        field: "leasedetails_rowid",
+                        title: "leasedetails_rowid",
+                        hidden: true,
+                    },
+                     
+                 {
+                     field: "of_leases",
+                     title: "# Of Leases",
+                     width: 80,
+                 },
+                 {
+                     field: "lease_hours",
+                     title: "Lease Hours",
+                     width: 80,
+                 },
+                 {
+                     field: "lease_revenue",
+                     title: "Lease Revenue (INR)",
+                     width: 100,
+
+                 },
+                  {
+                      field: "cash",
+                      title: "Cash",
+                      editor: '<input type="text" readonly name="cash" maxlength="10" style="width:100px;color:white"  onkeypress="return speical_char(event)" data-bind="value:cash"/>',
+                      width: 80,
+                  },
+                {
+                    field: "cashless",
+                    title: "Cashless",
+                    width: 80,
+                }],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+</script>
+
+<script>
+    function GridESP(data) {
+        try {
+            $("#grid_esplist").kendoGrid({
+                excel: {
+                    fileName: "Top 5 ESPs.xlsx",
+                    filterable: true,
+                    allPages: false
+                },
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+
+                                esp_name: { type: "string" },
+                                lease_hours: { type: "string" },
+                                lease_revenue: { type: "string" },
+                                cash: { type: "string" },
+                                cashless: { type: "string" },
+                                total_rev_cash_per: { type: "string" },
+                                total_rev_cashless_per: { type: "string" },
+                            }
+                        }
+                    }
+                },
+                height: 450,
+                groupable: false,
+
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                     {
+                         field: "equip_details_rowid",
+                         title: "equip_details_rowid",
+                         hidden: true,
+                     },
+                       {
+                           field: "esp_code",
+                           title: "esp_code",
+                           hidden: true,
+                       },
+                 {
+                     field: "esp_name",
+                     title: "ESP Name",
+                     width: 80,
+                 },
+                 {
+                     field: "lease_hours",
+                     title: "Lease Hours",
+                     width: 80,
+                     editor: function (container, options) {
+                         item_rate(container, options.field, '9', '2');
+                     },
+                     attributes: { style: "text-align:right;" }
+                 },
+                 {
+                     field: "lease_revenue",
+                     title: "Lease Revenue (INR)",
+                     width: 100,
+                     editor: function (container, options) {
+                         item_rate(container, options.field, '9', '2');
+                     },
+                     attributes: { style: "text-align:right;" }
+
+                 },
+                 {
+                     field: "total_revenue",
+                     title: "total_revenue",
+                     width: 100,
+                     hidden: true,
+
+                 },
+                  {
+                      field: "cash",
+                      title: "Cash",
+                      width: 80,
+                      editor: function (container, options) {
+                          item_rate(container, options.field, '9', '2');
+                      },
+                      attributes: { style: "text-align:right;" }
+                  },
+                {
+                    field: "cashless",
+                    title: "Cashless",
+                    width: 80,
+                    editor: function (container, options) {
+                        item_rate(container, options.field, '9', '2');
+                    },
+                    attributes: { style: "text-align:right;" }
+                },
+                {
+                    field: "total_rev_cash_per",
+                    title: "% Cash",
+                    width: 80,
+                    editor: function (container, options) {
+                        item_rate(container, options.field, '9', '2');
+                    },
+                    attributes: { style: "text-align:right;" }
+                },
+                {
+                    field: "total_rev_cashless_per",
+                    title: "% Cashless",
+                     width: 80,
+                    editor: function (container, options) {
+                        item_rate(container, options.field, '9', '2');
+                },
+                attributes: { style: "text-align:right;" }
+                 }
+                ],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+</script>
+
+<script>
+    function GridEquipment(data) {
+        try {
+            $("#grid_slowmovingEquipmt").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+
+                                esp_name: { type: "string" },
+                                equipment: { type: "string" },
+                                greater_than_60: { type: "string" },
+                                greater_than_30: { type: "string" },
+                            }
+                        }
+                    }
+                },
+                height: 130,
+                groupable: false,
+
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                      {
+                          field: "equip_status_rowid",
+                          title: "equip_status_rowid",
+                          hidden: true,
+                      },
+                       {
+                           field: "esp_code",
+                           title: "esp_code",
+                           hidden: true,
+                       },
+                 {
+                     field: "esp_name",
+                     title: "ESP Name",
+                     width: 80,
+                 },
+                 {
+                     field: "equipment_code",
+                     title: "equipment_code",
+                     hidden: true,
+                 },
+                 {
+                     field: "equipment_name",
+                     title: "Equipment",
+                     width: 80,
+                 },
+                 {
+                     field: "sixty_days",
+                     title: "> 60 Days",
+                     width: 100,
+
+                 },
+                  {
+                      field: "ninety_days",
+                      title: "> 30 Days",
+                      width: 80,
+                  },
+                ],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+</script>
+<script>
+    function mandatory() {
+        try {
+            var mandatory_check = true;
+
+            var grid_validate_msg = "";
+            if ($("#txtValidity1").val() == "" && $("#txtValidity2").val() == "") {
+                grid_validate_msg += "Kindly Select Period - From & To Date </br>";
+                mandatory_check = false;
+            }
+            else {
+                if ($("#txtValidity1").val() == "") {
+                    grid_validate_msg += "Kindly Select From Date </br>";
+                    mandatory_check = false;
+                }
+                if ($("#txtValidity2").val() == "") {
+                    grid_validate_msg += "Kindly Select To date </br>";
+                    mandatory_check = false;
+                }
+            }
+            if (mandatory_check == false) {
+                kendoAlert(grid_validate_msg);
+                return false;
+            }
+            else {
+                return listLoad();
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function listLoad() {
+        try {
+            var formval = form_Serialize("Dashbord_form");
+            var obj_val = JSON.parse(formval);
+            obj_val.from_date = $("#txtValidity1").val();
+            obj_val.to_date = $("#txtValidity2").val();
+
+            if (obj_val.hasOwnProperty('from_date')) {
+                if (obj_val.from_date != '')
+                    obj_val.from_date = getFormated_StringDate(obj_val.from_date);
+            }
+            if (obj_val.hasOwnProperty('to_date')) {
+                if (obj_val.to_date != '')
+                    obj_val.to_date = getFormated_StringDate(obj_val.to_date);
+            }
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Header = obj_val;
+            retrieve_FLDashboard_list(data);
+            var colCount = $("#grid_esplist").find('.k-grid-header colgroup > col').length;
+            if ($("#grid_esplist").data("kendoGrid").dataSource._view.length == 0) {
+                $("#grid_esplist").find('.k-grid-content tbody')
+                    .append('<tr class="kendo-data-row"><td colspan="' +
+                        colCount +
+                   '" style="text-align:center; padding-top:10px;background-color:#AFE4FA"><b> No Records Found</b></td></tr>');
+          
+            $('#btnExport').hide();
+        } else {
+                $('#btnExport').show();
+    }
+            
+            return false;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_FLDashboard_header(res) {
+        try {
+            if (res != null) {
+               
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function generate_FLDashboard_LeaseDetails(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                GridLease(data);
+            }
+            else {
+                GridLease([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }    }
+
+    function generate_FLDashboard_EquipmentDetails(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                GridESP(data);
+            }
+            else {
+                GridESP([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_FLDashboard_EquipmentStatus(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                GridEquipment(data);
+            }
+            else {
+                GridEquipment([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<style>
+    .k-grid-header th.k-header, .k-filter-row th {
+        text-align: left;
+    }
+</style>
+
+
+
+

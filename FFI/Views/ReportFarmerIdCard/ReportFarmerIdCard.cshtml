@@ -1,0 +1,687 @@
+﻿
+@{
+    ViewBag.Form = "FarmerIdCard Report";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+    <style>
+        .loading {
+            background-image: url('http://www.fotos-lienzo.es/media/aw_searchautocomplete/default/loading.gif');
+            background-repeat: no-repeat;
+        }
+
+            .loading:after {
+                content: "Processing...";
+                text-align: right;
+                padding-left: 25px;
+            }
+    </style>
+<form id="Reportconfig" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:5px">
+                <div class="col-sm-4">
+                    @*<input type="submit" class="submit-form" value="Run" id="myButton1" onclick="return GetReportName()">*@
+
+                    <input id="myButton1" type="button" value="Run" style="width:30%;height:35px;background-color:#00c0ef;margin: 4px 2px;border-radius: 12px;" onclick="return GetReportName()" />
+                    <div class="load"></div>
+                    
+                </div>
+                <div class="col-sm-4">
+                    @*<input id="test" type="button" value="Run" onclick="return GetReportName()" />*@
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:5px" >
+                <div class="col-sm-4" id="txtfilterby">
+                    <div class="form-group" >
+                        <label for="cmb_menu" class="col-sm-5 control-label required ">Filter By</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_filter" name="module_code" style="width: 100%" data-role="filtercombo">
+                            <a id="downloadpath" download href=""></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4" id="cmdgram">
+                    <div class="form-group">
+                        <label for="cmb_farmergrampanchyat" class="col-sm-5 control-label required">Gram Panchayat</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="cmb_grampanchayat" name="cmb_grampanchayat" style="width:203px;" class="form-control" maxlength="20">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txt_fromdate" class="col-sm-5 control-label required">Register From Date</label>
+
+                        <div class="col-sm-7">
+                            <input class="cusDate" data-role='datepicker' id="txt_fromdate" onkeypress="return date_validate(event)" onkeydown="return false;" data-checkdate-msg="Enter Valid Date" name="From_date" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                            <a id="downloadpath" download href=""></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txt_todate" class="col-sm-5 control-label required">Register To Date</label>
+                        <div class="col-sm-7">
+                            <input class="cusDate" data-role='datepicker' id="txt_todate" onkeypress="return date_validate(event)" onkeydown="return false;" data-checkdate-msg="Enter Valid Date" name="To_date" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                            <a id="downloadpath" download href=""></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                <div class="row" style="padding-bottom:5px">                
+                    <div class="col-sm-4" id="txtfarcode">
+                        <div class="form-group">
+                            <label for="txt_Farmercode" class="col-sm-5 control-label">Farmer Code</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="txtFarmercode" name="txtFarmercode" style="width: 203px;" class="form-control" maxlength="25">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4" id="cmddist">
+                        <div class="form-group">
+                            <label for="cmb_farmerdistrict" class="col-sm-5 control-label">District</label>
+                            <div class="col-sm-7">
+                                <input type="text" id="cmb_district" name="cmb_district" style="width:203px;" class="form-control" maxlength="20">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4" id="cmdtaluk">
+                        <div class="form-group">
+                            <label for="cmb_farmertaluk" class="col-sm-5 control-label">Taluk</label>
+                            <div class="col-sm-7">
+                                <input type="text" id="cmb_taluk" name="cmb_taluk" style="width:203px;" class="form-control" maxlength="20">
+                            </div>
+                        </div>
+                    </div>                   
+                    <div class="col-sm-4" id="cmbvillage">
+                        <div class="form-group">
+                            <label for="cmb_farmervillage" class="col-sm-5 control-label">Village</label>
+                            <div class="col-sm-7">
+                                <input type="text" id="cmb_village" name="cmb_village" style="width:203px;" class="form-control" maxlength="20">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</form>
+
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/CommonScripts/report.js"></script>@* Scrip Start*@
+<script>
+    $(document).ready(function () {
+
+        master_Run();
+        Screen_Id = "FPOFARID";
+        permission = sec_Master_Permission(Screen_Id);
+        $("#btn_run").hide();
+        $("#divUserRole7 #btnReport").hide();
+
+       
+        //div hide function
+        $("div#txtfilterby").hide();
+        $("div#txtfarcode").hide();
+        $("div#cmddist").hide();
+        $("div#cmdtaluk").hide();
+        $("div#cmdgram").show();
+        $("div#cmbvillage").hide();
+        $('#txtFarmercode').val("");
+
+        //kendo datepicker
+        $("#txt_fromdate").kendoDatePicker({
+            
+            max: new Date(),// sets max date
+            format: "dd/MM/yyyy",
+        });
+      
+        $('#txt_todate').kendoDatePicker({
+            min: new Date(),
+            format: "dd/MM/yyyy",
+        });
+        //$("#txt_fromdate").change(function () {
+        //   // $('#txt_todate').val('');
+        //    var today = $("#txt_fromdate").val();
+        //    var date = today.split('/');
+        //    var datemin = date[1] + "/" + date[0] + "/" + date[2];
+        //    if ($("#txt_fromdate").val() != '') {
+        //        $('#txt_todate').kendoDatePicker({
+        //            min: new Date(datemin),
+        //            format: "dd/MM/yyyy",
+        //        });
+        //    }
+        //});
+        
+      
+        var list_in = "";
+       // $("#cmb_filter").empty();
+        var list_in = [
+            //{ "code": "ALL", "desc": "ALL" },
+           // { "code": "FarmerCode", "desc": "FarmerCode" },
+            //{ "code": "District", "desc": "District" },
+                       //{ "code": "Taluk", "desc": "Taluk" },
+                          { "code": "Gram Panchayat", "desc": "Gram Panchayat" },
+                          // { "code": "Village", "desc": "Village" }
+        ];
+        filter_combobox("cmb_filter", "Gram Panchayat");
+
+        Alldropdownload();
+    /*  Prema added for fpo based abd ri user base loading*/
+        var role = getlocalStorage("role_code");
+        if (role == "RIACC") {
+            debugger;
+            $("#RIform").show();
+            $("#FPOform").show();
+            filter_combobox("cmb_RIBelongform", getlocalStorage("rilist"));
+            filter_combobox("cmb_FPOBelongform", getlocalStorage("fpolist"));
+            var cmb_riform3 = $("#cmb_RIBelongform").data("kendoComboBox");
+            cmb_riform3.value(getlocalStorage("org_id"));
+            $("#cmb_RIBelongform").data("kendoComboBox").enable(false);
+            $("#cmb_FPOBelong").data("kendoComboBox").value("All");
+            $("#cmb_FPOBelongform").data("kendoComboBox").enable(true);
+            var cmap_inselform = $("#cmb_FPOBelongform").data("kendoComboBox");
+            cmap_inselform.value(getlocalStorage("org"));
+        }
+        if (role == "ROLE_PF_ADMIN") {
+            debugger;
+            $("#RIform").show();
+            $("#FPOform").show();
+            filter_combobox("cmb_RIBelongform", getlocalStorage("rilist"));
+            filter_combobox("cmb_FPOBelongform", getlocalStorage("fpolist"));
+            $("#cmb_RIBelongform").data("kendoComboBox").value("All");
+            $("#cmb_FPOBelongform").data("kendoComboBox").value("All");
+            $("#cmb_RIBelongform").data("kendoComboBox").enable(true);
+            $("#cmb_FPOBelongform").data("kendoComboBox").enable(true);
+
+        }
+        if (role == "ROLE_FPO_COMMAKER") {
+            debugger;
+            $("#RIform").show();
+            $("#FPOform").show();
+            filter_combobox("cmb_RIBelongform", getlocalStorage("rilist"));
+            filter_combobox("cmb_FPOBelongform", getlocalStorage("fpolist"));
+            var cmb_riform3 = $("#cmb_RIBelongform").data("kendoComboBox");
+            cmb_riform3.value(getlocalStorage("parent_code"));
+            $("#cmb_RIBelongform").data("kendoComboBox").enable(false);
+            $("#cmb_FPOBelongform").data("kendoComboBox").enable(false);
+            var cmap_inselform = $("#cmb_FPOBelongform").data("kendoComboBox");
+            cmap_inselform.value(getlocalStorage("org"));
+        }   
+    /*  prema ended*/
+
+
+    });
+    function Alldropdownload()
+    {
+        //filter by dropdown load
+        load_master_code();
+      
+        //Gram Panchayat Load 20-01-2020
+        var grmapanchayatlist = "";
+        $("#cmb_grampanchayat").empty();
+        grmapanchayatlist = grid_comboScreen_mastercodes("QCD_UN_GRAMPAN");
+        filter_combobox("cmb_grampanchayat", grmapanchayatlist);
+    }
+
+    //load Master Code Function
+
+    function load_master_code() {
+        try {
+            var data = {};
+            data.screen_Id = "FPOFARID";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function GetReportName() {
+        debugger;
+        
+        if ($("#cmb_grampanchayat").val() != "") {
+        //if ($("#cmb_filter").val() == "Gram Panchayat") {
+            $('#myButton1').hide();
+            $('.load').addClass('loading');
+            var mandatory_check = true;
+            var report_param = [];
+            var report_result = {};
+           // var all = $("#cmb_filter").val();
+            var all = $("#cmb_filter").val("Gram Panchayat");
+            var farmer_code = $("#txtFarmercode").val()
+            var district = $("#cmb_district").val()
+            var from_date1 = $("#txt_fromdate").val();
+            var to_date1 = $("#txt_todate").val();
+            var taluk = $("#cmb_taluk").val();
+            var Gram = $("#cmb_grampanchayat").val();
+            var village = $("#cmb_village").val();
+
+            if ($("#txt_fromdate").val() != '' && $("#txt_todate").val() != '') {
+                var parts = from_date1.split('/');
+                var from_date = parts[2] + '-' + parts[1] + '-' + parts[0];
+
+                var parts1 = to_date1.split('/');
+                var to_date = parts1[2] + '-' + parts1[1] + '-' + parts1[0];
+
+
+
+                if ($("#cmb_filter").val() == "FarmerCode" && $("#txtFarmercode").val() == "") {
+                    kendoAlert('Please Enter The FarmerCode !!!');
+                }
+                if ($("#cmb_filter").val() == "District" && $("#cmb_district").val() == "") {
+                    kendoAlert('Please Choose the District !!!');
+                }
+                if ($("#cmb_filter").val() == "Taluk" && $("#cmb_taluk").val() == "") {
+                    kendoAlert('Please Choose the Taluk !!!');
+                }
+                if ($("#cmb_filter").val() == "Gram Panchayat" && $("#cmb_grampanchayat").val() == "") {
+                    kendoAlert('Please Choose the Gram Panchayat !!!');
+                }
+                if ($("#cmb_filter").val() == "Village" && $("#cmb_village").val() == "") {
+                    kendoAlert('Please Choose the Village !!!');
+                }
+                else {
+
+
+
+                    if ($("#cmb_filter").val() != "" && $("#txtFarmercode").val() != "") {
+                        debugger;
+                        var context = WebAPIProxy.getContext();
+                        var data = { userId: context.userId, orgnId: context.orgnId, locnId: context.locnId, localeId: context.localeId, In_fliterby: farmer_code, In_from_date: from_date, In_to_date: to_date };
+                        $.ajax({
+                            url: '@Url.Action("downloadpdf", "ReportFarmerIdCard")',
+                            type: "post",
+                            contentType: 'application/x-www-form-urlencoded',
+                            data: data,
+                            success: function (response1) {
+                                debugger;
+                                if (response1 != null) {
+                                    debugger;
+                                    var url_path = (response1);
+                                    $("#downloadpath").attr("href", url_path.path);
+                                    document.getElementById("downloadpath").click();
+                                }
+
+                            },
+                            error: function (er) {
+                                alert(er)
+                                console.log(er)
+                            }
+                        });
+                    }
+                    else if ($("#cmb_filter").val() != "" && $("#cmb_taluk").val() != "") {
+                        var context = WebAPIProxy.getContext();
+                        var data = { userId: context.userId, orgnId: context.orgnId, locnId: context.locnId, localeId: context.localeId, In_fliterby: taluk, In_from_date: fromdate, In_to_date: to_date };
+
+                     $.ajax({
+                            url: '@Url.Action("downloadpdf", "ReportFarmerIdCard")',
+                            type: "post",
+                            contentType: 'application/x-www-form-urlencoded',
+                            data: data,
+                            success: function (response1) {
+                                debugger;
+                                if (response1 != null) {
+                                    debugger;
+                                    var url_path = (response1);
+                                    $("#downloadpath").attr("href", url_path.path);
+                                    document.getElementById("downloadpath").click();
+                                }
+
+                            },
+                            error: function (er) {
+                                alert(er)
+                                console.log(er)
+                            }
+                        });
+                    }
+                    else if ($("#cmb_filter").val() != "" && $("#cmb_grampanchayat").val() != "") {
+                        var context = WebAPIProxy.getContext();
+                        var data = { userId: context.userId, orgnId: context.orgnId, locnId: context.locnId, localeId: context.localeId, In_fliterby: Gram, In_from_date: fromdate, In_to_date: to_date };
+
+                     $.ajax({
+                            url: '@Url.Action("downloadpdf", "ReportFarmerIdCard")',
+                            type: "post",
+                            contentType: 'application/x-www-form-urlencoded',
+                            data: data,
+                         success: function (response1) {
+                             debugger;
+                             $('.load').removeClass('loading');
+                             $('#myButton1').show();
+                             var response = JSON.parse(response1)
+                             
+                             if (response.Clentpath != "" ) {
+                                 debugger;
+                                 //  response = JSON.parse(response1);
+                                 var url_path = (response.Clentpath);
+                                 $("#downloadpath").attr("href", url_path);
+                                 document.getElementById("downloadpath").click();
+                             }
+                             else if (response.msg != "") {
+                                 debugger;
+                                 kendoAlert('No Record!!!');
+                             }
+
+                            },
+                            error: function (er) {
+                                alert(er)
+                                console.log(er)
+                            }
+                        });
+                    }
+                    else if ($("#cmb_filter").val() != "" && $("#cmb_village").val() != "") {
+                        var context = WebAPIProxy.getContext();
+                        var data = { userId: context.userId, orgnId: context.orgnId, locnId: context.locnId, localeId: context.localeId, In_fliterby: village, In_from_date: from_date, In_to_date: to_date };
+                        $.ajax({
+                            url: '@Url.Action("downloadpdf", "ReportFarmerIdCard")',
+                            type: "post",
+                            contentType: 'application/x-www-form-urlencoded',
+                            data: data,
+                            success: function (response1) {
+                                debugger;
+                                if (response1 != null) {
+                                    debugger;
+                                    var url_path = (response1);
+                                    $("#downloadpath").attr("href", url_path.path);
+                                    document.getElementById("downloadpath").click();
+                                }
+
+                            },
+                            error: function (er) {
+                                alert(er)
+                                console.log(er)
+                            }
+                        });
+
+                    }
+                    else if ($("#cmb_filter").val() != "" && $("#cmb_district").val() != undefined && $("#cmb_district").val() != "" && $("#txtFarmercode").val() == "") {
+                        var context = WebAPIProxy.getContext();
+                        var data = { userId: context.userId, orgnId: context.orgnId, locnId: context.locnId, localeId: context.localeId, In_fliterby: district, In_from_date: fromdate, In_to_date: to_date };
+
+                     $.ajax({
+                            url: '@Url.Action("downloadpdf", "ReportFarmerIdCard")',
+                            type: "post",
+                            contentType: 'application/x-www-form-urlencoded',
+                            data: data,
+                            success: function (response1) {
+                                debugger;
+                                if (response1 != null) {
+                                    debugger;
+                                    var url_path = (response1);
+                                    $("#downloadpath").attr("href", url_path.path);
+                                    document.getElementById("downloadpath").click();
+                                }
+
+                            },
+                            error: function (er) {
+                                alert(er)
+                                console.log(er)
+                            }
+                        });
+
+                    }
+
+                    else if ($("#cmb_filter").val() != "" && $("#txtFarmercode").val() == "" && $("#cmb_district").val() == "" && $("#cmb_district").val() != undefined) {
+                        var context = WebAPIProxy.getContext();
+                        var data = { userId: context.userId, orgnId: context.orgnId, locnId: context.locnId, localeId: context.localeId, In_fliterby: all, In_from_date: fromdate, In_to_date: to_date };
+
+                     $.ajax({
+                            url: '@Url.Action("downloadpdf", "ReportFarmerIdCard")',
+                            type: "post",
+                            contentType: 'application/x-www-form-urlencoded',
+                            data: data,
+                            success: function (response1) {
+                                debugger;
+                                if (response1 != null) {
+                                    debugger;
+                                    var url_path = (response1);
+                                    $("#downloadpath").attr("href", url_path.path);
+                                    document.getElementById("downloadpath").click();
+                                }
+
+                            },
+                            error: function (er) {
+                                alert(er)
+                                console.log(er)
+                            }
+                        });
+
+                    }
+                }
+            }
+
+
+            else if ($("#cmb_filter").val() == "FarmerCode" && $("#txtFarmercode").val() == "" && $("#txt_fromdate").val() == '' && $("#txt_todate").val() == '') {
+                kendoAlert('Please Enter the Farmer Code !!!');
+
+
+            }
+            else if ($("#cmb_filter").val() == "District" && $("#cmb_district").val() == "" && $("#txt_fromdate").val() == '' && $("#txt_todate").val() == '') {
+                kendoAlert('Please Choose the District !!!');
+
+
+            }
+            else if ($("#cmb_filter").val() == "Taluk" && $("#cmb_taluk").val() == "" && $("#txt_fromdate").val() == '' && $("#txt_todate").val() == '') {
+                kendoAlert('Please Choose the Taluk !!!');
+
+
+            }
+            else if ($("#cmb_filter").val() == "Gram Panchayat" && $("#cmb_grampanchayat").val() == "" && $("#txt_fromdate").val() == '' && $("#txt_todate").val() == '') {
+                kendoAlert('Please Choose the Gram Panchayat !!!');
+
+
+            }
+            else if ($("#cmb_filter").val() == "Village" && $("#cmb_village").val() == "" && $("#txt_fromdate").val() == '' && $("#txt_todate").val() == '') {
+                kendoAlert('Please Choose the Village !!!');
+
+
+            }
+            else if ($("#cmb_filter").val() != "" && $("#txt_fromdate").val() == '' && $("#txt_todate").val() == '') {
+                debugger;
+                var d = new Date();
+                var strDate = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+                var fromdate = '1900-01-01';
+                if ($("#cmb_filter").val() == "FarmerCode" && $("#txtFarmercode").val() != "" && $("#txt_fromdate").val() == '' && $("#txt_todate").val() == '') {
+                    var context = WebAPIProxy.getContext();
+                    var data = { userId: context.userId, orgnId: context.orgnId, locnId: context.locnId, localeId: context.localeId, In_fliterby: farmer_code, In_from_date: fromdate, In_to_date: strDate };
+
+                     $.ajax({
+                            url: '@Url.Action("downloadpdf", "ReportFarmerIdCard")',
+                            type: "post",
+                            contentType: 'application/x-www-form-urlencoded',
+                            data: data,
+                            success: function (response1) {
+                                debugger;
+                                if (response1 != null) {
+                                    debugger;
+                                    var url_path = (response1);
+                                    $("#downloadpath").attr("href", url_path.path);
+                                    document.getElementById("downloadpath").click();
+                                }
+
+                            },
+                            error: function (er) {
+                                alert(er)
+                                console.log(er)
+                            }
+                        });
+
+
+                }
+
+                else if ($("#cmb_filter").val() == "Taluk" && $("#cmb_taluk").val() != "" && $("#txt_fromdate").val() == '' && $("#txt_todate").val() == '') {
+                    var context = WebAPIProxy.getContext();
+                    var data = { userId: context.userId, orgnId: context.orgnId, locnId: context.locnId, localeId: context.localeId, In_fliterby: taluk, In_from_date: fromdate, In_to_date:strDate };
+                        $.ajax({
+                            url: '@Url.Action("downloadpdf", "ReportFarmerIdCard")',
+                            type: "post",
+                            contentType: 'application/x-www-form-urlencoded',
+                            data: data,
+                            success: function (response1) {
+                                debugger;
+                                if (response1 != null) {
+                                    debugger;
+                                    response1 = JSON.parse(response1);
+                                    var url_path = (response1);
+                                    $("#downloadpath").attr("href", url_path);
+                                    document.getElementById("downloadpath").click();
+                                }
+
+                            },
+                            error: function (er) {
+                                alert(er)
+                                console.log(er)
+                            }
+                        });
+
+                }
+
+                else if ($("#cmb_filter").val() == "Gram Panchayat" && $("#cmb_grampanchayat").val() != "" && $("#txt_fromdate").val() == '' && $("#txt_todate").val() == '') {
+                    var context = WebAPIProxy.getContext();
+                    var data = { userId: context.userId, orgnId: context.orgnId, locnId: context.locnId, localeId: context.localeId, In_fliterby: Gram, In_from_date: fromdate, In_to_date:strDate };
+                        $.ajax({
+                            url: '@Url.Action("downloadpdf", "ReportFarmerIdCard")',
+                            type: "post",
+                            contentType: 'application/x-www-form-urlencoded',
+                            data: data,
+                            success: function (response1) {
+                                debugger;
+                                $('.load').removeClass('loading');
+                                $('#myButton1').show();
+                                var response = JSON.parse(response1)
+                                if (response.Clentpath != "") {
+                                    debugger;
+                                    //  response = JSON.parse(response1);
+                                    var url_path = (response.Clentpath);
+                                    $("#downloadpath").attr("href", url_path);
+                                    document.getElementById("downloadpath").click();
+                                }
+                                else if (response.msg != "") {
+                                    debugger;
+                                    kendoAlert('No Record!!!');
+                                }
+                                
+
+                            },
+                            error: function (er) {
+                                alert(er)
+                                console.log(er)
+                            }
+                        });
+
+                }
+                else if ($("#cmb_filter").val() == "Village" && $("#cmb_village").val() != "" && $("#txt_fromdate").val() == '' && $("#txt_todate").val() == '') {
+                    debugger;
+                    var context = WebAPIProxy.getContext();
+                    var data = { userId: context.userId, orgnId: context.orgnId, locnId: context.locnId, localeId: context.localeId, In_fliterby: village, In_from_date: fromdate, In_to_date:strDate };
+                        $.ajax({
+                            url: '@Url.Action("downloadpdf", "ReportFarmerIdCard")',
+                            type: "post",
+                            contentType: 'application/x-www-form-urlencoded',
+                            data: data,
+                            success: function (response1) {
+                                debugger;
+                                if (response1 != null) {
+                                    debugger;
+                                    response1 = JSON.parse(response1);
+                                    var url_path = (response1);
+                                    $("#downloadpath").attr("href", url_path);
+                                    document.getElementById("downloadpath").click();
+                                }
+
+                            },
+                            error: function (er) {
+                                alert(er)
+                                console.log(er)
+                            }
+                        });
+                }
+                else if ($("#cmb_filter").val() != "" && $("#cmb_district").val() != undefined && $("#cmb_district").val() != "" && $("#txtFarmercode").val() == "" && $("#txt_fromdate").val() == '' && $("#txt_todate").val() == '') {
+                    var context = WebAPIProxy.getContext();
+                    var data = { userId: context.userId, orgnId: context.orgnId, locnId: context.locnId, localeId: context.localeId, In_fliterby: district, In_from_date: fromdate, In_to_date: strDate };
+                     $.ajax({
+                            url: '@Url.Action("downloadpdf", "ReportFarmerIdCard")',
+                            type: "post",
+                            contentType: 'application/x-www-form-urlencoded',
+                            data: data,
+                            success: function (response1) {
+                                debugger;
+                                if (response1 != null) {
+                                    debugger;
+                                    response1 = JSON.parse(response1);
+                                    var url_path = (response1);
+                                    $("#downloadpath").attr("href", url_path);
+                                    document.getElementById("downloadpath").click();
+                                }
+
+                            },
+                            error: function (er) {
+                                alert(er)
+                                console.log(er)
+                            }
+                        });
+
+                }
+
+                else if ($("#cmb_filter").val() == "ALL" && $("#txtFarmercode").val() == "" && $("#cmb_district").val() == "" && $("#cmb_district").val() != undefined && $("#txt_fromdate").val() == '' && $("#txt_todate").val() == '') {
+                    var context = WebAPIProxy.getContext();
+                    var data = { userId: context.userId, orgnId: context.orgnId, locnId: context.locnId, localeId: context.localeId, In_fliterby: all, In_from_date: fromdate, In_to_date: strDate };
+                     $.ajax({
+                            url: '@Url.Action("downloadpdf", "ReportFarmerIdCard")',
+                            type: "post",
+                            contentType: 'application/x-www-form-urlencoded',
+                            data: data,
+                            success: function (response1) {
+                                debugger;
+                                if (response1 != null) {
+                                    debugger;
+                                    response1 = JSON.parse(response1);
+                                    var url_path = (response1);
+                                    $("#downloadpath").attr("href", url_path);
+                                    document.getElementById("downloadpath").click();
+                                }
+
+                            },
+                            error: function (er) {
+                                alert(er)
+                                console.log(er)
+                            }
+                        });
+
+                }
+
+
+
+
+            }
+
+            else if ($("#cmb_filter").val() != "" && $("#txt_fromdate").val() != '' && $("#txt_todate").val() == '') {
+                kendoAlert('Please Choose the Register To Date !!!');
+
+
+            }
+            else if ($("#cmb_filter").val() != "" && $("#txt_fromdate").val() == '' && $("#txt_todate").val() != '') {
+                kendoAlert('Please Choose the Register From Date !!!');
+
+            }
+
+        }
+        //else {
+        //    kendoAlert('Please Select Filter');
+       else {
+            kendoAlert('Please Select Gram panchyat');
+            
+
+        }
+    }
+
+
+
+</script>
+
+

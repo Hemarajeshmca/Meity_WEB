@@ -1,0 +1,456 @@
+﻿@{
+    ViewBag.Form = "CP CC User Map";
+    ViewBag.helpName = "AggregatorUseraccessForm.html";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+<form id="aggregator_UserAccess" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="Text1" class="col-sm-5 control-label">Aggregator Org Name</label>
+                        <div class="col-sm-6">                          
+                            <input id="aggrorgn_code_desc" name="aggrorgn_code_desc" class="form-control" style="width: 100%" disabled>
+                            <input type="hidden" name="aggrorgn_code" id="aggrorgn_code" value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="Text2" class="col-sm-5 control-label ">Aggregator Org Type </label>
+                        <div class="col-sm-6">                         
+                            <input id="txtaggrorgn_type_desc" name="txtaggrorgn_type_desc" class="form-control" value="" style="width: 100%" disabled>
+                            <input type="hidden" name="aggrorgn_type" id="aggrorgn_type" value="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <div id="grid">
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script src="~/API_Scripts/CP_CCUserMap_retrieveCP_CC_UserMap_APIClient.js"></script>
+<script src="~/API_Scripts/CP_CCUserMap_retrieveCP_CC_UserMap_List_APIClient.js"></script>
+<script src="~/API_Scripts/CP_CCUserMap_saveCP_CC_UserMap_APIClient.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/API_Scripts/retrieveCP_CC_UserMap_List_Model.js"></script>
+<script src="~/API_Scripts/retrieveCP_CC_UserMap_Model.js"></script>
+<script src="~/API_Scripts/saveCP_CC_UserMap_Model.js"></script>
+<script src="~/API_Scripts/CP-CCUserMap.js"></script>
+
+<script>
+    var permission = "";
+    $(document).ready(function () {
+       
+        master_milkmap();
+        $(".file_attach").attr("hdrtitle", "CP CC User Map");
+        $(".notes").attr("hdrtitle", "CP CC User Map");
+        $("#lblForm_menuid").text("CCCP_USER");
+
+        Screen_Id = "CPCCUSER";
+        permission = sec_Permission(Screen_Id);
+
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#aggregator_UserAccess");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+
+        grid([]);
+        load_master_code();
+
+        var org_id = getlocalStorage('org_id');
+        var org_type = getlocalStorage('org_type');
+        var orgtname = getlocalStorage('orgtname');
+        var org = getlocalStorage('org');
+        $('#aggrorgn_code_desc').val(org);
+        $('#txtaggrorgn_type_desc').val(orgtname);
+        $('#aggrorgn_code').val(org_id);
+        $('#aggrorgn_type').val(org_type);
+      
+        setlocalStorage("status", "Active");
+        get_CCUserMap_details();
+       
+    });
+
+
+    function get_CCUserMap_details() {
+        try{
+        var formval = form_Serialize("aggregator_UserAccess");
+        var obj_val = JSON.parse(formval);
+        var data = {};
+        data.context = WebAPIProxy.getContext();
+        data.context.Header = obj_val;
+        retrieve_CCUserMap_details(data);
+    }
+    catch (err) {            
+        javascript_log4j_root(arguments.callee.name, err);
+    }
+    }
+
+
+    function get_CCUserMap(res) {
+        try{
+        var formval = form_Serialize("aggregator_UserAccess");
+        var obj_val = JSON.parse(formval);
+        obj_val.aggrloc_type = res.aggrloc_type;
+        var data = {};
+        data.context = WebAPIProxy.getContext();
+        data.context.Header = obj_val;
+
+        retrieve_CCUserMap_details(data);
+    }
+    catch (err) {            
+        javascript_log4j_root(arguments.callee.name, err);
+    }
+    }
+
+    function clear_val() {
+
+        grid([]);
+    }
+
+</script>
+
+<script>
+    function load_master_code() {
+        try {
+            debugger;
+            var data = {};
+            var context = WebAPIProxy.getContext();
+            data.userId = context.userId
+            data.orgnId = context.orgnId
+            data.locnId = context.locnId
+            data.localeId = context.localeId
+        data.screen_Id = "CPCCUSER";
+        var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+    }
+    catch (err) {            
+        javascript_log4j_root(arguments.callee.name, err);
+    }
+    }
+
+</script>
+
+<script>
+    var aggrloc_type_desc_list = "";
+    var aggrloc_code_desc_list = "";
+    var role_name_list = "";
+    var user_name_list = "";  
+    function grid(data) {
+        try {
+            $("#grid").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                aggrloc_type: { type: "string" },
+                                aggrlocuser_rowid: { type: "string" },
+                                role_code: { type: "string" },
+                                role_name: { type: "string" },
+                                user_role: { type: "string" },
+                                user_name: { type: "string" },
+                                status_code: { type: "string" },
+                                status_desc: { type: "string", defaultValue: getlocalStorage('status'), editable: false },
+                                row_timestamp: { type: "date" },
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+                toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 250,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [{
+                    command: [
+                {
+                    name: "Delete",
+                    id: "Delete",
+                    imageClass: "fa fa-close",
+                    click: function (e) {                      
+                        var grid = $("#grid").data("kendoGrid");
+                        var dataItem = $("#grid").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                        DeleteWindowEvent(e, dataItem, grid);
+                        e.stopImmediatePropagation()
+                    }
+                },
+                    ], title: "Action", width: "50px",
+                },
+                 {
+                     field: "aggrlocuser_rowid",
+                     title: "aggrlocuser_rowid",
+                     hidden: true,
+                 },
+                 {
+                     field: "aggrloc_type",
+                     title: "aggrloc_type",
+                     hidden: true,
+                 },
+                 {
+
+                     field: "aggrloc_type_desc",
+                     title: "Location Type",
+                     editor: function (container, options) {
+                         combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "aggrloc_type", "grid")
+                     },
+                     width: 100,
+
+                 },
+                 {
+                     field: "aggrloc_code",
+                     title: "aggrloc_code",
+                     hidden: true,
+                 },
+                 {
+
+                     field: "aggrloc_desc",
+                     title: "Location",
+                     editor: function (container, options) {
+                         combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "aggrloc_code", "grid")
+                     },
+                     width: 100,
+
+                 },
+                 {
+                     field: "role_val",
+                     title: "role val",
+                     hidden: true,
+                 },
+                   {
+                       field: "role_code",
+                       title: "role_code",
+                       hidden: true,
+                   },
+                 {
+                     field: "role_name",
+                     title: "User Role",
+                     editor: function (container, options) {
+                         combo_dependent_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "role_code", "grid")
+                     },
+                     width: 100,
+
+                 },
+                 {
+                     field: "user_code",
+                     title: "user_code",
+                     hidden: true,
+                 },
+                 {
+                     field: "user_name",
+                     title: "User Name",
+                     editor: function (container, options) {
+                         combo_dependent_man1(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "user_code", "grid")
+                     },
+                     width: 100,
+
+                 },
+                 {
+                     field: "status_code",
+                     title: "status_code",
+                     hidden: true
+                 },
+                 {
+                     field: "status_desc",
+                     title: "Status",
+                     editor: function (container, options) {
+                         combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "status_code", "grid")
+                     },
+                     width: 100,
+
+                 },
+                 {
+                     field: "row_timestamp",
+                     title: "row_timestamp",
+                     hidden: true
+                 },
+                 {
+                     field: "mode_flag",
+                     title: "Mode",
+                     hidden: true
+                 }
+                ],
+                editable: true
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+
+        }
+    }
+
+    //status bind dropdown
+    load_master_code();
+    aggrloc_type_desc_list = grid_comboScreen_mastercodes("AGGR_LOC_TYPE");
+    aggrloc_desc_list = grid_comboScreen_mastercodes("CC");
+    role_name_list = grid_comboScreen_mastercodes("ROLE");
+    user_name_list = grid_comboScreen_mastercodes("USERNAME");   
+</script>
+
+<script>
+    function save() {
+        try{
+        var formval = form_Serialize("aggregator_UserAccess");
+        var obj_val = JSON.parse(formval);
+        var grid_val = JSON.stringify($("#grid").data().kendoGrid._data);
+        var Bind = {};
+        Bind = grid_val;
+        var result = JSON.parse(Bind);
+        $.each(result, function (index, value) {
+            var row_id = value.aggrlocuser_rowid;
+            if (row_id == undefined || row_id == "") {
+                result[index].aggrlocuser_rowid = "0";
+            }
+            var mode = result[index].mode_flag;
+            if (mode == "S") {
+                result[index].mode_flag = "U";
+            }
+        });
+        var obj_grid_val = result;
+        var data = {};
+        data.context = WebAPIProxy.getContext();
+        data.context.Header = obj_val;
+        data.context.Detail = obj_grid_val;
+        save_CCUserMap_details(data);
+    }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+        function DeleteDetails() {
+            try{
+        $("#txtMode").val('D');
+        save();
+    }
+            catch (err) {            
+                javascript_log4j_root(arguments.callee.name, err);
+            }
+        }
+
+    function generate_CCUserMap_header(res) {
+    }
+
+    function generate_CCUserMap_detail(res) {
+        try{
+        if (res != null) {
+            var data = changedataType(res);
+            grid(data);
+        }
+        else {
+
+            grid([]);
+        }
+    }
+        catch (err) {            
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    //combo dependent
+        function combo_dependent_man(container, cmbid, datasource, datafield, code_datafield, grid_id) {
+            try{
+        var data = datasource;
+        $('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+            autoBind: false,
+            filter: "contains",
+            dataSource: data,
+            change: function (e) {
+                var cmb_value = this.value();
+                if (cmb_value && this.selectedIndex == -1) {
+                    this.value("");
+                }
+                var cmb_var = $("#" + grid_id).data("kendoGrid");
+                var selectedItem = cmb_var.dataItem(cmb_var.select());
+                var combobox_data = $("#" + cmbid).data("kendoComboBox");
+                if (combobox_data != undefined && combobox_data.selectedIndex == -1) {
+                    selectedItem[datafield] = "";
+                    selectedItem[code_datafield] = "";
+                }
+                else {
+                    selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+                    selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+                    selectedItem["role_val"] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+                }           
+            }
+        });
+
+        $("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
+
+            } catch (err) {            
+                javascript_log4j_root(arguments.callee.name, err);
+            }
+        }
+
+            function combo_dependent_man1(container, cmbid, datasource, datafield, code_datafield, grid_id) {
+                try{
+        var cus_arr = [];
+        var grid = $("#grid").data("kendoGrid");
+        var selectedItem = grid.dataItem(grid.select());
+        $.each(datasource, function (key, val) {
+            if (datasource[key].dependent == selectedItem.role_val) {
+                cus_arr.push(datasource[key]);
+            }
+        });
+
+        var data = cus_arr;
+
+        $('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+            autoBind: false,
+            filter: "contains",
+            dataSource: data,
+            change: function (e) {
+                var cmb_value = this.value();
+                if (cmb_value && this.selectedIndex == -1) {
+                    this.value("");
+                }
+                var cmb_var = $("#" + grid_id).data("kendoGrid");
+                var selectedItem = cmb_var.dataItem(cmb_var.select());
+                var combobox_data = $("#" + cmbid).data("kendoComboBox");
+                if (combobox_data != undefined && combobox_data.selectedIndex == -1) {
+                    selectedItem[datafield] = "";
+                    selectedItem[code_datafield] = "";
+                }
+                else {
+                    selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+                    selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+                }
+            }
+        });
+        $("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
+    }
+                catch (err) {            
+                    javascript_log4j_root(arguments.callee.name, err);
+                }
+            }
+
+</script>
+
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>
+
+

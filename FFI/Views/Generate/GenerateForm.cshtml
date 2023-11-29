@@ -1,0 +1,639 @@
+﻿@{
+    ViewBag.Form = "List Of Applications";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+
+<form id="Allotment_form" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-12">
+                    <div class="col-sm-5">
+                        <div class="form-group">
+                            <label for="txtAlotment" class="col-sm-4 control-label required">Register Name</label>
+                            <div class="col-sm-7">
+                                <input type="text" id="txtAlotment" name="In_register_type" style="width:100%" class="form-control" maxlength="50" readonly placeholder="List Of Applications" />
+                            </div>
+                            <input type="hidden" id="status_code" />
+                            <input type="hidden" id="row_timestamp" />
+                            <input type="hidden" id="chklist_status_flag" />
+                            @*<button id="btnReferesh" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="submit" data-original-title="Refresh" onclick="return  listLoad()"> <span class="glyphicon glyphicon-refresh"></span></button>*@
+                        </div>
+                    </div>
+                    <div class="col-xs-7">
+                        <div class="form-group">
+                            <label for="txtValidity" class=" col-md-4 control-label required">Report Date:</label>
+                            <div class=" col-sm-4">
+                                <input class="cusDate" data-role='datepicker' id="txtValidity" data-checkdate-msg="Enter Valid Date" name="In_register_date" style="width:100%" onkeypress="return date_validate(event)" />
+                                <span data-for='valid' class='k-invalid-msg'></span>
+                            </div>
+                            <div class="col-sm-1">
+                                <button id="btnReferesh" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="submit" data-original-title="Refresh" onclick="return  listLoad()"> <span class="glyphicon glyphicon-refresh"></span></button>
+                            </div>
+                            @*<div class="col-sm-4 pull-right" style="padding-bottom:10px">
+                                    <a data-toggle="modal" id="btnReport" type="button" class="Export btn btn-sm btn-info" href="~/ExportExcel/ExportExcel" data-target="#exportexcelModal"><span class="glyphicon glyphicon-export"></span></a>
+                                </div>*@
+                        </div>
+                        <div class="pull-right" style="margin-top: -33px;">
+                            <a data-toggle="modal" class="Export btn btn-sm btn-info" href="~/ExportExcel/ExportExcel" hdrtitle="" data-target="#exportexcelModal"><span class=" glyphicon glyphicon-export mr"></span></a>
+                        </div>
+                    </div>
+
+
+                    <div class="row" style="padding-top:15px;padding-bottom:15px">
+
+
+                        <div class="col-xs-12">
+                            <div id="grid_allotment_list">
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="form-group" style="display:none;">
+                            <label for="txtMode" class="col-sm-5 control-label">Mode</label>
+                            <div class="col-sm-7">
+                                <input id="txtMode" name="In_mode_flag" type="text" class="form-control" data-toggle="tooltip" data-placement="bottom" value="I">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="form-group" style="display:none;">
+                            <label for="txtregister_rowid" class="col-sm-5 control-label">register_rowid</label>
+                            <div class="col-sm-7">
+                                <input id="txtregister_rowid" name="IOU_register_rowid" type="text" class="form-control" data-toggle="tooltip" data-placement="bottom">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="form-group" style="display:none;">
+                            <label for="txtfpoorgn_code" class="col-sm-5 control-label">fpoorgn_code</label>
+                            <div class="col-sm-7">
+                                <input id="txtfpoorgn_code" name="In_fpoorgn_code" type="text" class="form-control" data-toggle="tooltip" data-placement="bottom" value="I">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</form>
+
+<script src="~/API_Scripts/FIS_Register_retrieveAllotmentRegister_APIClient.js"></script>
+<script src="~/API_Scripts/FIS_Register_retrieveRegisterList_APIClient.js"></script>
+<script src="~/API_Scripts/FIS_Register_saveAllotmentRegister_APIClient.js"></script>
+<script src="~/API_Scripts/retrieveAllotmentRegister_Model.js"></script>
+<script src="~/API_Scripts/retrieveRegisterList_Model.js"></script>
+<script src="~/API_Scripts/saveAllotmentRegister_Model.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/API_Scripts/AllotmentRegister.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#Allotment_form");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        Screen_Id = "ALLREG";
+        permission = sec_Permission(Screen_Id);
+        grid_allotment_details();
+        $("#btnReferesh").attr("disabled", false);
+        $("#txtValidity").attr("disabled", false);
+
+
+      
+
+        $("#common_id").text("Register ID");
+        $(".Export").attr("hdrtitle", "List Of Applications");
+        $(".Export").attr("SubTreeId", "ALLREG");
+
+        $(".file_attach").attr("hdrtitle", "List Of Applications");
+        $(".notes").attr("hdrtitle", "List Of Applications");
+        $("#lblForm_menuid").text("ALLREG");
+
+        if (getlocalStorage('btn_clk_val') == "Create") {
+            $('#divCreate #review').hide();
+            $("#txtMode").val("I");
+            $("#bottom_menus").hide();
+            $("#DocStat").val("New");
+            $("#status_code").val("A");
+
+        }
+        else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
+            $('#divEdit #reviewEd').hide();
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("Allotment_form");
+                $("#btnReferesh").attr("disabled", true);
+                $("#txtValidity").attr("disabled", true);
+                var obj_val = JSON.parse(formval);
+                obj_val.register_no = data.Out_register_no;
+                obj_val.register_rowid = data.Out_register_rowid;
+                obj_val.fpoorgn_code = data.Out_fpoorgn_code;
+
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, register_rowid: Context.Header.register_rowid , fpoorgn_code: Context.Header.fpoorgn_code }),
+                    url: "/Generate/Generatefetch",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        debugger;
+                        if (response.context != null) {
+                            generate_AllotmentRegister_header(response.context.Header);
+                            generate_AllotmentRegister_detail(response.context.Detail);
+                        }
+                        else {
+
+                        }
+                    },
+                    error: function (er) {
+                        alert(er)
+                        console.log(er)
+                    }
+
+                });
+                $("#txtregister_rowid").val(obj_val.IOU_register_rowid);
+                $("#txtcommon_id").val(obj_val.In_register_no);
+                $("#txtMode").val("U");
+                setlocalStorage('doc_no', $("#txtcommon_id").val());
+                setlocalStorage('doc_row_id', $("#txtregister_rowid").val());
+            }
+        }
+        $("#txtValidity").kendoDatePicker({
+            max: new Date(), // sets max date to Jan 1st, 2013
+            format: "dd/MM/yyyy"
+        });
+        setlocalStorage("status", "Active");
+        setlocalStorage('status_code', "A");
+
+    });
+    function save(mode) {
+        if ($("#grid_allotment_list").data("kendoGrid").dataSource._view.length > 0) {
+            try {
+                $("#txtValidity").attr("disabled", false);
+                if ($("#txtMode").val() == "") {
+                    $("#txtMode").val('I');
+                }
+                if ($("#DocStat").val() == "Active") {
+                    $("#txtMode").val('U');
+                }
+
+                if (mode != undefined) {
+                    $("#txtMode").val('D');
+                }
+                var formval = form_Serialize("Allotment_form");
+                var obj_val = JSON.parse(formval);
+
+                if ($("#txtcommon_id").val() == undefined || $("#txtcommon_id").val() == "") {
+                    obj_val.IOU_register_no = "0";
+                }
+                else {
+                    obj_val.IOU_register_no = $("#txtcommon_id").val();
+                }
+
+                obj_val.In_fpoorgn_code = getlocalStorage('org_id');
+                obj_val.In_register_type = "QCD_SHA_ALL_REG";
+                if (obj_val.In_status_code == undefined) {
+                    obj_val.In_status_code = "A";
+                }
+                if (obj_val.In_row_timestamp == undefined) {
+                    obj_val.In_row_timestamp = "0";
+                }
+                if (getlocalStorage('btn_clk_val') == "Create") {
+                    obj_val.In_mode_flag = "I";
+                }
+                else if (getlocalStorage('btn_clk_val') == "Edit") {
+                    obj_val.In_mode_flag = "U";
+                }
+
+                var grid_val = JSON.stringify($("#grid_allotment_list").data().kendoGrid._data);
+                var Bind = {};
+                Bind = grid_val;
+                var result = JSON.parse(Bind);
+
+
+                if ($("#txtregister_rowid").val() == undefined || $("#txtregister_rowid").val() == "") {
+                    obj_val.IOU_register_rowid = "0";
+                }
+                else {
+                    obj_val.IOU_register_rowid = $("#txtregister_rowid").val();
+                }
+                //if (result.length == 0) {
+                //    kendoAlert("Atleast one record needs to be entered");
+                //    return false;
+                //}
+                $.each(result, function (index, value) {
+                    var row_id = value.In_register_rowid;
+                    if (row_id == undefined || row_id == "") {
+                        result[index].In_register_rowid = "0";
+                    }
+
+                    var mode = value.In_mode_flag;
+                    if (mode == "S") {
+                        result[index].In_mode_flag = "I";
+                    }
+                });
+                var obj_grid_val = result;
+
+                $("#txtValidity").attr("disabled", true);
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                data.context.Detail = obj_grid_val;
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, Header: Context.Header, Detail: Context.Detail }),
+                    url: "/Generate/GenerateSave",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        console.log(response)
+                        var Res = JSON.parse(response);
+                        if (Res.context != null) {                            
+                            var mode = $("#txtMode").val();
+                            if (mode == "I") {
+                                kendoAlert("AllotmentRegister saved successfully");
+                                get_AllotmentRegister_details(Res.context.header);                              
+                            }
+                            else if (mode == "D") {
+                                kendoAlert("AllotmentRegister inactivate successfully");                              
+                            }
+                            else {
+                                kendoAlert("AllotmentRegister Updated successfully");
+                                get_AllotmentRegister_details(Res.context.header);                                
+                            };
+                        }
+                        else {
+                            kendoAlert(Res.ApplicationException.errorDescription);
+                        }
+                    },
+                    error: function (er) {
+                        alert(er)
+                        console.log(er)
+                    }
+
+                });
+                $('#divCreate #btnSave').prop('disabled', true);
+            }
+            catch (err) {
+                javascript_log4j_root(arguments.callee.name, err);
+            }
+        }
+        else {
+            kendoAlert("Atleast one record needs to be entered");
+        }
+    }
+
+    function listLoad() {
+        try {
+            var formval = form_Serialize("Allotment_form");
+            var obj_val = JSON.parse(formval);
+            obj_val.register_rowid = "0";
+            obj_val.fpoorgn_code = getlocalStorage('org_id');
+            obj_val.register_type = "QCD_SHA_ALL_REG";
+            obj_val.register_date = $("#txtValidity").val();
+
+            if (obj_val.hasOwnProperty('register_date')) {
+                if (obj_val.register_date != '')
+                    obj_val.register_date = getFormated_StringDate(obj_val.register_date);
+            }
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Header = obj_val;
+            var Context = data.context;
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, register_rowid: Context.Header.register_rowid, fpoorgn_code: Context.Header.fpoorgn_code }),
+                url: "/Generate/Generatefetch",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    if (response.context != null) {
+                        generate_AllotmentRegister_header(response.context.Header);
+                        generate_AllotmentRegister_detail(response.context.Detail);
+                    }
+                    else {
+
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+            var colCount = $("#grid_allotment_list").find('.k-grid-header colgroup > col').length;
+
+            //If There are no results place an indicator row
+            if ($("#grid_allotment_list").data("kendoGrid").dataSource._view.length == 0) {
+                $("#grid_allotment_list").find('.k-grid-content tbody')
+                    .append('<tr class="kendo-data-row"><td colspan="' +
+                        colCount +
+                   '" style="text-align:center; padding-top:10px;background-color:#AFE4FA"><b>No pending FPO share applications to generate the allotment register</b></td></tr>');
+            }
+
+            return false;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function listLoadfetch(res) {
+        try {
+            var formval = form_Serialize("Allotment_form");
+            var obj_val = JSON.parse(formval);
+            obj_val.register_rowid = res.ioU_register_rowid;
+            $("#txtcommon_id").val(res.ioU_register_no);
+            obj_val.fpoorgn_code = getlocalStorage('org_id');
+            obj_val.register_type = "QCD_SHA_ALL_REG";
+            obj_val.register_date = $("#txtValidity").val();
+
+            if (obj_val.hasOwnProperty('register_date')) {
+                if (obj_val.register_date != '')
+                    obj_val.register_date = getFormated_StringDate(obj_val.register_date);
+            }
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Header = obj_val;
+            var Context = data.context;
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, register_rowid: Context.Header.register_rowid, fpoorgn_code: Context.Header.fpoorgn_code }),
+                url: "/Generate/Generatefetch",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    if (response.context != null) {
+                        generate_AllotmentRegister_header(response.context.Header);
+                        generate_AllotmentRegister_detail(response.context.Detail);
+                    }
+                    else {
+
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+            var colCount = $("#grid_allotment_list").find('.k-grid-header colgroup > col').length;
+
+            //If There are no results place an indicator row
+            if ($("#grid_allotment_list").data("kendoGrid").dataSource._view.length == 0) {
+                $("#grid_allotment_list").find('.k-grid-content tbody')
+                    .append('<tr class="kendo-data-row"><td colspan="' +
+                        colCount +
+                        '" style="text-align:center; padding-top:10px;background-color:#AFE4FA"><b>No pending FPO share applications to generate the allotment register</b></td></tr>');
+            }
+
+            return false;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function get_AllotmentRegister_details(res) {
+        try {
+            listLoadfetch(res);
+            
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+</script>
+<script>
+    click_act_name = "Generate";
+    click_ctrl_name = "Generate";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+
+<script>
+    function grid_allotment_details(data) {
+        try {
+            $("#grid_allotment_list").kendoGrid(
+            {
+                dataSource: {
+                    data: data,
+
+                    schema: {
+                        model: {
+                            fields: {
+                                In_shareapp_no: { type: "string" },
+                                In_fpomember_code: { type: "string" },
+                                In_member_name: { type: "string" },
+                                In_member_sur_name: { type: "string" },
+                                In_applied_shares: { type: "string" },
+                                In_status_desc: { type: "string" },
+                                In_mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+
+                },
+                //toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+
+                toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                excelExport: function (e) {
+                    var gd = $("#grid_allotment_list").data("kendoGrid");
+                    var len = gd.dataSource._data.length;
+                    var chkall = $('#chkall').is(':checked');
+                    var chkfilter = $('#chkfilter').is(':checked');
+                    var chktemp = $('#chktemp').is(':checked');
+                    var twokendobox = true;
+                    gd.dataSource.pageSize(len);
+                    if (e.sender.dataSource._data.length == len) {
+                        twokendobox = false;
+                        exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                    }
+                    else {
+                        exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                    }
+                    gd.dataSource.pageSize('10');
+                    return false;
+                },
+
+                height: 400,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_allotment_list').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                //dataBound: gridDataBound,
+
+                columns: [
+                     {
+                        field: "In_shareapp_rowid",
+                         title: "shareapp_rowid",
+                         width: 100,
+                         hidden: true,
+                     },
+
+                     {
+                         field: "In_shareapp_no",
+                         title: "Application No",
+                         width: 100,
+
+                     },
+                      {
+                          field: "In_farmer_code",
+                          title: "farmer_code",
+                          width: 100,
+                          hidden: true,
+                      },
+                   {
+                       field: "In_fpomember_code",
+                       title: "Member ID",
+                       width: 100,
+
+                   },
+                    {
+                        field: "In_member_name",
+                        title: "Applicant Name",
+                        width: 100,
+
+                    },
+
+                        {
+                            field: "In_member_sur_name",
+                            title: "Applicant Surname",
+                            width: 100,
+
+                        },
+
+
+                  {
+                      field: "In_applied_shares",
+                      title: "Shares Applied",
+                      width: 100,
+
+                  },
+                   {
+                       field: "In_shareapp_remark",
+                       title: "shareapp_remark",
+                       hidden: true,
+                       width: 100
+                   },
+                    {
+                        field: "In_status_code",
+                        title: "Status",
+                        hidden: true,
+                        width: 100
+                    },
+                 {
+                     field: "In_status_desc",
+                     title: "Status",
+                     width: 100,
+                 },
+
+                   {
+                       field: "In_row_timestamp",
+                       title: "Timestamp",
+                       hidden: true
+                   },
+
+                {
+                    field: "In_mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }
+                ],
+                editable: false,
+
+            });
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+</script>
+
+<script>
+    function generate_AllotmentRegister_header(res) {
+        try {
+            if (res != null && getlocalStorage('btn_clk_val') != "Create") {
+                $("#txtcommon_id").val(res.In_register_no);
+                $("#DocStat").val(res.In_status_desc);
+                $("#txtValidity").val(res.In_register_date);
+            }
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function generate_AllotmentRegister_detail(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                grid_allotment_details(data);
+            }
+            else {
+                grid_allotment_details([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+<script>
+    function load_master_code() {
+        try {
+            debugger;
+            var data = {};
+            var context = WebAPIProxy.getContext();
+            data.userId = context.userId
+            data.orgnId = context.orgnId
+            data.locnId = context.locnId
+            data.localeId = context.localeId
+            data.screen_Id = "ALLREG";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>
+
+
+

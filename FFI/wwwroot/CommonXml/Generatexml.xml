@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <row>
+    <gen1>Allotment Register</gen1>
+  </row>
+  <row>
+    <gen>Objection certificate Register</gen>
+  </row>
+  <row>
+    <gen>Transfer Certificate</gen>
+  </row>
+  <row>
+    <gen>Duplicate Register</gen>
+  </row>
+  <row>
+    <gen2>Share Certificate</gen2>
+  </row>
+  <row>
+    <gen3>Dividend Register</gen3>
+  </row>
+  <row1>
+    <gen>FY1-Interim</gen>
+  </row1>
+  <row1>
+    <gen>FY1-Final</gen>
+  </row1>
+  <update>
+    <report>Pending Allotment</report>
+  </update>
+  <update>
+    <report>Allotted</report>
+  </update>
+  <update>
+    <report>Rejected</report>
+  </update>
+  <print>Original</print>
+  <print>Duplicate Request</print>
+  <shareDispatch>Pending Despatch</shareDispatch>
+  <shareDispatch>Despatched</shareDispatch>
+  <refund>Pending Refund</refund>
+  
+<refund>Refund Completed</refund>
+  <servicestatus>Approved</servicestatus>
+<servicestatus>Rejected</servicestatus>
+  <req>
+    <statutory>Index to Member</statutory>
+  </req>
+  <req>
+    <statutory>Transfer Certificate Register</statutory>
+  </req>
+  <req>
+    <statutory>Register and Index of Beneficial Owners</statutory>
+  </req>
+  <req>
+    <statutory>Copy Of Annual Returns</statutory>
+  </req>
+  <req>
+    <statutory>Register Of Renewed and Duplicate Share Certificate</statutory>
+  </req>
+  <req>
+    <statutory>Register Of Allotments</statutory>
+  </req>
+  <req>
+    <statutory>Dividend Register</statutory>
+  </req>
+  <req>
+    <statutory>Register Of Director Shareholding</statutory>
+  </req>
+  <report>Transfer Certificate register</report>
+ <report>Objection Certificate register</report>
+  <dub>Duplicate Register</dub>
+</root>

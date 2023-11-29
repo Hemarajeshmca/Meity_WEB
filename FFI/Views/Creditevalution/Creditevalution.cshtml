@@ -1,0 +1,129 @@
+﻿@{
+    ViewBag.Form = "CE Category Set-up";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+<form id="Attribute_MapNew" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtRoleDesc" class="col-sm-5 control-label required">Loan Type:</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_loantype" value="" style="width: 100%">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtRoleDesc" class="col-sm-5 control-label required">Questionnaire Name:</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtbank" name="attribute_group_code" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div id="grid_Drop_list">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    $(document).ready(function () {
+
+        // $("#form_design").css("padding-top", "95px");
+        $(".file_attach").attr("hdrtitle", "CE Category");
+        $(".notes").attr("hdrtitle", "CE Category");
+        $("#lblForm_menuid").text("FLCREDIT");
+        master_capital()
+        kendodate_format();
+        var data = [{ catagery: "Personal", wegitage: "35%", created_date: "", status: "Active" }, { catagery: "Ability", wegitage: "30%", created_date: "", status: "Active" }, { catagery: "Collateral", wegitage: "30%", created_date: "", status: "Active" }];
+
+        grid(data);
+        $("#bottom_menus").show();
+        $("#bottomFooter").show();
+        var combo_data = [{ code: 1, desc: "Equipment" }, { code: 1, desc: "Poultry" }, { code: 1, desc: "Cattle" }];
+        filter_combobox("cmb_loantype", combo_data);
+    });
+
+
+</script>
+<script>
+    function grid(data) {
+        $("#grid_Drop_list").kendoGrid(
+                {
+                    dataSource: {
+                        data: data,
+                        schema: {
+                            model: {
+                                fields: {
+                                    catagery: { type: "string" },
+                                    wegitage: { type: "string" },
+                                    created_date: { type: "string" },
+                                    status: { type: "string" },
+                                    mode_flag: { type: "string", defaultValue: "I" }
+                                }
+                            }
+                        }
+                    },
+                    toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                    height: 400,
+                    groupable: false,
+                    dataBinding: setDefaultValues,
+
+                    dataBound: function (e) {
+                        resultData = e.sender._data;
+                        var rows = $('#grid_Drop_list').data('kendoGrid').tbody.children();
+                        setColor(rows, resultData);
+                    },
+                    sortable: true,
+                    selectable: true,
+                    navigatable: true,
+                    columns: [
+                           {
+                               field: "catagery",
+                               title: "Evalution Category",
+                               width: 200,
+
+                           },
+                         {
+                             field: "wegitage",
+                             title: "Weightage (%)",
+                             width: 200,
+                             hidden: true
+                         },
+                          //{
+                          //    field: "created_date",
+                          //    title: "Created Date",
+                          //    width: 200,
+
+                          //},
+
+
+                        {
+                            field: "status",
+                            title: "Status",
+                            width: 200,
+
+                        }],
+                    editable: true
+                });
+
+
+
+        $(".k-dropdown-operator").css('display', 'none');
+        $("#closure_grid .k-input").attr('disabled', 'false');
+    }
+    var gridRowID = -1;
+    function sel_checkbox() {
+        gridRowID++;
+        return '<input id="chk_sel_' + gridRowID + '" class="checkbox" type="checkbox" />';
+    }
+
+
+
+</script>

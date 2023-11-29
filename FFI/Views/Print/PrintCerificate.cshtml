@@ -1,0 +1,50 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Print Certificate</title>
+</head>
+<body>
+    <form class="form-horizontal" id="frm_repayment" data-role="validator" novalidate="novalidate">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Print Certificate</h4>
+        </div>
+        <div class="modal-header" style="height:49px">
+            <div class="col-sm-12" style="margin-top:-7px">
+                <div class="form-group" style="padding-bottom:10px">
+                    <div class="col-sm-3">
+                        <button type="button" class="btn btn-sm btn-primary" id="btnClose" onclick=closeModal(); style="width:85px">
+                            Close
+                        </button>
+                    </div>
+                    <div class="col-sm-10">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-body" style="height:550px">
+            <div class="row" style="padding-bottom:15px; vertical-align:middle">
+               <h4 style="text-align:center">Under Process</h4>
+
+            </div>
+        </div>
+    </form>
+</body>
+</html>
+<style>
+    .breadcrumb > li + li:before {
+        color: #E6E6E6;
+    }
+</style>
+
+<script>
+
+    function closeModal() {
+        $('#searchadvance').modal("hide");
+    }
+</script>
+

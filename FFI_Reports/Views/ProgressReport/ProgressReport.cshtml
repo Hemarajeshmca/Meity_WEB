@@ -1,0 +1,215 @@
+﻿
+@{
+    ViewBag.Form = "Pro. Data Capture Progress Report";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+<style>
+    a.k-button.k-button-icontext.k-grid-Edit, a.k-button.k-button-icontext.k-grid-View, a.k-button.k-button-icontext.k-grid-Delete, a.k-button.k-button-icontext.k-grid-edit {
+        background-color: #00c0ef;
+        border-color: #00c0ef;
+    }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.min.js"></script>
+<form id="frm_progressreport" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+
+            <div class="row" style="padding-bottom:15px;padding-top:12px;">
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <button id="refresh" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button"
+                                        data-original-title="Refresh" style="margin-left:16px;">
+                                    Fetch Report
+                                </button>
+                                <label id="lblprog" style="color:red;display:none;margin-left:18px;"> In Progress..Please Wait </label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div id="gd_progress">
+                                    <div id="progress_grid"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script src="~/CommonScripts/Common_func.js"></script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+<script src="~/CommonScripts/ExportExcel.js"></script>
+
+<script>
+    click_act_name = "home ";
+    click_ctrl_name = "home";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+
+</script>
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+        debugger;
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#frm_progressreport");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        $("#Topsubheader").show();
+        $("#bottomFooter").show();
+        $("#bottom_menus").hide();
+        $("#btndiv").show();
+        $("#frmlayerdiv").hide();
+        $("#divCreate").hide();
+        $("#divEdit").hide();
+        $("#divView").show();
+        $("#DocStat").show();
+        $(".edtviw_item").show();
+        $(".create_item").hide();
+
+        $(".Export").attr("hdrtitle", "Progress Report");
+        $(".Export").attr("SubTreeId", "PRGRPT");
+        $("#RIform").hide();
+        $("#FPOform").hide();
+        Screen_Id = "PRGRPT";
+        permission = sec_Permission(Screen_Id);
+        setlocalStorage("ls_pageList", "");
+    });
+
+</script>
+
+<script>
+    $(function () {
+        $('#refresh').click(function () {
+            debugger;
+            $('#refresh').hide();
+            $('#lblprog').show();
+            $.ajax({
+                type: "POST",
+                data: {},
+                url: "/ProgressReport/GetFPOProgressReport",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+
+                success: function (Data1) {
+                    $('#lblprog').hide();
+                    $('#refresh').show();
+                    $("#exportExcel").show();
+                    var columns = [];
+                    var chkval = Data1;
+                    var data = Data1;
+                    var i = 0;
+
+                    var entryIndex = "entries[" + i + "]";
+                    for (var key in data[0]) {
+                        var propType = typeof data[0][key];
+
+                        if (key == "Ko Id") {
+                            columns.push({
+                                field: entryIndex,
+                                title: key,
+                                type: propType,
+                                width: 60,
+
+                            });
+                        }
+                        else if (key == "FPO NAME") {
+                            columns.push({
+                                field: entryIndex,
+                                title: key,
+                                type: propType,                                
+                                filterable: {
+                                    extra: false,
+                                    operators: {
+                                        string: {
+                                            contains: "Contains"
+                                        }
+                                    }
+                                }, 
+                                width: 200,
+                                filterable: true,
+                            });
+                        }
+
+                        else if (key != "" && key != "FPO NAME") {
+                            columns.push({
+                                field: entryIndex,
+                                title: key,
+                                type: propType,
+                                width: 90,
+                                attributes: { style: "text-align: center;" },
+                                filterable: false,
+                            });
+                        }
+                        i = i + 1;
+                        entryIndex = "entries[" + i + "]";
+                    }
+                    debugger;
+                    var rows = [];
+                    var data1 = Data1;
+
+                    $.each(data1, function (i, e) {
+                        var entryArray = [];
+                        $.each(e, function (key, val) {
+                            entryArray.push(val);
+                        });
+                        rows.push(kendo.observable({
+                            entries: entryArray
+                        }));
+                    });
+                    var viewModel = kendo.observable({
+                        gridRows: rows
+
+                    });
+                    var configuration = {
+                        height: 450,
+                        navigatable: true,
+                        groupable: false,
+                        editable: false,
+                        sortable: true,
+                        scrollable: true,
+                        filterable: true,
+                        pagable: true,
+                        pageSize: 5,
+                        resizable: true,
+                        persistSelection: true,
+                        selectable: "false",
+                        columns: columns,
+                        toolbar: ["excel"],
+                        excel: {
+                            fileName: "FPO ProgressReport.xlsx",
+                            filterable: true,
+                            allPages: false
+                        },
+                        rows: viewModel
+                    };
+
+                     $("#example").remove();
+                    $('#progress_grid').append('<div id="example" style="position:relative;" class="k-content"><table id="grid1"  data-bind="source: gridRows" style="position:relative;overflow:scroll;width:100%"></table></div>');
+                    var timeEditGrid = $("#grid1").kendoGrid(configuration).data("kendoGrid");
+                    kendo.bind($("#grid1"), viewModel);
+                },
+
+                error: function (er) {
+                    $('#lblprog').hide();
+                    $('#refresh').show();
+                    alert(er)
+                    console.log(er)
+                }
+            });
+
+            return false;
+        });
+    });
+
+</script>
+<style>
+    .k-footerTemplate {
+        text-align: right;
+    }
+</style>

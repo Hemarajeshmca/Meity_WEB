@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <row>
+    <instiute_type>NABARD</instiute_type>
+    <instiute_type>Bank</instiute_type>
+    <collertral>Machinery</collertral>
+    <collertral>Equipment</collertral>
+    <collertral>Land</collertral>
+    <collertral>Buliding</collertral>
+    <fpoloan>ACTIVE</fpoloan>
+    <fpoloan>CLOSED</fpoloan>
+    <fpoloan>WRITTEN OFF</fpoloan>
+    <fpoloanno>FPO Loan 1</fpoloanno>
+    <fpoloanno>FPO Loan 2</fpoloanno>
+    <fpoloantranch>Tranch 1</fpoloantranch>
+    <fpoloantranch>Tranch 2</fpoloantranch>
+    <payment>Monthly</payment>
+    <payment>Quarterly</payment>
+    <flscheme>Cattle </flscheme>
+    <!--<flscheme>Poultry</flscheme>-->
+    <flscheme>Machinery</flscheme>
+    <bene_type>Farmer</bene_type>
+    <bene_type>Supplier</bene_type>
+    <acc_type>Saving</acc_type>
+    <acc_type>Current</acc_type>
+    <status_credit>Credited</status_credit>
+    <status_credit>pending</status_credit>
+    <selectRep>Generate Loan InsTallment Dues-NACH</selectRep>
+    <selectRep>Generate Loan InsTallment Dues-CHEQUE</selectRep>
+    <selectRep>Generate PDC Retrieval List</selectRep>
+    <selectRep>Generate NACH Presentation File List</selectRep>
+    <sanction>Application Approved</sanction>
+    <sanction>Sanction Letter Generated</sanction>
+    <loantype>Cattle</loantype>
+  <loantype>Machinery</loantype>
+  <third>Yes</third>
+  <third>No</third>
+  </row>
+</root>

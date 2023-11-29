@@ -1,0 +1,283 @@
+﻿
+@{
+    ViewBag.Form = "Dublicate SlNo Report";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+
+}
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.min.js"></script>
+<form id="frm_duplicateslno" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px;padding-top:12px;">
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <button id="getreport" title="" data-placement="top" data-toggle="tooltip"
+                                        class="btn btn-info" type="button" style="background-color:#00c0ef; border-color:#00acd6;margin-left:16px;">
+                                    Getreport
+                                </button>
+                                <label id="lblprg" style=" color:red; display:none;"> In progress .. Please Wait</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+
+                        </div>
+                        <div class="col-sm-3">
+
+                        </div>
+                        <div class="col-sm-3">
+                            <button id="clear" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button">
+                                clear
+                            </button>
+                            <button id="btnExport" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button" style="background-color:#00c0ef; border-color:#00acd6;">
+                                Export to Excel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div id="gd-duplicate">
+                            <div id="duplicate_grid">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="~/CommonScripts/Common_func.js"></script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+<script src="~/CommonScripts/ExportExcel.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+        debugger;
+        $("#Topsubheader").show();
+        $("#bottomFooter").show();
+        $("#bottom_menus").hide();
+        $("#btndiv").show();
+        $("#frmlayerdiv").hide();
+        $("#divCreate").hide();
+        $("#divEdit").hide();
+        $("#divView").show();
+        $("#DocStat").show();
+        $(".edtviw_item").show();
+        $(".create_item").hide();
+        
+        //Empty grid showing Functionality
+        listgrid([]);
+
+    });
+    //Clear Button Click Functionality
+    $("#clear").click(function () {
+        debugger;
+        listgrid([]);
+    });
+    //Grid Initialization
+    function listgrid(data) {
+        debugger;
+        try {
+            $("#duplicate_grid").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                duplicateslno: { type: "string" },
+                                lotno: { type: "string" },
+                                farmercode: { type: "string" },
+                                farmername: { type: "string" },
+                                pickupdate: { type: "string" },
+                                createdate: { type: "string" }
+                            }
+                        }
+                    },
+                    pagesize: 20
+                },
+                filterable: true,
+                resizable:true,
+                height: 300,
+                columns: [
+                    {
+                        field: "duplicateslno",
+                        title: "Duplicate SlNO",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        },
+                        width: 100
+                    },
+                    {
+                        field: "lotno",
+                        title: "Lot No",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        },
+                        width: 100
+                    },
+                    {
+                        field: "farmercode",
+                        title: "Farmer Name",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        },
+                        width: 100
+                    },
+                    {
+                        field: "farmername",
+                        title: "Farmer Name",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        },
+                        width: 100
+                    },
+                    {
+                        field: "pickupdate",
+                        title: "Pickup Date",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        },
+                        width: 100
+                    },
+                    {
+                        field: "createdate",
+                        title: "Created Date",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        },
+                        width: 100
+                    },
+                ],
+                editable: false,
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+
+    }
+    //GetReport Click Functioality
+    $("#getreport").click(function () {
+        debugger;
+        $("#getreport").hide();
+        $("#lblprg").show();
+        $.ajax({
+            type: "POST",
+            data: {},
+            url: "/PAWHSNEWReports/Getduplicateslno",
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                debugger;
+                $("#getreport").show();
+                $("#lblprg").hide();
+                if (response != null) {
+                    $("gd-duplicate").empty();
+                    $("gd-duplicate").append("div id='duplicate_grid'></div>");
+                    listgrid(response);
+                }
+            },
+            error(er) {
+                alert(er);
+                $("#getreport").show();
+                $("#lblprg").hide();
+            }
+        });
+
+    });
+</script>
+<script>
+    $("#btnExport").kendoButton({
+        click: function () {
+            debugger;
+            ExportButtonClick();
+        }
+    })
+    function ExportButtonClick() {
+        debugger
+        var grid = $("#duplicate_grid").data("kendoGrid");
+        if (grid.dataSource.total() == 0) {
+            kendoAlert('No records available in the Grid to Export!!!');
+        }
+        else {
+            grid.bind("excelExport", function (e) {
+                debugger;
+                e.workbook.fileName = "Dublicate Serial No.xlsx";
+                var rows1 = e.workbook.sheets[0];
+
+                var sheet = e.workbook.sheets[0];
+                var gd = $("#duplicate_grid").data("kendoGrid");
+                var gd_fi = $("#duplicate_grid").data("kendoGrid").dataSource;
+                var filters = gd_fi.filter();
+                var allData = gd_fi.data();
+                var query = new kendo.data.Query(allData);
+                var data = query.filter(filters).data;
+                var data_tt = gd.dataSource.data();
+                var sheet = e.workbook.sheets[0];
+                var gridColumns = gd.columns;
+
+                var columnCells = []; 13
+                for (var c = 0; c < gridColumns.length; c++) {
+                    var fieldName = gd.columns[c].hidden;
+                    if (typeof (fieldName) === "undefined") {
+                        var cellValue = gridColumns[c].title ? gridColumns[c].title : gridColumns[c].field;
+                        columnCells.push({ value: cellValue, autoWidth: true, background: "#7a7a7a", color: "#fff" });
+                    }
+                }
+                var rows = [{ cells: columnCells, type: "header" }];
+                for (var i = 0; i < data.length; i++) {
+                    var rowCells = [];
+                    for (var j = 0; j < gridColumns.length; j++) {
+                        var fieldName = gd.columns[j].hidden;
+                        if (typeof (fieldName) === "undefined") {
+                            var cellValue = data[i][gridColumns[j].field];
+                            rowCells.push({ value: cellValue });
+                        }
+                    }
+                    rows.push({ cells: rowCells, type: "data" });
+                }
+                sheet.rows = rows;
+            });
+            grid.saveAsExcel();
+            kendoAlert('Exported Sucessfully');
+        }
+    }
+
+</script>
+
+

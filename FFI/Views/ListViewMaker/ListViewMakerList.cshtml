@@ -1,0 +1,880 @@
+﻿@{
+    ViewBag.List = "Farmer Registration";
+    ViewBag.helpName = "FarmerRegistration.html";
+    Layout = "~/Views/Shared/ListViewLayout.cshtml";
+}
+@*<div class="row">
+        <div class="col-xs-12">
+            <div id="LVMarker"></div>
+            <div id="pager"></div>
+        </div>
+    </div>*@
+<style>
+    #loader {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        opacity: 0.5;
+        background: url('../../images/LoadingImg.gif') 50% 50% no-repeat rgb(0,0,0);
+    }
+</style>
+<form id="frm_fdr_freg" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="gd_LVMarker">
+                <div id="LVMarker"></div>
+                <div id="pager"></div>
+            </div>
+        </div>
+    </div>
+   <div id="loader"></div>
+</form>
+<script>
+    click_act_name = "ListViewMakerForm";
+    click_ctrl_name = "ListViewMaker";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+<script>
+    var menuId = "";
+    var permission = "";
+    var gridrecord;
+    $(document).ready(function () {
+        //listpageloadfetch(0, 20);
+        debugger;
+        $(".adv_filter").attr("hdrtitle", "Farmer Registration Record");
+        $(".adv_filter").attr("fltid", "FDRREG");
+        $(".Export").attr("hdrtitle", "Farmer Registration List");
+        $(".Export").attr("SubTreeId", "Farmer_reg");
+        list_grid_id = "LVMarker";
+        Screen_Id = "FARMREG";
+        permission = sec_Permission(Screen_Id);
+        //page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+        $("#loader").fadeIn();
+        //filterhover();
+        role_ri();
+        listgrid([]);        
+    });
+
+     function role_ri() {
+        /*  Prema added for fpo based abd ri user base loading*/
+        var role = getlocalStorage("orgn_level")
+        if (role == "ORG_FO") {
+            debugger;
+            filter_combobox("cmb_RIBelong", getlocalStorage("rilist"));
+            filter_combobox("cmb_FPOBelong", getlocalStorage("fpolist"));
+            $("#cmb_FPOBelong").data("kendoComboBox").value("ALL");
+            var cmb_ri = $("#cmb_RIBelong").data("kendoComboBox");
+            cmb_ri.value(getlocalStorage("org_id"));
+            $("#RI").show();
+            $("#cmb_RIBelong").data("kendoComboBox").enable(false);
+            $("#FPO").show();
+            $("#cmb_FPOBelong").data("kendoComboBox").enable(true);
+            fpoload();
+            Overwritegrid();
+        }
+        if (role == "ORG_PF") {
+            debugger;
+            filter_combobox("cmb_RIBelong", getlocalStorage("rilist"));
+            $("#cmb_RIBelong").data("kendoComboBox").value("ALL");
+            filter_combobox("cmb_FPOBelong", getlocalStorage("fpolist"));
+            $("#cmb_FPOBelong").data("kendoComboBox").value("ALL");
+            $("#RI").show();
+            $("#cmb_RIBelong").data("kendoComboBox").enable(true);
+            $("#FPO").show();
+            $("#cmb_FPOBelong").data("kendoComboBox").enable(true);
+            fpoload();
+            Overwritegrid();
+        }
+        if (role == "ORG_FPO") {
+            debugger;
+            filter_combobox("cmb_RIBelong", getlocalStorage("rilist"));
+            filter_combobox("cmb_FPOBelong", getlocalStorage("fpolist"));
+            var cmb_ri = $("#cmb_RIBelong").data("kendoComboBox");
+            cmb_ri.value(getlocalStorage("parent_code"));
+            $("#RI").show();
+            $("#cmb_RIBelong").data("kendoComboBox").enable(false);
+            $("#FPO").show();
+            $("#cmb_FPOBelong").data("kendoComboBox").enable(false);           
+            var cmap_insel = $("#cmb_FPOBelong").data("kendoComboBox");
+          //  cmap_insel.value(getlocalStorage("org_id"));
+            cmap_insel.value(getlocalStorage("org_code"));
+            Overwritegrid();
+        }
+              /*  prema ended*/
+    }
+    function fpoload() {
+        var data = {};
+            data.userId = getlocalStorage("User_Id_Value");
+        var orgnid = $("#cmb_RIBelong").data("kendoComboBox").value();
+            var user_code = data.userId;
+            var data1 = {User_code: user_code, orgn_code: orgnid}
+            $.ajax({
+            url: '@Url.Action("GetFPOlist", "Login")',
+            type: "post",
+            contentType: 'application/x-www-form-urlencoded',
+            data: data1,
+            success: function (response1) {
+            debugger;
+                var url_path = JSON.parse(response1);
+                var itemArrFPO = [];
+                for (var i = 0; i < url_path.Table.length; i++) {
+                    var list = {};
+                    list.id = url_path.Table[i].serial_number;
+                    list.code = url_path.Table[i].dist_code;
+                    list.desc = url_path.Table[i].Member_district_name;
+                    itemArrFPO.push(list);
+                }
+                filter_combobox("cmb_FPOBelong", itemArrFPO);
+            },
+                error: function (er)
+                {
+                alert(er)
+                console.log(er)
+                }
+            });
+    }
+    function listfetch(st_index, end_index) {
+        try {
+            var formval = form_Serialize("frm_fdr_freg");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_FromValue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_FromValue = ".";
+            }
+            obj_val.FilterBy_ToValue = ".";
+            obj_val.from_index = 0;
+            obj_val.to_index = 0;
+            obj_val.record_count = "10";
+            if (obj_val.row_count == undefined) {
+                obj_val.row_count = "0";
+            }
+            var data = {};
+            data.context = getContext();
+            data.context.orgnId = $("#cmb_FPOBelong").data("kendoComboBox").value();
+            data.context.userId = $("#cmb_RIBelong").data("kendoComboBox").value();
+            data.context.locnId = getlocalStorage("User_Id_Value");
+            data.context.Filter = obj_val;
+            var Context = data.context;
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, Filter: Context.Filter }),
+                url: "/ListViewMaker/GetFarmersList",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+
+                    if (response.context != null) {
+                        generate_farmer_registration_list(response);
+                        $("#loader").fadeOut(1000);
+                        //Overwritegrid();
+                    }
+                    else {
+                        listgrid([]);
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err.message);
+        }
+    }
+    $("#cmb_FPOBelong").change(function () {
+        $("#loader").fadeIn();        
+        Overwritegrid();
+    });
+    $("#cmb_RIBelong").change(function () {
+        $("#cmb_FPOBelong").data("kendoComboBox").value("ALL")
+        fpoload();
+        $("#loader").fadeIn();
+        Overwritegrid();
+    });
+    function Overwritegrid() {
+        var formval = form_Serialize("frm_fdr_freg");
+        var obj_val = JSON.parse(formval);
+
+        obj_val.FilterBy_Option = "ALL";
+        obj_val.FilterBy_Code = ".";
+        if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+            obj_val.FilterBy_FromValue = getlocalStorage('flt_condition');
+        }
+        else {
+            obj_val.FilterBy_FromValue = ".";
+        }
+        obj_val.FilterBy_ToValue = ".";
+        obj_val.from_index = 0;
+        obj_val.to_index = 0;
+        obj_val.record_count = "10";
+        if (obj_val.row_count == undefined) {
+            obj_val.row_count = "0";
+        }
+
+        var data = {};
+        data.context = getContext();
+        data.context.orgnId = $("#cmb_FPOBelong").data("kendoComboBox").value();
+        data.context.userId = $("#cmb_RIBelong").data("kendoComboBox").value();
+        data.context.locnId = getlocalStorage("User_Id_Value");
+        data.context.Filter = obj_val;
+        var Context = data.context;
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, Filter: Context.Filter }),
+            url: "/ListViewMaker/GetFarmersList",
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+
+                if (response.context != null) {
+                    generate_farmer_registration_list(response)
+                    $("#loader").fadeOut(1000);
+                    langcodeloc("FARMREG");
+                }
+                else {
+                    listgrid([]);
+                }
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+
+        });
+    }
+    function generate_farmer_registration_list(res) {
+        try {
+            if (res.context.List == null) {
+                var row_count = res.context.Filter.out_record_count;
+                if (pager_click == true) {
+                    $("#gd_LVMarker").empty();
+                    $("#gd_LVMarker").append("<div id='LVMarker'></div>");
+                    $("#gd_LVMarker").append("<div id='pager'></div>");
+                    //SetPager(row_count);
+                }
+                else {
+                }
+                listgrid([]);
+            }
+            else {
+                var data = changedataType(res.context.List);
+                var row_count = res.context.Filter.out_record_count;
+                if (pager_click == true) {
+                    $("#gd_LVMarker").empty();
+                    $("#gd_LVMarker").append("<div id='LVMarker'></div>");
+                    $("#gd_LVMarker").append("<div id='pager'></div>");
+                    //SetPager(row_count);
+                }
+                else {
+                }
+                listgrid(data);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    var pager_ds = [];
+    function SetPager(no_of_rec) {
+
+        try {
+            var arr = [];
+            var obj = {};
+            var pages = no_of_rec / 200;
+            for (var i = 0; i < pages; i++) {
+                obj[i] = "page_" + i;
+                arr.push(obj);
+            }
+            pager_ds = new kendo.data.DataSource({
+                data: arr,
+                pageSize: 1
+            });
+
+            SetPagerDS(pager_ds, no_of_rec);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err.message);
+        }
+    }
+
+    function SetPagerDS(page_source, noofrecords) {
+
+        try {
+            $("#pager").kendoPager({
+                dataSource: page_source,
+                change: function (o) {
+                    fetchPageDetail('pager');
+                    return;
+                },
+                refresh: false,
+                pageSize: 1,
+                input: true,
+                numeric: true,
+                info: true,
+                messages: {
+                    of: "of {0}",
+                    display: '<span style="color:blue; font-weight : bold ">Total No of Records : </span>' + '<span style="color:red" >' + noofrecords + '</span>' //"<B>Total No of Records :</B> " +   noofrecords + " data items"
+                }
+            });
+            page_source.read();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err.message);
+        }
+        //pager.bind("change", fetchPageDetail('pager'));
+    }
+
+    var status_Priority = [];
+
+    function listgrid(data) {
+        try {
+          $("#LVMarker").kendoGrid(
+                {
+                    excel: {
+                        fileName: "Farmer Registration.xlsx",
+                        filterable: true,
+                        allPages: false
+                    },
+                    dataSource: {
+                        data: data,
+                        pageSize: 200,
+                    },
+                    toolbar: "<button type= 'button' id = 'Exportclick' class = 'k-grid-excel' style = 'display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                    excelExport: function (e) {
+                        gridrecord;
+                        var gd = $("#LVMarker").data("kendoGrid");
+                        var len = gd.dataSource._data.length;
+                        var chkall = $('#chkall').is(':checked');
+                        var chkfilter = $('#chkfilter').is(':checked');
+                        var chktemp = $('#chktemp').is(':checked');
+                        //var twokendobox = true;
+
+                        var twokendobox = false;
+                        gd.dataSource.pageSize(len);
+                        exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                        gd.dataSource.pageSize('10');
+                        return false;
+                    },
+                    filterMenuInit: function (e) {
+                        var gd = $("#LVMarker").data("kendoGrid");
+                        filter_row(gd);
+                    },
+                    height: 460,
+                    sortable: false,
+                    selectable: true,
+                    change: selectRow,
+                    selectable: "singl",   //  Grid Row Selection
+                    pageable: {
+                        refresh: false,
+                        //pageSizes: true,
+                        buttonCount: 5,
+                        pageSizes: ["All", 100, 200, 500, 2000]
+                    },
+                    filterable: true,
+                    navigatable: true,
+                    groupable: false,
+                    resizable: true,
+                    columns: [
+                        {
+                            field: "out_farmer_rowid",
+                            title: "Farmer Rowid",
+                            hidden: true,
+                        },
+                        {
+                            field: "out_farmer_code",
+                            title: "Farmer Code",
+                            filterable: {
+                                extra: false,
+                                operators: {
+                                    string: {
+                                        contains: "Contains"
+                                    }
+                                }
+                            },
+                            width: 200
+                        },
+                        {
+                            field: "out_version_no",
+                            title: "version no",
+                            hidden: true,
+                        },
+                        {
+                            field: "out_photo_farmer",
+                            title: "photo_farmer",
+                            hidden: true,
+                        },
+                        {
+                            field: "out_member_id",
+                            title: "Member ID",
+                            filterable: {
+                                extra: false,
+                                operators: {
+                                    string: {
+                                        contains: "Contains"
+                                    }
+                                }
+                            },
+                            width: 200,
+                        },
+                        {
+                            field: "out_fpo_name",
+                            title: "FPO Name",
+                            filterable: {
+                                extra: false,
+                                operators: {
+                                    string: {
+                                        contains: "Contains"
+                                    }
+                                }
+                            },
+                            width: 200,
+                        },
+
+                        {
+                            field: "out_farmer_name",
+                            title: "Farmer First Name",
+                            filterable: {
+                                extra: false,
+                                operators: {
+                                    string: {
+                                        contains: "Contains"
+                                    }
+                                }
+                            },
+                            width: 200,
+                        },
+                        {
+                            field: "out_sur_name",
+                            title: "Sur Name",
+                            filterable: {
+                                extra: false,
+                                operators: {
+                                    string: {
+                                        contains: "Contains"
+                                    }
+                                }
+                            },
+                            width: 150,
+
+                        },
+                        {
+                            field: "out_fhw_name",
+                            title: "Father/Husband/Wife's Name",
+                            filterable: {
+                                extra: false,
+                                operators: {
+                                    string: {
+                                        contains: "Contains"
+                                    }
+                                }
+                            },
+                            width: 180,
+
+                        },
+
+                        {
+                            field: "out_farmer_dob",
+                            title: "DOB",
+                            filterable: {
+                                extra: false,
+                                operators: {
+                                    string: {
+                                        contains: "Contains"
+                                    }
+                                }
+                            },
+                            width: 110,
+                        },
+                        {
+                            field: "out_farmer_addr1",
+                            title: "Permanent Address 1",
+                            filterable: {
+                                extra: false,
+                                operators: {
+                                    string: {
+                                        contains: "Contains"
+                                    }
+                                }
+                            },
+                            width: 220,
+                        },
+                        {
+                            field: "Hamlet",
+                            title: "Hamlet",
+                            filterable: {
+                                extra: false,
+                                operators: {
+                                    string: {
+                                        contains: "Contains"
+                                    }
+                                }
+                            },
+                            width: 180,
+                            hidden: true,
+                        },
+
+                        {
+                            field: "out_farmer_ll_name",
+                            title: "Farmer Tamil Name",
+                            hidden: true,
+                        },
+                        {
+                            field: "out_sur_ll_name",
+                            title: "Sur Tamil Name",
+                            hidden: true,
+
+                        },
+                        {
+                            field: "out_fhw_ll_name",
+                            title: "Father/Husband/Wife's tamil Name",
+                            hidden: true,
+
+                        },
+
+                        {
+                            field: "out_farmer_ll_addr1",
+                            title: "Permanent Address 1",
+                            hidden: true,
+                        },
+                        {
+                            field: "out_farmer_ll_addr2",
+                            title: "Permanent Address 2",
+                            hidden: true,
+                        },
+
+                        {
+                            field: "out_farmer_country",
+                            title: "Country_c",
+                            hidden: true,
+                        },
+
+                        {
+                            field: "out_farmer_country_desc",
+                            title: "Country",
+                            hidden: true,
+                        },
+
+                        {
+                            field: "out_farmer_state",
+                            title: "State",
+                            hidden: true,
+                        },
+                        {
+                            field: "out_farmer_state_desc",
+                            title: "State",
+                            //filterable: {
+                            //    cell: {
+                            //        operator: "contains",
+                            //        inputWidth: 1500
+                            //    }
+                            //},
+                            width: 160
+                        },
+                        {
+                            field: "out_farmer_dist",
+                            title: "District",
+                            hidden: true,
+                        },
+                        {
+                            field: "out_farmer_dist_desc",
+                            title: "District",
+                            filterable: {
+                                extra: false,
+                                operators: {
+                                    string: {
+                                        contains: "Contains"
+                                    }
+                                }
+                            },
+                            width: 160
+                        },
+                        {
+                            field: "out_farmer_taluk",
+                            title: "Taluk",
+                            hidden: true,
+                        },
+                        {
+                            field: "out_farmer_taluk_desc",
+                            title: "Taluk",
+                            filterable: {
+                                extra: false,
+                                operators: {
+                                    string: {
+                                        contains: "Contains"
+                                    }
+                                }
+                            },
+                            width: 160
+                        },
+                        {
+                            field: "out_farmer_panchayat",
+                            title: "Gram Panchayat",
+                            hidden: true,
+                        },
+                        {
+                            field: "out_farmer_panchayat_desc",
+                            title: "Gram Panchayat",
+                            filterable: {
+                                extra: false,
+                                operators: {
+                                    string: {
+                                        contains: "Contains"
+                                    }
+                                }
+                            },
+                            width: 160
+                        },
+
+                        {
+                            field: "out_farmer_village",
+                            title: "Village",
+                            hidden: true,
+                        },
+                        {
+                            field: "out_farmer_village_desc",
+                            title: "Village",
+                            filterable: {
+                                extra: false,
+                                operators: {
+                                    string: {
+                                        contains: "Contains"
+                                    }
+                                }
+                            },
+                            width: 130
+                        },
+
+
+                        {
+                            field: "out_farmer_pincode",
+                            title: "Pincode",
+                            attributes: { style: "text-align:right;" },
+                            filterable: {
+                                extra: false,
+                                operators: {
+                                    string: {
+                                        contains: "Contains"
+                                    }
+                                }
+                            },
+                            width: 100
+                        },
+                        {
+                            field: "out_farmer_pincode_desc",
+                            title: "Pincode Desc.",
+                            hidden: true,
+                        },
+                        {
+                            field: "out_marital_status",
+                            title: "Marital",
+                            hidden: true,
+                        },
+                        {
+                            field: "out_marital_status_desc",
+                            title: "Marital Desc.",
+                            hidden: true,
+                        },
+
+
+                        {
+                            field: "out_gender_flag",
+                            title: "Gender",
+                            hidden: true,
+                        },
+                        {
+                            field: "out_gender_flag_desc",
+                            title: "Gender",
+                            filterable: {
+                                extra: false,
+                                operators: {
+                                    string: {
+                                        contains: "Contains"
+                                    }
+                                }
+                            },
+                            width: 100
+                        },
+
+                        {
+                            field: "out_reg_mobile_no",
+                            title: "Farmer Mobile Number",
+                            attributes: { style: "text-align:right;" },
+                            filterable: {
+                                extra: false,
+                                operators: {
+                                    string: {
+                                        contains: "Contains"
+                                    }
+                                }
+                            },
+                            width: 140
+                        },
+                        {
+                            field: "out_reg_note",
+                            title: "Reg.Note",
+                            hidden: true,
+                        },
+                        {
+                            field: "out_status_code",
+                            title: "Status",
+                            hidden: true,
+                        },
+                        {
+                            field: "out_status_desc",
+                            title: "Status",
+                            filterable: {
+                                extra: false,
+                                operators: {
+                                    string: {
+                                        contains: "Contains"
+                                    }
+                                }
+                            },
+                            width: 130,
+                            //hidden: true,
+                        },
+                        {
+                            field: "out_row_timestamp",
+                            title: "Time stamp",
+                            hidden: true,
+                        },
+                    ]
+
+                });
+            $(".k-dropdown-operator").css('display', 'none');
+            $("#LVMarker .k-input").attr('disabled', 'false');
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function selectRow() {
+        try {
+            var grid = $("#LVMarker").data("kendoGrid");
+            var selectedItem = grid.dataItem(grid.select());
+            setlocalStorage("ls_pageList", selectedItem);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function Reslocal(Resourcelocal) {
+        var result1 = JSON.stringify(Resourcelocal);
+        var result = JSON.parse(result1);
+        for (var i = 0; i < result.length; i++) {
+            var screendata = result[i].data_field;
+            var finalscreen = screendata.split("-");
+            if (finalscreen[0] == 'gridlist') {
+                $("#LVMarker thead [data-field=" + result[i].control_code + "]").html(result[i].control_value);
+            }
+            if (finalscreen[0] == 'BUTTON') {
+
+                $("#" + result[i].control_code + "").attr('data-original-title', result[i].control_value);
+
+            }
+        }
+        $("#LVMarker").data("kendoGrid").refresh();
+    }
+</script>
+
+<script>
+
+    $("#btn_Edit").bind("click", function () {
+        getSerializedSelectedRows('edit');
+    });
+
+    $("#btn_View").bind("click", function () {
+        getSerializedSelectedRows('view');
+    });
+
+    $("#btn_new").bind("click", function () {
+        btn_onClick('Create');
+        location.href = "../ListViewMaker/ListViewMakerForm";
+    });
+
+    function getSerializedSelectedRows(mode) {
+        try {
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var items = getlocalStorage("ls_pageList");
+                if (items.length == 0) {
+                    kendoAlert("Please select records");
+                }
+                else {
+                    if (mode == "edit") {
+                        btn_onClick('Edit');
+                        location.href = "../ListViewMaker/ListViewMakerForm";
+                    }
+                    else if (mode == "view") {
+                        btn_onClick('View');
+                        location.href = "../ListViewMaker/ListViewMakerForm";
+                    }
+                }
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>
+       function listRefresh() {
+        try {
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch(0, 0);
+            pager_click = true;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function list_pager_refresh() {
+        try {
+            listpageloadfetch(0, 0);
+            pager_click = true;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    var pager_click = true;
+    function fetchPageDetail(pager_id) {
+        try {
+            var st_index = getStartIndex(pager_id);
+            var end_index = getEndIndex(pager_id, st_index);
+            pager_click = false;
+            listpageloadfetch(st_index, end_index);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function get_hindi_lang() {       
+        Overwritegrid();
+    }
+
+    function get_english_lang() {       
+        Overwritegrid();
+    }
+</script>
+
+
+
+
+

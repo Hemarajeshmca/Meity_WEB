@@ -1,0 +1,36 @@
+﻿@*@using ReportViewerForMvc;*@
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Print View</title>
+    <script src="~/Scripts/jQuery-2.1.4.min.js"></script>
+    <link href="~/CSS/popupGrid.css" rel="stylesheet" />      
+    <script src="~/CommonScripts/Print.js"></script>  
+</head>
+<body>
+    <form class="form-horizontal" id="frm_report" data-role="validator" novalidate="novalidate">        
+        <div class="modal-body" style="height:550px;width:600px">           
+            <div id="rpt_maindiv" class="col-md-12" style="padding-bottom:10px;width:100%;height:100%">
+                <div id="rpt_div">
+                    @*@Html.ReportViewer(
+    ViewBag.ReportViewer as Microsoft.Reporting.WebForms.ReportViewer,
+                               new { scrolling = "no", width = "750px", height = "500px", name = "ReportViewer1" })*@
+                </div>
+            </div>
+
+        </div>
+      
+    </form> 
+ </body>
+</html>
+<style>
+    .breadcrumb > li + li:before {
+        color: #E6E6E6;
+    }
+</style>
+

@@ -1,0 +1,342 @@
+﻿@{
+    ViewBag.Form = "Generate Subvention Refund Advice";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+<form id="Subvention_Advice_form" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="cmb_scheme" class=" col-md-3 control-label">Scheme</label>
+                        <div class=" col-sm-7">
+                            <input id="cmb_scheme" name="subvention_code" data-role="filtercombo" style="width:100%" />
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="cmb_update" class="col-sm-3 control-label required">Status</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_update" name="refund_status_code" data-role="filtercombo" style="width:100%" />
+                        </div>
+                        <button title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button" onclick="listLoad()" data-original-title="Refresh"> <span class="glyphicon glyphicon-refresh"></span></button>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtRoleDesc" class=" col-md-5 control-label">Run Date</label>
+                        <div class=" col-sm-7">
+                            <input class="cusDate" data-role='datepicker' id="txtValidity" data-checkdate-msg="Enter Valid Date" name="run_date" style="width:100%" onkeypress="return date_validate(event)" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-xs-12">
+                    <div id="sub_grid">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</form>
+<script>
+    $(document).ready(function () {
+
+        master_applysubvention();
+        kendodate_format();
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#Subvention_Advice_form");
+        kendo.init(container);
+        container.kendoValidator({
+            rules: {
+                checkdate: function (input) {
+                    if (input.attr("data-role") == "datepicker") {
+                        var res = isDate(input.val());
+                        return res;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+            }
+        });
+
+        Screen_Id = "SUBADGEN";
+        load_master_code();
+        $(".txtValidity").kendoDatePicker();
+
+        var combo_data = "";
+        $("#cmb_update").empty();
+        combo_data = grid_comboScreen_mastercodes("QCD_FL_SubRefund");
+        filter_combobox("cmb_update", combo_data);
+
+        var combo_scheme = "";
+        $("#cmb_scheme").empty();
+        combo_scheme = grid_comboScreen_mastercodes("SUBScheme");
+        filter_combobox("cmb_scheme", combo_scheme);
+
+        var data = [];
+        gridsub(data);
+
+    });
+
+    var container = $("#txtValidity");
+    container.kendoValidator({
+        rules: {
+            checkdate: function (input) {
+                if (input.attr("data-role") == "datepicker") {
+                    var res = isDate(input.val());
+                    return res;
+                }
+                else {
+                    return true;
+                }
+            }
+        }
+    });
+</script>
+<script>
+    function load_master_code() {
+        debugger;
+        var data = {};
+        var context = WebAPIProxy.getContext();
+        data.userId = context.userId
+        data.orgnId = context.orgnId
+        data.locnId = context.locnId
+        data.localeId = context.localeId
+        data.screen_Id = "SUBADGEN";
+        var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+    }
+</script>
+<script src="~/API_Scripts/subvention_master_retrieveSubvention_advice_APIClient.js"></script>
+<script src="~/API_Scripts/subvention_master_save_subvention_advice_APIClient.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/API_Scripts/retrieveSubvention_advice_Model.js"></script>
+<script src="~/API_Scripts/save_subvention_advice_Model.js"></script>
+<script src="~/API_Scripts/SubVentionAdvice.js"></script>
+<script>
+    function gridsub(data) {
+        $("#sub_grid").kendoGrid(
+           {
+               dataSource: {
+                   data: data,
+                   schema: {
+                       model: {
+                           fields: {
+
+                               loansubvention_rowid: { type: "string" },
+                               mode_flag: { type: "string", defaultValue: "I" }
+                           }
+                       }
+                   }
+               },
+               dataBound: onDataBound,
+               height: 400,
+               sortable: true,
+               selectable: true,
+               selectable: "singl",   //  Grid Row Selection
+               navigatable: true,
+               groupable: false,
+               columns: [
+                     {
+                         title: "Selected",
+
+                         template: "<input type='checkbox' name='sel_flag' class='checkbox' />",
+                         width: 60
+                     },
+                     {
+                         field: "loansubvention_rowid",
+                         title: "loansubvention_rowid",
+                         hidden: true
+                     },
+                     {
+                         field: "subvention_code",
+                         title: "subvention_code",
+                         hidden: true
+                     },
+                     {
+                        field: "farmer_code",
+                        title: "Member ID",
+                    },
+                    {
+                        field: "farmer_name",
+                        title: "Farmer Name",
+                    },
+                    {
+                        field: "subvention_name",
+                        title: "FL Scheme",
+                    },
+                    {
+                        field: "loan_type",
+                        title: "loan_type",
+                        hidden: true
+                    },
+                    {
+                        field: "loan_type_desc",
+                        title: "Loan Type",
+                    },
+                    {
+                        field: "loan_acc_no",
+                        title: "Loan Account No.",
+                    },
+                    {
+                       field: "interest_amount",
+                       title: "Interest %",
+                    },
+                    {
+                       field: "refund_amount",
+                       title: "Refund Amount",
+                   },
+                   {
+                      field: "refund_advice_no",
+                      title: "Refund Advice No",
+                  },
+                  {
+                     field: "mode_flag",
+                     title: "mode_flag",
+                     hidden: true
+                 },
+
+                ]
+           });          
+    }
+    function onDataBound(e) {
+
+        $(".checkbox").bind("change", function (e) {
+            $(e.target).closest("tr").toggleClass("k-state-selected");
+        });
+    }
+    function selectRow() {
+        try {
+            var grid = $("#sub_grid").data("kendoGrid");
+            var selectedItem = grid.dataItem(grid.select());
+            setlocalStorage("ls_pageList", selectedItem);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>
+    function listLoad() {
+        try {          
+            var formval = form_Serialize("Subvention_Advice_form");
+            var obj_val = JSON.parse(formval);
+            var c = $('#cmb_update');
+            var s = $('#cmb_scheme');
+
+            if ($('#cmb_update').data("kendoComboBox").value() == "") {
+                kendoAlert("Status cannot be blank");
+            }
+            if (c.data('kendoComboBox').value() != "" && c.data('kendoComboBox').value() != undefined) {
+                obj_val.refund_status_code = c.data('kendoComboBox').value();
+
+            }
+            else {
+                obj_val.refund_status_code = "0";
+            }
+
+            if ($('#cmb_scheme').data("kendoComboBox").value() == "") {
+                kendoAlert("Scheme cannot be blank");
+            }
+
+            if (s.data('kendoComboBox').value() != "" && s.data('kendoComboBox').value() != undefined) {
+                obj_val.subvention_code = s.data('kendoComboBox').value();
+
+            }
+            else {
+                obj_val.subvention_code = "0";
+            }
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Header = obj_val;
+            retrieve_SubVentionAdvice_details(data);
+
+            var colCount = $("#sub_grid").find('.k-grid-header colgroup > col').length;
+
+            //If There are no results place an indicator row
+            if ($("#sub_grid").data("kendoGrid").dataSource._view.length == 0) {
+                $("#sub_grid").find('.k-grid-content tbody')
+                     .append('<tr class="kendo-data-row"><td colspan="' +
+                         colCount +
+                    '" style="text-align:center; padding-top:10px;background-color:#AFE4FA"><b>No Records</b></td></tr>');
+            }
+            return false;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>
+    function generate_SubVentionAdviceGen_Header(res) {
+    }
+    function generate_SubVentionAdviceGen_Detail(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                gridsub(data);
+            }
+            else {
+                gridsub([]);
+            }
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function get_SubVentionAdviceGen_details(res) {
+
+    }
+</script>
+<script>
+    function save() {
+        try {
+            var formval = form_Serialize("Subvention_Advice_form");
+            var obj_val = JSON.parse(formval);
+            var grid_val = JSON.stringify($("#sub_grid").data().kendoGrid._data);
+            var Bind = {};
+            Bind = grid_val;
+            var result = JSON.parse(Bind);
+            $.each(result, function (index, value) {
+                var d = value.instalment_date;
+                var date = kendo.parseDate(d);
+                value = kendo.toString(date, "MM/dd/yyyy");
+                result[index].instalment_date = value;
+
+                var mmode = result[index].mode_flag;
+                if (mmode == "S") {
+                    result[index].mode_flag = "U";
+                }                
+            });
+            var obj_val1 = result;
+            var data_save = {};
+            data_save.context = WebAPIProxy.getContext();
+            data_save.context.Header = obj_val;
+            data_save.context.Detail = obj_val1;
+            save_SubVentionAdviceGen_details(data_save);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+
+
+
+
+

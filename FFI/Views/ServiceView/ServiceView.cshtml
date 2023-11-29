@@ -1,0 +1,309 @@
+﻿@{
+    ViewBag.Form = "ServiceView";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.min.js"></script>
+<form id="service_view_form" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px;padding-top:12px;">
+                <div class="col-xs-4" style="display:none">
+                    <div class=" form-group">
+                        <label for="ic_code" class=" col-sm-5 control-label">Input Centre Name</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="ic_code" name="ic_code" class="form-control" maxlength="50" disabled>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+
+                    <div class="col-sm-3">
+
+                        <label for="cmb_reqtype" class="col-sm-3 control-label required">Request Type</label>
+                        <div class="col-sm-6">
+                            @Html.DropDownList("FromJson", new SelectList(Enumerable.Empty
+          <SelectListItem>()))
+
+                        </div>
+
+
+                    </div>
+                    <div class="col-sm-3">
+
+                        <label for="txt_fromdate" class="col-sm-4 control-label required">Date From</label>
+                        <div class="col-sm-8">
+                            <input class="cusDate" data-role='datepicker' id="txt_fromdate" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="From_date" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <label for="txt_todate" class="col-sm-3 control-label required">Date To</label>
+                        <div class="col-sm-8">
+                            <input class="cusDate" data-role='datepicker' id="txt_todate" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="To_date" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                    <button id="refresh" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button"
+                            data-original-title="Refresh">
+                        <span class="glyphicon glyphicon-refresh"></span>
+                    </button>
+
+                    <div class="pull-right">
+                        <button id="clear" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button"
+                                data-original-title="clear" onclick="listclear()">
+                            clear
+                        </button>
+                        <button type="button" id="btnExport" style="background-color:skyblue" class="Export btn btn-sm btn-info"><span class="glyphicon glyphicon-export"></span></button>
+                        @*<a data-toggle="modal" class="Export btn btn-sm btn-info" href="~/ExportExcel/ExportExcel" hdrtitle="" data-target="#exportexcelModal"><span class=" glyphicon glyphicon-export mr"></span></a>*@
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+
+                            <div id="gd_ser">
+                                <div id="servw_grid"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="~/CommonScripts/Common_func.js"></script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+        var jso = ["Name Request", "Address Request", "Nominee Request", "Bank Request"]
+        for (var i in jso) {
+            $("#FromJson").append('<option value="' + jso[i] + '">' + jso[i] + '</option>');
+        }
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#frm_salesreport");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        $("#Topsubheader").show();
+        $("#bottomFooter").show();
+        $("#bottom_menus").hide();
+        $("#btndiv").show();
+        $("#frmlayerdiv").hide();
+        $("#divCreate").hide();
+        $("#divEdit").hide();
+        $("#divView").show();
+        $("#DocStat").show();
+        $(".edtviw_item").show();
+        $(".create_item").hide();
+        $('#btnExport').show();
+        $(".Export").attr("hdrtitle", "Sales Report List");
+        $(".Export").attr("SubTreeId", "RequestView");
+        var org_id = getlocalStorage('org_id');
+
+        $("#RIform").hide();
+        $("#FPOform").hide();
+
+        $("#txt_fromdate").kendoDatePicker({
+            max: new Date(),// sets max date
+            format: "dd/MM/yyyy"
+        });
+
+        $("#txt_todate").kendoDatePicker({
+            max: new Date(),// sets max date
+            format: "dd/MM/yyyy"
+        });
+
+
+        listgrid();
+
+
+    });
+    $("#btnExport").kendoButton({
+        click: function () {
+            $("#servw_grid").data("kendoGrid").saveAsExcel();
+        }
+    })
+    $(function () {
+        $('#refresh').click(function () {
+            debugger;
+
+            if ($("#txt_fromdate").val() != "" || $("#txt_todate").val() != "" || $('#FromJson').val() != "") {
+                var from_date1 = $("#txt_fromdate").val();
+                var to_date1 = $("#txt_todate").val();
+                if (from_date1 != "") {
+                    var parts = from_date1.split('/');
+                    var from_date = parts[2] + '-' + parts[1] + '-' + parts[0];
+                }
+                else {
+                    var from_date = "2000-01-01";
+                }
+                if (to_date1 != "") {
+                    var parts1 = to_date1.split('/');
+                    var to_date = parts1[2] + '-' + parts1[1] + '-' + parts1[0];
+                }
+                else {
+                    var to_date = "2040-01-01";
+                }
+                var org_id = getlocalStorage('org_id');
+
+                var cmb_code = $("#FromJson").val();
+
+                var datas = { "pro_code": cmb_code, "fromdate": from_date, "todate": to_date, "orgid": org_id };
+
+                $.ajax({
+                    type: "POST",
+                    //data: '{pro_code: "' + cmb_code + '",fromdate:"' + from_date + '",todate:"' + to_date + '",orgid:"' + org_id + '"}',
+                    data: JSON.stringify(datas),
+                    url: "/ServiceView/reqbid",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        debugger;
+                        console.log(response)
+                        listgrid(response);
+
+                    },
+                    error: function (er) {
+                        alert(er)
+                        console.log(er)
+                    }
+
+                });
+
+            }
+            else {
+                kendoAlert('Please Select Any One Field');
+            }
+
+            return false;
+        });
+    });
+    function listclear() {
+        try {
+
+            listgrid([]);
+            $('#service_view_form').find('input:text').val('');
+            //location.reload();
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+
+
+<script>
+
+    function listgrid(data) {
+        $("#servw_grid").kendoGrid({
+            excel: {
+                fileName: "Service View.xlsx",
+                filterable: true,
+                allPages: false
+            },
+            dataSource: {
+                data: data,
+                schema: {
+                    model: {
+                        fields: {
+
+                            servicereq_no: { type: "string", required: true },
+                            servicereq_date: {type:"string", required:true},
+                            member_code: { type: "string", required: true },
+                            farmer_code: { type: "string", required: true },
+                            farmer_name: { type: "string", required: true },
+                            old_value: { type: "string", required: true },
+                            new_value: { type: "string", required: true },
+                            created_datetime: { type: "string", required: true },
+                            status_code: { type: "string", required: true },
+
+                        }
+                    }
+                },
+
+                pageSize: 20
+            },
+            toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+            
+            height: 450,
+            scrollable: true,
+            sortable: true,
+            pageable: {
+                refresh: false,
+                pageSizes: true,
+                previousNext: false,
+                buttonCount: 8
+            },
+
+            columns: [
+                {
+                    field: "servicereq_no",
+                    title: "Service Request #",
+                    width: 60
+                },
+                {
+                    field: "servicereq_date",
+                    title: "Request Date",
+                    width: 60
+                },
+                {
+                    field: "member_code",
+                    title: "Member Code",
+                    width: 80,
+
+                },
+                {
+                    field: "farmer_code",
+                    title: "Farmer Code",
+                    width: 80,
+
+                },
+                {
+                    field: "farmer_name",
+                    title: "Farmer Name",
+                    width: 80,
+
+                },
+
+               
+                {
+                    field: "old_value",
+                    title: "Old value",
+                    width: 80,
+
+                },
+
+                {
+                    field: "new_value",
+                    title: "New Value",
+                    width: 80,
+
+                },
+
+
+                {
+                    field: "created_datetime",
+                    title: "Action Date",
+                    width: 60
+                  //  template: '#= kendo.toString(kendo.parseDate(created_datetime), "dd/MM/yyyy hh:mm tt")#'
+
+                },
+                {
+                    field: "status_code",
+                    title: "Status",
+                    width: 80,
+
+                },
+
+            ],
+            editable: false,
+
+        });
+
+    }
+
+</script>
+

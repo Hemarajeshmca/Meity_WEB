@@ -1,0 +1,702 @@
+﻿@{
+    ViewBag.Form = "Maintain Subvention";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+<form id="Subvention_form" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-top:10px; padding-bottom:15px">
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="txt_loansubvention_rowid" class="col-sm-5 control-label">loansubvention_rowid</label>
+                        <div class="col-sm-4">
+                            <input type="number" id="txt_loansubvention_rowid" name="loansubvention_rowid" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="txt_subvention_code" class="col-sm-5 control-label">subvention_code</label>
+                        <div class="col-sm-4">
+                            <input type="number" id="txt_subvention_code" name="subvention_code" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtsubvention_name" class="col-sm-5 control-label">Scheme</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtsubvention_name" name="subvention_name" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtapplied_on" class=" col-sm-5 control-label">Creation Date</label>
+                        <div class=" col-sm-7">
+                            <input class="cusDate" type="date" onkeypress="return date_validate(event)" data-role='datepicker' id="TXT_date" data-checkdate-msg="Enter Valid Date" name="schemecreated_date" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-top:10px;padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtapplied_on" class=" col-sm-5 control-label">Valid From</label>
+                        <div class=" col-sm-7">
+                            <input class="cusDate" type="date" onkeypress="return date_validate(event)" data-role='datepicker' id="txtValidity1" data-checkdate-msg="Enter Valid Date" name="period_from" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtapplied_on" class=" col-sm-5 control-label">Valid To</label>
+                        <div class=" col-sm-7">
+                            <input class="cusDate" type="date" onkeypress="return date_validate(event)" data-role='datepicker' id="txtValidity2" data-checkdate-msg="Enter Valid Date" name="period_to" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row" style="padding-top:10px;padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtsubvention_rate" class=" col-sm-5 control-label">Interest %</label>
+                        <div class=" col-sm-7">
+                            <input type="text" id="txtsubvention_rate" name="subvention_rate" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtThreshold" class=" col-sm-5 control-label">Threshold</label>
+                        <div class=" col-sm-7">
+                            <input type="text" id="txtThreshold" name="Threshold" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-top:10px;padding-bottom:15px">
+
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtRef_Circular_No" class=" col-sm-5 control-label">Ref.Circular No.</label>
+                        <div class=" col-sm-7">
+                            <input type="text" id="txtRef_Circular_No" name="Ref_Circular_No" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="cmbloan_type" class=" col-sm-5 control-label">Loan Type</label>
+                        <div class=" col-sm-7">
+                            <input id="cmbloan_type" name="loan_type_code" data-role="filtercombo" onclick="listLoad()" style="width:100%">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-top:10px;padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtapplied_on" class=" col-sm-5 control-label">Loan Disb.From</label>
+                        <div class=" col-sm-7">
+                            <input class="cusDate" type="date" onkeypress="return date_validate(event)" data-role='datepicker' id="txtValidity3" data-checkdate-msg="Enter Valid Date" name="Loan_Disb_From" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtapplied_on" class=" col-sm-5 control-label">Loan Disb.To</label>
+                        <div class=" col-sm-7">
+                            <input class="cusDate" type="date" onkeypress="return date_validate(event)" data-role='datepicker' id="txtValidity4" data-checkdate-msg="Enter Valid Date" name="Loan_Disb_to" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                </div>               
+            </div>
+            <div class="row" style="padding-top:10px;padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtapplied_on" class=" col-sm-5 control-label">Interest Paid From</label>
+                        <div class=" col-sm-7">
+                            <input class="cusDate" type="date" onkeypress="return date_validate(event)" data-role='datepicker' id="txtValidity5" data-checkdate-msg="Enter Valid Date" name="Interest_Paid_From" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtapplied_on" class=" col-sm-5 control-label">Interest Paid To</label>
+                        <div class=" col-sm-7">
+                            <input class="cusDate" type="date" onkeypress="return date_validate(event)" data-role='datepicker' id="txtValidity6" data-checkdate-msg="Enter Valid Date" name="Interest_Paid_to" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <button title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button" onclick="mandatory()" data-original-title="Refresh"> <span class="glyphicon glyphicon-refresh"></span></button>
+                </div>
+            </div>
+           
+            <div class="col-sm-6">
+                <div class="form-group" style="display:none;">
+                    <label for="status_code" class="col-sm-5 control-label">Status_code</label>
+                    <div class="col-sm-4">
+                        <input type="text" value="A" id="txt_status_code" name="status_code" class="form-control" maxlength="10">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group" style="display:none;">
+                    <label for="txtMode" class="col-sm-5 control-label">Mode</label>
+                    <div class="col-sm-4">
+                        <input type="text" id="txtMode" name="mode_flag" class="form-control" maxlength="10" value="I">
+                        <input type="hidden" id="row_timestamp" name="row_timestamp" value="2017-08-23T08:43:11.806Z">
+                    </div>
+                </div>
+            </div>
+            @*<div class="col-sm-6">
+                <div class="form-group">
+                    <label for="row_timestamp" class="col-sm-5 control-label">Timestamp:</label>
+                    <div class="col-sm-4">
+                        <input type="text" id="row_timestamp" name="row_timestamp" class="form-control" maxlength="10" value="23/08/2017">
+                    </div>
+                </div>
+            </div>*@
+            
+            <div class="col-sm-12">
+                <div id="module_grid"></div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-xs-12">
+                    <div>
+                        <label>Comments:</label>
+                        <textarea id="TextArea1" rows="4" cols="20" style="width:1211px;height:77px;" class="form-control"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+<script src="~/API_Scripts/subvention_master_retrieve_subvention_List_APIClient.js"></script>
+<script src="~/API_Scripts/subvention_master_save_maintain_subvention_APIClient.js"></script>
+<script src="~/API_Scripts/subvention_master_retrieveSubventionMaster_APIClient.js"></script>
+<script src="~/API_Scripts/subvention_master_get_subvention_loantype_APIClient.js"></script>
+<script src="~/API_Scripts/get_subvention_loantype_Model.js"></script>
+<script src="~/API_Scripts/retrieve_subvention_List_Model.js"></script>
+<script src="~/API_Scripts/retrieveMaintainMaster_Model.js"></script>
+<script src="~/API_Scripts/save_maintain_subvention_Model.js"></script>
+<script src="~/API_Scripts/SubventionMaster.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script>
+    $(document).ready(function () {
+        kendodate_format();
+
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#Subvention_form");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+
+        //master_subvention();
+        grid_subvention();
+
+        load_master_code();
+
+        var combo_Instuite = "";
+        $("#cmbloan_type").empty();
+        combo_Instuite = grid_comboScreen_mastercodes("QCD_LOANTYPE");
+        filter_combobox("cmbloan_type", combo_Instuite);
+
+        $("#hide_div").hide();
+
+        Screen_Id = "SUBSCH";
+        permission = sec_Permission(Screen_Id);
+        $('#txtsubvention_rate').keypress(function (event) {
+            var $this = $(this);
+            if ((event.which != 46 || $this.val().indexOf('.') != -1) &&
+               ((event.which < 48 || event.which > 57) &&
+               (event.which != 0 && event.which != 8))) {
+                event.preventDefault();
+            }
+
+            var text = $(this).val();
+            if (text.indexOf('.') != -1) {
+                setTimeout(function () {
+                    if ($this.val().substring($this.val().indexOf('.')).length > 3) {
+                        $this.val($this.val().substring(0, $this.val().indexOf('.') + 3));
+                    }
+                }, 1);
+                if ((text.indexOf('.') != -1) &&
+               (text.substring(text.indexOf('.')).length > 2) &&
+               (event.which != 0 && event.which != 8) &&
+               ($(this)[0].selectionStart >= text.length - 2)) {
+                    event.preventDefault();
+                }
+            }
+            else {
+                if ($this.val().length > 2) {
+                    if (event.which != 46) {
+                        event.preventDefault();
+                    }
+                }
+            }
+
+        });
+        $('#txtsubvention_rate').bind("paste", function (e) {
+            var text = e.originalEvent.clipboardData.getData('Text');
+            if ($.isNumeric(text)) {
+                if ((text.substring(text.indexOf('.')).length > 3) && (text.indexOf('.') > -1)) {
+                    e.preventDefault();
+                    $(this).val(text.substring(0, text.indexOf('.') + 3));
+                }
+            }
+            else {
+                e.preventDefault();
+            }
+        });
+
+        $('#txtThreshold').keypress(function (event) {
+            var $this = $(this);
+            if ((event.which != 46 || $this.val().indexOf('.') != -1) &&
+               ((event.which < 48 || event.which > 57) &&
+               (event.which != 0 && event.which != 8))) {
+                event.preventDefault();
+            }
+
+            var text = $(this).val();
+            if (text.indexOf('.') != -1) {
+                if ((text.indexOf('.') != -1) &&
+               (text.substring(text.indexOf('.')).length > 2) &&
+               (event.which != 0 && event.which != 8) &&
+               ($(this)[0].selectionStart >= text.length - 2)) {
+                    event.preventDefault();
+                }
+            }
+            else {
+                if ($this.val().length > 17) {
+                    if (event.which != 46) {
+                        event.preventDefault();
+                    }
+                }
+            }
+
+        });
+        $('#txtThreshold').bind("paste", function (e) {
+            var text = e.originalEvent.clipboardData.getData('Text');
+            if ($.isNumeric(text)) {
+                if ((text.substring(text.indexOf('.')).length > 3) && (text.indexOf('.') > -1)) {
+                    e.preventDefault();
+                    $(this).val(text.substring(0, text.indexOf('.') + 3));
+                }
+            }
+            else {
+                e.preventDefault();
+            }
+        });
+
+
+        if (getlocalStorage('btn_clk_val') == "Create") {
+            $('#divCreate #review').hide();
+            $("#txtMode").val("I");
+            $("#bottom_menus").hide();
+            $("#DocStat").val("New");
+        }
+        else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
+            $('#divEdit #reviewEd').hide();
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("Subvention_form");
+                var obj_val = JSON.parse(formval);
+                if (obj_val != undefined) {
+                    var org_id = getlocalStorage('org_id');
+                    obj_val.fpoorgn_code = org_id;
+                    $("#txt_subvention_code").val(data.subvention_code);
+                    $("#txt_loansubvention_rowid").val(data.loansubvention_rowid);
+                    obj_val.loansubvention_rowid = data.loansubvention_rowid;
+                    obj_val.subvention_code = data.subvention_code;
+                    var data = {};
+                    data.context = WebAPIProxy.getContext();
+                    data.context.Header = obj_val;
+                    retrieve_SubventionMaster_details(data);
+                    //$("#shareapp_rowid").val(obj_val.shareapp_rowid);
+                    //$("#txtcommon_id").val(obj_val.shareapp_no);
+                    $("#txtMode").val("U");
+                    setlocalStorage('doc_no', $("#txtsubvention_name").val());
+                    setlocalStorage('doc_row_id', $("#txt_loansubvention_rowid").val());
+                }
+            }
+        }
+
+    });
+</script>
+<script>
+    function load_master_code() {
+        var data = {};
+        data.screen_Id = "SUBSCH";
+        var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+    }
+
+</script>
+
+<script>
+    click_act_name = "SubVentionMasterList";
+    click_ctrl_name = "SubVentionMaster";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+
+
+<script>
+   
+    function grid_subvention(data) {
+        try {
+    $("#module_grid").kendoGrid(
+        {
+            dataSource: {
+                data: data,
+                //multi: true,
+                schema: {
+                    model: {
+                        fields: {
+                            loanscheme_code: { type: "string" },
+                            loansubventionmap_rowid: { type: "string"},                           
+                            mode_flag: { type: "string", defaultValue: "I" }
+                        }
+                    }
+                }
+            },            
+            change: selectRow,
+            dataBound: onDataBound,
+            dataBinding: setDefaultValues,
+            height: 450,
+            sortable: true,
+            selectable: true,
+            //change: onChangeSelection,
+            selectable: "singl",   //  Grid Row Selection
+            change: function (e) {
+                $('tr').find('[type=checkbox]').prop('checked', false);
+                $('tr.k-state-selected').find('[type=checkbox]').prop('checked', true);
+            },
+            navigatable: true,
+            groupable: false,
+
+            columns: [
+                  {
+                      title: "Selected",
+                              
+                      template: "<input type='checkbox' name='sel_flag' class='checkbox' />",
+                      width: 60
+                  },
+                   
+                {
+                    field: "loanscheme_code",
+                    title: "Farmer Loan Scheme",
+                    hidden: true,
+                },
+                 {
+                     field: "loanscheme_desc",
+                     title: "Farmer Loan Scheme",
+                     //hidden: true,
+                 },
+                 {
+                     field: "loansubventionmap_rowid",
+                     title: "loansubventionmap_rowid",
+                     hidden: true,
+                 },
+                 {
+                     field: "mode_flag",
+                     title: "mode_flag",
+                     hidden: true,
+                 },
+            ],
+            editable: true,
+
+        });
+         }
+         catch (err) {
+             javascript_log4j_root(arguments.callee.name, err);
+
+         }
+     }
+    function onDataBound(e) {
+
+        $(".checkbox").bind("change", function (e) {
+            $(e.target).closest("tr").toggleClass("k-state-selected");
+        });
+    }
+
+    //var gridRowID = -1;
+    //function Select_checkbox() {
+    //    gridRowID++;
+    //    return '<input id="sel_flag' + gridRowID + '" class="checkbox" type="checkbox" />';
+    //}
+    function selectRow() {
+        try {
+            var grid = $("#module_grid").data("kendoGrid");
+            var selectedItem = grid.dataItem(grid.select());
+            setlocalStorage("ls_pageList", selectedItem);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+<script>
+    function save() {
+        try {
+            $('#cmbloan_type').data("kendoComboBox").enable(true);
+            if ($("#txt_loansubvention_rowid").val() == "") {
+                $("#txt_loansubvention_rowid").val('0');
+            }
+            if ($("#txtMode").val() == "S") {
+                $("#txtMode").val('U');
+            }
+            if ($("#txt_subvention_code").val() == "") {
+                $("#txt_subvention_code").val('0');
+            }
+            
+            var formval =  form_Serialize("Subvention_form");
+            var obj_val = JSON.parse(formval);
+
+            
+            if (obj_val.period_from != '')
+                obj_val.period_from = getFormated_StringDate($("#txtValidity1").val());
+          
+           
+            if (obj_val.period_to != '')
+                obj_val.period_to = getFormated_StringDate($("#txtValidity2").val());
+          
+                if (obj_val.schemecreated_date != '')
+                    obj_val.schemecreated_date = '';
+
+                if (obj_val.Loan_Disb_From != '')
+                    obj_val.Loan_Disb_From = getFormated_StringDate($("#txtValidity3").val());
+
+                if (obj_val.Loan_Disb_to != '')
+                    obj_val.Loan_Disb_to = getFormated_StringDate($("#txtValidity4").val());
+                if (obj_val.Interest_Paid_From != '')
+                    obj_val.Interest_Paid_From = getFormated_StringDate($("#txtValidity5").val());
+          
+                if (obj_val.Interest_Paid_to != '')
+                    obj_val.Interest_Paid_to = getFormated_StringDate($("#txtValidity6").val());
+          
+             
+
+            if (obj_val.row_timestamp == undefined) {
+                obj_val.row_timestamp = "0";
+            }
+            else {
+                obj_val.row_timestamp = $("#row_timestamp").val();
+            }
+            //var obj_val= JSON.parse(formval);
+            //var org_id = getlocalStorage('org_id');
+            //obj_val1.fpoorgn_code = org_id;
+            //obj_val1.status_option = "1";
+            var Bind = [];
+            var grid = $("#module_grid").data("kendoGrid");
+            var gridList = grid.select();
+            gridList.each(function (index, gridList) {
+                Bind[index] = grid.dataItem(gridList);
+            })
+            //subvention
+            //var grid_val = JSON.stringify($("#module_grid").data().kendoGrid._data);
+            //var Bind = {};
+            //Bind = grid_val;
+            var result = Bind;
+            $.each(result, function (index, value) {
+                var row_id = value.loansubventionmap_rowid;
+                if (row_id == undefined) {
+                    result[index].loansubventionmap_rowid = "0";
+                }               
+                var mode = result[index].mode_flag;
+                if (mode == "S") {
+                    result[index].mode_flag = "U";
+                }
+                if (mode == undefined) {
+                    result[index].mode_flag = "I";
+                }
+            });
+            var obj_grid_val = result;
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_val;
+            data.context.Detail = obj_grid_val;
+            save_SubventionMaster_details(data);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function generate_SubventionMaster_header(res) {
+        try {
+            $("#txtsubvention_name").val(res.subvention_name);
+            $("#txt_subvention_code").val(res.subvention_code);
+            $("#txt_subvention_code").val("readonly");
+            $("#TXT_date").val(res.schemecreated_date);         
+            $("#txtValidity1").val(res.period_from);
+            $("#txtValidity2").val(res.period_to);
+            $("#txtsubvention_rate").val(res.subvention_rate);
+            $("#txtThreshold").val(res.Threshold);
+            $("#txtRef_Circular_No").val(res.Ref_Circular_No);
+            $('#cmbloan_type').data("kendoComboBox").value(res.loan_type_code);
+            $('#cmbloan_type').data("kendoComboBox").enable(false);
+            $("#txtValidity5").val(res.Interest_Paid_From);
+            $("#txtValidity6").val(res.Interest_Paid_to);
+            $("#txtValidity3").val(res.Loan_Disb_From);
+            $("#txtValidity4").val(res.Loan_Disb_to);
+            $("#txt_status_code").val(res.status_code);
+            $("#DocStat").val(res.status_desc);
+            $("#txtMode").val(res.mode_flag);
+            $("#row_timestamp").val(res.row_timestamp);           
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function generate_SubventionMaster_Detail(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                grid_subvention(data);
+            }
+            else {
+
+                grid_subvention([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    
+</script>
+<script>
+    //$("#cmbloan_type").change(function () {
+    //    var c = $('#cmbloan_type');
+    //    var formval = form_Serialize("Subvention_form");
+    //    var obj_val = JSON.parse(formval);       
+    //    obj_val.loan_type = c.data('kendoComboBox').value();
+    //    //var grid_val = JSON.stringify($("#module_grid").data().kendoGrid._data);
+    //    var data = {};
+    //    data.context = WebAPIProxy.getContext();       
+    //    data.context.Header = obj_val;
+    //    //data.context.Detail = grid_val;
+    //    retrieve_SubventionMaster_loantype(data);
+    //});
+
+    function generate_Subventionloantype_Detail(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                grid_subvention(data);
+            }
+            else {
+
+                grid_subvention([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_Subventionloantype_header(res) {
+        //try {
+        //    $('#cmbloan_type').data("kendoComboBox").value(res.loan_type_code);
+        //}
+        //catch (err) {
+        //    javascript_log4j_root(arguments.callee.name, err);
+        //}
+    }
+</script>
+
+<script>
+    function mandatory() {
+        try {
+            var mandatory_check = true;
+
+            var grid_validate_msg = "";
+
+            if ($('#cmbloan_type').data("kendoComboBox").value() == "") {
+                grid_validate_msg += "Loan Type cannot be blank <br>";
+                mandatory_check = false;
+            }
+
+            if ($("#txtValidity3").val() == "") {
+                grid_validate_msg += "Loan Disb.From cannot be blank <br>";
+                mandatory_check = false;
+            }
+            if ($("#txtValidity4").val() == "") {
+                grid_validate_msg += "Loan Disb.To cannot be blank <br>";
+                mandatory_check = false;
+            }
+            if ($("#txtValidity5").val() == "") {
+                grid_validate_msg += "Interest Paid From cannot be blank <br>";
+                mandatory_check = false;
+            }
+            if ($("#txtValidity6").val() == "") {
+                grid_validate_msg += "Interest Paid To cannot be blank <br>";
+                mandatory_check = false;
+            }
+
+            if (mandatory_check == false) {
+                kendoAlert(grid_validate_msg);
+                return false;
+            }
+            else {
+                return listLoad();
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function listLoad() {
+        try {
+                       
+                var formval = form_Serialize("Subvention_form");
+                var obj_val = JSON.parse(formval);
+                var c = $('#cmbloan_type');
+                obj_val.loan_type = c.data('kendoComboBox').value();
+                //obj_val.Interest_Paid_From = $("#txtValidity3").val();
+                //obj_val.Interest_Paid_to = $("#txtValidity4").val();
+                //obj_val.Loan_Disb_From = $("#txtValidity5").val();
+                //obj_val.Loan_Disb_to = $("#txtValidity6").val();
+
+             
+                    if (obj_val.Interest_Paid_From != '')
+                        obj_val.Interest_Paid_From = getFormated_StringDate($("#txtValidity5").val());
+             
+                    if (obj_val.Interest_Paid_to != '')
+                        obj_val.Interest_Paid_to = getFormated_StringDate($("#txtValidity6").val());
+               
+                    if (obj_val.Loan_Disb_From != '')
+                        obj_val.Loan_Disb_From = getFormated_StringDate($("#txtValidity3").val());
+            
+                
+                    if (obj_val.Loan_Disb_to != '')
+                        obj_val.Loan_Disb_to = getFormated_StringDate($("#txtValidity4").val());
+              
+           
+                var data = {};
+                data.context = WebAPIProxy.getContext();       
+                data.context.Header = obj_val;             
+                retrieve_SubventionMaster_loantype(data);
+            return false;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>

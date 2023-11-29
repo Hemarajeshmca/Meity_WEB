@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Activity>
+  <Local>
+    <ScreenName>FPO Registration</ScreenName>
+  </Local>
+  <Local>
+    <ScreenName>FPO List</ScreenName>
+  </Local>
+  <Local>
+    <ScreenName>Farmer Registration</ScreenName>
+  </Local>
+  <Local>
+    <ScreenName>Receive Share Application</ScreenName>
+  </Local>
+  <Local>
+    <ScreenName>Application List</ScreenName>
+  </Local>
+  <Local>
+    <ScreenName>Service Request For Share Certificate</ScreenName>
+  </Local>
+
+
+</Activity>

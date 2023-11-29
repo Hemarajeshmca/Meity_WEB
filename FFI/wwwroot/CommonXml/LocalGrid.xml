@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Local>
+  <Screen>
+    <controltype>TextBox</controltype>
+    <control>1</control>
+    <desEnglish>FirstName</desEnglish>
+  <deslocal></deslocal>
+  </Screen>
+<Screen>
+  <controltype>RadioButton</controltype>
+    <control>2</control>
+    <desEnglish>Yes</desEnglish>
+  <deslocal></deslocal>
+  </Screen>
+<Screen>
+  <controltype>RadioButton</controltype>
+    <control>3</control>
+    <desEnglish>No</desEnglish>
+  <deslocal></deslocal>
+  </Screen>
+<Grid>
+    <column>Grid-1 Address</column>
+    <desEnglish>Address</desEnglish>
+    <deslocal>முகவரி</deslocal>
+  </Grid>
+  <Grid>
+    <column>Grid-1 Phone</column>
+    <desEnglish>Phone</desEnglish>
+    <deslocal>தொலைபேசி</deslocal>
+  </Grid>
+  <Grid>
+    <column>Grid-2 Name</column>
+    <desEnglish>Name</desEnglish>
+    <deslocal>பெயர்</deslocal>
+  </Grid>
+<Front>
+    <error>404</error>
+    <desEnglish>server not connect</desEnglish>
+    <deslocal>
+      சர்வர் இணைக்க முடியவில்லை
+    </deslocal>
+  </Front>
+  <Front>
+    <error>500</error>
+    <desEnglish>Wrong Password</desEnglish>
+    <deslocal>தவறான கடவுச்சொல்</deslocal>
+  </Front>
+  
+</Local>

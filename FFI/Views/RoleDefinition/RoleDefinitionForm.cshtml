@@ -1,0 +1,803 @@
+﻿RoleDefinitionfetch@{
+    ViewBag.Form = "Role Definition";
+    ViewBag.helpName = "RoleDefinitionForm.html";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+
+<form id="rolescreen_form" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            @*<input type="hidden" name="alert_msg" id="alert_msg" value="" /  onkeypress="return tamil(event);">*@
+            <div class="row">
+                <!-- Left col -->
+                <div class="col-lg-3">
+                    <!-- Custom tabs (Charts with tabs)-->
+                    <div id="grid_role">
+                    </div>
+                </div>
+                <div class="col-lg-9">
+                    <div class=" row">
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                <label for="txt_RoleId" class="col-sm-5 control-label required">Role Code:</label>
+                                <div class="col-sm-7">
+                                    <input type="text" id="txt_RoleId" name="in_role_code" class="form-control" maxlength="50">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                <label for="txt_RoleName" class="col-sm-5 control-label required">RoleName:</label>
+                                <div class="col-sm-7">
+                                    <input type="text" id="txt_RoleName" name="in_role_name" class="form-control" maxlength="125">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-5" style="display:none">
+                            <div class="form-group">
+                                <label for="txt_Role_rowid" class="col-sm-5 control-label">Role Row Id:</label>
+                                <div class="col-sm-7">
+                                    <input type="text" id="txt_Role_rowid" name="inout_role_rowid" class="form-control" maxlength="125">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-5" style="display:none">
+                            <div class="form-group">
+                                <label for="txt_timestamp" class="col-sm-5 control-label">Timestamp:</label>
+                                <div class="col-sm-7">
+                                    <input type="text" id="txt_timestamp" name="in_row_timestamp" class="form-control" maxlength="125">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-5" style="display:none">
+                            <div class="form-group">
+                                <label for="txt_status_code" class="col-sm-5 control-label">Status Code:</label>
+                                <div class="col-sm-7">
+                                    <input type="text" id="txt_status_code" name="in_status_code" class="form-control" maxlength="125">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                <label for="cmb_OrgLevel" class="col-sm-5 control-label required">Organization Level:</label>
+                                <div class="col-sm-7">
+                                    <input id="cmb_OrgLevel" name="in_orgn_level" data-role="filtercombo" style="width:100%">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3" style=" display:none">
+                            <div class="form-group" style=" display:none">
+                                <label for="txtMode" class="col-sm-5 control-label">Mode Flag</label>
+                                <div class="col-sm-7">
+                                    <input type="text" id="txtMode" name="in_mode_flag" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="active">
+                                    <a href="#permission" role="tab" data-toggle="tab">
+                                        Permissions
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane fade active in" id="permission">
+                                    <div id="permission">
+                                        <div id="grid_role_list">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+@*<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>*@
+<script>
+    $(document).ready(function () {
+        master_userRoleNew();
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#rolescreen_form");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        load_master_code();
+        $("#hide_div").hide();
+        var list_in = "";
+        $("#cmb_OrgLevel").empty();
+        list_in = grid_comboScreen_mastercodes("ORG_TYPE");
+        filter_combobox("cmb_OrgLevel", list_in);
+        grid_role([]);
+        grid_permission([]);
+
+        var data = {};
+        data.context = getContext();
+        var Context = data.context;
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId }),
+            url: "/RoleDefinition/RoleDefinitionList",
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                debugger;
+                if (response.context != null) {
+                    generate_roleactivity_list(response.context.List);
+                    //SetPager(response.context.Filter.out_record_count)
+                }
+                else {
+                    grid_role([]);
+                }
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+
+        });
+        Screen_Id = "ROLE";
+        permission = sec_Master_Permission(Screen_Id);
+    });
+    function load_master_code() {
+        try {
+            var data = {};
+            data.screen_Id = "ROLE";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<script>
+    function grid_role(data) {
+        $("#grid_role").kendoGrid({
+            dataSource: {
+                data: data, //  pageSize: 20
+            },
+            height: 470,
+            sortable: true,
+            selectable: true,
+            change: onChangeSelection,
+            selectable: "singl",   //  Grid Row Selection
+            navigatable: true,
+            columns: [
+                {
+                    field: "out_orgn_level",
+                    title: "Role Id",
+                    hidden: true,
+                    width: 30
+                },
+                {
+                    field: "out_orgn_level_desc",
+                    title: "Org Level Desc",
+                    hidden: true,
+                    width: 30
+                },
+                {
+                    field: "out_role_code",
+                    title: "Role Code",
+                    width: 30
+                },
+                {
+                    field: "out_role_name",
+                    title: "Role Name",
+                    width: 30
+                },
+                {
+                    field: "out_role_rowid",
+                    title: "Role RowId",
+                    hidden: true,
+                    width: 30
+                },
+                {
+                    field: "out_status_code",
+                    title: "Status Code",
+                    hidden: true,
+                    width: 30
+                },
+                {
+                    field: "out_status_desc",
+                    title: "Status Desc",
+                    hidden: true,
+                    width: 30
+                }]
+        });
+        load_master_code();
+    }
+
+    function grid_permission(role_data) {
+        $("#grid_role_list").kendoGrid({
+            dataSource: {
+                data: role_data,
+                schema: {
+                    model: {
+                        fields: {
+                            out_activity_desc: { editable: false },
+                            out_add_perm: { editable: false },
+                            out_mod_perm: { editable: false },
+                            out_view_perm: { editable: false },
+                            out_auth_perm: { editable: false },
+                            out_inactivate_perm: { editable: false },
+                            out_print_perm: { editable: false },
+                            out_deny_perm: { editable: false },
+                        }
+                    }
+                },
+            },
+            height: 380,
+            sortable: true,
+            columns: [
+                {
+                    field: "out_rolemenu_rowid",
+                    title: "Row Id",
+                    width: 10,
+                    hidden: true,
+                },
+                {
+                    field: "out_activity_code",
+                    title: "Activity code",
+                    width: 10,
+                    hidden: true,
+                },
+                {
+                    field: "out_activity_desc",
+                    title: "Activity Desc",
+                    width: 150,
+                },
+                {
+                    field: "out_add_perm",
+                    title: "Add",
+                    template: '<input type="checkbox" #= out_add_perm == "1" ? "checked=checked" : "" # class="chkbx1" ></input>',
+                    update: true,
+                    width: 90
+                },
+                {
+                    field: "out_mod_perm",
+                    title: "Modify",
+                    template: '<input type="checkbox" #= out_mod_perm == "1" ? "checked=checked" : "" # class="chkbx2" ></input>',
+                    update: true,
+                    width: 90
+                },
+                {
+                    field: "out_view_perm",
+                    title: "View Only",
+                    template: '<input type="checkbox" #= out_view_perm == "1" ? "checked=checked" : "" # class="chkbx3" ></input>',
+                    update: true,
+                    width: 90
+                },
+                {
+                    field: "out_auth_perm",
+                    title: "Authorize",
+                    template: '<input type="checkbox" #= out_auth_perm == "1" ? "checked=checked" : "" # class="chkbx4" ></input>',
+                    update: true,
+                    width: 90
+                },
+                {
+                    field: "out_inactivate_perm",
+                    title: "Inactivate",
+                    template: '<input type="checkbox" #=out_inactivate_perm=="1"? "checked=checked": "" # class="chkbx5" ></input>',
+                    update: true,
+                    width: 90
+                },
+                {
+                    field: "out_print_perm",
+                    title: "Print",
+                    template: '<input type="checkbox" #= out_print_perm == "1" ? "checked=checked" : "" # class="chkbx6" ></input>',
+                    update: true,
+                    width: 90
+                },
+                {
+                    field: "out_deny_perm",
+                    title: "Deny",
+                    template: '<input type="checkbox" #= out_deny_perm == "1" ? "checked=checked" : "" # class="chkbx7" ></input>',
+                    update: true,
+                    width: 90
+                }],
+            editable: true
+        });
+    }
+
+
+    function onChangeSelection() {
+        debugger;
+        var grid = $("#grid_role").data("kendoGrid");
+        var selectedItem = grid.dataItem(grid.select());
+        var formval = form_Serialize("rolescreen_form");
+        var obj_val = JSON.parse(formval);
+        obj_val.role_rowid = selectedItem.out_role_rowid;
+        obj_val.orgn_level = selectedItem.out_orgn_level;
+        $("#txt_Role_rowid").val(selectedItem.out_role_rowid);
+        var data1 = {};
+        data1.context = getContext();;
+        data1.context.Header = obj_val;
+        var Context = data1.context;
+        var role_rowid = obj_val.role_rowid;
+        var data = { userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, role_rowid: obj_val.role_rowid, orgn_level: obj_val.orgn_level};
+
+        $.ajax({
+
+          url: '@Url.Action("RoleDefinitionfetch", "RoleDefinition")',
+     type: "post",
+     contentType: 'application/x-www-form-urlencoded',
+            data: data,
+            success: function (response1) {
+                debugger;
+                if (response1 != null) {
+                    generate_roleactivity_header(response1.context.header);
+                    generate_roleactivity_detail(response1.context.detail);
+                }
+                else {
+                    grid_role([]);
+                }
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+        });
+
+    }
+
+    function get_role_details(id) {
+        var formval = form_Serialize("rolescreen_form");
+        var obj_val = JSON.parse(formval);
+        obj_val.role_rowid = id;
+        obj_val.orgn_level = ".";
+
+        var data1 = {};
+        data1.context = getContext();
+        data1.context.Header = obj_val;
+        var Context = data1.context;
+        var data = { userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, role_rowid: obj_val.role_rowid, orgn_level: obj_val.orgn_level };
+
+        $.ajax({
+
+          url: '@Url.Action("RoleDefinitionfetch", "RoleDefinition")',
+     type: "post",
+     contentType: 'application/x-www-form-urlencoded',
+            data: data,
+            success: function (response1) {
+                debugger;
+                if (response1 != null) {
+                    generate_roleactivity_header(response1.context.header);
+                    generate_roleactivity_detail(response1.context.detail);
+                }
+                else {
+                    grid_role([]);
+                }
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+        });
+        $("#txt_Role_rowid").val(id);
+    }
+
+</script>
+
+<script>
+
+
+    function tamil(event) {
+        //debugger;
+        event = (event) ? event : window.event;
+        var charCode = (event.which) ? event.which : event.keyCode;
+
+        var alertmsg = document.getElementById('alert_msg').value;
+        //var alertmsg = document.getElementById("<%=alert_msg.ClientID%>").value;
+        alert("hai this is the value" + charCode);
+
+        alert("this is hidden Filed value" + alertmsg);
+        if ((charCode <= 123) && (event.keyCode != 9) && (event.keyCode != 8) && (charCode != 46) && (charCode >= 47) && (charCode >= 58) && (charCode != 44) && (event.which != 32)) {
+            alert("this is my first loop" + charCode);
+            if (alertmsg == "") {
+                alert("On scroll lock and then type for Tamil");
+                var x = document.getElementById("<%=alert_msg.ClientID%>");
+                x.value = "true";
+                alertmsg = x.value;
+            }
+        }
+    }
+</script>
+
+
+<script>
+    function generate_roleactivity_list(res) {
+        var data = changedataType(res);
+        grid_role(data);
+    }
+
+
+    function generate_roleactivity_header(res) {
+        $("#txt_RoleId").val(res.out_role_code);
+        //$("#txt_RoleId").attr("readonly", "");
+        $("#txt_RoleName").val(res.out_role_name);
+        $('#cmb_OrgLevel').data("kendoComboBox").value(res.inout_orgn_level);
+        $("#txt_status_code").val(res.out_status_code);
+        $("#DocStat").val(res.out_status_desc);
+        $("#txtMode").val(res.out_mode_flag);
+        //$("#txt_Role_rowid").val(res.out_role_rowid);
+        $("#txt_timestamp").val(res.out_row_timestamp);
+        $("#modevalue").text("Edit Mode");
+        $('.k-widget.k-tooltip.k-tooltip-validation.k-invalid-msg').css('display', 'none');
+    }
+
+
+    function generate_roleactivity_detail(res) {
+        var data = changedataType(res);
+        grid_permission(data);
+    }
+
+    function create_new() {
+        debugger;
+        clear_val();
+        var formval = form_Serialize("rolescreen_form");
+        var obj_val = JSON.parse(formval);
+        obj_val.role_rowid = "0";
+        obj_val.orgn_level = ".";
+        if (obj_val.in_row_timestamp == null || obj_val.in_row_timestamp == "" || obj_val.in_row_timestamp == undefined) {
+            obj_val.in_row_timestamp = "2000-01-01";
+        }
+
+        var data = {};
+        data.context = getContext();
+        data.context.Header = obj_val;
+        var Context = data.context;
+        var data = { userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, role_rowid: obj_val.role_rowid, orgn_level: obj_val.orgn_level };
+
+        $.ajax({
+
+          url: '@Url.Action("RoleDefinitionfetch", "RoleDefinition")',
+     type: "post",
+     contentType: 'application/x-www-form-urlencoded',
+            data: data,
+            success: function (response1) {
+                debugger;
+                if (response1 != null) {
+                    generate_roleactivity_header(response1.context.header);
+                    generate_roleactivity_detail(response1.context.detail);
+                }
+                else {
+                    grid_role([]);
+                }
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+        });
+        var data1 = {};
+        data1.context1 = getContext();;
+        var Context1 = data1.context1;
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({ userId: Context1.userId, orgnId: Context1.orgnId, locnId: Context1.locnId, localeId: Context1.localeId }),
+            url: "/RoleDefinition/RoleDefinitionList",
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                debugger;
+                if (response.context != null) {
+                    generate_roleactivity_list(response.context.List);
+                    //SetPager(response.context.Filter.out_record_count)
+                    //$("#txt_RoleId").removeAttr("readonly");
+                }
+                else {
+                    grid_role([]);
+                }
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+
+        });
+        $("#modevalue").text("New Mode");
+
+        $('.k-widget.k-tooltip.k-tooltip-validation.k-invalid-msg').css('display', 'none');
+
+    }
+
+    function clear_val() {
+        $("#txt_RoleId").val('');
+        $("#txt_RoleName").val('');
+        $('#cmb_OrgLevel').data("kendoComboBox").value('');
+        grid_permission([]);
+    }
+
+    function save() {
+        if ($("#txt_Role_rowid").val() == "") {
+            $("#txt_Role_rowid").val('0');
+        }
+
+        if ($("#txtMode").val() == "S") {
+            $("#txtMode").val('U');
+        }
+
+        var formval = form_Serialize("rolescreen_form");
+        var obj_val = JSON.parse(formval);
+        if (obj_val.in_row_timestamp == null || obj_val.in_row_timestamp == "" || obj_val.in_row_timestamp == undefined) {
+            obj_val.in_row_timestamp = "2000-01-01";
+        }
+        var grid_val = JSON.stringify($("#grid_role_list").data().kendoGrid._data);
+        var Bind = {};
+        Bind = grid_val;
+        var result = JSON.parse(Bind);
+        result.rolemenu_rowid = "0";
+        $.each(result, function (index, value) {
+            var row_id = value.rolemenu_rowid;
+            if (row_id == undefined) {
+                result[index].rolemenu_rowid = "0";
+            }
+        });
+        var obj_grid_val = result;
+
+
+        var data = {};
+        data.context = getContext();
+        data.context.Header = obj_val;
+        data.context.Detail = obj_grid_val;
+        var Context = data.context;
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, Header: Context.Header, Detail: Context.Detail }),
+            url: "/RoleDefinition/SaveRole",
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                console.log(response)
+                var Res = JSON.parse(response);
+                if (Res.context != null) {
+                    console.log(Res);
+                    kendoAlert("Saved Succedfully");
+
+                    get_role_details(Res.context.Header.out_role_rowid);
+                    // generate_farmer_registration_header(Res.context.header);
+                }
+                else {
+                    kendoAlert(Res.ApplicationException.errorDescription);
+                }
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+
+        });
+    }
+
+
+    function DeleteDetails() {
+        $("#txtMode").val('D');
+        save();
+    }
+</script>
+
+<script>
+    $(function () {
+        $('#grid_role_list').on('click', '.chkbx1', function () {
+            var checked = $(this).is(':checked');
+            var grid = $('#grid_role_list').data().kendoGrid;
+            var dataItem = grid.dataItem($(this).closest('tr'));
+            var row = $(this).closest('tr');
+            if (checked == true) {
+                dataItem._set('out_add_perm', '1');
+                if (dataItem.out_deny_perm == '1') {
+                    dataItem._set('out_deny_perm', '0');
+                    row.find("td:eq(9) input").prop("checked", false);
+                }
+                if (dataItem.out_view_perm == '1') {
+                    dataItem._set('out_view_perm', '0');
+                    row.find("td:eq(5) input").prop("checked", false);
+                }
+                if (dataItem.out_auth_perm == '1') {
+                    dataItem._set('out_auth_perm', '0');
+                    row.find("td:eq(6) input").prop("checked", false);
+                }
+            }
+            else {
+                dataItem._set('out_add_perm', '0');
+            }
+        })
+        $('#grid_role_list').on('click', '.chkbx2', function () {
+            var checked = $(this).is(':checked');
+            var grid = $('#grid_role_list').data().kendoGrid;
+            var dataItem = grid.dataItem($(this).closest('tr'));
+            var row = $(this).closest('tr');
+            if (checked == true) {
+                dataItem._set('out_mod_perm', '1');
+                if (dataItem.out_add_perm == '0') {
+                    dataItem._set('out_add_perm', '1');
+                    row.find("td:eq(3) input").prop("checked", true);
+                }
+                if (dataItem.out_deny_perm == '1') {
+                    dataItem._set('out_deny_perm', '0');
+                    row.find("td:eq(9) input").prop("checked", false);
+                }
+                if (dataItem.out_view_perm == '1') {
+                    dataItem._set('out_view_perm', '0');
+                    row.find("td:eq(5) input").prop("checked", false);
+                }
+                if (dataItem.out_auth_perm == '1') {
+                    dataItem._set('out_auth_perm', '0');
+                    row.find("td:eq(6) input").prop("checked", false);
+                }
+            }
+            else {
+                dataItem._set('out_mod_perm', '0');
+            }
+        })
+        $('#grid_role_list').on('click', '.chkbx5', function () {
+            var checked = $(this).is(':checked');
+            var grid = $('#grid_role_list').data().kendoGrid;
+            var dataItem = grid.dataItem($(this).closest('tr'));
+            var row = $(this).closest('tr');
+            if (checked == true) {
+                dataItem._set('out_inactivate_perm', '1');
+                if (dataItem.out_add_perm == '0') {
+                    dataItem._set('add_perm', '1');
+                    row.find("td:eq(3) input").prop("checked", true);
+                }
+                if (dataItem.out_mod_perm == '0') {
+                    dataItem._set('out_mod_perm', '1');
+                    row.find("td:eq(4) input").prop("checked", true);
+                }
+
+                if (dataItem.out_deny_perm == '1') {
+                    dataItem._set('out_deny_perm', '0');
+                    row.find("td:eq(9) input").prop("checked", false);
+                }
+                if (dataItem.out_view_perm == '1') {
+                    dataItem._set('out_view_perm', '0');
+                    row.find("td:eq(5) input").prop("checked", false);
+                }
+                if (dataItem.out_auth_perm == '1') {
+                    dataItem._set('out_auth_perm', '0');
+                    row.find("td:eq(6) input").prop("checked", false);
+                }
+            }
+            else {
+                dataItem._set('out_inactivate_perm', '0');
+            }
+        })
+
+        $('#grid_role_list').on('click', '.chkbx6', function () {
+            var checked = $(this).is(':checked');
+            var grid = $('#grid_role_list').data().kendoGrid;
+            var dataItem = grid.dataItem($(this).closest('tr'));
+            var row = $(this).closest('tr');
+            if (checked == true) {
+                dataItem._set('out_print_perm', '1');
+                if (dataItem.out_deny_perm == '1') {
+                    dataItem._set('out_deny_perm', '0');
+                    row.find("td:eq(9) input").prop("checked", false);
+                }
+            }
+            else {
+                dataItem._set('out_print_perm', '0');
+            }
+        })
+        $('#grid_role_list').on('click', '.chkbx3', function () {
+            var checked = $(this).is(':checked');
+            var grid = $('#grid_role_list').data().kendoGrid;
+            var dataItem = grid.dataItem($(this).closest('tr'));
+            var row = $(this).closest('tr');
+            if (checked == true) {
+                dataItem._set('out_view_perm', '1');
+                if (dataItem.out_add_perm == '1') {
+                    dataItem._set('out_add_perm', '0');
+                    row.find("td:eq(3) input").prop("checked", false);
+                }
+                if (dataItem.out_mod_perm == '1') {
+                    dataItem._set('out_mod_perm', '0');
+                    row.find("td:eq(4) input").prop("checked", false);
+                }
+                if (dataItem.out_inactivate_perm == '1') {
+                    dataItem._set('out_inactivate_perm', '0');
+                    row.find("td:eq(7) input").prop("checked", false);
+                }
+                if (dataItem.out_deny_perm == '1') {
+                    dataItem._set('out_deny_perm', '0');
+                    row.find("td:eq(9) input").prop("checked", false);
+                }
+                if (dataItem.out_auth_perm == '1') {
+                    dataItem._set('out_auth_perm', '0');
+                    row.find("td:eq(6) input").prop("checked", false);
+                }
+            }
+            else {
+                dataItem._set('out_view_perm', '0');
+            }
+        })
+        $('#grid_role_list').on('click', '.chkbx7', function () {
+            var checked = $(this).is(':checked');
+            var grid = $('#grid_role_list').data().kendoGrid;
+            var dataItem = grid.dataItem($(this).closest('tr'));
+            var row = $(this).closest('tr');
+            if (checked == true) {
+                dataItem._set('out_deny_perm', '1');
+                if (dataItem.out_add_perm == '1') {
+                    dataItem._set('out_add_perm', '0');
+                    row.find("td:eq(3) input").prop("checked", false);
+                }
+                if (dataItem.out_mod_perm == '1') {
+                    dataItem._set('out_mod_perm', '0');
+                    row.find("td:eq(4) input").prop("checked", false);
+                }
+                if (dataItem.out_inactivate_perm == '1') {
+                    dataItem._set('out_inactivate_perm', '0');
+                    row.find("td:eq(7) input").prop("checked", false);
+                }
+                if (dataItem.out_auth_perm == '1') {
+                    dataItem._set('out_auth_perm', '0');
+                    row.find("td:eq(6) input").prop("checked", false);
+                }
+                if (dataItem.out_print_perm == '1') {
+                    dataItem._set('out_prn_perm', '0');
+                    row.find("td:eq(8) input").prop("checked", false);
+                }
+                if (dataItem.out_view_perm == '1') {
+                    dataItem._set('out_view_perm', '0');
+                    row.find("td:eq(5) input").prop("checked", false);
+                }
+
+            }
+            else {
+                dataItem._set('out_deny_perm', '0');
+            }
+        })
+        $('#grid_role_list').on('click', '.chkbx4', function () {
+            var checked = $(this).is(':checked');
+            var grid = $('#grid_role_list').data().kendoGrid;
+            var dataItem = grid.dataItem($(this).closest('tr'));
+            var row = $(this).closest('tr');
+            if (checked == true) {
+                dataItem._set('out_auth_perm', '1');
+                if (dataItem.out_add_perm == '1') {
+                    dataItem._set('out_add_perm', '0');
+                    row.find("td:eq(3) input").prop("checked", false);
+                }
+                if (dataItem.out_mod_perm == '1') {
+                    dataItem._set('out_mod_perm', '0');
+                    row.find("td:eq(4) input").prop("checked", false);
+                }
+                if (dataItem.out_inactivate_perm == '1') {
+                    dataItem._set('out_inactivate_perm', '0');
+                    row.find("td:eq(7) input").prop("checked", false);
+                }
+                if (dataItem.out_deny_perm == '1') {
+                    dataItem._set('out_deny_perm', '0');
+                    row.find("td:eq(9) input").prop("checked", false);
+                }
+            }
+            else {
+                dataItem._set('out_auth_perm', '0');
+            }
+        })
+    })
+</script>
+<style>
+    #grid_role_list input[type=checkbox] {
+        margin: 4px 37px 0;
+    }
+
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>

@@ -1,0 +1,342 @@
+﻿@{
+    ViewBag.List = "CE-Category & Questions Mapping";
+    Layout = "~/Views/Shared/ListViewLayout.cshtml";
+}
+<form id="frm_category" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="gd_Category_grid">
+                <div id="Category_grid"></div>
+            </div>
+    </div>
+       </div>
+</form>
+<script src="~/API_Scripts/Credit_evalution_retrieveCreditevalutionSetup_APIClient.js"></script>
+<script src="~/API_Scripts/Credit_evalution_retrieveCreditevalutionSetupList_APIClient.js"></script>
+<script src="~/API_Scripts/Credit_evalution_saveCreditevalutionSetup_APIClient.js"></script>
+<script src="~/API_Scripts/retrieveCreditevalutionSetup_Model.js"></script>
+<script src="~/API_Scripts/retrieveCreditevalutionSetupList_Model.js"></script>
+<script src="~/API_Scripts/saveCreditevalutionSetup_Model.js"></script>
+<script src="~/API_Scripts/EvalutionMap.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script>
+    click_act_name = "Category";
+    click_ctrl_name = "Creditevalution";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+        $(".adv_filter").attr("hdrtitle", "CE-Category List");
+        $(".adv_filter").attr("fltid", "EvalutionList");
+        $(".Export").attr("hdrtitle", "CE-Category List");
+        $(".Export").attr("SubTreeId", "FLCEQUES");
+        list_grid_id = "Category_grid";
+
+        listpageloadfetch();
+
+        Screen_Id = "FLCEQUES";
+        permission = sec_Permission(Screen_Id);
+        page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+        filterhover();
+    });
+</script>
+<script>
+    function listpageloadfetch() {
+        try {
+            var formval = form_Serialize("frm_category");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_FromValue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_FromValue = ".";
+            }
+            obj_val.FilterBy_ToValue = ".";
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Filter = obj_val;
+            retrieve_CreditevalutionSetup_list(data);
+
+            setlocalStorage('flt_condition', "");
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    var status_Priority = [];
+    var status_Priority = [];
+    function listgrid(data) {
+        try {
+            $.each(data, function (index, value) {
+                var flag = false;
+                $.each(status_Priority, function (sindex, svalue) {
+                    if (svalue == value.status_desc) {
+                        flag = true;
+                    }
+                });
+                if (flag == false) {
+                    status_Priority.push(value.status_desc);
+                }
+            });
+            $("#Category_grid").kendoGrid(
+                {
+                    dataSource: {
+                        data: data,
+                        pageSize: 20,
+                        change: function (e) {
+                            setTimeout(function () {
+                                var gd = $("#Category_grid").data("kendoGrid");
+                                filter_row(gd);
+                                $('.k-i-close').css('display', 'none');
+                                $('button.k-button-icon').css('display', 'none');
+                                $('#Category_grid .k-input').prop('disabled', false);
+                                $('#Category_grid .k-input').prop('readonly', true);
+
+                            }, 1);
+                        },
+                    },
+                    toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                    excelExport: function (e) {
+                        var gd = $("#Category_grid").data("kendoGrid");
+                        var len = gd.dataSource._data.length;
+                        var chkall = $('#chkall').is(':checked');
+                        var chkfilter = $('#chkfilter').is(':checked');
+                        var chktemp = $('#chktemp').is(':checked');
+                        var twokendobox = true;
+                        gd.dataSource.pageSize(len);
+                        if (e.sender.dataSource._data.length == len) {
+                            twokendobox = false;
+                            exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                        }
+                        else {
+                            exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                        }
+                        gd.dataSource.pageSize('10');
+                        return false;
+                    },
+                    filterable: {
+                        enabled: true,
+                        delay: 1500,
+                        mode: "menu, row",
+                        height: 200,
+                        click: function (e) {
+                            var gd = $("#Category_grid").data("kendoGrid");
+                            filter_row(gd);
+                        }
+                    },
+                    filterMenuInit: function (e) {
+                        var gd = $("#Category_grid").data("kendoGrid");
+                        filter_row(gd);
+                    },
+                    change: selectRow,
+                    height: 450,
+                    sortable: true,
+                    selectable: true,
+                    selectable: "singl",   //  Grid Row Selection
+                    pageable: {
+                        refresh: false,
+                        pageSizes: true,
+                        buttonCount: 5
+                    },
+                    navigatable: true,
+                    groupable: false,
+                    columns: [
+                        {
+                            field: "evaluationmap_id",
+                            title: "evaluationmap_id",
+                            width: 100,
+                            hidden: true,
+                        },
+                         {
+                             field: "loan_type",
+                             title: "loan_type",
+                             width: 100,
+                             hidden: true,
+                         },
+                           {
+                               field: "loan_type_desc",
+                               title: "Loan Type",
+                               filterable: {
+                                   cell: {
+                                       operator: "contains",
+                                       inputWidth: 1500
+                                   }
+                               }
+                           },
+                        {
+                            field: "questionnaire",
+                            title: "Category",
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                         {
+                             field: "Evalution_Parameters",
+                             title: "Evalution Parameters",
+                             hidden: true,
+                             filterable: {
+                                 cell: {
+                                     operator: "contains",
+                                     inputWidth: 1500
+                                 }
+                             }
+                         },
+
+                          {
+                              field: "Weightage",
+                              title: "Weightage",
+                              hidden: true,
+                              filterable: {
+                                  cell: {
+                                      operator: "contains",
+                                      inputWidth: 1500
+                                  }
+                              }
+                          },
+                          {
+                              field: "Max_Score",
+                              title: "Max Score",
+                              hidden: true,
+                              filterable: {
+                                  cell: {
+                                      operator: "contains",
+                                      inputWidth: 1500
+                                  }
+                              }
+                          },
+                          {
+                              field: "status_code",
+                              title: "Status",
+                              //width: 100,
+                              hidden: true,
+                          },
+                                   {
+                                       field: "status_desc",
+                                       title: "Status",                                     
+                                       filterable: {
+                                           cell: {
+                                               operator: "contains",
+                                               inputWidth: 1500
+                                           }
+                                       }
+                                   },
+                                   {
+                                       field: "row_timestamp",
+                                       title: "Time stamp",
+                                       width: 100,
+                                       hidden: true,
+                                   },
+                                   {
+                                       field: "mode_flag",
+                                       title: "mode_flag",
+                                       width: 100,
+                                       hidden: true,
+                                   },
+                    ]
+
+                });
+            $(".k-dropdown-operator").css('display', 'none');
+            $("#Category_grid .k-input").attr('disabled', 'false');
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function statusFilter(element) {    // Dropdown list functionality
+        element.kendoDropDownList({
+            dataSource: status_Priority,
+            optionLabel: "--Select Value--"
+        });
+    }
+    function selectRow() {
+        try {
+            var grid = $("#Category_grid").data("kendoGrid");
+            var selectedItem = grid.dataItem(grid.select());
+            setlocalStorage("ls_pageList", selectedItem);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+<script>
+    $("#btn_Edit").bind("click", function () {
+        getSerializedSelectedRows('edit');
+    });
+
+    $("#btn_View").bind("click", function () {
+        getSerializedSelectedRows('view');
+    });
+
+    $("#btn_new").bind("click", function () {
+        btn_onClick('Create');
+        location.href = "../Creditevalution/Category";
+    });
+
+    function getSerializedSelectedRows(mode) {
+        try {
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var items = getlocalStorage("ls_pageList");
+                if (items.length == 0) {
+                    kendoAlert("Please select records");
+                }
+                else {
+                    if (mode == "edit") {
+                        btn_onClick('Edit');
+                        location.href = "../Creditevalution/Category";
+                    }
+                    else if (mode == "view") {
+                        btn_onClick('View');
+                        location.href = "../Creditevalution/Category";
+                    }
+                }
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<script>
+    function generate_CreditevalutionSetup_list(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                $("#gd_Category_grid").empty();
+                $("#gd_Category_grid").append("<div id='Category_grid'></div>");
+                listgrid(data);
+            }
+            else {
+                listgrid([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function listRefresh() {
+        try {
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+
+

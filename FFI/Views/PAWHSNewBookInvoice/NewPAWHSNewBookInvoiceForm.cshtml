@@ -1,0 +1,2447 @@
+﻿@{
+    ViewBag.Form = "Sale Invoice";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+<form id="invoice_form" class="form-horizontal">
+    <div class="row" style="padding-bottom:1px">
+        <div class="row" style="padding-bottom:1px;padding-left:15px">
+            <div class="col-sm-3">
+                <div class=" form-group">
+                    <label for="cmb_cus_type" class=" col-sm-5 control-label required">Buyer Name:</label>
+                    <div class=" col-sm-6">
+                        <input id="txt_buyer_name" name="In_buyer_name" class="form-control" data-role="filtercombo" onchange="fetch_loc()">
+                        <input hidden id="txt_buyer_code" />
+                        <input id="txtagg_code" name="In_agg_code" type="hidden" />
+                        <input id="txt_invc_rowid" name="IOU_invoice_rowid" type="hidden" />
+                        <input id="txtinvoice_no" name="IOU_invoice_no" type="hidden" />
+                        <input id="txtMode" name="In_mode_flag" type="hidden" />
+                        <input type="hidden" id="tax_rate" name="tax_rate">
+                        <input type="hidden" id="serail_uid" name="serail_uid">
+                        <input type="hidden" id="json" name="json">
+                        <input type="hidden" id="tranqty" name="tranqty">
+                        <input type="hidden" id="product_code" name="product_code">
+                        <input type="hidden" id="noofbages" name="noofbages">
+                        <input type="hidden" id="txt_Location_code" name="txt_Location_code">
+                        <input type="hidden" id="txt_bal_amount" name="">
+                    </div>
+                    @*<a class="HelpWindow fa fa-search fa-lg" role="button" id="pay_help1" data-toggle="modal" href="/HelpFilter/HelpFilter" hdrtitle="Member" searchid="PAWHSBUYER" data-target="#HelpModal" onclick=transfer(this,"form","","form_control"); title="Search" style="font-size: 19px; "></a>*@
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label for="txt_mobile" class=" col-sm-4 control-label required">Batch No</label>
+                    <div class=" col-sm-6">
+                        <input id="cmb_filter" name="In_po_ID" style="width: 100%" data-role="filtercombo" onchange="setpolocation()">
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class=" form-group">
+                    <label for="cmb_rec_Loca" class=" col-sm-4 control-label required">Location</label>
+                    <div class=" col-sm-6">
+                        <input id="txt_Location" name="In_Location" class="form-control" maxlength="10" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class=" form-group">
+                    <label for="invoice_date" class=" col-sm-4 control-label">Batch Date</label>
+                    <div class=" col-sm-6">
+                        <input class="cusDate" type="date" data-role='datepicker' onkeypress="return date_validate(event)" readonly id="txtValidity" data-checkdate-msg="Enter Valid Date" name="In_buyer_date" style="width:100%" />
+                        <span data-for='valid' class='k-invalid-msg'></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="padding-top:3px;">
+        <section class="col-md-12" style="padding-top:2px;">
+            <div id="tab_list" class="col-md-12">
+                <ul class="nav nav-tabs" style="border-bottom: 12px solid #fff;">
+
+                    <li class="active" style="width: 10%;">
+                        <a href="#Invoice1" onclick="Invoice()" role="tab" data-toggle="tab">
+                            Invoice
+                        </a>
+                    </li>
+                    <li style="width: 8%;">
+                        <a href="#Tax" id="txtdtl" onclick="Tax1()" role="tab" data-toggle="tab">
+                            Tax
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#OtherDtls" id="data1" role="tab" onclick="Othertab()" data-toggle="tab">
+                            Other Costs
+                        </a>
+                    </li> 
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane fade active in" id="Invoice1">
+                        <div class="panel panel-default">
+                            <div class="panel-body" style="padding-bottom:5px">
+                                <div id="grid_invoice">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade active in" id="Tax">
+                        <div class="panel panel-default">
+                            <div class="panel-body" style="padding-bottom:5px">
+                                <div id="grid_tax"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade " id="OtherDtls">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div id="grid_Other">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                   
+                </div>
+            </div>
+        </section>
+    </div>
+   
+    <div id="dialog">
+        <button type="button" id="btnRSaveserialno" style="margin-left:18px;margin-top:-7px" class="btn btn-info" onclick="saveserialno()"><span class="glyphicon glyphicon-ok"></span> Save</button>
+        <div id="grid_serialno"></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+        </div>
+        <div class="col-sm-2">
+        </div>
+        <div class="col-sm-3">
+            <div class="form-group">
+                <a id="btnPayment" data-toggle="modal" type="button" class="btn btn-info" role="button" href="~/PAWHSNewBookInvoice/PAWHSNewBookInvoicePaymentForm" data-target="#invoice_payment">Payment Collection</a>
+                <input type="hidden" id="tax_rate" name="In_tax_rate">
+            </div>
+        </div>
+    </div>
+</form>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script>
+    click_act_name = "PAWHSNewBookInvoiceList";
+    click_ctrl_name = "PAWHSNewBookInvoice";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+<script>
+    $(document).ready(function () {
+        debugger;
+        master_GST_PRODUCT1();
+        $("#divUserRole20 #btnReport2").hide();
+        $("#divUserRole20 #btnA4Report").hide();
+
+        kendodate_format();
+
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#invoice_form");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        $("#bottom_menus").hide();
+        $(".file_attach").attr("hdrtitle", "Invoice");
+        $(".notes").attr("hdrtitle", "Invoice");
+        $("#lblForm_menuid").text("PWNEWBI");
+        $("#btnRSaveserialno").hide();
+        Screen_Id = "PWNEWBI";
+        permission = sec_Permission(Screen_Id);
+        setlocalStorage('screen', Screen_Id);
+        setlocalStorage("procrowid", "");
+        setlocalStorage("process", "PWNEWBI");
+        $("#hdn_state_provider").val("Tamil Nadu");
+
+
+        gridinvoice([]);
+        $("dialog").hide();
+        var org_id = getlocalStorage('org_id');
+        var test = org_id.split("/");
+        $('#ic_code').val(test[0]);
+        // $('#ic_code').val(org_id);
+
+        gridtax([]);
+        gridtransport([]);
+        New_grid_Other_details([]);
+        setlocalStorage("invoice_data", "");
+        setlocalStorage("tax_data", "");
+        $("div#Tax").hide();
+        $("div#Transport").hide(); 
+
+        load_master_code();
+        $("#txt_buyer_name").empty();
+        combo_data2 = grid_comboScreen_mastercodes("BUYERNAME");
+        filter_combobox("txt_buyer_name", combo_data2);
+
+        //----StateMap
+        var org = getlocalStorage('org_id');
+        $('#txtagg_code').val(org);
+
+        //End
+        $("#cmb_rec_Loca").change(function () {
+            var myComboBox = $('#cmb_rec_Loca').data('kendoComboBox').text();
+            $("#hdn_state_reciver").val(myComboBox);
+            $("#hdn_rec_Loc").val(myComboBox);
+        });
+
+        if (getlocalStorage('btn_clk_val') == "Create") {
+            $("#invoice #DocStat").val("New");
+            disable();
+        }
+
+        if (getlocalStorage('btn_clk_val') == "Edit") {
+            debugger;
+            $('#divEdit #reviewEd').hide();
+            $("#divEdit #deactivate").hide();
+            $('#divUserRole20 #btnSave').hide();
+            $("#invoice #DocStat").val("Edit");
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("invoice_form");
+                var obj_val = JSON.parse(formval);
+                obj_val.invoice_rowid = data.Out_Book_invoce_rowid;
+
+                var data = {};
+                data.context = getContext();
+                data.context.Header = obj_val;
+
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, IOU_invoice_rowid: Context.Header.invoice_rowid }),
+                    url: "/PAWHSNewBookInvoice/BookInvoiceFetch",
+                    dataType: "json",
+                    contentType: 'application/json; charset-utf-8;',
+                    success: function (response) {
+                        debugger;
+                        if (response.context != null) {
+                            debugger;
+                            generate_invoice_header(response.context.Header);
+                            generate_invoice_invoicedetails(response.context.Header.InvoiceDetails);
+                            generate_invoice_taxdetail(response.context.Header.TaxDetails);
+                            generate_invoice_transportdetail(response.context.Header.transport);
+                            generate_invoice_otherdetail(response.context.Header.othercost);
+                        }
+                        setlocalStorage('doc_no', $("#txtcommon_id").val());
+                        setlocalStorage('doc_row_id', $("#txt_invc_rowid").val());
+                        $("#txtic_invoicedate").attr("disabled", true);
+                        setlocalStorage('doc_no', $("#txtcommon_id").val());
+                        setlocalStorage('doc_row_id', $("#txt_invc_rowid").val());
+                        //balance();
+                        enable();
+                        TotalAmount()
+                        $("#cmb_filter").attr("readonly", "");
+                    },
+                    error: function (er) {
+                        alert(er);
+                        console.log(er);
+                    }
+                });
+                $("#txtMode").val("U");
+            }
+        }
+        if (getlocalStorage('btn_clk_val') == "View") {
+            debugger;
+            $('#divUserRole20 #btnSave').hide();
+            $("#invoice #DocStat").val("View");
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("invoice_form");
+                var obj_val = JSON.parse(formval);
+                obj_val.invoice_rowid = data.Out_Book_invoce_rowid;
+
+                var data = {};
+                data.context = getContext();
+                data.context.Header = obj_val;
+
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, IOU_invoice_rowid: Context.Header.invoice_rowid }),
+                    url: "/PAWHSNewBookInvoice/BookInvoiceFetch",
+                    dataType: "json",
+                    contentType: 'application/json; charset-utf-8;',
+                    success: function (response) {
+                        debugger;
+                        if (response.context != null) {
+                            debugger;
+                            generate_invoice_header(response.context.Header);
+                            generate_invoice_invoicedetails(response.context.Header.InvoiceDetails);
+                            generate_Invoice_InvoiceTax(response.context.Header.TaxDetails);
+                            generate_invoice_transportdetail(response.context.Header.transport);
+                            generate_invoice_otherdetail(response.context.Header.othercost);
+                            disable();
+                            TotalAmount()
+                        }
+                    },
+                    error: function (er) {
+                        alert(er);
+                        console.log(er);
+                    }
+                });
+                $("#txtMode").val("U");
+            }
+        }
+        $('#HelpModal').on('hide.bs.modal', function (e) {
+            debugger;
+            if ($("#buyer_name").val() != undefined && $("#buyer_name").val() != "") {
+                fetch_loc();
+            }
+        });
+        // code Introduced by venkat report pdf
+        $("#btnA4Report").click(function () {
+            debugger;
+            var exportURL = getRootUrl() + "PAWHSNewBookInvoice/downloadpdf";
+            window.location.href = exportURL;
+        });
+        function getRootUrl() {
+            debugger;
+            return window.location.origin ? window.location.origin + '/' : window.location.protocol + '/' + window.location.host + '/';
+        }
+
+        $("#btnReport2").click(function () {
+            debugger;
+            var exportURL = getRootUrl() + "PAWHSNewBookInvoice/downloadpdfInvoice";
+            window.location.href = exportURL;
+        });
+
+        //End
+        function balance() {
+            debugger;
+            if ($("#txt_bal_amount").val() != $("#txt_net_amount").val()) {
+                $('#divUserRole20 #btnSave').hide();
+                // $("#btnReport2").hide();
+                $("#txt_discountamt").attr("readonly", "");
+                $("#grid_invoice .k-grid-toolbar").hide();
+                $("#grid_invoice .k-grid-Delete").hide();
+                var len = $("#invoice_form #grid_invoice").find("tbody tr").length;
+                for (var i = 0; i <= len; i++) {
+                    var model = $("#invoice_form #grid_invoice").data("kendoGrid").dataSource.at(i);
+                    if (model) {//field names
+                        model.fields["In_product_desc"].editable = false;
+                        model.fields["In_qty"].editable = false;
+                        model.fields["In_rate"].editable = false;
+                        model.fields["In_discount_amount"].editable = false;
+                        model.fields["In_tax_amount"].editable = false;
+                        $(".Delete").attr("disabled", false);
+                    }
+                }
+            }
+        }
+
+    });
+    function TotalAmount() {
+
+        var grid = $("#grid_invoice").data("kendoGrid");
+        var gridData = grid.dataSource.view();
+        var net_amt = 0;
+        for (var i = 0; i < gridData.length; i++) {
+            if (gridData[i].In_net_amount != '') {
+                net_amt += gridData[i].In_net_amount != undefined ? parseFloat(gridData[i].In_net_amount) : parseFloat(0);
+            }
+        }
+
+        $('#txt_gross_amount').val(parseFloat(net_amt).toFixed(2));
+
+    }
+    function generate_invoice_header(res) {
+        debugger;
+        try {
+            $('#txt_buyer_name').data("kendoComboBox").value(res.In_buyer_name);
+            //$("#txt_buyer_name").val(res.In_buyer_name);
+            $("#txt_buyer_code").val(res.In_buyer_code);
+            fetch_loc();
+            $("#cmb_filter").val(res.In_po_no);
+            $("#txt_invc_rowid").val(res.IOU_invoice_rowid);
+            $("#invoice #txtic_invoiceno").val(res.In_invoice_no);
+            $("#invoice #txtic_invoicedate").val(res.In_invoice_date);
+            $("#txtinvoice_no").val(res.In_invoice_no);
+            $("#txt_Location").val(res.In_customer_state);
+            $("#txt_transportamt").val(parseFloat(res.In_Transport_Amt).toFixed(2));
+            $("#txt_discountamt").val(parseFloat(res.In_Discount_Amt).toFixed(2));
+            $("#txt_net_amount").val(parseFloat(res.In_net_amount).toFixed(2));
+            $("#txt_bal_amount").val(parseFloat(res.In_bal_amount).toFixed(2));
+            $("#txtValidity").val(res.In_po_date);
+            setlocalStorage("procrowid", res.IOU_invoice_rowid);
+            localStorage.invoiceno = res.In_invoice_no;
+            setlocalStorage("process", "BIINVOICE");
+            //$("#invoice #DocStat").val(res.In_status_desc);
+            $("#txtMode").val(res.In_mode_flag);
+
+            $("#divUserRole20 #btnReport2").hide();
+            $("#divUserRole20 #btnA4Report").show();
+            $("#grid_invoice .k-grid-add").hide();
+            $("#grid_invoice .Delete").hide();
+            $("#grid_invoice .k-grid-Delete").hide();
+
+            if (parseFloat(res.In_bal_amount) == 0.00 || res.In_bal_amount == 0) {
+                $("#divUserRole20 #btnReport2").hide();
+                $("#divUserRole20 #btnA4Report").show();
+                $("#grid_invoice .k-grid-add").hide();
+                $("#grid_invoice .Delete").hide();
+                $("#grid_invoice .k-grid-Delete").hide();
+                $("#txt_discountamt").attr("readonly", "");
+                var len = $("#invoice_form #grid_invoice").find("tbody tr").length;
+                for (var i = 0; i <= len; i++) {
+                    var model = $("#invoice_form #grid_invoice").data("kendoGrid").dataSource.at(i);
+                    if (model) {//field names
+                        model.fields["In_product_desc"].editable = false;
+                        model.fields["In_qty"].editable = false;
+                        model.fields["In_rate"].editable = false;
+                        model.fields["In_discount_amount"].editable = false;
+                        model.fields["In_tax_amount"].editable = false;
+                        $(".Delete").attr("disabled", false);
+                    }
+                }
+            }
+            $('#cmb_filter').data("kendoComboBox").value(res.In_po_no);
+            $('#cmb_filter').data("kendoComboBox").enable(false);
+            //$('#adjustment_no').prop("disabled", true);
+
+
+        } catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_invoice_invoicedetails(res) {
+        debugger;
+        try {
+            if (res != null) {
+
+                var data = changedataType(res);
+                setlocalStorage("invoice_data", data);
+                for (var i = 0; i < data.length; i++) {
+                    data[i].In_qty = (parseFloat(data[i].In_qty)).toFixed(2);
+                    data[i].In_rate = data[i].In_rate != undefined ? parseFloat(data[i].In_rate) : parseFloat(0);
+                    data[i].In_amount = (parseFloat(data[i].In_amount)).toFixed(2);
+                    data[i].In_discount = (parseFloat(data[i].In_discount)).toFixed(2);
+                    data[i].In_others = (parseFloat(data[i].In_others)).toFixed(2);                    
+                    data[i].In_net_amount = (parseFloat(data[i].In_net_amount)).toFixed(2);
+                    data[i].In_tax_amount = (parseFloat(data[i].In_tax_amount)).toFixed(2);
+                    data[i].In_uomtype_code = data[i].In_uom_code;
+                    data[i].In_uomtype_desc = data[i].In_uom_desc;
+                    data[i].In_product_code = data[i].In_item_code;
+                    data[i].In_product_name = data[i].In_item_name;
+                    data[i].In_current_qty = (parseFloat(data[i].In_qty) + parseFloat(data[i].In_current_qty));
+                }
+                gridinvoice(data);
+            }
+            else {
+                gridinvoice([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_invoice_taxdetail(res) {
+        debugger;
+        try {
+            if (res != null) {
+                var data = res;
+                setlocalStorage("tax_data", data);
+                res.In_tax_amount = data.In_tax;
+                for (var i = 0; i < data.length; i++) {
+                    data[i].In_cgst_rate = (parseFloat(data[i].In_cgst_rate)).toFixed(2);
+                    data[i].In_sgst_rate = (parseFloat(data[i].In_sgst_rate)).toFixed(2);
+                    data[i].In_ugst_rate = (parseFloat(data[i].In_ugst_rate)).toFixed(2);
+                    data[i].In_sugst_rate = (parseFloat(data[i].In_sugst_rate)).toFixed(2);
+                    data[i].In_igst_rate = (parseFloat(data[i].In_igst_rate)).toFixed(2);
+                    data[i].In_tax_rate = (parseFloat(data[i].In_tax_rate)).toFixed(2);
+                    data[i].In_taxable_amount = (parseFloat(data[i].In_taxable_amount)).toFixed(2);
+                    data[i].In_tax_amount = (parseFloat(data[i].In_tax_amount)).toFixed(2);
+                    var dataItem = $("#grid_invoice").data("kendoGrid").dataSource.data()[i];
+                    dataItem.set("In_tax_rate", data[i].In_tax_rate);
+
+                }
+                gridtax(res);
+            }
+            else {
+                gridtax([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    $("#Invoice1").focusout(function () {
+        var grid1 = $("#grid_invoice").data("kendoGrid");
+        var gridData1 = grid1.dataSource.view();
+        var net_amt1 = 0;
+        for (var i = 0; i < gridData1.length; i++) {
+            if (gridData1[i].In_net_amount != '') {
+                net_amt1 += gridData1[i].In_net_amount != undefined ? parseFloat(gridData1[i].In_net_amount) : parseFloat(0);
+            }
+        }
+        $("#txt_gross_amount").val(parseFloat(net_amt1).toFixed(2));
+        var trran = $("#txt_gross_amount").val();
+        var inv = $("#txt_transportamt").val();
+        var dis = $("#txt_discountamt").val();
+        var total_amount = (parseFloat(inv) + parseFloat(trran) + parseFloat(dis)).toFixed(2);
+        $("#txt_net_amount").val(parseFloat(total_amount).toFixed(2));
+    });
+    $("#Othercost").focusout(function () {
+        var grid = $("#grid_othercost").data("kendoGrid");
+        var gridData = grid.dataSource.view();
+        var othercose_amt = 0;
+        for (var i = 0; i < gridData.length; i++) {
+            if (gridData[i].In_othercost_amt != '') {
+                othercose_amt += gridData[i].In_othercost_amt != undefined ? parseFloat(gridData[i].In_othercost_amt) : parseFloat(0);
+            }
+        }
+        $("#txt_transportamt").val(parseFloat(othercose_amt).toFixed(2));
+        var inv = $("#txt_gross_amount").val();
+        var trran = $("#txt_transportamt").val();
+        var total_amount = (parseFloat(inv) + parseFloat(trran)).toFixed(2);
+        $("#txt_net_amount").val(parseFloat(total_amount).toFixed(2));
+
+    });
+    $("#txt_discountamt").focusout(function () {
+        var inv = $("#txt_gross_amount").val();
+        var trran = $("#txt_transportamt").val();
+        var total_amount = (parseFloat(inv) + parseFloat(trran)).toFixed(2);
+        $("#txt_net_amount").val(parseFloat(total_amount).toFixed(2));
+        var dis1 = $("#txt_discountamt").val();
+        if (dis1 == "") {
+            $("#txt_discountamt").val(0);
+        }
+        var dis = $("#txt_discountamt").val();
+        var netamount = $("#txt_net_amount").val();
+        var gross = $("#txt_gross_amount").val();
+        if (parseInt(dis) > parseInt(gross)) {
+            kendoAlert("Discount Amount not greater than net Amount");
+            validate = false;
+            $("#txt_discountamt").val(0);
+        } else {
+            var total_amount1 = (parseFloat(netamount) - parseFloat(dis)).toFixed(2);
+            $("#txt_net_amount").val(parseFloat(total_amount1).toFixed(2));
+        }
+    });
+    $("#txt_discountamt").mouseleave(function () {
+        var inv = $("#txt_gross_amount").val();
+        var trran = $("#txt_transportamt").val();
+        var total_amount = (parseFloat(inv) + parseFloat(trran)).toFixed(2);
+        $("#txt_net_amount").val(parseFloat(total_amount).toFixed(2));
+        var dis1 = $("#txt_discountamt").val();
+        if (dis1 == "") {
+            $("#txt_discountamt").val(0);
+        }
+        var dis = $("#txt_discountamt").val();
+        var netamount = $("#txt_net_amount").val();
+        var gross = $("#txt_gross_amount").val();
+        if (parseInt(dis) > parseInt(gross)) {
+            kendoAlert("Discount Amount not greater than net Amount");
+            validate = false;
+            $("#txt_discountamt").val(0);
+        } else {
+            var total_amount1 = (parseFloat(netamount) - parseFloat(dis)).toFixed(2);
+            $("#txt_net_amount").val(parseFloat(total_amount1).toFixed(2));
+        }
+    });
+    function generate_invoice_transportdetail(res) {
+        debugger;
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                setlocalStorage("grid_Transport", data);
+                for (var i = 0; i < data.length; i++) {
+                    var data1 = {};
+                    data1.context = getContext();
+                    var tran_rowid = data[i].In_transdtl_rowid;
+                    var Context = data1.context;
+                    $.ajax({
+                        type: "POST",
+                        data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, In_transdtl_rowid: tran_rowid }),
+                        url: "/PAWHSNewBookInvoice/BookInvoicetransslnoFetch",
+                        dataType: "json",
+                        contentType: 'application/json; charset-utf-8;',
+                        success: function (response) {
+                            debugger;
+                            if (response.context != null) {
+                                var k = i - 1;
+                                data[k].Transportslno = JSON.stringify(response.context.transport);
+                                i = k
+                            }
+                            gridtransport(data);
+                        }
+                    });
+                }
+                gridtransport(data);
+            }
+            else {
+                gridtransport([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_invoice_otherdetail(res) {
+        debugger;
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                setlocalStorage("grid_othercost", data);
+                New_grid_Other_details(data);
+            }
+            else {
+                New_grid_Other_details([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>
+    function disable() {
+        $("#btnPayment").attr("disabled", true);
+        $("#btnPayment").css("pointer-events", "none");
+    }
+    function enable() {
+        $("#btnPayment").css("pointer-events", "default");
+        $("#btnPayment").attr("disabled", false);
+        $("#btnPayment").removeAttr("style");
+    }
+</script>
+<script>
+    function Invoice() {
+        try {
+            //$("div#Invoice1").toggleClass('tab-pane fade active in');
+            $("div#Tax").hide(); 
+            $("div#OtherDtls").hide();
+            $("div#Invoice1").show();
+            var itemGrid = $("#grid_invoice").data("kendoGrid");
+            itemGrid.refresh();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function Tax1() {
+        try {
+            //$("div#Tax").toggleClass('tab-pane fade active in');
+            $("div#Tax").show(); 
+            $("div#OtherDtls").hide();
+            $("div#Invoice1").hide();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function Othertab() {
+        try {
+            $("div#OtherDtls").show();
+            $("div#Invoice1").hide();
+            $("div#Tax").hide();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+   
+    $("#txtdtl").click(function () {
+
+        var sourcegrid = $('#grid_invoice').data('kendoGrid');
+        var destinationgrid = $('#grid_tax').data('kendoGrid');
+        if (sourcegrid._data.length > 0 && destinationgrid._data.length > 0) {
+            for (var i = 0; i < sourcegrid._data.length; i++) {
+                for (var j = 0; j < destinationgrid._data.length; j++) {
+                    var srcdataitem = sourcegrid._data[i];
+                    var decdataitem = destinationgrid._data[j];
+                    if (decdataitem.In_taxdetails_rowid == 0) {
+                        if (srcdataitem.In_item_code == decdataitem.In_product_code) {
+                            var firstItem = $('#grid_tax').data().kendoGrid.dataSource.data()[j];
+                            var amt = (parseFloat(srcdataitem.In_amount)).toFixed(2);
+                            firstItem["In_taxable_amount"] = amt;
+                            firstItem["In_tax_amount"] = srcdataitem.In_tax_amount;
+                        }
+                    }
+                }
+            }
+            destinationgrid.refresh();
+        }
+    });
+</script>
+<script>
+    function load_master_code() {
+        var data = {};
+        var context = WebAPIProxy.getContext();
+        data.userId = context.userId
+        data.orgnId = context.orgnId
+        data.locnId = context.locnId
+        data.localeId = context.localeId 
+        data.screen_Id = "PWNEWBI";
+        var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+    }
+</script>
+<script>
+    //var data = [];
+    function New_grid_Other_details(data) {
+        try {
+            $("#grid_Other").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+
+                                in_cost_type: { type: "string", required: true },
+                                In_cost_name: {
+                                    validation: {
+                                        dropdownlistValidation: function (input) {
+                                            if (input.is("[name='In_cost_name']")) {
+                                                var isValid = true;
+                                                input.attr("data-dropdownlistValidation-msg", "Cost Type cannot be blank"); if (input.val().length <= 0) {
+                                                    isValid = false;
+                                                }
+                                                return isValid;
+                                            }
+                                            return true;
+                                        }
+                                    }
+                                },
+                                In_cost_value: { type: "int", defaultValue: 0 },
+                                In_mode_flag: { type: "string", defaultValue: "I" }
+
+
+                            }
+                        }
+                    }
+                },
+                //toolbar: "<a  class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 280,
+                groupable: false,
+
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                //{
+
+                //    command: [
+                //        {
+                //            name: "Delete",
+                //            id: "Delete",
+                //            imageClass: "fa fa-close",
+                //            click: function (e) {
+                //                var grid = $("#grid_Other").data("kendoGrid");
+                //                var dataItem = $("#grid_Other").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                //                DeleteWindowEvent(e, dataItem, grid);
+                //                e.stopImmediatePropagation()
+                //            }
+                //        },
+                //    ],
+                //    title: "Action",
+                //    width: "25px",
+
+                //},
+                {
+                    field: "in_cost_type",
+                    title: "cost_type",
+                    hidden: true,
+
+                },
+                {
+                    field: "In_cost_name",
+                    title: "Cost Name",
+                    editor: function (container, options) {
+                        combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "in_cost_type", "grid_Other")
+                    },
+                    width: 100,
+
+                },
+                {
+                    field: "In_cost_value",
+                    title: "Value",
+                    width: 50,
+                    attributes: { style: "text-align:right;", "class": "customClass" },
+                    editor: function (container, options) {
+                        item_rate(container, options.field, '9', '2');
+                    },
+
+                },
+                {
+                    field: "in_mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }
+                ],
+                editable: false
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+    load_master_code();
+    In_cost_name_list = grid_comboScreen_mastercodes("QCD_OTHERCOST_TYPE");
+    function gridinvoice(data) {
+        try {
+            $("#grid_invoice").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                In_invoicedtl_rowid: { type: "string" },
+                                In_product_code: { type: "string" },
+                                In_product_name: { type: "string" },
+                                In_uomtype_code: { type: "string" },
+                                In_uomtype_desc: { type: "string" },
+                                In_qty: { type: "string", defaultValue: "0" },
+                                In_rate: { type: "string", defaultValue: "0" },
+                                In_amount: { type: "string" },
+                                In_discount: { type: "string", defaultValue: "0" },
+                                In_others: { type: "string", defaultValue: "0" },
+                                In_tax_amount: { type: "string", defaultValue: "0" },
+                                In_net_amount: { type: "number", defaultValue: 0 },
+                                In_tax_rate: { type: "string" },
+                                In_mode_flag: { type: "string", defaultValue: "I" }
+                                //editable: false
+                            }
+                        }
+                    },
+                    aggregate: [{ field: "In_net_amount", aggregate: "sum" }],
+                },
+
+                //toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+
+
+                dataBinding: setDefaultValues,
+                dataBound: function (e) {
+
+                    resultData = e.sender._data;
+                    var rows = $('#grid_invoice').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                edit: OnEdit,
+                save: function (data) {
+                    debugger;
+                    if (data.values.In_qty) {
+                        data.model.set("In_amount", (parseFloat(data.values.In_qty) * parseFloat(data.model.In_rate)).toFixed(2));
+                        var prd_amt = data.model.In_amount != undefined ? parseFloat(data.model.In_amount) : parseFloat(0.0);
+                        var amt = parseFloat(prd_amt).toFixed(2)
+                        var amt1 = parseFloat(prd_amt).toFixed(2)
+                        //var amt = (data.model.product_amount != undefined ? parseFloat(data.model.product_amount) : parseFloat(0.0)) - (data.model.discount_amount != undefined ? parseFloat(data.model.discount_amount) : parseFloat(0.0));
+                        data.model.set("In_tax_amount", ((parseFloat(amt1) * parseFloat(data.model.In_tax_rate)) / 100.0).toFixed(2));
+                        data.model.set("In_net_amount", (parseFloat(amt) + parseFloat(data.model.In_tax_amount)).toFixed(2));
+
+                    }
+                    if (data.values.In_rate) {
+                        data.model.set("In_amount", (parseFloat(data.model.In_qty) * parseFloat(data.values.In_rate)).toFixed(2));
+                        var prd_amt = data.model.In_amount != undefined ? parseFloat(data.model.In_amount) : parseFloat(0.0);
+                        var amt = parseFloat(prd_amt).toFixed(2)
+                        var amt1 = parseFloat(prd_amt).toFixed(2)
+                        //var amt = (data.model.product_amount != undefined ? parseFloat(data.model.product_amount) : parseFloat(0.0)) - (data.model.discount_amount != undefined ? parseFloat(data.model.discount_amount) : parseFloat(0.0));
+                        data.model.set("In_tax_amount", ((parseFloat(amt1) * parseFloat(data.model.In_tax_rate)) / 100.0).toFixed(2));
+                        data.model.set("In_net_amount", (parseFloat(amt) + parseFloat(data.model.In_tax_amount)).toFixed(2));
+                    }
+
+                    if (data.values.In_product_code != "") {
+                        var code = (data.model.In_product_code)
+                    }
+                },
+                height: 280,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                    //{
+                //    command: [
+                //        {
+                //            name: "Delete",
+                //            id: "Delete",
+                //            imageClass: "fa fa-close",
+                //            click: function (e) {
+                //                // e.preventDefault();
+                //                var grid = $("#grid_invoice").data("kendoGrid");
+                //                var dataItem = $("#grid_invoice").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                //                DeleteWindowEvent(e, dataItem, grid);
+                //                e.stopImmediatePropagation()
+
+                //                var gridTax2 = $("#grid_tax").data("kendoGrid");
+                //                var gridData2 = gridTax2.dataSource.view();
+
+                //                for (var i = 0; i < gridData2.length; i++) {
+                //                    if (gridData2[i].In_product_code == dataItem.In_item_code) {
+                //                        var array1 = gridTax2.dataSource.data();
+                //                        gridTax2.dataSource.remove(array1[i]);
+                //                        gridTax2.dataSource.sync();
+                //                    }
+                //                }
+                //            }
+                //        },
+                //    ], title: "Action", width: "50px",
+                //},
+                {
+                    field: "In_invoicedtl_rowid",
+                    title: "invoicedtl_rowid",
+                    hidden: true
+                },
+                {
+                    field: "In_invoice_no",
+                    title: "invoice_no",
+                    hidden: true
+                },
+                {
+                    field: "In_product_catg_code",
+                    title: "product_catg_code",
+                    width: 1,
+                    hidden: true,
+                },
+                {
+                    field: "In_product_code",
+                    title: "Item Code",
+                    width: 100,
+                    //hidden: true,
+                },
+                {
+                    field: "In_product_name",
+                    title: "Item Name",
+                    width: 100,
+
+                },
+
+                {
+                    field: "In_item_desc",
+                    title: "Product Category",
+                    width: 120,
+                    hidden: true,
+                },
+                {
+                    field: "In_product_subcatg_code",
+                    title: "product_subcatg_code",
+                    width: 1,
+                    hidden: true,
+                },
+                {
+                    field: "In_type",
+                    title: "Product Sub-Category",
+                    width: 130,
+                    hidden: true,
+                },
+                {
+                    field: "In_uomtype_code",
+                    title: "UOM",
+                    hidden: true
+                },
+                {
+                    field: "In_uomtype_desc",
+                    title: "UOM",
+                    width: 100,
+                },
+
+                {
+                    field: "In_current_qty",
+                    title: "Stock Qty",
+                    width: 80,
+                    hidden: true,
+                },
+                {
+                    field: "In_qty",
+                    title: "Quantity",
+                    width: 80,
+                    attributes: { style: "text-align:right;", "class": "customClass" },
+                    editor: function (container, options) {
+                        item_rate(container, options.field, '9', '2');
+                    },
+                },
+                {
+                    field: "In_rate",
+                    title: "Rate",
+                    width: 100,
+                    attributes: { style: "text-align:right;" },
+                    editor: function (container, options) {
+                        numeric_editor_dot(container, options.field, '9', '3');
+                    },
+                },
+
+                {
+                    field: "In_amount",
+                    title: "Amount",
+                    width: 100,
+                    attributes: { style: "text-align:right;" },
+                    editor: function (container, options) {
+                        item_rate(container, options.field, '9', '2');
+
+                    },
+                    },
+                    {
+                        field: "In_discount",
+                        title: "Discount",
+                        width: 100,
+                        attributes: { style: "text-align:right;" },
+                        editor: function (container, options) {
+                            item_rate(container, options.field, '9', '2');
+
+                        },
+                    },
+                {
+                    field: "In_tax_amount",
+                    title: "Tax Amount",
+                    width: 100,
+                    attributes: { style: "text-align:right;" },
+                    footerTemplate: "Total",
+                    editor: function (container, options) {
+                        item_rate(container, options.field, '9', '2');
+
+
+                    },
+                    },
+                    {
+                        field: "In_others",
+                        title: "Others",
+                        width: 100,
+                        attributes: { style: "text-align:right;" },
+                        editor: function (container, options) {
+                            item_rate(container, options.field, '9', '2');
+
+                        },
+                    },    
+
+                {
+                    title: 'Net Amount',
+                    field: 'In_net_amount',
+                    width: 100,
+                    format: "{0:0.##}",
+                    footerTemplate: "<div style='text-align:right'>#= kendo.toString(sum, '0.00') # </div>",
+                    attributes: { style: "text-align:right;" },
+                    editor: function (container, options) {
+                        item_rate(container, options.field, '9', '2');
+                    },
+
+
+                },
+                {
+                    field: "In_tax_rate",
+                    title: "Tax Rate",
+                    width: 100,
+                    hidden: true
+
+                },
+
+                {
+                    field: "In_status_code",
+                    title: "status_code",
+                    width: 1,
+                    hidden: true,
+                },
+                {
+                    field: "In_hsn_code",
+                    title: "Tax Rate",
+                    width: 100,
+                    hidden: true
+                },
+                {
+                    field: "In_hsn_desc",
+                    title: "status_code",
+                    width: 1,
+                    hidden: true,
+                },
+                {
+                    field: "In_status_desc",
+                    title: "status_desc",
+                    width: 1,
+                    hidden: true,
+                },
+
+                {
+                    field: "In_mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }],
+                editable: false
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+    function OnEdit(e) {
+        setDefaultValues(e);
+        e.container.find("input[name='In_amount']").prop('readonly', true);
+        e.container.find("input[name='In_tax_amount']").prop('readonly', true);
+        e.container.find("input[name='In_net_amount']").prop('readonly', true);
+        e.container.find("input[name='In_item_name']").prop('readonly', true);
+        e.container.find("input[name='In_item_code']").prop('readonly', true);
+        e.container.find("input[name='In_type']").prop('readonly', true);
+        e.container.find("input[name='In_item_desc']").prop('readonly', true);
+        e.container.find("input[name='In_current_qty']").prop('readonly', true);
+
+        var grid_validate_msg = "";
+        grid_validate_msg = "Given quantity is greater than stock";
+        e.container.find("input[name='In_qty']").focusout(function () {
+            if (parseFloat(e.model.In_qty) == 0) {
+                e.model.In_qty = 0;
+                e.model.In_amount = 0;
+                e.model.In_tax_amount = 0;
+                e.model.In_net_amount = 0;
+
+                var invgrid = $("#grid_invoice").data("kendoGrid");
+                invgrid.dataSource.sync();
+                kendoAlert("Quantity Can't Be Zero for the Product" + e.model.In_item_name);
+                return false;
+            }
+
+            if (parseFloat(e.model.In_qty) > parseFloat(e.model.In_current_qty)) {
+                e.model.In_qty = 0;
+                e.model.In_amount = 0;
+                e.model.In_tax_amount = 0;
+                e.model.In_net_amount = 0;
+                var invgrid = $("#grid_invoice").data("kendoGrid");
+                invgrid.dataSource.sync();
+                kendoAlert(grid_validate_msg);
+                return false;
+            }
+
+        });
+        e.container.find("input[name='In_rate']").focusout(function () {
+            if (parseFloat(e.model.In_qty) > parseFloat(e.model.In_current_qty)) {
+                e.model.In_qty = 0;
+                e.model.In_amount = 0;
+                e.model.In_tax_amount = 0;
+                e.model.In_net_amount = 0;
+                var invgrid = $("#grid_invoice").data("kendoGrid");
+                invgrid.dataSource.sync();
+                kendoAlert(grid_validate_msg);
+                return false;
+            }
+        });
+    }
+</script>
+<script>
+    function gridtax(data) {
+        try {
+            $("#grid_tax").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                In_taxdetails_rowid: { type: "int" },
+                                In_product_category: { type: "string" },
+                                In_product_sub_category: { type: "string" },
+                                In_product_code: { type: "string" },
+                                In_product_name: { type: "string" },
+                                In_hsn_code: { type: "string" },
+                                In_hsn_code_desc: { type: "string" },
+                                In_hsn_desc: { type: "string" },
+                                In_cgst_rate: { type: "string" },
+                                In_sgst_rate: { type: "string" },
+                                In_ugst_rate: { type: "string" },
+                                In_sugst_rate: { type: "string" },
+                                In_igst_rate: { type: "string" },
+                                In_tax_rate: { type: "string" },
+                                In_taxable_amount: { type: "string" },
+                                In_tax_amount: { type: "string" },
+                                In_mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        },
+                        parse: function (data) {
+                            return $.map(data, function (item) {
+                                item.sugst_rate = parseFloat(item.In_sgst_rate) + parseFloat(item.In_ugst_rate);
+                                return item;
+                            });
+                        }
+                    }
+                },
+                height: 280,
+                groupable: false,
+                dataBinding: setDefaultValues,
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_tax').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                    {
+                        field: "In_taxdetails_rowid",
+                        title: "invoicedtl_rowid",
+                        hidden: true
+                    },
+                    {
+                        field: "In_invoice_no",
+                        title: "invoice_no",
+                        width: 1,
+                        hidden: true,
+                    },
+                    {
+                        field: "In_product_category",
+                        title: "Product Category",
+                        editor: function (container, options) {
+                            combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "", "grid_tax")
+                        },
+                        width: 100,
+                        hidden: true
+                    },
+                    {
+                        field: "In_product_sub_category",
+                        title: "Product Sub-Category",
+                        editor: function (container, options) {
+                            combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "", "grid_tax")
+                        },
+                        width: 120,
+                        hidden: true
+                    },
+                    {
+                        field: "In_product_code",
+                        title: "Product Code",
+                        width: 100,
+
+                    },
+                    {
+                        field: "In_product_name",
+                        title: "Product Name",
+                        width: 100,
+                    },
+                    {
+                        field: "In_hsn_code",
+                        title: "HSN Code",
+                        width: 100,
+                        hidden: true
+                    },
+                    {
+                        field: "In_hsn_desc",
+                        title: "HSN",
+                        width: 100,
+
+                    },
+
+                    {
+                        field: "In_cgst_rate",
+                        title: "CGST %",
+                        width: 100,
+                        attributes: { style: "text-align:right;" },
+                        editor: function (container, options) {
+                            item_rate(container, options.field, '4', '2');
+                        },
+                    },
+                    {
+                        field: "In_sgst_rate",
+                        title: "sgst_rate",
+                        hidden: true
+                    },
+                    {
+                        field: "In_ugst_rate",
+                        title: "ugst_rate",
+                        hidden: true
+                    },
+                    {
+                        field: "In_sgst_rate",
+                        title: "SGST % / UGST %",
+                        width: 100,
+                        attributes: { style: "text-align:right;" },
+                        editor: function (container, options) {
+                            item_rate(container, options.field, '4', '2');
+                        },
+                    },
+                    {
+                        field: "In_igst_rate",
+                        title: "IGST %",
+                        width: 100,
+                        attributes: { style: "text-align:right;" },
+                        editor: function (container, options) {
+                            item_rate(container, options.field, '4', '2');
+                        },
+                    },
+                    {
+                        field: "In_tax_rate",
+                        title: "Tax Rate",
+                        width: 100,
+                        hidden: true
+                    },
+                    {
+                        field: "In_taxable_amount",
+                        title: "Taxable Amount",
+                        attributes: { style: "text-align:right;" },
+                        width: 100,
+                    },
+
+                    {
+                        field: "In_tax_amount",
+                        title: "Tax Amount",
+                        attributes: { style: "text-align:right;" },
+                        width: 100,
+                    },
+
+                    {
+                        field: "In_mode_flag",
+                        title: "Mode",
+                        hidden: true
+                    }],
+                editable: false
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+</script>
+<script>
+    var validate = "";
+    function Validate() {
+        validate = true;
+        var dis = $("#txt_discountamt").val();
+        var gross = $("#txt_gross_amount").val();
+        if (parseInt(dis) > parseInt(gross)) {
+            kendoAlert("Discount Amount not greater than net Amount");
+            validate = false;
+        }
+        var grid_invoice = JSON.stringify($("#grid_invoice").data().kendoGrid._data);
+        //var grid_val = JSON.stringify($("#grid_Transport").data().kendoGrid._data);
+        var Bind1 = {};
+        //Bind = grid_val;
+        Bind1 = grid_invoice;
+        //var result = JSON.parse(Bind);
+        //var grid_validate_msg = "";
+        //$.each(result, function (index, value) {
+        //    var In_no_of_bags = value.In_no_of_bags;
+        //    if (In_no_of_bags == undefined || In_no_of_bags == '') {
+        //        kendoAlert("Enter serial No");
+        //        validate = false;
+        //    }
+        //    var In_vehicle_weight = value.In_vehicle_weight;
+        //    if (In_vehicle_weight == undefined || In_vehicle_weight == '') {
+        //        kendoAlert("Enter vehicle weight");
+        //        validate = false;
+        //    }
+        //    var In_location = value.In_location;
+        //    if (In_location == undefined || In_location == '') {
+        //        kendoAlert("Select Location field");
+        //        validate = false;
+        //    }
+        //});
+        var result1 = JSON.parse(Bind1);
+        $.each(result1, function (index, value) {
+            var In_qty = value.In_qty;
+            if (In_qty == undefined || In_qty == 0) {
+                kendoAlert("Quantity Can't Be Zero for the Product Name   " + value.In_item_name);
+                validate = false;
+            }
+           // var In_rate = value.In_rate;
+           // if (In_rate == undefined || In_rate == 0 || In_rate == "") {
+            //    kendoAlert("Amount Can't Be Zero for the Product Name   " + value.In_item_name);
+            //    validate = false;
+           // }
+        })
+
+    }
+    function gridtransport(data) {
+        try {
+            $("#grid_Transport").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                In_transdtl_rowid: { type: "string" },
+                                In_vehicle_no: { type: "string", validation: { required: { message: "Vechicle. No cannot be blank" } } },
+                                In_vehicle_weight: { type: "string", required: true },
+                                In_qty: { type: "string" },
+                                In_prodcut_code: { type: "string" },
+                                In_no_of_bags: {
+                                    validation: {
+                                        required: { message: "Add serial no" },
+                                        maxlength:
+                                            function (input) {
+                                                if (input.val().length > 50) {
+                                                    input.attr("data-maxlength-msg", "Max length is 50");
+                                                    return false;
+                                                }
+                                                return true;
+                                            }
+                                    }
+                                },
+                                In_product_qty: { type: "string" },
+                                In_location: {
+                                    validation: {
+                                        dropdownlistValidation: function (input) {
+                                            if (input.is("[name='In_location']")) {
+                                                var isValid = true;
+                                                input.attr("data-dropdownlistValidation-msg", "location cannot be blank"); if (input.val().length <= 0) {
+                                                    isValid = false;
+                                                }
+                                                return isValid;
+                                            }
+                                            return true;
+                                        }
+                                    }
+                                },
+                                Transportslno: { type: "string" }, unique_id: { type: "string" },
+                                In_mode_flag: { type: "string", defaultValue: "I" },
+                                unique_id: { type: "string" }
+                            }
+                        }
+                    }
+                },
+                toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 240,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_Transport').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                save: function (data) {
+                    debugger;
+                    if (data.values.In_vehicle_no) {
+                        combo();
+                    }
+                    if (data.values.In_no_of_bags) {
+                        data.model.set("unique_id", $("#serail_uid").val());
+                        data.model.set("Transportslno", $("#json").val());
+                        data.model.set("In_prodcut_qty", $("#tranqty").val());
+                        data.model.set("In_no_of_bags", $("#noofbages").val());
+                    }
+                },
+                edit: OnEdittrans,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [{
+                    command: [
+                        {
+                            name: "Delete",
+                            id: "Delete",
+                            imageClass: "fa fa-close",
+                            click: function (e) {
+
+                                var grid = $("#grid_Transport").data("kendoGrid");
+                                var dataItem = $("#grid_Transport").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                                DeleteWindowEvent(e, dataItem, grid);
+                                e.stopImmediatePropagation()
+
+                            }
+                        },
+                    ], title: "Action", width: "50px",
+                },
+                {
+                    field: "In_transdtl_rowid",
+                    title: "transdtl_rowid",
+                    width: 100,
+                    hidden: true
+                },
+                {
+                    field: "In_vehicle_no",
+                    title: "Vechicle NO",
+                    width: 100,
+
+                },
+                {
+                    field: "In_vehicle_weight",
+                    title: "Weight",
+                    width: 100,
+                    attributes: { style: "text-align:right;" },
+                    editor: function (container, options) {
+                        item_rate(container, options.field, '4', '2');
+                    },
+                },
+                {
+                    field: "In_prodcut_code",
+                    title: "Product",
+                    width: 100,
+                    editor: function (container, options) {
+                        combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "", "grid_Transport")
+                    },
+                },
+                {
+                    command: [
+                        {
+                            name: "Add",
+                            id: "Add",
+                            text: "Add",
+                            click: function (e) {
+                                var grid = $("#grid_Transport").data("kendoGrid");
+                                var dataItem = $("#grid_Transport").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                                serialno(e, dataItem, grid);
+                            }
+                        },
+                        {
+                            name: "View",
+                            id: "View",
+                            text: "View",
+                            click: function (e) {
+                                var grid = $("#grid_Transport").data("kendoGrid");
+                                var dataItem = $("#grid_Transport").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                                serialnoview(e, dataItem, grid);
+                            }
+                        },
+                    ], title: "Serial NO", width: "100px",
+                },
+
+                {
+                    field: "unique_id",
+                    title: "unique_id",
+                    width: 100,
+                    hidden: true
+                },
+                {
+                    field: "Transportslno",
+                    title: "json",
+                    width: 100,
+                    hidden: true
+                },
+                {
+                    field: "In_no_of_bags",
+                    title: "No OF Bags",
+                    width: 100,
+                    attributes: { style: "text-align:right;" },
+                    editor: function (container, options) {
+                        item_rate(container, options.field, '4', '2');
+                    },
+                },
+                {
+                    field: "In_prodcut_qty",
+                    title: "QTY",
+                    width: 120,
+                },
+                {
+                    field: "In_location",
+                    title: "Location",
+                    width: 100,
+                    editor: function (container, options) {
+                        combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "In_location", "grid_Transport")
+                    },
+                },
+                {
+                    field: "In_sl_no",
+                    title: "In_sl_no",
+                    width: 100,
+                    editor: function (container, options) {
+                        item_rate(container, options.field, '4', '2');
+                    },
+                    hidden: true
+                },
+                {
+                    field: "In_mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }],
+                editable: true,
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+    function OnEdittrans(e) {
+        setDefaultValues(e);
+        e.container.find("input[name='In_prodcut_qty']").prop('readonly', true);
+        e.container.find("input[name='In_no_of_bags']").prop('readonly', true);
+        e.container.find("input[name='In_location']").focusout(function () {
+            var CreditCount = 0;
+            var currentlocation = e.model.In_location;
+            var currentProductName = e.model.In_prodcut_code;
+            var grid = $("#grid_Transport").data("kendoGrid");
+            var gridData = grid.dataSource.view();
+            for (var i = 0; i < gridData.length; i++) {
+                var gridlocation = gridData[i].In_location;
+                var gridproduct = gridData[i].In_prodcut_code;
+                if (gridproduct == currentProductName && gridlocation == currentlocation) {
+                    CreditCount = CreditCount + 1;
+                }
+                if (CreditCount > 1) {
+                    kendoAlert("Product and Location  Should Be Unique");
+                    e.model.In_location = "";
+                    return false;
+                }
+            }
+        });
+    }
+    function fetchtran_grid() {
+        debugger;
+        var grid = $("#grid_Transport").data("kendoGrid");
+        var models = grid.dataSource.data();
+        for (var i = 0; i < models.length; i++) {
+            if (models[i].uid == $("#serail_uid").val()) {
+                var dataItem = $("#grid_Transport").data("kendoGrid").dataSource.data()[i];
+                dataItem.set("In_prodcut_qty", $("#tranqty").val());
+                dataItem.set("In_no_of_bags", $("#noofbages").val());
+                dataItem.set("unique_id", $("#serail_uid").val());
+                dataItem.set("Transportslno", $("#json").val());
+
+            }
+        }
+
+    }
+    function combo() {
+        var grid = $("#grid_invoice").data("kendoGrid");
+        var gridData = grid.dataSource.view();
+        var itemArr = [];
+        for (var i = 0; i < gridData.length; i++) {
+            var list = {};
+            if (gridData[i].In_item_name != '') {
+                list.id = gridData[i].In_item_name;
+                list.code = gridData[i].In_item_name;
+                list.desc = gridData[i].In_item_name;
+                itemArr.push(list);
+            }
+        }
+
+        In_prodcut_code_list = itemArr;
+        In_location_list = getlocalStorage('Location');
+    }
+</script>
+<script>
+    function grid_othercost(data) {
+        try {
+            $("#grid_othercost").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                In_trans_rowid: { type: "string" },
+                                In_cost_type: { type: "string" },
+                                In_othercost_amt: { type: "string" },
+                                In_mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+                toolbar: "<a class='k-grid-add' id='btnSave1' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 240,
+                groupable: false,
+                dataBinding: setDefaultValues,
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_othercost').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                edit: OnEditother,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [{
+                    command: [
+                        {
+                            name: "Delete",
+                            id: "Delete",
+                            imageClass: "fa fa-close",
+                            click: function (e) {
+
+                                var grid = $("#grid_othercost").data("kendoGrid");
+                                var dataItem = $("#grid_othercost").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                                DeleteWindowEvent(e, dataItem, grid);
+                                e.stopImmediatePropagation()
+
+                            }
+                        },
+                    ], title: "Action", width: "50px",
+                },
+                {
+                    field: "In_othercostdtl_rowid",
+                    title: "othercostdtl_rowid",
+                    hidden: true
+                },
+                {
+                    field: "In_cost_type",
+                    title: "Types",
+                    width: 100,
+                    editor: function (container, options) {
+                        combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "", "grid_othercost")
+                    },
+                },
+                {
+                    field: "In_othercost_amt",
+                    title: "Cost",
+                    width: 100,
+                    attributes: { style: "text-align:right;" },
+                    editor: function (container, options) {
+                        item_rate(container, options.field, '4', '2');
+                    },
+                },
+
+                {
+                    field: "In_mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }],
+                editable: true,
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+    load_master_code();
+    In_cost_type_list = grid_comboScreen_mastercodes("QCD_BIOTHERCOSTTYPE");
+    function OnEditother(e) {
+        setDefaultValues(e);
+        e.container.find("input[name='In_cost_type']").focusout(function () {
+            var CreditCount = 0;
+            var currentProductName = e.model.In_cost_type;
+            var grid = $("#grid_othercost").data("kendoGrid");
+            var gridData = grid.dataSource.view();
+            for (var i = 0; i < gridData.length; i++) {
+                var gridproduct = gridData[i].In_cost_type;
+                if (gridproduct == currentProductName) {
+                    CreditCount = CreditCount + 1;
+                }
+                //if (CreditCount > 1){
+                //    kendoAlert("Cost Type Should Be Unique");
+                //    e.model.In_cost_type = "";
+                //    return false;
+                //}
+            }
+            if (CreditCount > 1 && currentProductName != "") {
+                kendoAlert("Cost Type Should Be Unique");
+                e.model.In_cost_type = "";
+                return false;
+            }
+        });
+
+    }
+</script>
+<script>
+    function grid_serialno(data) {
+        try {
+            $("#grid_serialno").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                In_slno_rowid: { type: "string" },
+                                In_sl_no: { type: "string" },
+                                In_sl_qty: { type: "number" },
+                                unique_id: { type: "string" },
+                                In_mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+                toolbar: "<a class='k-grid-add' id='btnSave1' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 240,
+                groupable: false,
+                dataBinding: setDefaultValues,
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_serialno').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                save: function (data) {
+                    debugger;
+                    if (data.values.In_sl_qty) {
+                        data.model.set("unique_id", $("#serail_uid").val())
+                    }
+                },
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [
+                    {
+                        field: "unique_id",
+                        title: "unique_id",
+                        width: 100,
+                        hidden: true
+                    },
+                    {
+                        field: "In_slno_rowid",
+                        title: "slno_rowid",
+                        hidden: true
+                    },
+                    {
+                        field: "In_sl_no",
+                        title: "Serial No",
+                        width: 100,
+                    },
+                    {
+                        field: "In_sl_qty",
+                        title: "qty",
+                        width: 100,
+                        attributes: { style: "text-align:right;" },
+                        editor: function (container, options) {
+                            item_rate(container, options.field, '4', '2');
+                        },
+                    },
+                    {
+                        field: "In_UOM",
+                        title: "In_UOM",
+                        width: 100,
+                        hidden: true
+                    },
+                    {
+                        field: "In_mode_flag",
+                        title: "Mode",
+                        hidden: true
+                    }],
+                editable: true,
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+</script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+
+<script>
+    function serialno(e, dataItem, grid) {
+        debugger
+        $("#dialog").kendoWindow();
+        var dialog = $("#dialog").data("kendoWindow");
+        dialog.open().element.closest(".k-window").css({
+            top: 121,
+            left: 300, height: 400, width: 900
+        });
+        dialog.title("Serial No");
+        dialog.bind("open", serialno);
+        $("#serail_uid").val(dataItem.uid);
+        $("#product_code").val(dataItem.In_prodcut_code);
+        $("#btnRSaveserialno").show();
+        $("#grid_serialno .k-grid-toolbar").show();
+        if (dataItem.In_transdtl_rowid != "" && dataItem.unique_id == undefined || dataItem.unique_id == undefined) {
+            var data = {};
+            data.context = getContext();
+           var tran_rowid= dataItem.In_transdtl_rowid;
+
+            var Context = data.context;
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, In_transdtl_rowid: tran_rowid }),
+                url: "/PAWHSNewBookInvoice/BookInvoicetransslnoFetch",
+                dataType: "json",
+                contentType: 'application/json; charset-utf-8;',
+                success: function (response) {
+                    debugger;
+                    if (response.context != null) {
+                        var data = changedataType(response.context.transport);
+                        grid_serialno(data);
+                    }
+                }
+            });
+        } else if (dataItem.unique_id == "" && dataItem.In_transdtl_rowid == "" || dataItem.In_transdtl_rowid == undefined) {
+            grid_serialno([]);
+        }
+        else {
+            var data = JSON.parse(dataItem.Transportslno)
+            grid_serialno(data);
+        }
+    }
+    function serialnoview(e, dataItem, grid) {
+        debugger
+        $("#dialog").kendoWindow();
+        var dialog = $("#dialog").data("kendoWindow");
+        dialog.open().element.closest(".k-window").css({
+            top: 121,
+            left: 300, height: 400, width: 900
+        });
+        dialog.title("Serial No");
+        dialog.bind("open", serialno);
+        $("#btnRSaveserialno").hide();
+        $("#grid_serialno .k-grid-toolbar").hide();
+        if (dataItem.In_transdtl_rowid != "" && dataItem.unique_id == undefined || dataItem.unique_id == "") {
+            var data = {};
+            data.context = getContext();
+            var tran_rowid = dataItem.In_transdtl_rowid;
+
+            var Context = data.context;
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, In_transdtl_rowid: tran_rowid }),
+                url: "/PAWHSNewBookInvoice/BookInvoicetransslnoFetch",
+                dataType: "json",
+                contentType: 'application/json; charset-utf-8;',
+                success: function (response) {
+                    debugger;
+                    if (response.context != null) {
+                        var data = changedataType(response.context.transport);
+                        grid_serialno(data);
+                    }
+                }
+            });
+        } else {
+            var data = JSON.parse(dataItem.Transportslno)
+            grid_serialno(data);
+        }
+    }
+    function saveserialno() {
+        debugger;
+        var grid_val2 = JSON.stringify($("#grid_serialno").data().kendoGrid._data);
+        var Bind1 = {};
+        Bind1 = grid_val2;
+        var result3 = JSON.parse(Bind1);
+        $.each(result3, function (index, value) {
+            var In_slno_rowid = value.In_slno_rowid;
+            if (In_slno_rowid == undefined || In_slno_rowid == '') {
+                result3[index].In_slno_rowid = 0;
+            }
+        });
+        var grid_val3 = JSON.stringify(result3);
+        var grid = $("#grid_serialno").data("kendoGrid");
+        var gridData = grid.dataSource.view();
+        var net_amt = 0;
+        for (var i = 0; i < gridData.length; i++) {
+            if (gridData[i].In_sl_qty != '') {
+                net_amt += gridData[i].In_sl_qty != undefined ? parseFloat(gridData[i].In_sl_qty) : parseFloat(0);
+            }
+        }
+        var grid = $("#grid_Transport").data("kendoGrid");
+        var gridData = grid.dataSource.view();
+        var grid1 = $("#grid_serialno").data("kendoGrid");
+        var gridData1 = grid1.dataSource.view();
+        var net_amt1 = 0;
+        for (var k = 0; k < gridData1.length; k++) {
+            for (var j = 0; j < gridData.length; j++) {
+                if (gridData[j].In_prodcut_code == $("#product_code").val()) {
+                    if (gridData[j].uid != gridData1[k].unique_id && gridData1[k].unique_id != undefined) {
+                        net_amt1 += gridData[j].In_prodcut_qty != undefined ? parseFloat(gridData[j].In_prodcut_qty) : parseFloat(0);
+                    }
+                }
+                //if (gridData[j].unique_id != gridData1[k].unique_id) {
+                //    if (gridData[j].In_prodcut_code == $("#product_code").val()) {
+                //        net_amt1 += gridData[j].In_prodcut_qty != undefined ? parseFloat(gridData[j].In_prodcut_qty) : parseFloat(0);
+                //    }
+                //}
+            }
+        }
+        var totalnet = net_amt + net_amt1
+        var grid_valinv = JSON.stringify($("#grid_invoice").data().kendoGrid._data);
+        var Bindinv = {};
+        Bindinv = grid_valinv;
+        var resultinv = JSON.parse(Bindinv);
+        $.each(resultinv, function (index, value) {
+            var qtyinvoive = "";
+            if (value.In_item_name == $("#product_code").val()) {
+                if (value.In_qty == undefined || value.In_qty == "") {
+                    value.In_qty = 0;
+                }
+                qtyinvoive = parseFloat(value.In_qty);
+                if (qtyinvoive == NaN || qtyinvoive == "") {
+                    qtyinvoive = 0;
+                }
+                if (qtyinvoive < totalnet) {
+                    kendoAlert("Entered Qty is  higher than Invoice Qty");
+                    $("#tranqty").val("");
+                    $("#noofbages").val("");
+                    $("#json").val("");
+                } else {
+                    $("#tranqty").val(net_amt);
+                    $("#noofbages").val(i);
+                    $("#json").val(grid_val3);
+                    $('#dialog').data("kendoWindow").close();
+                    fetchtran_grid();
+                    //OnEdittrans();
+                }
+            }
+
+        });
+
+        //console.log(JSON.stringify(slinfo));
+
+    }
+    function grid_control() {
+        var control_Name = [
+
+        ];
+        return control_Name;
+    }
+    function form_control() {
+        var control_Name = [
+            { "dataCol": "orgn_code", "controlId": "", "type": "Text" },
+            { "dataCol": "buyer_code", "controlId": "", "type": "Text" },
+            { "dataCol": "buyer_name", "controlId": "buyer_name", "type": "Text" }
+        ];
+        return control_Name;
+    }
+    function trans_input_data() {
+        var trans_coll = [
+            { "trasfer": "Yes", "dataCol": "orgn_code", "controlId": "txtagg_code", "grid_id": "", "grid_row_col": "" },
+            { "trasfer": "Yes", "dataCol": "buyer_code", "controlId": "", "grid_id": "", "grid_row_col": "" },
+            { "trasfer": "Yes", "dataCol": "buyer_name", "controlId": "", "grid_id": "", "grid_row_col": "" }
+        ];
+        return trans_coll;
+    }
+    function fetch_loc() {
+        var In_buyer_code = $("#txt_buyer_name").val();
+        var In_agg_code = $("#txtagg_code").val();
+        var data = { In_buyer_code: In_buyer_code, In_agg_code: In_agg_code };
+        $.ajax({
+          url: '@Url.Action("search_po", "PAWHSNewBookInvoice")',
+         type: "post",
+        contentType: 'application/x-www-form-urlencoded',
+            data: data,
+            success: function (response) {
+                debugger;
+                if (response != null) {
+                    debugger;
+                    var itemArr = [];
+                    for (var i = 0; i < response.length; i++) {
+                        var list = {};
+                        list.id = response[i].Out_batch_rowid
+                        list.code = response[i].Out_batch_no;
+                        list.desc = response[i].Out_batch_no;
+                        itemArr.push(list);
+                    }
+                    filter_combobox("cmb_filter", itemArr);
+
+                }
+                else {
+                    $("#cmb_filter").empty();
+                }
+            },
+            error: function (er) {
+                alert(er);
+                console.log(er);
+            }
+        });
+        $.ajax({
+          url: '@Url.Action("location_search", "PAWHSNewBookInvoice")',
+         type: "post",
+        contentType: 'application/x-www-form-urlencoded',
+            data: data,
+            success: function (response) {
+                debugger;
+                if (response != null) {
+                    debugger;
+                    var itemArr1 = [];
+                    for (var i = 0; i < response.length; i++) {
+                        var list = {};
+                        list.id = response[i].Out_buyer_addr_rowid
+                        list.code = response[i].Out_loction;
+                        list.desc = response[i].Out_loction;
+                        itemArr1.push(list);
+                    }
+                    setlocalStorage("Location", itemArr1);
+                }
+            },
+            error: function (er) {
+                alert(er);
+                console.log(er);
+            }
+        });
+    }
+     function setpolocation() {
+        var po_id = $("#cmb_filter").val();
+        var po_rowid = "0";
+        var data = {};
+        data.context = getContext();
+        var Context = data.context;
+
+        var data = { user: Context.userId, org: Context.orgnId, locn: Context.locnId, lang: Context.localeId,po_id: po_id, po_rowid: po_rowid };
+        $.ajax({
+          url: '@Url.Action("getPOlocation", "PAWHSNewBookInvoice")',
+         type: "post",
+        contentType: 'application/x-www-form-urlencoded',
+            data: data,
+            success: function (response) {
+                debugger;
+                if (response.context != null) {
+                    $("#txt_Location").val(response.context.Header.In_buyer_location);
+                    $("#txt_Location_code").val(response.context.Header.In_buyer_location_code);
+                    $("#txtValidity").val(response.context.Header.In_buyer_date);
+                    setpolist();
+                }
+            }
+        });
+    }
+    function setpolist() {
+        var po_id = $("#cmb_filter").val();
+        var location_code = $("#txt_Location_code").val();
+        var data = {};
+        data.context = getContext();
+        var Context = data.context;
+
+        var data = { user: Context.userId, org: Context.orgnId, locn: Context.locnId, lang: Context.localeId, po_id: po_id, location_code: location_code };
+        $.ajax({
+          url: '@Url.Action("getPOproduct", "PAWHSNewBookInvoice")',
+         type: "post",
+        contentType: 'application/x-www-form-urlencoded',
+            data: data,
+            success: function (response) {
+                debugger;
+                if (response.context != null) {
+                    generate_Invoice_InvoiceTax(response.context.InvoiceTax);
+                    generate_Invoice_InvoiceDetail(response.context.Detail);
+                    generate_batchcreation_OtherList(response.context.OtherDtl); // ramya added on 17 jul 21
+                }
+            }
+        });
+    }
+    function generate_batchcreation_OtherList(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                New_grid_Other_details(data);
+            }
+            else {
+                New_grid_Other_details([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_Invoice_InvoiceDetail(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                setlocalStorage("invoice_data", data);
+                //for (var i = 0; i < data.length; i++) {
+                //    data[i].In_product_catg_code = data[i].In_productcategory;
+                //    data[i].In_item_desc = data[i].In_productcategory_desc;
+                //    data[i].In_product_subcatg_code = data[i].In_productsubcategory;
+                //    data[i].In_type = data[i].In_productsubcategory_desc;
+                //    data[i].In_item_code = data[i].In_product_code;
+                //    data[i].In_item_name = data[i].In_product_name;
+                //    data[i].In_uomtype_code = data[i].In_uomtype_code;
+                //    data[i].In_uomtype_desc = data[i].In_uomtype_desc;
+                //    data[i].In_current_qty = (parseFloat(data[i].In_current_qty)).toFixed(2);
+                //    data[i].In_qty = (parseFloat(data[i].In_base_price)).toFixed(2);
+                //    data[i].In_tax_rate = (parseFloat(data[i].In_tax_rate)).toFixed(2);
+                //    data[i].In_net_amount = 0;
+
+                //}
+                gridinvoice(data);
+
+            }
+            else {
+                gridinvoice([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_Invoice_InvoiceTax(res) {
+        debugger;
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                setlocalStorage("tax_data", data);
+                res.In_tax_amount = data.In_tax;
+                for (var i = 0; i < data.length; i++) {
+                    data[i].In_product_category = data[i].In_product_code;
+                    data[i].In_product_sub_category = data[i].In_product_name
+                    data[i].In_cgst_rate = (parseFloat(data[i].In_cgst_rate)).toFixed(2);
+                    data[i].In_sgst_rate = (parseFloat(data[i].In_sgst_rate)).toFixed(2);
+                    data[i].In_ugst_rate = (parseFloat(data[i].In_ugst_rate)).toFixed(2);
+                    data[i].In_sugst_rate = (parseFloat(data[i].In_sugst_rate)).toFixed(2);
+                    data[i].In_igst_rate = (parseFloat(data[i].In_igst_rate)).toFixed(2);
+                    data[i].In_tax_rate = (parseFloat(data[i].In_tax_rate)).toFixed(2);
+                    data[i].In_taxable_amount = (parseFloat(data[i].In_taxable_amount)).toFixed(2);
+                    data[i].In_tax_amount = (parseFloat(data[i].In_tax_amount)).toFixed(2);
+                }
+                gridtax(data);
+                $("#tax_rate").val(res[0].In_tax_rate);
+            }
+            else {
+                gridtax([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function save() {
+        debugger;
+        try {
+            Validate();
+            if (validate == true) {
+
+                if ($("#txtinvoice_no").val() == "" || $("#txtinvoice_no").val() == undefined) {
+                    $("#txtinvoice_no").val('0');
+                }
+                if ($("#txt_invc_rowid").val() == "" || $("#txt_invc_rowid").val() == undefined) {
+                    $("#txt_invc_rowid").val('0');
+                }
+
+                if ($("#txtMode").val() == "S") {
+                    $("#txtMode").val('U');
+                }
+                if ($("#txtMode").val() == "") {
+                    $("#txtMode").val("I");
+                }
+                var formval = form_Serialize("invoice_form");
+                var obj_val = JSON.parse(formval);
+                obj_val.In_row_timestamp = "";
+                if ($("#invoice #txtic_invoiceno").val() == "" || $("#invoice #txtic_invoiceno").val() == undefined) {
+                    obj_val.IOU_invoice_no = "";
+                } else {
+                    obj_val.IOU_invoice_no = $("#invoice #txtic_invoiceno").val();
+                }
+                obj_val.In_invoice_date = getFormated_StringDate($("#invoice #txtic_invoicedate").val());
+                var In_tran = parseFloat(obj_val.In_tranport);
+                obj_val.In_tranport = In_tran;
+                var In_dis = parseFloat(obj_val.In_discount);
+                obj_val.In_discount = In_dis;
+                obj_val.In_Buyer_Location = $("#txt_Location_code").val();
+                obj_val.In_provider_state = $("#txt_Location_code").val();
+                obj_val.In_status_code = "A";
+                var grid_val1 = JSON.stringify($("#grid_invoice").data().kendoGrid._data);
+                var Bind = {};
+                Bind = grid_val1;
+                var result1 = JSON.parse(Bind);
+                $.each(result1, function (index, value) {
+
+                    var invoice_details_rowid = value.In_invoice_details_rowid;
+                    if (invoice_details_rowid == undefined || invoice_details_rowid == '') {
+                        result1[index].In_invoice_details_rowid = "0";
+                    }
+                    var discount = value.In_discount;
+                    if (discount == undefined || discount == '') {
+                        result1[index].In_discount = "0";
+                    }
+                    var status_code = value.In_status_code;
+                    if (status_code == undefined || status_code == '') {
+                        result1[index].In_status_code = "A";
+                    }
+                    var item_name = value.In_item_name;
+                    if (item_name == undefined || item_name == '') {
+                        result1[index].In_item_name = "Item";
+                    }
+                    result1[index].In_item_code = value.In_product_code;
+
+                    var mode_flag = value.In_mode_flag;
+                    if (mode_flag == undefined || mode_flag == '') {
+                        result1[index].In_mode_flag = "I";
+                    }
+                    var In_tax_rate = value.In_tax_rate;
+                    if (In_tax_rate == undefined || In_tax_rate == '') {
+                        result1[index].In_tax_rate = 0.00;
+                    }
+                    In_tax_rate
+                    var base_price = parseFloat(value.In_rate);
+                    result1[index].In_rate = base_price;
+                    var In_qty = parseFloat(value.In_qty);
+                    result1[index].In_qty = In_qty;
+                    var In_product_amount = parseFloat(value.In_amount);
+                    result1[index].In_amount = In_product_amount;
+                    var In_tax_amount = parseFloat(value.In_tax_amount);
+                    result1[index].In_tax_amount = In_tax_amount;
+                    var In_current_qty = parseFloat(value.In_current_qty);
+                    result1[index].In_current_qty = In_current_qty;
+                    var In_tax_rate = parseFloat(value.In_tax_rate);
+                    result1[index].In_tax_rate = In_tax_rate;
+                    var nwtamount = parseFloat(value.In_net_amount);
+                    result1[index].In_net_amount = nwtamount;
+                    obj_val.In_net_amount = nwtamount;
+                });
+                var obj_tax_val1 = result1;
+
+                var grid_val2 = JSON.stringify($("#grid_tax").data().kendoGrid._data);
+                var Bind = {};
+                Bind = grid_val2;
+                var result2 = JSON.parse(Bind);
+                $.each(result2, function (index, value) {
+                    var taxdetails_rowid = value.In_taxdetails_rowid;
+                    if (taxdetails_rowid == undefined) {
+                        result2[index].In_taxdetails_rowid = "0";
+                    }
+                    var status_code = value.In_status_code;
+                    if (status_code == undefined || status_code == '') {
+                        result2[index].In_status_code = "A";
+                    }
+                    var mode_flag = value.In_mode_flag;
+                    if (mode_flag == undefined || mode_flag == '') {
+                        result2[index].In_mode_flag = "I";
+                    }
+                    var taxable_amount = value.In_taxable_amount;
+                    if (taxable_amount == undefined || taxable_amount == '') {
+                        result2[index].In_taxable_amount = result1[index].In_net_amount;
+                    }
+                    var tax_amount = value.In_tax_amount;
+                    if (tax_amount == undefined || tax_amount == '') {
+                        result2[index].In_tax_amount = result1[index].In_tax_amount;
+                    }
+                    var In_taxable_amount = parseFloat(value.In_taxable_amount);
+                    result2[index].In_taxable_amount = In_taxable_amount;
+                    var In_tax_amount = parseFloat(value.In_tax_amount);
+                    result2[index].In_tax_amount = In_tax_amount;
+                });
+                var obj_grid_val2 = result2;
+
+                //var grid_val3 = JSON.stringify($("#grid_Transport").data().kendoGrid._data);
+                //if (grid_val3 != "[]") {
+                //    var Bind1 = {};
+                //    Bind1 = grid_val3;
+                //    var result3 = JSON.parse(Bind1);
+                //    //for (var i = 0; i < result5.length; i++) {
+                //    //    if (result5[i]['In_location'] == "") {
+                //    //        kendoAlert("Please Fill the Type Field..!");
+                //    //        return false;
+                //    //    }
+                //    //}
+                //    $.each(result3, function (index, value) {
+                //        var transdtl_rowid = value.In_transdtl_rowid;
+                //        if (transdtl_rowid == undefined || transdtl_rowid == '') {
+                //            result3[index].In_transdtl_rowid = 0;
+                //        }
+                //        var mode_flag = value.In_mode_flag;
+                //        if (mode_flag == undefined || mode_flag == '') {
+                //            result3[index].In_mode_flag = "I";
+                //        }
+                //        var Transportslno = value.Transportslno;
+                //        if (Transportslno != "") {
+                //            result3[index].Transportslno = JSON.parse(Transportslno);
+                //        } else {
+                //            result3[index].Transportslno = "";
+                //        }
+                //        var In_vehicle_weight = parseFloat(value.In_vehicle_weight);
+                //        result3[index].In_vehicle_weight = In_vehicle_weight;
+                //        var In_no_of_bags = parseFloat(value.In_no_of_bags);
+                //        result3[index].In_no_of_bags = In_no_of_bags;
+                //        var In_prodcut_qty = parseFloat(value.In_prodcut_qty);
+                //        result3[index].In_prodcut_qty = In_prodcut_qty;
+                //    });
+                //    var obj_grid_val3 = result3;
+
+                //}
+                //else {
+                //    kendoAlert("Please Fill the Transport Tab..!");
+                //    return false;
+                //}
+
+                //var grid_val5 = JSON.stringify($("#grid_othercost").data().kendoGrid._data);
+                //if (grid_val5 != "[]") {
+
+                //    var Bind2 = {};
+                //    Bind2 = grid_val5;
+                //    var result5 = JSON.parse(Bind2);
+                //    //Introduced By Mohan (31-10-2020)
+                //    for (var i = 0; i < result5.length; i++) {
+                //        if (result5[i]['In_cost_type'] != "") {
+                //            var othercostdtl_rowid = result5[i]['In_othercostdtl_rowid'];
+                //            if (othercostdtl_rowid == undefined) {
+                //                result5[i]['In_othercostdtl_rowid'] = 0;
+                //            }
+                //            var mode_flag = result5[i]['In_mode_flag'];
+                //            if (mode_flag == undefined || mode_flag == '') {
+                //                result5[i]['In_mode_flag'] = "I";
+                //            }
+                //            var In_othercost_amt = parseFloat(result5[i]['In_othercost_amt']);
+                //            result5[i]['In_othercost_amt'] = In_othercost_amt;
+                //        }
+                //        else {
+                //            kendoAlert("Please Fill the Type Field..!");
+                //            return false;
+                //        }
+                //    }
+                //    //Commanded By Mohan
+                //    //$.each(result5, function (index, value) {
+                //    //    var othercostdtl_rowid = value.In_othercostdtl_rowid;
+                //    //    if (othercostdtl_rowid == undefined) {
+                //    //        result5[index].In_othercostdtl_rowid = 0;
+                //    //    }
+                //    //    var mode_flag = value.In_mode_flag;
+                //    //    if (mode_flag == undefined || mode_flag == '') {
+                //    //        result5[index].In_mode_flag = "I";
+                //    //    }
+                //    //    var In_othercost_amt = parseFloat(value.In_othercost_amt);
+                //    //    result5[index].In_othercost_amt = In_othercost_amt;
+                //    //});
+                //    var obj_grid_val5 = result5;
+                //}
+                //else {
+                //    kendoAlert("Please Fill the OtherCost Tab..!");
+                //    return false;
+                //}
+                var data = {};
+                data.context = getContext();
+                data.context.Header = obj_val;
+                data.context.Header.InvoiceDetails = obj_tax_val1;
+                data.context.Header.TaxDetails = obj_grid_val2;
+                //data.context.Header.othercost = obj_grid_val5;
+                //data.context.Header.transport = obj_grid_val3;
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ orgnId: Context.orgnId, locnId: Context.locnId, userId: Context.userId, localeId: Context.localeId, Header: Context.Header }),
+                    url: "/PAWHSNewBookInvoice/NewBookInvoice",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        var Res = response;
+                        if (Res.context != null) {
+                            var mode = $("#txtmode").val();
+                            if (mode == "I") {
+                                kendoAlert("Book Invoice Details Saved Successfully");
+                                $('#divUserRole20 #btnSave').hide();
+                                get_Invoice_details(Res.context.Header);
+                            }
+                            else if (mode == "D") {
+                                kendoAlert("Book Invoice Details Saved Successfully");
+                                get_Invoice_details(Res.context.Header);
+                            }
+                            else {
+                                kendoAlert("Book Invoice Details Saved Successfully");
+                                get_Invoice_details(Res.context.Header);
+                            }
+                        }
+                        else {
+                            kendoAlert(Res.ApplicationException.errorDescription);
+                        }
+                    },
+                    error: function (er) {
+                        alert(er)
+                        console.log(er)
+                    }
+                });
+                $("#DocStat").val("Active");
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function get_Invoice_details(res) {
+        debugger;
+        var formval = form_Serialize("invoice_form");
+        var obj_val = JSON.parse(formval);
+        obj_val.invoice_rowid = res.IOU_invoice_rowid;
+        var data = {};
+        data.context =getContext();
+        data.context.Header = obj_val;
+        var Context = data.context;
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, IOU_invoice_rowid: Context.Header.invoice_rowid }),
+            url: "/PAWHSNewBookInvoice/BookInvoiceFetch",
+            dataType: "json",
+            contentType: 'application/json; charset-utf-8;',
+            success: function (response) {
+                debugger;
+                if (response.context != null) {
+                    debugger;
+                    $('#divUserRole20 #btnSave').hide();
+                    generate_invoice_header(response.context.Header);
+                    generate_invoice_invoicedetails(response.context.Header.InvoiceDetails);
+                    generate_invoice_taxdetail(response.context.Header.TaxDetails);
+                    generate_invoice_transportdetail(response.context.Header.transport);
+                    generate_invoice_otherdetail(response.context.Header.othercost);
+                    enable();
+                    TotalAmount();
+                }
+            },
+            error: function (er) {
+                alert(er);
+                console.log(er);
+            }
+        });
+        $("#txtMode").val("U");
+    }
+</script>
+
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>

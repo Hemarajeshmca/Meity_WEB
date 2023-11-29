@@ -1,0 +1,14 @@
+﻿<root>
+  <row>
+    <bank_code>SBI</bank_code>
+    <ifsc_code>SBIN0000441</ifsc_code>
+    <branch_name>Alisoor</branch_name>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <bank_code>IOB</bank_code>
+    <ifsc_code>IOBA0000148</ifsc_code>
+    <branch_name>Uthiramerur</branch_name>
+    <status_code>Active</status_code>
+  </row>
+</root>

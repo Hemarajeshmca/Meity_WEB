@@ -1,0 +1,1194 @@
+﻿@{
+    ViewBag.Form = "Item Master";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+
+<form id="Item_Master" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:20px;padding-bottom:20px">
+            <div class="row" style="padding-bottom:1px">
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_item_cde" class=" col-sm-5 control-label">Item Code</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_item_cde" name="IOU_item_code" class="form-control" maxlength="50" readonly>
+                            <input type="hidden" id="txtitem_rowid" name="IOU_item_rowid">
+                            <input type="hidden" id="txtagg_code" name="In_agg_code">
+                            @*<input type="hidden" id="txt_Prcccode" name="product_catg_code" />
+                                <input type="hidden" id="txt_proscode" name="product_subcatg_code" />*@
+                            <input type="hidden" id="txt_ITEM_LLNAME" name="In_item_ll_name" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <label for="txt_item_name" class=" col-sm-5 control-label required">Item Name</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_item_name" name="In_item_name" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class=" form-group">
+                        <div class=" col-sm-3">
+                            <input type="checkbox" id="chk-rg" name="In_item_type" value="RM" onclick="changing()" />RM
+                        </div>
+                        <div class=" col-sm-3">
+                            <input type="checkbox" id="chk_wip" name="In_item_type" value="WIP" onclick="changing()" />WIP
+                        </div>
+                        <div class=" col-sm-3">
+                            <input type="checkbox" id="chk_Fg" name="In_item_type" value="FG" onclick="changing()" />FG
+                        </div>
+                        @*<div class=" col-sm-3">
+                                <input type="checkbox" id="chk_Service" name="item_type" value="Service" onclick="changing()" />Service
+                            </div>*@
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:1px">
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label for="txt_fg_cate" class=" col-sm-5 control-label ">Category</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_fg_cate" name="In_fg_category" class="form-control" maxlength="50" readonly>
+                        </div>
+                        <div id="pay_help1">
+                            <a class="HelpWindow fa fa-search fa-lg" role="button" id="pay_help1" data-toggle="modal" href="../HelpFilter/HelpFilter" hdrtitle="product" searchid="PW03" data-target="#HelpModal" onclick=transfer(this,"form","","form_control"); title="Search" style="font-size: 19px; margin-left: 0px; margin-top: 10px;"></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label for="txt_fg_subcate" class=" col-sm-5 control-label ">SubCategory</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_fg_subcate" name="In_fg_subcategory" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4" style="display:none;">
+                    <div class=" form-group">
+                        <label for="txt_fg_subcate" class=" col-sm-5 control-label ">Category Code</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_fg_cate_code" name="In_fg_category" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4" style="display:none;">
+                    <div class=" form-group">
+                        <label for="txt_fg_subcate" class=" col-sm-5 control-label ">SubCategory Code</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_fg_subcate_code" name="In_fg_subcategory" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label for="txt_uom" class=" col-sm-5 control-label">Standard UOM</label>
+                        <div class=" col-sm-6">
+                            <input id="cmb_item_type" class="form-control" name="In_uom_code" data-role="filtercombo" style="width:100%">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" style="padding-bottom:5px">
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label for="txt_hsn_code" class=" col-sm-5 control-label">HSN Code</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_hsn_code" name="In_hsn_code" class="form-control" maxlength="50" readonly>
+                        </div>
+                        <div id="pay_help1">
+                            <a class="HelpWindow fa fa-search fa-lg" role="button" id="pay_help2" data-toggle="modal" href="../HelpFilter/HelpFilter" hdrtitle="product" searchid="S114" data-target="#HelpModal" onclick=transfer(this,"form","","form_control1"); title="Search" style="font-size: 19px; margin-left: 0px; margin-top: 10px;"></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label for="txt_hsn_desc" class=" col-sm-5 control-label">HSN Description</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_hsn_desc" name="In_hsn_description" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class="form-group" style="display:none;">
+                        <label for="txt_hsn_desc" class=" col-sm-5 control-label">HSN Code mst</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_hsn_code_mst" name="In_hsn_code" class="form-control" maxlength="50" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group" style="display:none;">
+                    <label for="status_code" class="col-sm-5 control-label">Status_code</label>
+                    <div class="col-sm-4">
+                        <input type="text" value="A" id="txt_status_code" name="In_status_code" class="form-control" maxlength="10">
+                        <input type="hidden" id="txt_status_DESC" name="In_status_desc" value="Active" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group" style="display:none;">
+                    <label for="txtMode" class="col-sm-5 control-label">Mode</label>
+                    <div class="col-sm-4">
+                        <input type="text" id="txtMode" name="In_mode_flag" class="form-control" maxlength="10" value="I">
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group" style="display:none;">
+                    <label for="row_timestamp" class="col-sm-5 control-label">Timestamp:</label>
+                    <div class="col-sm-4">
+                        <input type="text" id="txt_row_timestamp" name="In_row_timestamp" class="form-control" maxlength="10">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12" style="padding-bottom:25px">
+                <div id="Itm_mst"></div>
+            </div>
+        </div>
+    </div>
+    @*</div>*@
+</form>
+<script>
+    click_act_name = "PAWHSItemMasterList";
+    click_ctrl_name = "PAWHSItemMaster";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+<script src="~/API_Scripts/Item_Master_PAWHS_getItemMaster_APIClient.js"></script>
+<script src="~/API_Scripts/Item_Master_PAWHS_getItemMasterList_APIClient.js"></script>
+<script src="~/API_Scripts/Item_Master_PAWHS_saveItemMaster_APIClient.js"></script>
+<script src="~/API_Scripts/PAWHS_getItemMaster_Model.js"></script>
+<script src="~/API_Scripts/PAWHS_getItemMasterList_Model.js"></script>
+<script src="~/API_Scripts/PAWHS_saveItemMaster_Model.js"></script>
+<script src="~/API_Scripts/PAWHSItemmaster.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+<script src="~/CommonScripts/common.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+        kendodate_format();
+        ITMMST();
+        $("#bottom_menus").hide();
+        $("#divCreate").hide();
+        $("#divEdit").hide();
+        $("#divView").hide();
+        $('#frmlayerdiv').hide();
+        $('#divUserRole8').show();
+        $('#divUserRole8 #review').hide();
+        $("#hide_div").hide();
+        $("#divScreen").hide();
+
+
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#Item_Master");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        Screen_Id = "PWITEMMAS";
+        permission = sec_Permission(Screen_Id);
+
+        load_master_code();
+        $("#cmb_item_type").empty();
+        share_cert = grid_comboScreen_mastercodes("QCD_PAWHS_UOM");
+        filter_combobox("cmb_item_type", share_cert);
+
+        $(".file_attach").attr("hdrtitle", "HSN");
+        $(".notes").attr("hdrtitle", "HSN");
+        $("#lblForm_menuid").text("PWITEMMAS");
+
+        var org_id = getlocalStorage('org_id');
+        var org_type = getlocalStorage('org_type');
+        var orgtname = getlocalStorage('orgtname');
+        var org = getlocalStorage('org');
+        $('#txtagg_code').val(org_id);
+
+
+        if (getlocalStorage('btn_clk_val') == "Create") {
+            $('#frmlayerdiv').show();
+            $('#divCreate #review').hide();
+            $("#txtMode").val("I");
+            $("#bottom_menus").hide();
+            $("#DocStat").val("New");
+            $("#pay_help1").hide();
+        }
+        else if (getlocalStorage('btn_clk_val') == "Edit") {
+            debugger;
+            $('#frmlayerdiv').show();
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("Item_Master");
+                var obj_val = JSON.parse(formval);
+                obj_val.item_rowid = data.Out_item_rowid;
+                obj_val.item_code = data.Out_item_code;
+                obj_val.agg_code = data.Out_agg_code;
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                //Item Master Edit Binding  start 18-05-2020
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, item_rowid: Context.Header.item_rowid, agg_code: Context.Header.agg_code, item_code: Context.Header.item_code }),
+                    url: "/PAWHSItemMaster/ItemMasterfetch",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        if (response.context != null) {
+                            debugger;
+                            generate_ItemMaster_header(response.context.Header);
+                            generate_ItemMaster_list(response.context.Detail);
+
+                        }
+                        else {
+                            console.log(response);
+                        }
+                    },
+                    error: function (er) {
+                        alert(er);
+                        console.log(er);
+                    }
+                    
+                });
+
+                //Item Master Edit Binding  End
+                //retrieve_ItemMaster_details(data);
+                $("#txtMode").val("U");
+                $("#DocStat").val("Active");
+            }
+        }
+        else if (getlocalStorage('btn_clk_val') == "View") {
+            $('#frmlayerdiv').show();
+            $('#divEdit #reviewEd').hide();
+            $('#divEdit #deactivate').hide();
+            $("#bottom_menus li:nth-child(1)").hide();
+            $("#bottom_menus li:nth-child(3)").hide();
+            $('#divUserRole8 #review').hide();
+            $('#divUserRole8 #btnSave').hide();
+            viewdisable();
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("Item_Master");
+                var obj_val = JSON.parse(formval);
+                obj_val.item_rowid = data.Out_item_rowid;
+                obj_val.item_code = data.Out_item_code;
+                obj_val.agg_code = data.Out_agg_code;
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                //Item Master Edit Binding  start 18-05-2020
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, item_rowid: Context.Header.item_rowid, agg_code: Context.Header.agg_code, item_code: Context.Header.item_code }),
+                    url: "/PAWHSItemMaster/ItemMasterfetch",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        if (response.context != null) {
+                            debugger;
+                            generate_ItemMaster_header(response.context.Header);
+                            generate_ItemMaster_list(response.context.Detail);
+
+                        }
+                        else {
+                            console.log(response);
+                        }
+                    },
+                    error: function (er) {
+                        alert(er);
+                        console.log(er);
+                    }
+
+                });
+
+                //Item Master Edit Binding  End
+               // retrieve_ItemMaster_details(data);
+                $("#txtMode").val("U");
+                $("#DocStat").val("Active");
+            }
+        }
+
+
+    });
+    
+    function load_master_code() {
+        try {
+            debugger;
+            var data = {};
+            var context = WebAPIProxy.getContext();
+            data.userId = context.userId
+            data.orgnId = context.orgnId
+            data.locnId = context.locnId
+            data.localeId = context.localeId
+            data.screen_Id = "PWITEMMAS";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    var data = [];
+    function ITMMST(data) {
+        try {
+            $("#Itm_mst").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+
+                                In_item_dtl_rowid: { type: "int", defaultValue: 0 },
+                                In_item_code: { type: "string" },
+                                In_quality: { type: "string" },
+                                In_quality_desc: { type: "string" },
+                                In_base_price: { type: "int", defaultValue: 0 },
+                                In_range_1: { type: "string" },
+                                In_range_2: { type: "string" },
+                                In_range_3: { type: "string" },
+                                In_range_4: { type: "string" },
+                                In_range_5: { type: "string" },
+                                In_status_code: { type: "string" },
+                                In_mode_flag: { type: "string" }
+
+                            }
+                        }
+                    }
+                },
+                toolbar: "<a  class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 350,
+                groupable: false,
+                edit: OnEdit,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [{
+
+                    command: [
+                     {
+                         name: "Delete",
+                         id: "Delete",
+                         imageClass: "fa fa-close",
+                         click: function (e) {
+                             var grid = $("#Itm_mst").data("kendoGrid");
+                             var dataItem = $("#Itm_mst").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                             DeleteWindowEvent(e, dataItem, grid);
+                             e.stopImmediatePropagation()
+                         }
+                     },
+                    ],
+                    title: "Action",
+                    width: "25px",
+                   
+                },
+
+
+                {
+                    field: "In_item_dtl_rowid",
+                    title: "itemrowid",
+                    width: 15,       
+                    hidden: true,
+
+                },
+                {
+                    field: "In_item_code    ",
+                    title: "Item Code",
+                    hidden: true,
+                    width: 50,
+                },
+
+                    {
+                        field: "In_quality_desc",
+                        title: "Quality",
+                        editor: function (container, options) {
+                            combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "In_quality", "Itm_mst")
+                        },
+                        editable: true,
+                        width: 50,
+
+                    },
+
+               {
+                   field: "In_quality",
+                   title: "Quality_code",
+                   hidden: true,
+                   width: 100,
+               },
+               {
+                   field: "In_range_1",
+                   title: "Range",
+                   width: 50,
+               },
+               {
+                   field: "In_range_2",
+                   title: "Range 2",
+                   hidden: true,
+                   width: 50,
+               },
+               {
+                   field: "In_range_3",
+                   title: "Range 3",
+                   hidden: true,
+                   width: 50,
+               },
+               {
+                   field: "In_range_4",
+                   title: "Range 4",
+                   hidden: true,
+                   width: 100,
+               },
+               {
+                   field: "In_range_5",
+                   title: "Range 5",
+                   hidden: true,
+                   width: 100,
+               },
+                {
+                    field: "In_status_code",
+                    title: "Status",
+                    editor: function (container, options) {
+                        combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "", "Itm_mst")
+                    },
+                    editable: true,
+                    width: 50,
+
+                },
+
+               {
+                   field: "In_base_price",
+                   title: "Price",
+                   hidden: true,
+                   width: 100,
+               },
+              
+                 {
+                     field: "In_mode_flag",
+                     title: "Mode",
+                     hidden: true
+                 }
+                ],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+        load_master_code();
+        In_quality_desc_list = grid_comboScreen_mastercodes("QCD_PAWHS_QTY");
+        In_status_code_list = grid_comboScreen_mastercodes("QCD_PAWHS_STS");
+
+   
+    function OnEdit(e) {
+        setDefaultValues(e);
+        e.container.find("input[name='expense_amount']").focusout(function () {
+
+            var grid = $("#Itm_mst").data("kendoGrid");
+            var gridData = grid.dataSource.view();
+        });
+    }
+    }
+   
+    function generate_ItemMaster_list(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                $("#Itm_mst").empty();
+                $("#Itm_mst").append("<div id='Item_tran_grid'></div>");
+                ITMMST(data);
+                var rows = $('#Itm_mst tbody tr');
+                $.map(rows, function (row) {
+                    //cell buttons index
+                    row.cells[0].innerHTML = "";
+
+                });
+                var rows = $('#Itm_mst tbody tr');
+                $.map(rows, function (row) {
+                    //cell buttons index
+                    row.cells[0].innerHTML = "";
+
+                });
+                //$("#Itm_mst").find("table th").eq(1).hide();
+            }
+            else {
+                ITMMST([]);
+                //var grid = $("#Itm_mst").data("kendoGrid");
+                //grid.hideColumn(1);
+
+                //$("#Itm_mst").kendoGrid({
+                //    columns: [
+                //      { hidden: true, id: "Delete" },
+                //    ],
+                //});
+
+                $("#Itm_mst").find("table th").eq(1).hide();
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function get_ItemMaster_details(res) {
+        try {
+            $("#txt_item_cde").val(res.IOU_item_code);
+            var formval = form_Serialize("Item_Master");
+            var obj_val = JSON.parse(formval);
+            obj_val.item_rowid = res.IOU_item_rowid;
+            obj_val.item_code = res.IOU_item_code;
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_val;
+            //Item Master Edit Binding  start 18-05-2020
+            var Context = data.context;
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, item_rowid: Context.Header.item_rowid, agg_code: Context.Header.agg_code, item_code: Context.Header.item_code }),
+                url: "/PAWHSItemMaster/ItemMasterfetch",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    if (response.context != null) {
+                        debugger;
+                        generate_ItemMaster_header(response.context.Header);
+                        generate_ItemMaster_list(response.context.Detail);
+
+                    }
+                    else {
+                        console.log(response);
+                    }
+                },
+                error: function (er) {
+                    alert(er);
+                    console.log(er);
+                }
+
+            });
+
+                //Item Master Edit Binding  End
+
+
+           /// retrieve_ItemMaster_details(data);
+            $("#txt_item_cde").val(res.IOU_item_code);
+            $("#txtitem_rowid").val(res.IOU_item_rowid);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+
+
+<script>
+
+    function grid_control() {
+        var control_Name = [
+
+        ];
+        return control_Name;
+    }
+
+    function form_control() {
+        var control_Name = [
+             { "dataCol": "item_catogory", "controlId": "txt_fg_cate_code", "type": "Text" },
+           { "dataCol": "item_catogory_desc", "controlId": "txt_fg_cate", "type": "Text" },
+            { "dataCol": "item_subcatogory", "controlId": "txt_fg_subcate_code", "type": "Text" },
+            { "dataCol": "item_subcatogory_desc", "controlId": "txt_fg_subcate", "type": "Text" },
+        ];
+        return control_Name;
+    }
+
+    function form_control1() {
+        debugger;
+        var control_Name = [
+             { "dataCol": "taxrate_rowid", "controlId": "", "type": "Text" },
+           { "dataCol": "hsn_code", "controlId": "txt_hsn_code_mst", "type": "Text" },
+             { "dataCol": "hsn_code_desc", "controlId": "txt_hsn_code", "type": "Text" },
+            { "dataCol": "hsn_desc", "controlId": "txt_hsn_desc", "type": "Text" },
+            { "dataCol": "HSN_uom", "controlId": "", "type": "Text" },
+
+        ];
+        return control_Name;
+    }
+
+    function trans_input_data() {
+        var trans_coll = [
+             { "trasfer": "Yes", "dataCol": "prodc_cate", "controlId": "", "grid_id": "", "grid_row_col": "" },
+        ];
+        return trans_coll;
+    }
+</script>
+
+
+<script>
+    function viewdisable() {
+        debugger;
+        $("#chk-rg").attr("disabled", true);
+        $("#chk_wip").attr("disabled", true);
+        $("#chk_Fg").attr("disabled", true);
+        $("#chk_Service").attr("disabled", true);
+        $("#txt_item_name").attr("disabled", true);
+        $("#cmb_item_type").data("kendoComboBox").enable(false);
+
+
+    }
+    function changing() {
+        debugger;
+        if ($("#chk-rg").is(":checked")) {
+            //document.getElementById("chk_Service").disabled = true;
+            $('#txt_fg_cate').attr("disabled", 'readonly');
+            $('#txt_fg_cate').attr("disabled", true);
+            $('#txt_fg_subcate').attr("disabled", true);
+            $("#pay_help1").hide();
+        }
+        else {
+            //document.getElementById("chk_Service").disabled = false;
+        }
+        if ($("#chk_wip").is(":checked")) {
+            //document.getElementById("chk_Service").disabled = true;
+            $('#txt_fg_cate').attr("disabled", 'readonly');
+            $('#txt_fg_cate').attr("disabled", true);
+            $('#txt_fg_subcate').attr("disabled", true);
+            $("#pay_help1").hide();
+        }
+        else {
+        }
+        if ($("#chk_Fg").is(":checked")) {
+            //document.getElementById("chk_Service").disabled = true;
+            $('#txt_fg_cate').removeAttr("disabled");
+            $('#txt_fg_subcate').removeAttr("disabled");
+            $("#pay_help1").show();
+            $('#txt_fg_cate_code').removeAttr("disabled");
+            $('#txt_fg_subcate_code').removeAttr("disabled");
+        }
+        else {
+            $('#txt_fg_subcate').val("");
+            $('#txt_fg_cate').val("");
+            $('#txt_fg_subcate_code').val("");
+            $('#txt_fg_cate_code').val("");
+            $('#txt_fg_cate').attr("readonly", true);
+            $('#txt_fg_subcate').attr("readonly", true);
+            $('#txt_fg_cate_code').attr("readonly", true);
+            $('#txt_fg_subcate_code').attr("readonly", true);
+            $("#pay_help1").hide();
+        }
+        if ($("#chk_Service").is(":checked")) {
+            document.getElementById("chk-rg").disabled = true;
+            document.getElementById("chk_wip").disabled = true;
+            document.getElementById("chk_Fg").disabled = true;
+
+            $('#txt_fg_cate').val = "";
+            $('#txt_fg_subcate').val = "";
+            //$('#txt_fg_cate_code').removeAttr("disabled");
+            //$('#txt_fg_subcate_code').removeAttr("disabled");
+            //$("#txt_fg_cate_code").val() == "";
+            //$("#txt_fg_subcate_code").val() == "";
+            $('#txt_fg_cate').attr("disabled", 'readonly');
+            $('#txt_fg_cate_code').attr("readonly", true);
+            $('#txt_fg_subcate_code').attr("readonly", true);
+            $('#txt_fg_ cate').attr("disabled", true);
+            $('#txt_fg_subcate').attr("disabled", true);
+            $("#pay_help1").hide();
+        }
+        else {
+            document.getElementById("chk-rg").disabled = false;
+            document.getElementById("chk_wip").disabled = false;
+            document.getElementById("chk_Fg").disabled = false;
+        }
+    }
+</script>
+<script>
+    function DeleteWindowEvent(e, dataItem, grid) {
+        debugger;
+        e.preventDefault();
+        if (dataItem.mode_flag != "I") {
+            var kendoWindow = $("<div />").kendoWindow({
+                title: "Confirm",
+                width: "350px",
+                height: "130px",
+                resizable: false,
+                modal: true
+            });
+            kendoWindow.data("kendoWindow")
+        .content($("#grid_delete-confirmation").html())
+        .center().open();
+            kendoWindow
+                .find(".grid_delete-confirm,.grid_delete-cancel")
+                    .click(function () {
+                        if ($(this).hasClass("grid_delete-confirm")) {
+                            if (dataItem.mode_flag == "S" || dataItem.mode_flag == "U") {
+                                dataItem.mode_flag = "D";
+                                ($(e.target).closest("tr")).css('backgroundColor', '#ff3333');
+                            }
+                            else if (dataItem.mode_flag == "D") {
+                                dataItem.mode_flag = "S";
+                                ($(e.target).closest("tr")).css('backgroundColor', '');
+                            }
+                            else if (dataItem.mode_flag == undefined) {
+                                grid.dataSource.remove(dataItem);
+                                grid.dataSource.sync();
+                            }
+
+                        }
+                        else {
+                            if (dataItem.mode_flag == "D")
+                                dataItem.mode_flag = "D";
+                            else if (dataItem.mode_flag == "U")
+                                dataItem.mode_flag = "U";
+                            else if (dataItem.mode_flag == "S")
+                                dataItem.mode_flag = "S";
+                            kendoWindow.data("kendoWindow").close();
+                        }
+                        kendoWindow.data("kendoWindow").close();
+                    })
+            //.end()
+        }
+        else {
+            grid.dataSource.remove(dataItem);
+            grid.dataSource.sync();
+
+            var rows = grid.tbody.children();
+
+            for (var j = 0; j < rows.length; j++) {
+                var row = $(rows[j]);
+                var dataItem = grid.dataItem(row);
+
+                if (dataItem.mode_flag == "I") {
+                    row.css('backgroundColor', 'lightgreen')
+                }
+                else if (dataItem.mode_flag == "D") {
+                    grid.closeCell();
+                    row.css('backgroundColor', '#ff3333')
+                }
+            }
+        }
+
+    };
+</script>
+
+<script>
+
+    var item = "";
+    function ItemType() {
+        if ($("#chk-rg").is(":checked")) {
+            item = 'RM';
+        }
+        if ($("#chk_wip").is(":checked")) {
+            item = item == "" ? 'WIP' : item + '/' + 'WIP'
+        }
+        if ($("#chk_Fg").is(":checked")) {
+            item = item == "" ? 'FG' : item + '/' + 'FG'
+        }
+        if ($("#chk_Service").is(":checked")) {
+            item = item == "" ? 'Service' : item + '/' + 'Service'
+        }
+    }
+
+        var validate = false;
+    function Validate() {
+        if ($("#cmb_item_type").val() == "") {
+            kendoAlert("UOM Cannot Be Balnk. Please Fill the UOM Field  Field");
+            return false;
+        }
+        if ($("#txt_hsn_code").val() == "") {
+            kendoAlert("HSN Code Cannot Be Balnk. Please Fill the HSN Code Field");
+            return false;
+        }
+              var grid_val = JSON.stringify($("#Itm_mst").data().kendoGrid._data);
+            var Bind = {};
+            Bind = grid_val;
+            var result = JSON.parse(Bind);
+            var grid_validate_msg = "";
+            if (result.length == 0) {
+                kendoAlert("Atleast one record needs to be entered");
+                //mandatory_check = false;
+                return false;
+            }
+            //if ($("#chk_Fg").is(":checked")) {
+            //    if ($("#txt_fg_cate").val() == "") {
+            //        kendoAlert("FG Catogory Cannot Be Balnk. Please Fill the FG Catogory Field");
+            //    }
+            //    else {
+            //        validate = true;
+            //    }
+            //    return 0;
+            //}
+        else {
+            validate = true;
+        }
+    }
+
+    function save() {
+        debugger;
+        item = "";
+        ItemType();
+        try {
+            if (item != "") {
+                if ($("#chk_Fg").is(":checked")) {
+                    if ($("#txt_fg_cate").val() == "") {
+                        kendoAlert("FG Catogory Cannot Be Balnk. Please Fill the FG Catogory Field");
+                        return false;
+                        validate = false;
+
+                    }
+
+                    else {
+                        validate = true;
+                    }
+                }
+              
+                Validate();
+                if (validate == true) {
+
+                    if ($("#txt_item_cde").val() == "") {
+                        $("#txt_item_cde").val('0');
+                    }
+                    if ($("#txtitem_rowid").val() == "") {
+                        $("#txtitem_rowid").val('0');
+                    }
+                    if ($("#txtagg_code").val() == "") {
+                        $("#txtagg_code").val(' ');
+                    }
+                    if ($("#txt_fg_cate").val() == "") {
+                        $("#txt_fg_cate").val('');
+                    }
+                    if ($("#txt_fg_subcate").val() == "") {
+                        $("#txt_fg_subcate").val('');
+                    }
+                    if ($("#txt_ITEM_LLNAME").val() == "") {
+                        $("#txt_ITEM_LLNAME").val('');
+                    }
+                    //var modeflag=$("#txtMode").val();
+                    //alert(modeflag);
+                    //if (modeflag == "U") {
+                    //    obj_val.hsn_code =$("txt_hsn_code").val();
+                    //}
+                    var formval = form_Serialize("Item_Master");
+                    var obj_val = JSON.parse(formval);
+                    var grid_val = JSON.stringify($("#Itm_mst").data().kendoGrid._data);
+                    var Bind = {};
+                    Bind = grid_val;
+                    var result = JSON.parse(Bind);
+                    $.each(result, function (index, value) {
+                        var row_id = value.In_item_dtl_rowid;
+                        if (row_id == undefined || row_id == '') {
+                            result[index].In_item_dtl_rowid = '0';
+                        }
+
+                        var mode = value.In_mode_flag;
+                        if (mode == "") {
+                            result[index].In_mode_flag = "I";
+                        }
+                        if (mode == "S") {
+                            result[index].In_mode_flag = "U";
+                        }
+                        //if (mode == "D") {
+                        //    result[index].status_code = "Inactive";
+                        //}
+                        //if (status == "") {
+                        //    result[index].status_code = "A";
+                        //}
+
+                    });
+
+                    var obj_grid_val = result;
+
+                    if (obj_grid_val.length > 0) {
+
+                        for (i = 0; i < obj_grid_val.length; i++) {
+                            if (obj_grid_val[i].In_quality_desc == "") {
+                                kendoAlert("Kindly fill the Quality field.!!");
+                                return false;
+                            }
+                            if (obj_grid_val[i].In_range_1 == "") {
+                                kendoAlert("Kindly fill the Range field.!!");
+                                return false;
+                            }
+                            if (obj_grid_val[i].In_status_code == "") {
+                                kendoAlert("Kindly fill the Status field.!!");
+                                return false;
+                            }
+
+                        }
+
+                        for (var i = 0; i < obj_grid_val.length; i++) {
+                            var currentDataItem = obj_grid_val[i];
+                            var qty1 = currentDataItem.In_quality_desc.trim().toUpperCase();
+                            var range1 = currentDataItem.In_range_1.trim().toUpperCase();
+                            for (var j = i + 1; j < obj_grid_val.length; j++) {
+                                var nextDataItem = obj_grid_val[j];
+                                var qty2 = nextDataItem.In_quality_desc.trim().toUpperCase();
+                                var range2 = nextDataItem.In_range_1.trim().toUpperCase();
+                                if (qty1 == qty2) {
+                                    if (range1 == range2) {
+                                        kendoAlert("This " + qty1 + "Quality and " + range1 +" Range is already exists");
+                                        return false;
+                                    }
+                                    else
+                                        {
+                                    
+}
+                                }
+                            }
+                        }
+
+                        obj_val.In_item_type = item;
+                        var data = {};
+                        data.context = WebAPIProxy.getContext();
+                        data.context.Header = obj_val;
+                        data.context.Detail = obj_grid_val;
+                        var Context = data.context;
+                        //Item Master Save Start 18-05-2020
+                        $.ajax({
+                            type: "POST",
+                            data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, Header: Context.Header, Detail: Context.Detail}),
+                            url: "/PAWHSItemMaster/ItemMasterSave",
+                            dataType: "json",
+                            contentType: 'application/json; charset=utf-8',
+                            success: function (response) {
+                                console.log(response)
+                                var Res = JSON.parse(response);
+                                var mode = $("#txtMode").val();
+                                if (mode == "I") {
+                                    kendoAlert("Item Master saved successfully");
+                                    get_ItemMaster_details(Res.context.Header);
+                                }
+                                else if (mode == "D") {
+                                    kendoAlert("Item Master inactivate successfully");
+                                    get_ItemMaster_details(Res.context.Header);
+                                }
+                                else {
+                                    kendoAlert("Item Master saved successfully");
+                                    get_ItemMaster_details(Res.context.Header);
+                                }
+                            },
+                            error: function (er) {
+                                alert(er);
+                                console.log(er);
+                            }
+
+                        });
+
+
+                        //Item Master Save End
+                       // save_ItemMaster_details(data);
+                        $("#txtMode").val("U");
+                        $("#DocStat").val("Active");
+                        var rows = $('#Itm_mst tbody tr');
+                        $.map(rows, function (row) {
+                            //cell buttons index
+                            row.cells[0].innerHTML = "";
+
+                        });
+                        if (mode == "I") {
+                            result[index].mode_flag = "S";
+                        }
+                     
+
+
+                    }
+                   
+                }
+            }
+
+        }
+
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    //function  Validationgrid() {
+    //    try {
+    //        var grid_val = JSON.stringify($("#Itm_mst").data().kendoGrid._data);
+    //        var Bind = {};
+    //        Bind = grid_val;
+    //        var result = JSON.parse(Bind);
+    //        var grid_validate_msg = "";
+    //        if (result.length == 0) {
+    //            kendoAlert("Atleast one record needs to be entered");
+    //            //mandatory_check = false;
+    //            return false;
+    //        }
+    //    }
+    //    catch (err) {
+    //        javascript_log4j_root(arguments.callee.name, err);
+    //    }
+    //}
+    function generate_ItemMaster_header(res) {
+        try {
+            if (res != null) {
+                $("#txtMode").val("U");
+                $("#DocStat").val("Active");
+                $("#txtitem_rowid").val(res.IOU_item_rowid);
+                //$("#txtagg_code").val(res.agg_code);
+                $("#txt_item_cde").val(res.IOU_item_code);
+                $("#txt_item_name").val(res.In_item_name);
+                $("#txt_fg_cate").val(res.In_fg_category);
+                $("#txt_fg_subcate").val(res.In_fg_subcategory);
+                $("#txt_fg_cate_code").val(res.In_status_code);
+                $("#txt_fg_subcate_code").val(res.In_status_desc);
+                $('#cmb_item_type').data("kendoComboBox").value(res.In_uom_code);
+                $("#txt_hsn_code").val(res.In_hsn_code);
+                $("#txt_hsn_code_mst").val(res.IOU_agg_code);
+                $("#txt_hsn_desc").val(res.In_hsn_description);
+
+                var items = res.In_item_type.split("/");
+                for (var i = 0; i < items.length; i++) {
+
+                    if (items[i] == "RM") {
+                        $("#chk-rg").attr("checked", "true");
+                        //$("#chk_wip").attr("disabled", "false");
+                        //$("#chk_Fg").attr("disabled", "false");
+                        $("#chk_Service").attr("disabled", "false");
+                        //$('#txt_fg_cate').attr("disabled", 'readonly');
+                        //$('#txt_fg_cate').attr("disabled", true);
+                        //$('#txt_fg_subcate').attr("disabled", true);
+                        $("#pay_help1").hide();
+                    }
+                    if (items[i] == "WIP") {
+                        //$("#chk-rg").attr("disabled", "false");
+                        $("#chk_wip").attr("checked", "true");
+                        //$("#chk_Fg").attr("disabled", "false");
+                        $("#chk_Service").attr("disabled", "false");
+                        //$('#txt_fg_cate').attr("disabled", 'readonly');
+                        //$('#txt_fg_cate').attr("disabled", true);
+                        //$('#txt_fg_subcate').attr("disabled", true);
+                        $("#pay_help1").hide();
+                    }
+                    if (items[i] == "FG") {
+                        //$("#chk-rg").attr("disabled", "false");
+                        //$("#chk_wip").attr("disabled", "false");
+                        $("#chk_Fg").attr("checked", "true");
+                        $("#chk_Service").attr("disabled", "false");
+                        //$('#txt_fg_cate').removeAttr("disabled");
+                        //$('#txt_fg_subcate').removeAttr("disabled");
+                        $("#pay_help1").show();
+                    }
+                    //if (res.item_type == "RM/WIP/FG") {
+                    //    $("#chk-rg").attr("checked", "true");
+                    //    $("#chk_wip").attr("checked", "true");
+                    //    $("#chk_Fg").attr("checked", "true");
+                    //    $("#chk_Service").attr("disabled", "false");
+                    //    //$('#txt_fg_cate').removeAttr("disabled");
+                    //    //$('#txt_fg_subcate').removeAttr("disabled");
+                    //    $("#pay_help1").show();
+                    //}
+                    if (items[i] == "Service") {
+                        $("#chk-rg").attr("disabled", "false");
+                        $("#chk_wip").attr("disabled", "false");
+                        $("#chk_Fg").attr("disabled", "false");
+                        $("#chk_Service").attr("checked", "true");
+                        $('#txt_fg_cate').attr("disabled", 'readonly');
+                        $('#txt_fg_cate').attr("disabled", true);
+                        $('#txt_fg_subcate').attr("disabled", true);
+                        $("#pay_help1").hide();
+                    }
+
+                    /*Commented By SheebaSebasthian*/
+
+                    //if (res.item_type == "RM") {
+                    //    $("#chk-rg").attr("checked", "true");
+                    //    $("#chk_wip").attr("disabled", "false");
+                    //    $("#chk_Fg").attr("disabled", "false");
+                    //    $("#chk_Service").attr("disabled", "false");
+                    //    $('#txt_fg_cate').attr("disabled", 'readonly');
+                    //    $('#txt_fg_cate').attr("disabled", true);
+                    //    $('#txt_fg_subcate').attr("disabled", true);
+                    //    $("#pay_help1").hide();
+                    //}
+                    //if (res.item_type == "WIP") {
+                    //    $("#chk-rg").attr("disabled", "false");
+                    //    $("#chk_wip").attr("checked", "true");
+                    //    $("#chk_Fg").attr("disabled", "false");
+                    //    $("#chk_Service").attr("disabled", "false");
+                    //    $('#txt_fg_cate').attr("disabled", 'readonly');
+                    //    $('#txt_fg_cate').attr("disabled", true);
+                    //    $('#txt_fg_subcate').attr("disabled", true);
+                    //    $("#pay_help1").hide();
+                    //}
+                    //if (res.item_type == "RM/WIP") {
+                    //    $("#chk-rg").attr("checked", "true");
+                    //    $("#chk_wip").attr("checked", "true");
+                    //    $("#chk_Fg").attr("disabled", "false");
+                    //    $("#chk_Service").attr("disabled", "false");
+                    //    $('#txt_fg_cate').attr("disabled", 'readonly');
+                    //    $('#txt_fg_cate').attr("disabled", true);
+                    //    $('#txt_fg_subcate').attr("disabled", true);
+                    //    $("#pay_help1").hide();
+                    //}
+                    //if (res.item_type == "FG") {
+                    //    $("#chk-rg").attr("disabled", "false");
+                    //    $("#chk_wip").attr("disabled", "false");
+                    //    $("#chk_Fg").attr("checked", "true");
+                    //    $("#chk_Service").attr("disabled", "false");
+                    //    $('#txt_fg_cate').removeAttr("disabled");
+                    //    $('#txt_fg_subcate').removeAttr("disabled");
+                    //    $("#pay_help1").show();
+                    //}
+                    //if (res.item_type == "RM/WIP/FG") {
+                    //    $("#chk-rg").attr("checked", "true");
+                    //    $("#chk_wip").attr("checked", "true");
+                    //    $("#chk_Fg").attr("checked", "true");
+                    //    $("#chk_Service").attr("disabled", "false");
+                    //    //$('#txt_fg_cate').removeAttr("disabled");
+                    //    //$('#txt_fg_subcate').removeAttr("disabled");
+                    //    $("#pay_help1").show();
+                    //}
+                    //if (res.item_type == "Service") {
+                    //    $("#chk-rg").attr("disabled", "false");
+                    //    $("#chk_wip").attr("disabled", "false");
+                    //    $("#chk_Fg").attr("disabled", "false");
+                    //    $("#chk_Service").attr("checked", "true");
+                    //    $('#txt_fg_cate').attr("disabled", 'readonly');
+                    //    $('#txt_fg_cate').attr("disabled", true);
+                    //    $('#txt_fg_subcate').attr("disabled", true);
+                    //    $("#pay_help1").hide();
+                    //}
+                    /*End*/
+                }
+                $("#txtMode").val("U");
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    //if ($("#chk-rg").is(":checked")) {
+    //    obj_val.item_type = 'RM'
+    //}
+    //if ($("#chk_wip").is(":checked")) {
+    //    obj_val.item_type = 'WIP'
+    //}
+    //if ($("#chk_Service").is(":checked"))
+    //{
+    //    obj_val.item_type = 'Service'
+    //}
+    //if ($("#chk-rg").is(":checked") && $("#chk_wip").is(":checked") && $("#chk_Fg").is(":checked")) {
+    //    obj_val.item_type = 'RM/WIP/FG'
+    //}
+    //if ($("#chk-rg").is(":checked") && $("#chk_wip").is(":checked")) {
+    //    obj_val.item_type = 'RM/WIP'
+    //}
+</script>
+
+
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>

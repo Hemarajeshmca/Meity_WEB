@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Activity>
+  <Screen>FPO Registration</Screen>
+  <Screen>Apply For Shares</Screen>
+  <Screen>Service Requests - Name Change </Screen>
+  <Screen>Service Requests - Address Change</Screen>
+  <Screen>Service Requests - Nominee Change</Screen>
+  <Screen>Service Requests - Bank Details Change</Screen>
+  <Screen>Service Requests - Transfer</Screen>
+  <Screen>Service Requests - Duplicate</Screen>
+  <Screen>Loan Disbursement-Cattle</Screen>
+  <Screen>Loan Disbursement-Poultry</Screen>
+  <Screen>Loan Disbursement -Machinery</Screen>
+  <Screen>Loan Application-Cattle</Screen>
+  <Screen>Loan Application-Poultry</Screen>
+  <Screen>Loan Application-Machinery</Screen>
+  <Screen>Loan ForeClosure-Cattle</Screen>
+  <Screen>Loan ForeClosure-Poultry</Screen>
+  <Screen>Loan ForeClosure-Machinery</Screen>
+  <Screen>Aggregator Setup</Screen>
+  <Screen>Chilling Plant Setup</Screen>
+  <Screen>Collection Centre SetUp</Screen>
+  <Screen>Rate Card SetUp</Screen>
+  <type>SMS</type>
+  <type>Email</type>
+</Activity>

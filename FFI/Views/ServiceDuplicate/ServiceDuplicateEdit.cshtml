@@ -1,0 +1,300 @@
+﻿@{
+    ViewBag.Form = "Duplicate Request";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+
+<form id="Reportconfig" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="box-body" style="padding-top:6px;padding-bottom:2px;border-color:black;">
+            <div class="row" style="padding-top:10px; padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="cmb_memId" class="col-sm-5 control-label ">Member ID</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_memId" type="text" value="" style="width: 100%">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="col-sm-5">
+                            <input id=" brows" type="button" disabled value="Search">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtfarmer_id" class=" col-sm-5 control-label">Farmer ID</label>
+                        <div class=" col-sm-7">
+                            <input type="text" id="txtfarmer_id" class="form-control" maxlength="50" disabled>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtfarmer_name" class="col-sm-5 control-label">Farmer Given Name</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtfarmer_name" class="form-control" maxlength="50" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtRoleId" class="col-sm-5 control-label ">Farmer Surname</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtRoleId" class="form-control" maxlength="50" disabled>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="box-body" style="padding-top:6px;padding-bottom:2px">
+
+            <div class="row" style="padding-top:10px; padding-bottom:15px">
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtEm" class=" col-sm-5 control-label">Duplicate Certificate reason</label>
+                        <div class=" col-sm-7">
+                            <textarea id="TextArea1" rows="2" cols="2" style="width:1045px;height:48px;" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-sm-12" id="default-example" data-collapse>
+            <div class="col-sm-12 control-label" style="font-size:14px">+&nbsp; Share Certificates Held</div>
+            <div class="col-sm-12">
+                <div id="grid_Drop_list"></div>
+            </div>
+
+        </div>
+
+
+
+        <div class="col-sm-12" id="default-example" data-collapse>
+            <div class="col-sm-12 control-label" style="font-size:14px">+&nbsp; Service Request History</div>
+            <div class="col-sm-12">
+                <div id="grid"></div>
+            </div>
+        </div>
+
+    </div>
+</form>
+<script>
+    click_act_name = "ServiceDuplicateList";
+    click_ctrl_name = "ServiceDuplicate";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        $("#lblForm_menuid").text("SERV_REQ");
+        kendodate_format();
+        master_serviceedit();
+        var combo_Gender = [];
+        filter_combobox("cmb_reqtype", combo_Gender);
+        var combo_Gender = [];
+        filter_combobox("cmb_reqsubtype", combo_Gender);
+        var combo_member = [];
+        filter_combobox("cmb_memId", combo_member);
+
+        $(".file_attach").attr("hdrtitle", "ServiceRequest-Duplicate");
+        $(".notes").attr("hdrtitle", "ServiceRequest-Duplicate");
+        $("#lblForm_menuid").text("SERVICE_DUPE");
+    });
+</script>
+
+
+<script>
+    $(document).ready(function () {
+       
+        var data = [];
+        grid();
+        grid1();
+        var combo_Gender = [{ code: 1, desc: "Certificate Related" },
+
+        ];
+        filter_combobox("cmb_reqtype", combo_Gender);
+        var combo_Gender = [{ code: 1, desc: "Name Change" },
+
+        ];
+        filter_combobox("cmb_reqsubtype", combo_Gender);
+        var combo_member = [{ code: 1, desc: "MB10001" }];
+        filter_combobox("cmb_memId", combo_member);
+        
+    });
+</script>
+<script>
+    function grid(data) {
+        $("#grid_Drop_list").kendoGrid(
+                {
+                    dataSource: {
+                        data: data,
+                    },
+
+                    height: 200,
+                    sortable: true,
+                    selectable: true,
+                    //change: onChangeSelection,
+                    selectable: "singl",   //  Grid Row Selection
+
+                    navigatable: true,
+                    groupable: false,
+
+                    columns: [
+                           {
+                               title: "Select", width: 40,
+                               template: '#=sel_checkbox()#'
+
+                           },
+
+                           {
+                               field: "share_certificate",
+                               title: "Share Certificate No",
+                               width: 200,
+                               filterable: {
+                                   cell: {
+                                       operator: "contains",
+                                       inputWidth: 1500
+                                   }
+                               }
+                           },
+                         {
+                             field: "distinct_from",
+                             title: "Distinct From",
+                             width: 200,
+                             filterable: {
+                                 cell: {
+                                     operator: "contains",
+                                     inputWidth: 1500
+                                 }
+                             }
+                         },
+                          {
+                              field: "distinct_to",
+                              title: "Distinct to",
+                              width: 200,
+                              filterable: {
+                                  cell: {
+                                      operator: "contains",
+                                      inputWidth: 1500
+                                  }
+                              }
+                          },
+                          {
+                              field: "issued_date",
+                              title: "Issued Date",
+                              width: 200,
+                              filterable: {
+                                  cell: {
+                                      operator: "contains",
+                                      inputWidth: 1500
+                                  }
+                              }
+                          },
+
+                        {
+                            field: "status",
+                            title: "Status",
+                            width: 200,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+
+
+                    ]
+
+                });
+
+
+
+
+
+        var gridRowID = -1;
+        function sel_checkbox() {
+            gridRowID++;
+            return '<input id="chk_sel_' + gridRowID + '" class="checkbox" type="checkbox" />';
+        }
+
+
+    }
+</script>
+<script>
+    function grid1(data) {
+        $("#grid").kendoGrid({
+            dataSource: {
+                data: data,
+                schema: {
+                    model: {
+                        fields: {
+                            print_ref: { editable: false },
+                            certificate: { editable: false },
+                            print_date: { editable: false },
+                            certificates_print: { editable: false },
+
+                        }
+                    }
+                },
+            },
+
+            height: 200,
+            sortable: true,
+            columns: [
+                {
+                    field: "certificate_no",
+                    title: "Certificate No"
+                },
+                {
+                    field: "issued_date",
+                    title: "Issued Date"
+                },
+            {
+                field: "service_req",
+                title: "Service Request No"
+            },
+            {
+                field: "request_date",
+                title: "Request Date"
+            },
+             {
+                 field: "request_type",
+                 title: "Request Type"
+             },
+             {
+                 field: "request_subtype",
+                 title: "Request Subtype"
+             },
+             {
+                 field: "status",
+                 title: "Status"
+             },
+
+
+            ]
+        });
+
+    }
+</script>
+
+<script src="~/Scripts/json2.js"></script>
+<script src="~/Scripts/jquery.collapse.js"></script>
+<script src="~/Scripts/jquery.collapse_storage.js"></script>
+<script src="~/Scripts/jquery.collapse_cookie_storage.js"></script>

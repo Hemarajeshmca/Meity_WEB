@@ -1,0 +1,232 @@
+﻿
+@{
+    ViewBag.Form = "Reports";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+<form id="MapMilk_DNew" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-top:10px; padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txtRoleDesc" class="col-sm-5 control-label">Report Name</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_payment" style="width: 100%">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtapplied_on" class=" col-sm-5 control-label">From Date</label>
+                        <div class=" col-sm-5">
+                            <input class="cusDate" data-role='datepicker' id="txtValidity" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="valid_until" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtapplied_on" class=" col-sm-5 control-label">To Date</label>
+                        <div class=" col-sm-5">
+                            <input class="cusDate" data-role='datepicker' id="txtValidity1" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="valid_until" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-top:10px;padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txtapplied_on" class=" col-sm-5 control-label">Report Date</label>
+                        <div class=" col-sm-5">
+                            <input class="cusDate" data-role='datepicker' id="txtValidity2" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="valid_until" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-top:15px;padding-bottom:15px">
+                <div class="col-xs-12">
+                    <div id="grid_Drop_list">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    $(document).ready(function () {
+
+        // $("#form_design").css("padding-top", "95px");
+        master_userRoleNew1();
+        kendodate_format();
+
+        gridFilter();
+        var combo_data1 = [{ code: 1, desc: "Expense VS Income" },
+                   { code: 1, desc: "Receivables/Payables" }];
+        filter_combobox("cmb_payment", combo_data1);
+
+       
+        var container = $("#txtValidity");
+        kendo.init(container);
+        container.kendoValidator({
+            rules: {
+                checkdate: function (input) {
+                    if (input.attr("data-role") == "datepicker") {
+                        var res = isDate(input.val());
+                        return res;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+            }
+        });
+
+        var container = $("#txtValidity1");
+        kendo.init(container);
+        container.kendoValidator({
+            rules: {
+                checkdate: function (input) {
+                    if (input.attr("data-role") == "datepicker") {
+                        var res = isDate(input.val());
+                        return res;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+            }
+        });
+
+        var container = $("#txtValidity2");
+        kendo.init(container);
+        container.kendoValidator({
+            rules: {
+                checkdate: function (input) {
+                    if (input.attr("data-role") == "datepicker") {
+                        var res = isDate(input.val());
+                        return res;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+            }
+        });
+
+
+    });
+</script>
+<script>
+    click_act_name = "home";
+    click_ctrl_name = "home";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+
+<script>
+    //var data = [];
+    function gridFilter(data) {
+        try {
+            $("#grid_Drop_list").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+
+                                report_ref_no: { type: "string" },
+                                report_nmae: { type: "string" },
+                                from_date: { type: "string" },
+                                to_date: { type: "string" },
+                                report_date: { type: "string" },
+                                Records_processed: { type: "string" },
+
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+
+                height: 400,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_Drop_list').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+
+
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [{
+                    command: [
+            {
+                name: "print",
+                id: "print",
+                imageClass: "fa fa-print",
+
+            },
+                    ], title: "Action", width: "25px",
+                }, {
+
+
+                    field: "report_ref_no",
+                    title: "Report Reference No",
+                    width: 100
+
+                },
+
+                {
+                    field: "report_nmae",
+                    title: "Report Name",
+                    width: 100
+
+                },
+                 {
+                     field: "from_date",
+                     title: "From Date",
+                     width: 100
+
+                 },
+                  {
+                      field: "to_date",
+                      title: "To Date",
+                      width: 100
+
+                  },
+                 {
+                     field: "report_date",
+                     title: "Report Date",
+                     width: 100
+
+                 },
+                  {
+                      field: "records_processed",
+                      title: "Records Processed",
+                      width: 100
+
+                  },
+
+
+                {
+                    field: "mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+</script>
+
+
+
+

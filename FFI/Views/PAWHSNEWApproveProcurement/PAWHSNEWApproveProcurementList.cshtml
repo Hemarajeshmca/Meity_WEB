@@ -1,0 +1,408 @@
+﻿
+
+@{
+    ViewBag.List = "Approved Actual Purchase List";
+    Layout = "~/Views/Shared/ListViewLayout.cshtml";
+}
+
+<form id="frm_ActualProcutement_list" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="gd_product">
+                <div id="ActualProcutement_grid"></div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/CommonScripts/ExportExcel.js"></script>
+<script src="~/CommonScripts/Common_func.js"></script>
+
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+        debugger;
+        $("#divCreate").hide();
+        $("#divEdit").hide();
+        $("#btn_new").hide();
+        $("#btn_Edit").hide();
+        $(".adv_filter").attr("hdrtitle", "Actual Procutement List");
+        $(".adv_filter").attr("fltid", "Approveproc");
+        $(".Export").attr("hdrtitle", "Actual Procutement List");
+        $(".Export").attr("SubTreeId", "PWNEWACTPRO");
+        list_grid_id = "ActualProcurement_grid";
+
+        listpageloadfetch();
+
+        Screen_Id = "PWNEWACTPRO";
+        permission = sec_Permission(Screen_Id);
+        page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+        filterhover();
+    });
+
+    //Product Estimated List Loaded start  18-05-2020
+
+    function listpageloadfetch() {
+        debugger;
+        try {
+            var formval = form_Serialize("frm_aggr_orgs");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_FromValue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_FromValue = ".";
+            }
+            obj_val.FilterBy_ToValue = ".";
+            obj_val.status = "warehouse";
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Filter = obj_val;
+            var Context = data.context;
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, status: Context.Filter.status }),
+                url: "/PAWHSNEWApproveProcurement/GetActualProcurementList",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    if (response.context != null) {
+                        debugger;
+                        generate_ActualProcutement_list(response.context.approved_List)
+                    }
+                    else {
+                        New_ActualProcurement([]);
+                    }
+
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+
+            });
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    var status_Priority = [];
+    function New_ActualProcurement(data) {
+        try {
+            $.each(data, function (index, value) {
+                var flag = false;
+                $.each(status_Priority, function (sindex, svalue) {
+                    if (svalue == value.status_desc) {
+                        flag = true;
+                    }
+                });
+                if (flag == false) {
+                    status_Priority.push(value.status_desc);
+                }
+            });
+            $("#ActualProcurement_grid").kendoGrid(
+                {
+                    excel: {
+                        fileName: "Approved Purchase.xlsx",
+                        filterable: true,
+                        allPages: false
+                    },
+                    dataSource: {
+                        data: data,
+                        pageSize: 20,
+                        change: function (e) {
+                            setTimeout(function () {
+                                var gd = $("#ActualProcurement_grid").data("kendoGrid");
+                                filter_row(gd);
+                                $('.k-i-close').css('display', 'none');
+                                $('button.k-button-icon').css('display', 'none');
+                                $('#ActualProcurement_grid .k-input').prop('disabled', false);
+                                $('#ActualProcurement_grid .k-input').prop('readonly', true);
+
+                            }, 1);
+                        },
+                    },
+                    toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                    excelExport: function (e) {
+                    //    var gd = $("#ActualProcurement_grid").data("kendoGrid");
+                    //    var len = gd.dataSource._data.length;
+                    //    var chkall = $('#chkall').is(':checked');
+                    //    var chkfilter = $('#chkfilter').is(':checked');
+                    //    var chktemp = $('#chktemp').is(':checked');
+                    //    var twokendobox = true;
+                    //    gd.dataSource.pageSize(len);
+                    //    if (e.sender.dataSource._data.length == len) {
+                    //        twokendobox = false;
+                    //        exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                    //    }
+                    //    else {
+                    //        exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                    //    }
+                    //    gd.dataSource.pageSize('10');
+                    //    return false;
+                    //},
+                        debugger;
+
+                        //Mohan Changes 07-10-2020
+                        var gd = $("#ActualProcurement_grid").data("kendoGrid");
+                        var gd_fi = $("#ActualProcurement_grid").data("kendoGrid").dataSource;
+
+                        var filters = gd_fi.filter();
+                        var allData = gd_fi.data();
+                        var query = new kendo.data.Query(allData);
+                        var data = query.filter(filters).data;
+                        var data_tt = gd.dataSource.data();
+
+
+                        var sheet = e.workbook.sheets[0];
+                        var gridColumns = gd.columns;
+
+                        var columnCells = [];
+                        for (var c = 0; c < gridColumns.length; c++) {
+                            var fieldName = gd.columns[c].hidden;
+                            if (typeof (fieldName) === "undefined") {
+                                var cellValue = gridColumns[c].title ? gridColumns[c].title : gridColumns[c].field;
+                                columnCells.push({ value: cellValue, autoWidth: true, background: "#7a7a7a", color: "#fff" });
+                            }
+                        }
+
+                        var rows = [{ cells: columnCells, type: "header" }];
+
+
+                        for (var i = 0; i < data.length; i++) {
+                            var rowCells = [];
+                            for (var j = 0; j < gridColumns.length; j++) {
+
+                                var fieldName = gd.columns[j].hidden;
+                                if (typeof (fieldName) === "undefined") {
+                                    var cellValue = data[i][gridColumns[j].field];
+                                    rowCells.push({ value: cellValue });
+                                }
+                            }
+                            rows.push({ cells: rowCells, type: "data" });
+                        }
+
+                        sheet.rows = rows;
+
+                        return false;
+                    },
+                    filterable: {
+                        enabled: true,
+                        delay: 1500,
+                        mode: "menu, row",
+                        height: 200,
+                        click: function (e) {
+                            var gd = $("#ActualProcurement_grid").data("kendoGrid");
+                            filter_row(gd);
+                        }
+                    },
+                    filterMenuInit: function (e) {
+                        var gd = $("#ActualProcurement_grid").data("kendoGrid");
+                        filter_row(gd);
+                    },
+                    change: selectRow,
+                    height: 450,
+                    sortable: true,
+                    selectable: true,
+                    selectable: "singl",   //  Grid Row Selection
+                    pageable: {
+                        refresh: false,
+                        pageSizes: true,
+                        buttonCount: 5
+                    },
+                    navigatable: true,
+                    groupable: false,
+                    columns: [
+                        {
+                            field: "out_act_rowid",
+                            title: "Actual Row Id",
+                            width: 1,
+                            hidden: true,
+                        },
+                        {
+                            field: "out_agg_code",
+                            title: "Aggregator Code",
+                           hidden: true,
+                        },
+                        {
+                            field: "out_lotno",
+                            title: "Lot No",
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                        {
+                            field: "out_farmer_code",
+                            title: "Farmer Code",
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+
+                        },
+                        {
+                            field: "out_farmer_name",
+                            title: "Farmer Name",
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                        {
+                            field: "out_member_type",
+                            title: "Member Type",
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+
+                        {
+                            field: "out_item_code",
+                            title: "Item Code",
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                        {
+                            field: "out_item_name",
+                            title: "Item Name",
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                        {
+                            field: "out_status",
+                            title: "Status",
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1300
+                                }
+                            }
+                        },
+                        {
+                            field: "out_actual_remarks",
+                            title: "Actual Remarks",
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                        {
+                            field: "out_approved_remarks",
+                            title: "Approved Remarks",
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    inputWidth: 1500
+                                }
+                            }
+                        },
+                    ]
+
+                });
+            $(".k-dropdown-operator").css('display', 'none');
+            $("#ActualProcurement_grid .k-input").attr('disabled', 'false');
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function selectRow() {
+        try {
+            var grid = $("#ActualProcurement_grid").data("kendoGrid");
+            var selectedItem = grid.dataItem(grid.select());
+            setlocalStorage("ls_pageList", selectedItem);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function generate_ActualProcutement_list(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                $("#gd_product").empty();
+                $("#gd_product").append("<div id='ActualProcurement_grid'></div>");
+                New_ActualProcurement(data);
+            }
+            else {
+                New_ActualProcurement([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    //Product Estimated List After Hitting Controller Get Response End
+
+
+    // list Refresh Click function start 21-08-2020
+    function listRefresh() {
+        try {
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+          // list Refresh Click function End
+
+
+    $("#btn_View").bind("click", function () {
+        getSerializedSelectedRows('view');
+    });
+
+    function getSerializedSelectedRows(mode) {
+        try {
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var items = getlocalStorage("ls_pageList");
+                if (items.length == 0) {
+                    kendoAlert("Please select records");
+                }
+
+                else {
+                     if (mode == "view") {
+                        btn_onClick('View');
+                         location.href = "../PAWHSNEWApproveProcurement/PAWHSNEWApproveProcurementForm";
+                    }
+                }
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>

@@ -1,0 +1,86 @@
+﻿<root>
+  <row>
+    <entitygrp_code>EC-BANK</entitygrp_code>
+    <description>வங்கி</description>
+    <lang_code>ta-IN</lang_code>
+    <multiline_flag>Y</multiline_flag>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <entitygrp_code>EC-KYC</entitygrp_code>
+    <description>தொடர்பு (KYC)</description>
+    <lang_code>ta-IN</lang_code>
+    <multiline_flag>Y</multiline_flag>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <entitygrp_code>EC-PER-FARMER</entitygrp_code>
+    <description>சொந்த விவரங்கள்</description>
+    <lang_code>ta-IN</lang_code>
+    <multiline_flag>Y</multiline_flag>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <entitygrp_code>EC-FAMILYDET</entitygrp_code>
+    <description>குடும்ப விவரம்</description>
+    <lang_code>ta-IN</lang_code>
+    <multiline_flag>Y</multiline_flag>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <entitygrp_code>EC-LOANDET</entitygrp_code>
+    <description>கடன் விவரம்</description>
+    <lang_code>ta-IN</lang_code>
+    <multiline_flag>Y</multiline_flag>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <entitygrp_code>EC-LANDDET</entitygrp_code>
+    <description>நிலம் விவரம்</description>
+    <lang_code>ta-IN</lang_code>
+    <multiline_flag>Y</multiline_flag>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <entitygrp_code>EC-LIVESTOCKDET</entitygrp_code>
+    <description>வீட்டு விலங்கு இருப்பு விவரம்</description>
+    <lang_code>ta-IN</lang_code>
+    <multiline_flag>Y</multiline_flag>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <entitygrp_code>EC-ASSET</entitygrp_code>
+    <description>சொத்து விவரம்</description>
+    <lang_code>ta-IN</lang_code>
+    <multiline_flag>Y</multiline_flag>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <entitygrp_code>EC-FIG</entitygrp_code>
+    <description>FIG(கள்)/விவசாய சங்கம்(கள்)</description>
+    <lang_code>ta-IN</lang_code>
+    <multiline_flag>Y</multiline_flag>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <entitygrp_code>EC-OFFPEAR</entitygrp_code>
+    <description>அலுவலக நிர்வாகிகள்</description>
+    <lang_code>ta-IN</lang_code>
+    <multiline_flag>Y</multiline_flag>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <entitygrp_code>EC-ADDR</entitygrp_code>
+    <description>முகவரி</description>
+    <lang_code>ta-IN</lang_code>
+    <multiline_flag>Y</multiline_flag>
+    <status_code>Active</status_code>
+  </row>
+  <row>
+    <entitygrp_code>EC-USER</entitygrp_code>
+    <description>பயனர்</description>
+    <lang_code>ta-IN</lang_code>
+    <multiline_flag>Y</multiline_flag>
+    <status_code>Active</status_code>
+  </row>
+</root>

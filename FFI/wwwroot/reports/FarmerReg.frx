@@ -1,0 +1,257 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="05/13/2020 14:40:43" ReportInfo.Modified="06/03/2020 18:00:37" ReportInfo.CreatorVersion="2020.1.0.0">
+  <Dictionary>
+    <MySqlDataConnection Name="Connection1" ConnectionString="rijcmlqJ9ltPwNsYyX+2oAnmCElmGIz/SJ0vefyWJNqFvJ9CpVcxZe7+FQFpmKpxbZDWz0V6R67CmUYRz08CylTygPQ7h8VqmM9XfxEz8OeLl3Nbzk=" CommandTimeout="0">
+      <TableDataSource Name="Table1" DataType="System.Int32" Enabled="true" SelectCommand="call report_FarmerBank">
+        <Column Name="farmer_code" DataType="System.String"/>
+        <Column Name="farmer_name" DataType="System.String"/>
+        <Column Name="sur_name" DataType="System.String"/>
+        <Column Name="bank_acc_no" DataType="System.String"/>
+        <Column Name="bank_acc_type_desc" DataType="System.String"/>
+        <Column Name="bank_code" DataType="System.String"/>
+        <Column Name="bank_desc" DataType="System.String"/>
+        <Column Name="branch_code" DataType="System.String"/>
+        <Column Name="branch_desc" DataType="System.String"/>
+        <Column Name="ifsc_code" DataType="System.String"/>
+        <Column Name="dflt_dr_acc_desc" DataType="System.String"/>
+        <Column Name="dflt_cr_acc_desc" DataType="System.String"/>
+      </TableDataSource>
+    </MySqlDataConnection>
+    <MySqlDataConnection Name="Connection2" ConnectionString="rijcmlqJ9ltPwNsYyX+2oAnmCElmGIz/SJ0vefyWJNqFvJ9CpVcxZe7+FQFpmKpxbZDWz0V6R67CmUYRz08CylTygPQ7ibxs/+QedmNZVxOD15XDZY=" CommandTimeout="0">
+      <TableDataSource Name="Table2" DataType="System.Int32" Enabled="true" SelectCommand="call report_FarmerKYC">
+        <Column Name="farmer_code" DataType="System.String"/>
+        <Column Name="farmer_name" DataType="System.String"/>
+        <Column Name="sur_name" DataType="System.String"/>
+        <Column Name="proof_type_desc" DataType="System.String"/>
+        <Column Name="proof_doc_desc" DataType="System.String"/>
+        <Column Name="proof_doc_no" DataType="System.String"/>
+        <Column Name="proof_valid_till" DataType="System.String"/>
+      </TableDataSource>
+    </MySqlDataConnection>
+    <MySqlDataConnection Name="Connection" ConnectionString="rijcmlqJ9ltPwNsYyX+2oAnmCElmGIz/SJ0vefyWJNqFvJ9CpVcxZe7+FQFpmKpxbZDWz0V6R67CmUYRz08CylTygPQ7jWebcC8bXY0p5kKX3JzF6Y=" CommandTimeout="0">
+      <TableDataSource Name="Table" DataType="System.Int32" Enabled="true" SelectCommand="call report_FarmerRegistration">
+        <Column Name="orgn_name" DataType="System.String"/>
+        <Column Name="farmer_code" DataType="System.String"/>
+        <Column Name="farmer_name" DataType="System.String"/>
+        <Column Name="sur_name" DataType="System.String"/>
+        <Column Name="fhw_name" DataType="System.String"/>
+        <Column Name="farmer_dob" DataType="System.String"/>
+        <Column Name="farmer_addr1" DataType="System.String"/>
+        <Column Name="farmer_addr2" DataType="System.String"/>
+        <Column Name="farmer_country" DataType="System.String"/>
+        <Column Name="farmer_state" DataType="System.String"/>
+        <Column Name="farmer_dist" DataType="System.String"/>
+        <Column Name="farmer_taluk" DataType="System.String"/>
+        <Column Name="farmer_panchayat" DataType="System.String"/>
+        <Column Name="farmer_village" DataType="System.String"/>
+        <Column Name="farmer_pincode" DataType="System.String"/>
+        <Column Name="marital_status" DataType="System.String"/>
+        <Column Name="gender_flag" DataType="System.String"/>
+        <Column Name="reg_mobile_no" DataType="System.String"/>
+      </TableDataSource>
+    </MySqlDataConnection>
+  </Dictionary>
+  <ReportPage Name="Page1" Landscape="true" PaperWidth="389" PaperHeight="210" Watermark.Font="Arial, 60pt">
+    <ReportTitleBand Name="ReportTitle1" Width="1394.82" Height="37.8">
+      <TextObject Name="Text7" Left="500.85" Top="9.45" Width="245.7" Height="28.35" Text="Farmer Registration Details" Font="Cambria, 14pt"/>
+    </ReportTitleBand>
+    <DataBand Name="Data1" Top="41.8" Width="1394.82" Height="18.9">
+      <SubreportObject Name="Subreport1" Width="94.5" Height="18.9" ReportPage="Page2"/>
+    </DataBand>
+    <DataBand Name="Data2" Top="64.7" Width="1394.82" Height="18.9" StartNewPage="true" PrintOnBottom="true">
+      <SubreportObject Name="Subreport2" Width="94.5" Height="18.9" ReportPage="Page3"/>
+    </DataBand>
+    <DataBand Name="Data3" Top="87.6" Width="1394.82" Height="18.9" StartNewPage="true" PrintOnBottom="true">
+      <SubreportObject Name="Subreport3" Width="94.5" Height="18.9" ReportPage="Page4"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page2" Landscape="true" PaperWidth="389" PaperHeight="210" Watermark.Font="Arial, 60pt">
+    <DataBand Name="Data4" Top="79.6" Width="1394.82" Height="47.25" DataSource="Table">
+      <TableObject Name="Table3" Left="9.45" Width="1379.65" Height="47.25">
+        <TableColumn Name="Column19" Width="146.59"/>
+        <TableColumn Name="Column20" Width="108.79"/>
+        <TableColumn Name="Column21" Width="89.89"/>
+        <TableColumn Name="Column22" Width="89.89"/>
+        <TableColumn Name="Column23" Width="80.44"/>
+        <TableColumn Name="Column24" Width="69.1"/>
+        <TableColumn Name="Column25" Width="88"/>
+        <TableColumn Name="Column26" Width="88"/>
+        <TableColumn Name="Column27" Width="69.1"/>
+        <TableColumn Name="Column28" Width="69.1"/>
+        <TableColumn Name="Column29" Width="69.1"/>
+        <TableColumn Name="Column30" Width="69.1"/>
+        <TableColumn Name="Column31" Width="78.55"/>
+        <TableColumn Name="Column32" Width="69.1"/>
+        <TableColumn Name="Column33" Width="97.45"/>
+        <TableColumn Name="Column34" Width="97.45"/>
+        <TableRow Name="Row2" Height="47.25">
+          <TableCell Name="Cell19" Border.Lines="All" Text="[Table.farmer_code]" VertAlign="Center" Font="Cambria, 10pt"/>
+          <TableCell Name="Cell20" Border.Lines="Right, Top, Bottom" Text="[Table.farmer_name]" VertAlign="Center" Font="Cambria, 10pt"/>
+          <TableCell Name="Cell21" Border.Lines="Right, Top, Bottom" Text="[Table.sur_name]" VertAlign="Center" Font="Cambria, 10pt"/>
+          <TableCell Name="Cell22" Border.Lines="Right, Top, Bottom" Text="[Table.fhw_name]" VertAlign="Center" Font="Cambria, 10pt"/>
+          <TableCell Name="Cell23" Border.Lines="Right, Top, Bottom" Text="[Table.farmer_dob]" VertAlign="Center" Font="Cambria, 10pt"/>
+          <TableCell Name="Cell24" Border.Lines="Right, Top, Bottom" VertAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell25" Border.Lines="Right, Top, Bottom" Text="[Table.farmer_addr1]" VertAlign="Center" Font="Cambria, 10pt"/>
+          <TableCell Name="Cell26" Border.Lines="Right, Top, Bottom" Text="[Table.farmer_addr2]" VertAlign="Center" Font="Cambria, 10pt"/>
+          <TableCell Name="Cell27" Border.Lines="Right, Top, Bottom" Text="[Table.farmer_country]" HorzAlign="Center" VertAlign="Center" Font="Cambria, 10pt"/>
+          <TableCell Name="Cell28" Border.Lines="Right, Top, Bottom" Text="[Table.farmer_state]" HorzAlign="Center" VertAlign="Center" Font="Cambria, 10pt"/>
+          <TableCell Name="Cell29" Border.Lines="Right, Top, Bottom" Text="[Table.farmer_dist]" VertAlign="Center" Font="Cambria, 10pt"/>
+          <TableCell Name="Cell30" Border.Lines="Right, Top, Bottom" Text="[Table.farmer_taluk]" VertAlign="Center" Font="Cambria, 10pt"/>
+          <TableCell Name="Cell31" Border.Lines="Right, Top, Bottom" Text="[Table.farmer_panchayat]" VertAlign="Center" Font="Cambria, 10pt"/>
+          <TableCell Name="Cell32" Border.Lines="Right, Top, Bottom" Text="[Table.farmer_village]" VertAlign="Center" Font="Cambria, 10pt"/>
+          <TableCell Name="Cell33" Border.Lines="Right, Top, Bottom" Text="[Table.farmer_pincode]" HorzAlign="Center" VertAlign="Center" Font="Cambria, 10pt"/>
+          <TableCell Name="Cell34" Border.Lines="Right, Top, Bottom" Text="[Table.reg_mobile_no]" VertAlign="Center" Font="Cambria, 10pt"/>
+        </TableRow>
+      </TableObject>
+      <DataHeaderBand Name="DataHeader1" Width="1394.82" Height="75.6">
+        <TableObject Name="Table3" Left="9.45" Top="9.45" Width="1379.65" Height="66.15">
+          <TableColumn Name="Column1" Width="146.59"/>
+          <TableColumn Name="Column2" Width="108.79"/>
+          <TableColumn Name="Column3" Width="89.89"/>
+          <TableColumn Name="Column4" Width="89.89"/>
+          <TableColumn Name="Column5" Width="80.44"/>
+          <TableColumn Name="Column7" Width="69.1"/>
+          <TableColumn Name="Column8" Width="88"/>
+          <TableColumn Name="Column9" Width="88"/>
+          <TableColumn Name="Column10" Width="69.1"/>
+          <TableColumn Name="Column11" Width="69.1"/>
+          <TableColumn Name="Column12" Width="69.1"/>
+          <TableColumn Name="Column13" Width="69.1"/>
+          <TableColumn Name="Column14" Width="78.55"/>
+          <TableColumn Name="Column15" Width="69.1"/>
+          <TableColumn Name="Column16" Width="97.45"/>
+          <TableColumn Name="Column17" Width="97.45"/>
+          <TableRow Name="Row1" Height="66.15">
+            <TableCell Name="Cell1" Border.Lines="All" Text="Farmer Code" HorzAlign="Center" VertAlign="Center" Font="Cambria, 11pt, style=Bold"/>
+            <TableCell Name="Cell2" Border.Lines="Right, Top, Bottom" Text="Farmer Name" HorzAlign="Center" VertAlign="Center" Font="Cambria, 11pt, style=Bold"/>
+            <TableCell Name="Cell3" Border.Lines="Right, Top, Bottom" Text="Sur Name" HorzAlign="Center" VertAlign="Center" Font="Cambria, 11pt, style=Bold"/>
+            <TableCell Name="Cell4" Border.Lines="Right, Top, Bottom" Text="Father / &#13;&#10;Husband / &#13;&#10;Wife's Name&#13;&#10;" HorzAlign="Center" VertAlign="Center" Font="Cambria, 11pt, style=Bold"/>
+            <TableCell Name="Cell5" Border.Lines="Right, Top, Bottom" Text="Date Of Birth &#13;&#10;" HorzAlign="Center" VertAlign="Center" Font="Cambria, 11pt, style=Bold"/>
+            <TableCell Name="Cell7" Border.Lines="Right, Top, Bottom" Text="Farmer Fig&#13;&#10;" HorzAlign="Center" VertAlign="Center" Font="Cambria, 11pt, style=Bold"/>
+            <TableCell Name="Cell8" Border.Lines="Right, Top, Bottom" Text="Permanent &#13;&#10;Address 1&#13;&#10;" HorzAlign="Center" VertAlign="Center" Font="Cambria, 11pt, style=Bold"/>
+            <TableCell Name="Cell9" Border.Lines="Right, Top, Bottom" Text="Permanent &#13;&#10;Address 2 &#13;&#10;" HorzAlign="Center" VertAlign="Center" Font="Cambria, 11pt, style=Bold"/>
+            <TableCell Name="Cell10" Border.Lines="Right, Top, Bottom" Text="Country&#13;&#10;" HorzAlign="Center" VertAlign="Center" Font="Cambria, 11pt, style=Bold"/>
+            <TableCell Name="Cell11" Border.Lines="Right, Top, Bottom" Text="State&#13;&#10;" HorzAlign="Center" VertAlign="Center" Font="Cambria, 11pt, style=Bold"/>
+            <TableCell Name="Cell12" Border.Lines="Right, Top, Bottom" Text="District" HorzAlign="Center" VertAlign="Center" Font="Cambria, 11pt, style=Bold"/>
+            <TableCell Name="Cell13" Border.Lines="Right, Top, Bottom" Text="Taluk&#13;&#10;" HorzAlign="Center" VertAlign="Center" Font="Cambria, 11pt, style=Bold"/>
+            <TableCell Name="Cell14" Border.Lines="Right, Top, Bottom" Text="Gram Panchayat&#13;&#10;" HorzAlign="Center" VertAlign="Center" Font="Cambria, 11pt, style=Bold"/>
+            <TableCell Name="Cell15" Border.Lines="Right, Top, Bottom" Text="Village&#13;&#10;" HorzAlign="Center" VertAlign="Center" Font="Cambria, 11pt, style=Bold"/>
+            <TableCell Name="Cell16" Border.Lines="Right, Top, Bottom" Text="Pincode&#13;&#10;" HorzAlign="Center" VertAlign="Center" Font="Cambria, 11pt, style=Bold"/>
+            <TableCell Name="Cell17" Border.Lines="Right, Top, Bottom" Text="Registered &#13;&#10;Mobile No&#13;&#10;" VertAlign="Center" Font="Cambria, 11pt, style=Bold"/>
+          </TableRow>
+        </TableObject>
+      </DataHeaderBand>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page3" Landscape="true" PaperWidth="389" PaperHeight="210" Watermark.Font="Arial, 60pt">
+    <DataBand Name="Data5" Top="89.05" Width="1394.82" Height="37.8" DataSource="Table1">
+      <TableObject Name="Table3" Left="9.45" Width="1342.14" Height="37.8">
+        <TableColumn Name="Column47" Width="140.51"/>
+        <TableColumn Name="Column48" Width="121.61"/>
+        <TableColumn Name="Column49" Width="93.26"/>
+        <TableColumn Name="Column50" Width="140.51"/>
+        <TableColumn Name="Column51" Width="102.71"/>
+        <TableColumn Name="Column52" Width="81.92"/>
+        <TableColumn Name="Column53" Width="138.62"/>
+        <TableColumn Name="Column54" Width="138.62"/>
+        <TableColumn Name="Column55" Width="100.82"/>
+        <TableColumn Name="Column56" Width="119.72"/>
+        <TableColumn Name="Column57" Width="81.92"/>
+        <TableColumn Name="Column58" Width="81.92"/>
+        <TableRow Name="Row4" Height="37.8">
+          <TableCell Name="Cell47" Border.Lines="All" Text="[Table1.farmer_code]" Font="Cambria, 10pt"/>
+          <TableCell Name="Cell48" Border.Lines="Right, Top, Bottom" Text="[Table1.farmer_name]" Font="Cambria, 10pt"/>
+          <TableCell Name="Cell49" Border.Lines="Right, Top, Bottom" Text="[Table1.sur_name]" Font="Cambria, 10pt"/>
+          <TableCell Name="Cell50" Border.Lines="Right, Top, Bottom" Text="[Table1.bank_acc_no]" Font="Cambria, 10pt"/>
+          <TableCell Name="Cell51" Border.Lines="Right, Top, Bottom" Text="[Table1.bank_acc_type_desc]" HorzAlign="Center" Font="Cambria, 10pt"/>
+          <TableCell Name="Cell52" Border.Lines="Right, Top, Bottom" Text="[Table1.bank_code]" HorzAlign="Center" Font="Cambria, 10pt"/>
+          <TableCell Name="Cell53" Border.Lines="Right, Top, Bottom" Text="[Table1.bank_desc]" HorzAlign="Center" Font="Cambria, 10pt"/>
+          <TableCell Name="Cell54" Border.Lines="Right, Top, Bottom" Text="[Table1.branch_code]" HorzAlign="Center" Font="Cambria, 10pt"/>
+          <TableCell Name="Cell55" Border.Lines="Right, Top, Bottom" Text="[Table1.branch_desc]" Font="Cambria, 10pt"/>
+          <TableCell Name="Cell56" Border.Lines="Right, Top, Bottom" Text="[Table1.ifsc_code]" HorzAlign="Center" Font="Cambria, 10pt"/>
+          <TableCell Name="Cell57" Border.Lines="Right, Top, Bottom" Text="[Table1.dflt_dr_acc_desc]" HorzAlign="Center" Font="Cambria, 10pt"/>
+          <TableCell Name="Cell58" Border.Lines="Right, Top, Bottom" Text="[Table1.dflt_cr_acc_desc]" HorzAlign="Center" Font="Cambria, 10pt"/>
+        </TableRow>
+      </TableObject>
+      <DataHeaderBand Name="DataHeader2" Width="1394.82" Height="85.05">
+        <TableObject Name="Table3" Left="9.45" Top="37.8" Width="1342.05" Height="47.25">
+          <TableColumn Name="Column35" Width="138.14"/>
+          <TableColumn Name="Column36" Width="119.24"/>
+          <TableColumn Name="Column37" Width="100.34"/>
+          <TableColumn Name="Column38" Width="138.14"/>
+          <TableColumn Name="Column39" Width="109.79"/>
+          <TableColumn Name="Column40" Width="70.1"/>
+          <TableColumn Name="Column41" Width="145.7"/>
+          <TableColumn Name="Column42" Width="136.25"/>
+          <TableColumn Name="Column43" Width="98.45"/>
+          <TableColumn Name="Column44" Width="117.35"/>
+          <TableColumn Name="Column45" Width="79.55"/>
+          <TableColumn Name="Column46" Width="89"/>
+          <TableRow Name="Row3" Height="47.25">
+            <TableCell Name="Cell35" Border.Lines="All" Text="Farmer Code" HorzAlign="Center" VertAlign="Center" Font="Cambria, 11pt, style=Bold"/>
+            <TableCell Name="Cell36" Border.Lines="Right, Top, Bottom" Text="Farmer Name&#13;&#10;" HorzAlign="Center" VertAlign="Center" Font="Cambria, 11pt, style=Bold"/>
+            <TableCell Name="Cell37" Border.Lines="Right, Top, Bottom" Text="Sur Name" HorzAlign="Center" VertAlign="Center" Font="Cambria, 11pt, style=Bold"/>
+            <TableCell Name="Cell38" Border.Lines="Right, Top, Bottom" Text="Account No" HorzAlign="Center" VertAlign="Center" Font="Cambria, 11pt, style=Bold"/>
+            <TableCell Name="Cell39" Border.Lines="Right, Top, Bottom" Text="Account Type" HorzAlign="Center" VertAlign="Center" Font="Cambria, 11pt, style=Bold"/>
+            <TableCell Name="Cell40" Border.Lines="Right, Top, Bottom" Text="Bank Code" HorzAlign="Center" VertAlign="Center" Font="Cambria, 11pt, style=Bold"/>
+            <TableCell Name="Cell41" Border.Lines="Right, Top, Bottom" Text="Bank" HorzAlign="Center" VertAlign="Center" Font="Cambria, 11pt, style=Bold"/>
+            <TableCell Name="Cell42" Border.Lines="Right, Top, Bottom" Text="Branch Code" HorzAlign="Center" VertAlign="Center" Font="Cambria, 11pt, style=Bold"/>
+            <TableCell Name="Cell43" Border.Lines="Right, Top, Bottom" Text="Branch" HorzAlign="Center" VertAlign="Center" Font="Cambria, 11pt, style=Bold"/>
+            <TableCell Name="Cell44" Border.Lines="Right, Top, Bottom" Text="IFSC Code" HorzAlign="Center" VertAlign="Center" Font="Cambria, 11pt, style=Bold"/>
+            <TableCell Name="Cell45" Border.Lines="Right, Top, Bottom" Text="Default&#13;&#10;Debit  A/C" HorzAlign="Center" VertAlign="Center" Font="Cambria, 11pt, style=Bold"/>
+            <TableCell Name="Cell46" Border.Lines="Right, Top, Bottom" Text="Default &#13;&#10;Credit A/C" HorzAlign="Center" VertAlign="Center" Font="Calibri, 11pt, style=Bold"/>
+          </TableRow>
+        </TableObject>
+        <TextObject Name="Text1" Left="472.5" Width="207.9" Height="28.35" Text="Farmer Bank Details" Font="Cambria, 14pt, style=Bold"/>
+      </DataHeaderBand>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page4" PaperWidth="290" Watermark.Font="Arial, 60pt">
+    <DataBand Name="Data6" Top="70.15" Width="1020.6" Height="28.35" DataSource="Table2">
+      <TableObject Name="Table3" Left="9.45" Width="1001.7" Height="28.35">
+        <TableColumn Name="Column71" Width="174.69"/>
+        <TableColumn Name="Column72" Width="136.89"/>
+        <TableColumn Name="Column73" Width="108.54"/>
+        <TableColumn Name="Column74" Width="146.34"/>
+        <TableColumn Name="Column75" Width="136.89"/>
+        <TableColumn Name="Column76" Width="144.45"/>
+        <TableColumn Name="Column77" Width="153.9"/>
+        <TableRow Name="Row6" Height="28.35">
+          <TableCell Name="Cell71" Border.Lines="All" Text="[Table2.farmer_code]" Font="Cambria, 10pt"/>
+          <TableCell Name="Cell72" Border.Lines="Right, Top, Bottom" Text="[Table2.farmer_name]" HorzAlign="Center" Font="Cambria, 10pt"/>
+          <TableCell Name="Cell73" Border.Lines="Right, Top, Bottom" Text="[Table2.sur_name]" HorzAlign="Center" Font="Cambria, 10pt"/>
+          <TableCell Name="Cell74" Border.Lines="Right, Top, Bottom" Text="[Table2.proof_type_desc]" HorzAlign="Center" Font="Cambria, 10pt"/>
+          <TableCell Name="Cell75" Border.Lines="Right, Top, Bottom" Text="[Table2.proof_doc_desc]" HorzAlign="Center" Font="Cambria, 10pt"/>
+          <TableCell Name="Cell76" Border.Lines="Right, Top, Bottom" Text="[Table2.proof_doc_no]" HorzAlign="Center" Font="Cambria, 10pt"/>
+          <TableCell Name="Cell77" Border.Lines="Right, Top, Bottom" Text="[Table2.proof_valid_till]" HorzAlign="Center" Font="Cambria, 10pt"/>
+        </TableRow>
+      </TableObject>
+      <DataHeaderBand Name="DataHeader3" Width="1020.6" Height="66.15">
+        <TableObject Name="Table3" Left="9.45" Top="37.8" Width="1001.7" Height="28.35">
+          <TableColumn Name="Column59" Width="174.69"/>
+          <TableColumn Name="Column60" Width="136.89"/>
+          <TableColumn Name="Column61" Width="108.54"/>
+          <TableColumn Name="Column62" Width="146.34"/>
+          <TableColumn Name="Column63" Width="136.89"/>
+          <TableColumn Name="Column64" Width="144.45"/>
+          <TableColumn Name="Column65" Width="153.9"/>
+          <TableRow Name="Row5" Height="28.35">
+            <TableCell Name="Cell59" Border.Lines="All" Text="Farmer Code" HorzAlign="Center" Font="Cambria, 11pt, style=Bold"/>
+            <TableCell Name="Cell60" Border.Lines="Right, Top, Bottom" Text="Farmer Name" HorzAlign="Center" Font="Cambria, 11pt, style=Bold"/>
+            <TableCell Name="Cell61" Border.Lines="Right, Top, Bottom" Text="Sur Name" HorzAlign="Center" Font="Cambria, 11pt, style=Bold"/>
+            <TableCell Name="Cell62" Border.Lines="Right, Top, Bottom" Text="Proof Type Desc" HorzAlign="Center" Font="Cambria, 11pt, style=Bold"/>
+            <TableCell Name="Cell63" Border.Lines="Right, Top, Bottom" Text="Proof Doc Desc" HorzAlign="Center" Font="Cambria, 11pt, style=Bold"/>
+            <TableCell Name="Cell64" Border.Lines="Right, Top, Bottom" Text="Proof Doc No" HorzAlign="Center" Font="Cambria, 11pt, style=Bold"/>
+            <TableCell Name="Cell65" Border.Lines="Right, Top, Bottom" Text="Proof Valid  Till" HorzAlign="Center" Font="Cambria, 11pt, style=Bold"/>
+          </TableRow>
+        </TableObject>
+        <TextObject Name="Text2" Left="359.1" Width="264.6" Height="28.35" Text="Farmer Kyc Details" HorzAlign="Center" Font="Cambria, 14pt, style=Bold"/>
+      </DataHeaderBand>
+    </DataBand>
+  </ReportPage>
+</Report>
+>
+      </DataHeaderBand>
+    </DataBand>
+  </ReportPage>
+</Report>

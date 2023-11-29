@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="05/12/2020 18:24:49" ReportInfo.Modified="05/12/2020 18:25:43" ReportInfo.CreatorVersion="2020.1.0.0">
+  <Styles Name="Standard">
+    <Style Name="Title" Font="Arial, 12pt, style=Bold"/>
+    <Style Name="Header" Font="Arial, 10pt, style=Bold"/>
+    <Style Name="Group" Font="Arial, 10pt, style=Bold"/>
+    <Style Name="Data" Font="Arial, 10pt"/>
+    <Style Name="Footer" Font="Arial, 10pt"/>
+    <Style Name="EvenRows" Fill.Color="WhiteSmoke" Font="Arial, 10pt"/>
+  </Styles>
+  <Dictionary>
+    <MySqlDataConnection Name="Connection" ConnectionString="rijcmlqJ9ltPwNsYyX+2oAnmCElmGIz/SJ0vefyWJNqFvJ9CpVcxZe7+FQFpmKpxbZDWz0V6JezihMLHf9zFqtmqW5z1oSAwA7myrPsGaZnqLzGLn8=">
+      <TableDataSource Name="core_mst_tfarmerkyc" DataType="System.Int32" Enabled="true" TableName="core_mst_tfarmerkyc">
+        <Column Name="farmerkyc_rowid" DataType="System.Int32"/>
+        <Column Name="farmer_code" DataType="System.String"/>
+        <Column Name="version_no" DataType="System.Int32"/>
+        <Column Name="proof_type" DataType="System.String"/>
+        <Column Name="proof_doc" DataType="System.String"/>
+        <Column Name="proof_doc_no" DataType="System.String"/>
+        <Column Name="proof_doc_adharno" DataType="System.String"/>
+        <Column Name="proof_valid_till" DataType="System.String"/>
+        <Column Name="status_code" DataType="System.String"/>
+        <Column Name="created_datetime" DataType="System.DateTime"/>
+        <Column Name="created_by" DataType="System.String"/>
+        <Column Name="modified_datetime" DataType="System.DateTime"/>
+        <Column Name="modified_by" DataType="System.String"/>
+      </TableDataSource>
+    </MySqlDataConnection>
+  </Dictionary>
+  <ReportPage Name="Page1" Landscape="true" PaperWidth="297" PaperHeight="210" Watermark.Font="Arial, 60pt">
+    <ReportTitleBand Name="ReportTitle1" Width="1047.06" Height="37.8">
+      <TextObject Name="Text1" Width="1047.06" Height="37.8" Dock="Fill" Text="core_mst_tfarmerkyc" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold" Style="Title"/>
+    </ReportTitleBand>
+    <PageHeaderBand Name="PageHeader1" Top="41.8" Width="1047.06" Height="28.35">
+      <TextObject Name="Text3" Width="85.05" Height="18.9" Text="farmerkyc_rowid" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text5" Left="85.05" Width="85.05" Height="18.9" Text="farmer_code" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text7" Left="170.1" Width="85.05" Height="18.9" Text="version_no" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text9" Left="255.15" Width="85.05" Height="18.9" Text="proof_type" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text11" Left="340.2" Width="85.05" Height="18.9" Text="proof_doc" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text13" Left="425.25" Width="85.05" Height="18.9" Text="proof_doc_no" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text15" Left="510.3" Width="75.6" Height="18.9" Text="proof_doc_adharno" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text17" Left="585.9" Width="75.6" Height="18.9" Text="proof_valid_till" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text19" Left="661.5" Width="75.6" Height="18.9" Text="status_code" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text21" Left="737.1" Width="75.6" Height="18.9" Text="created_datetime" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text23" Left="812.7" Width="75.6" Height="18.9" Text="created_by" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text25" Left="888.3" Width="75.6" Height="18.9" Text="modified_datetime" Font="Arial, 10pt, style=Bold" Style="Header"/>
+      <TextObject Name="Text27" Left="963.9" Width="75.6" Height="18.9" Text="modified_by" Font="Arial, 10pt, style=Bold" Style="Header"/>
+    </PageHeaderBand>
+    <DataBand Name="Data1" Top="74.15" Width="1047.06" Height="18.9" EvenStyle="EvenRows" DataSource="core_mst_tfarmerkyc">
+      <TextObject Name="Text2" Width="85.05" Height="18.9" Text="[core_mst_tfarmerkyc.farmerkyc_rowid]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text4" Left="85.05" Width="85.05" Height="18.9" Text="[core_mst_tfarmerkyc.farmer_code]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text6" Left="170.1" Width="85.05" Height="18.9" Text="[core_mst_tfarmerkyc.version_no]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text8" Left="255.15" Width="85.05" Height="18.9" Text="[core_mst_tfarmerkyc.proof_type]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text10" Left="340.2" Width="85.05" Height="18.9" Text="[core_mst_tfarmerkyc.proof_doc]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text12" Left="425.25" Width="85.05" Height="18.9" Text="[core_mst_tfarmerkyc.proof_doc_no]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text14" Left="510.3" Width="75.6" Height="18.9" Text="[core_mst_tfarmerkyc.proof_doc_adharno]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text16" Left="585.9" Width="75.6" Height="18.9" Text="[core_mst_tfarmerkyc.proof_valid_till]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text18" Left="661.5" Width="75.6" Height="18.9" Text="[core_mst_tfarmerkyc.status_code]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text20" Left="737.1" Width="75.6" Height="18.9" Text="[core_mst_tfarmerkyc.created_datetime]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text22" Left="812.7" Width="75.6" Height="18.9" Text="[core_mst_tfarmerkyc.created_by]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text24" Left="888.3" Width="75.6" Height="18.9" Text="[core_mst_tfarmerkyc.modified_datetime]" Font="Arial, 10pt" Style="Data"/>
+      <TextObject Name="Text26" Left="963.9" Width="75.6" Height="18.9" Text="[core_mst_tfarmerkyc.modified_by]" Font="Arial, 10pt" Style="Data"/>
+    </DataBand>
+    <PageFooterBand Name="PageFooter1" Top="97.05" Width="1047.06" Height="18.9">
+      <TextObject Name="Text28" Width="1047.06" Height="18.9" Dock="Fill" Text="[PageN]" HorzAlign="Right" Font="Arial, 10pt" Style="Footer"/>
+    </PageFooterBand>
+  </ReportPage>
+</Report>

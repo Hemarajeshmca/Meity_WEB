@@ -1,0 +1,701 @@
+﻿@{
+    ViewBag.Form = "Warehouse";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+
+<form id="WarehouseMaster" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="txt_whs_code" class=" col-sm-5 control-label">Warehouse Code</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_whs_code" name="IOU_whs_code" class="form-control" readonly />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class=" form-group">
+                        <label for="whs_type" class=" col-sm-6  control-label">Warehouse Type</label>
+
+                        <input type="radio" id="rdo_own" checked="checked" name="In_whs_type" />Owned
+                        &nbsp;  &nbsp;  &nbsp;  &nbsp;
+                        <input type="radio" id="rdo_Lease" name="In_whs_type" />Leased
+
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txt_whs_name" class="col-sm-5 control-label required">Warehouse Name</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txt_whs_name" name="In_whs_name" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txt_whs_add1" class="col-sm-5 control-label required">Address 1</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txt_whs_add1" name="In_whs_addr1" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txt_whs_add2" class="col-sm-5 control-label required">Address 2</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txt_whs_add2" name="In_whs_addr2" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="txt_whspincode" class="col-sm-5 control-label required">PinCode</label>
+                        <div class=" col-sm-6">
+                            <input type="text" id="txt_whspincode" name="In_whs_pincode" class="form-control" onkeypress="return isNumberKey(event)" style="text-align:right" maxlength="6">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="combo_village" class="col-sm-5 control-label ">Village</label>
+                        <div class=" col-sm-6">
+                            <input id="combo_village" class="form-control " name="In_whs_village_desc" data-role="filtercombo" style="width:100%"readonly >
+                        </div>
+                        <div>
+                            <a class="HelpWindow fa fa-search fa-lg " role="button" id="Search1" data-toggle="modal" href="/HelpFilter/HelpFilter" hdrtitle="warehouse Master" searchid="S106" data-target="#HelpModal" onclick=transfer(this,"form","","form_control"); title="Search" style="font-size: 19px; "></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="combo_grampanchayat" class="col-sm-5 control-label">Gram Panchayat</label>
+                        <div class="col-sm-6">
+                            <input id="combo_grampanchayat" class="form-control" name="In_whs_panchayat_desc" style="width:100%" data-toggle="tooltip" data-placement="bottom" data-role="filtercombo" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="taluk" class="col-sm-5 control-label ">Taluk</label>
+                        <div class="col-sm-6">
+                            <input id="combo_taluk" class="form-control" name="In_whs_taluk_desc" style="width:100%" data-toggle="tooltip" data-placement="bottom" data-role="filtercombo" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="combo_district" class="col-sm-5 control-label ">District</label>
+                        <div class="col-sm-6">
+                            <input id="combo_district" class="form-control" name="In_whs_dist_desc" style="width:100%" data-toggle="tooltip" data-placement="bottom" data-role="filtercombo" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="combo_country" class="col-sm-5 control-label">Country</label>
+                        <div class=" col-sm-6">
+                            <input id="combo_country" class="form-control" name="In_whs_country_desc" data-role="filtercombo" style="width:100%" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="combo_state" class="col-sm-5 control-label">State</label>
+                        <div class=" col-sm-6">
+                            <input id="combo_state" class="form-control" name="In_whs_state_desc" data-role="filtercombo" style="width:100%" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4" style="display:none">
+                    <div class="form-group">
+                        <label for="combo_villagecode" class="col-sm-5 control-label">Village Desc</label>
+                        <div class=" col-sm-6">
+                            <input id="combo_villagecode" class="form-control" name="In_whs_village" data-role="filtercombo" style="width:100%">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4" style="display:none">
+                    <div class="form-group">
+                        <label for="combo_grampanchayatcode" class="col-sm-5 control-label">Gram Panchayat Desc</label>
+                        <div class="col-sm-6">
+                            <input id="combo_grampanchayatcode" class="form-control" name="In_whs_panchayat" style="width:100%" data-toggle="tooltip" data-placement="bottom" data-role="filtercombo">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4" style="display:none">
+                    <div class="form-group">
+                        <label for="combo_talukcode" class="col-sm-5 control-label ">Taluk Desc</label>
+                        <div class="col-sm-6">
+                            <input id="combo_talukcode" class="form-control" name="In_whs_taluk" style="width:100%" data-toggle="tooltip" data-placement="bottom" data-role="filtercombo">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-4" style="display:none">
+                    <div class="form-group">
+                        <label for="combo_districtcode" class="col-sm-5 control-label ">District Desc</label>
+                        <div class="col-sm-6">
+                            <input id="combo_districtcode" class="form-control" name="In_whs_dist" style="width:100%" data-toggle="tooltip" data-placement="bottom" data-role="filtercombo">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group" style="display:none">
+                        <label for="combo_countrycode" class="col-sm-5 control-label">Country Desc</label>
+                        <div class=" col-sm-6">
+                            <input id="combo_countrycode" class="form-control" name="In_whs_country" data-role="filtercombo" style="width:100%">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group" style="display:none">
+                        <label for="combo_statecode" class="col-sm-5 control-label">State Desc</label>
+                        <div class=" col-sm-6">
+                            <input id="combo_statecode" class="form-control" name="In_whs_state" data-role="filtercombo" style="width:100%">
+                        </div>
+                    </div>
+                </div>
+            </div>
+                    <div class="row" style="padding-bottom:15px;">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="txt_whs_sqrf" class="col-sm-5 control-label required">Sq. Feet Area</label>
+                                <div class="col-sm-6">
+                                    <input type="text" id="txt_whs_sqrf" class="form-control" name="In_sqrf_area" maxlength="50" onkeypress="return isNumberKey(event)" style="text-align:right">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4" style="display:none">
+                        <div class="form-group">
+                            <label for="txt_agg_code" class="col-sm-5 control-label ">Agg Code</label>
+                            <div class=" col-sm-6">
+                                <input type="text" name="IOU_agg_code" onkeypress="return isNumberKey(event)" id="txt_agg_code" class="form-control" maxlength="50" style="text-align:right">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group" style="display:none;">
+                            <label for="txt_status_code" class="col-sm-5 control-label">Status_code</label>
+                            <div class="col-sm-4">
+                                <input type="text" value="A" id="txt_status_code" name="In_status_code" class="form-control" maxlength="10">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group" style="display:none;">
+                            <label for="txt_status_desc" class="col-sm-5 control-label">Status Desc</label>
+                            <div class="col-sm-4">
+                                <input type="text" value="A" id="txt_status_desc" name="In_status_desc" class="form-control" maxlength="10">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group" style="display:none;">
+                            <label for="txtMode" class="col-sm-5 control-label">Mode</label>
+                            <div class="col-sm-4">
+                                <input type="text" id="txtMode" name="In_mode_flag" class="form-control" maxlength="10">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group" style="display:none;">
+                            <label for="row_timestamp" class="col-sm-5 control-label">Timestamp:</label>
+                            <div class="col-sm-4">
+                                <input type="text" id="txt_row_timestamp" name="In_row_timestamp" class="form-control" maxlength="10">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4" style="display:none">
+                        <div class="form-group">
+                            <label for="txt_whs_rowid" class="col-sm-5 control-label ">WHS RowID</label>
+                            <div class=" col-sm-6">
+                                <input type="text" name="IOU_whs_rowid" onkeypress="return isNumberKey(event)" id="text_Warehouse_rowid" class="form-control" maxlength="50" style="text-align:right">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+</form>
+
+<script src="~/API_Scripts/PAWHS_saveWarehouseReg_Model.js"></script>
+<script src="~/API_Scripts/PAWHS_getWarehouseReg_Model.js"></script>
+<script src="~/API_Scripts/PAWHS_getWarehouseRegList_Model.js"></script>
+<script src="~/API_Scripts/Warehouse_Registration_PAWHS_getWarehouseReg_APIClient.js"></script>
+<script src="~/API_Scripts/Warehouse_Registration_PAWHS_getWarehouseRegList_APIClient.js"></script>
+<script src="~/API_Scripts/Warehouse_Registration_PAWHS_saveWarehouseReg_APIClient.js"></script>
+<script src="~/API_Scripts/PAWHSWarehouseMaster.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/CommonScripts/ExportExcel.js"></script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+<script src="~/CommonScripts/Common_func.js"></script>
+
+
+<script>
+    click_act_name = "PAWHSWarehouseMasterList";
+    click_ctrl_name = "PAWHSWarehouseMaster";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+
+<script>
+    function load_master_code() {
+        try {
+            var data = {};
+            data.screen_Id = "PWWAREHOUSE";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+   
+</script>
+<script>
+    $(document).ready(function () {
+        kendodate_format();
+        $("#hide_div").hide();
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#WarehouseMaster");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        
+        $(".file_attach").attr("hdrtitle", "Warehouse ");
+        $(".notes").attr("hdrtitle", "Warehouse ");
+        $("#lblForm_menuid").text("PWWAREHOUSE");
+        Screen_Id = "PWWAREHOUSE";
+        permission = sec_Permission(Screen_Id);
+
+
+
+        load_master_code();
+        //orgn_state_desc_list = grid_comboScreen_mastercodes("QCD_UN_STATE");
+        //var Country = "";
+        //$("#combo_country").empty();
+        //Country = grid_comboScreen_mastercodes("QCD_COUNTRY");
+        //filter_combobox("combo_country", Country);
+
+        //var State = "";
+        //$("#combo_state").empty();
+        //State = grid_comboScreen_mastercodes("QCD_UN_STATE");
+        //filter_combobox("combo_state", State);
+
+
+        //var Village = "";
+        //$("#combo_village").empty();
+        //Village = grid_comboScreen_mastercodes("QCD_UN_VILLAGE");
+        //filter_combobox("combo_village", Village);
+        //var dmap_in = "";
+
+        //$("#combo_district").empty();
+        //dmap_in = grid_comboScreen_mastercodes("QCD_UN_DIST");
+        //filter_combobox("combo_district", dmap_in);
+
+        //var gmap_in = "";
+        //$("#combo_grampanchayat").empty();
+        //gmap_in = grid_comboScreen_mastercodes("QCD_UN_GRAMPAN");
+        //filter_combobox("combo_grampanchayat", gmap_in);
+
+        //var tmap_in = "";
+        //$("#combo_taluk").empty();
+        //tmap_in = grid_comboScreen_mastercodes("QCD_UN_TALUK");
+        //filter_combobox("combo_taluk", tmap_in);
+
+        var org_id = getlocalStorage('org_id');
+        var org = getlocalStorage('org');
+        $("#txt_agg_code").val(org_id);
+
+        if (getlocalStorage('btn_clk_val') == "Create") {
+            $('#divCreate #review').hide();
+            $("#txtMode").val("I");
+            $("#bottom_menus").hide();
+            $("#DocStat").val("New");
+        }
+        else if (getlocalStorage('btn_clk_val') == "Edit") {
+            $('#divUserRole8 #review').hide();
+            $('#divEdit #reviewEd').hide();
+            $('#divEdit #deactivate').hide();
+            $("#bottom_menus").show();
+            $("#bottom_menus li:nth-child(1)").hide();
+            $("#bottom_menus li:nth-child(3)").hide();
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("WarehouseMaster");
+                var obj_val = JSON.parse(formval);
+                obj_val.IOU_whs_rowid = data.Out_whs_rowid;
+                obj_val.IOU_agg_code = data.Out_agg_code;
+                obj_val.IOU_whs_code = data.Out_whs_code;
+                
+
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                var Context = data.context;              
+                SingleFetch_Warehouse_MasterScreen(Context);
+                //retrieve_WHS_masterScreen(data);
+                $("#txtMode").val("U");
+                $("#DocStat").val("Active");
+                setlocalStorage('doc_no', $("#txt_whs_code").val());
+                setlocalStorage('doc_row_id', $("#text_Warehouse_rowid").val());
+            }
+        }
+        else if (getlocalStorage('btn_clk_val') == "View") {
+            $('#divEdit #reviewEd').hide();
+            $('#divUserRole8 #review').hide();
+            $("#bottom_menus").hide();
+            $('#frmlayerdiv').show();
+            $('#divUserRole8').hide();
+            $("#pay_help2").hide();
+            viewdisable();
+           // $('#btndiv').css("padding-left", "1000px");
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("WarehouseMaster");
+                var obj_val = JSON.parse(formval);
+                obj_val.IOU_whs_rowid = data.Out_whs_rowid;
+                obj_val.IOU_agg_code = data.Out_agg_code;
+                obj_val.IOU_whs_code = data.Out_whs_code;
+                
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                var Context = data.context;
+                SingleFetch_Warehouse_MasterScreen(Context);
+                //retrieve_WHS_masterScreen(data);
+                $("#txtMode").val("U");
+                $("#DocStat").val("Active");
+
+            }
+        }
+    });
+
+    function clear_val() {
+
+
+    }
+
+    function SingleFetch_Warehouse_MasterScreen(Context) {
+        debugger;
+        try {
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ orgnId: Context.orgnId, locnId: Context.locnId, userId: Context.userId, localeId: Context.localeId, IOU_whs_rowid: Context.Header.IOU_whs_rowid, IOU_agg_code: Context.Header.IOU_agg_code, IOU_whs_code: Context.Header.IOU_whs_code}),
+                url: "/PAWHSWarehouseMaster/SingleServiceList",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    if (response.context != null) {
+                        generate_WarehouseMaster_header(response.context.Header)
+
+                    }
+                    if (response.ApplicationException != null) {
+                        kendoAlert(response.ApplicationException.errorDescription);
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+
+    }
+
+    function Get_WarehouseMaster_details(res) {
+        try {
+            var formval = form_Serialize("grid_whs_master");
+            var obj_val = JSON.parse(formval);
+            $("#txtagg_code").attr("readonly", "");
+            $("#txt_whs_code").val(res.IOU_whs_code);
+            if (res.whs_type == "Owned") {
+                $("#rdo_own").attr("checked", true);
+            }
+            else if (res.whs_type == "Leased") {
+                $("#rdo_Lease").attr("checked", true);
+            }
+            //$("#text_Warehouse_rowid").val(res.whs_rowid);
+            //$("#txt_whs_name").val(res.whs_name);
+            //$("#txt_whs_add1").val(res.whs_addr1);
+            //$("#txt_whs_add2").val(res.whs_addr2);
+            //$("#txt_whspincode").val(res.whs_pincode);
+            //$('#combo_village').data("kendoComboBox").value(res.whs_village);
+            //$('#combo_state').data("kendoComboBox").value(res.whs_state);
+            //$('#combo_country').data("kendoComboBox").value(res.whs_country);
+            //$('#combo_grampanchayat').data("kendoComboBox").value(res.whs_panchayat);
+            //$('#combo_taluk').data("kendoComboBox").value(res.whs_taluk);
+            //$('#combo_district').data("kendoComboBox").value(res.whs_dist);
+            //$("#txt_whs_sqrf").val(res.sqrf_area);
+            //$("#txt_status_code").val(res.status_code);
+            //$("#DocStat").val(res.status_desc);
+            //$("#txtMode").val(res.mode_flag);
+            //$("#txt_row_timestamp").val(res.row_timestamp);
+            //$("#txtMode").val("U");
+            setlocalStorage('doc_no', $("#txt_whs_code").val());
+            setlocalStorage('doc_row_id', $("#text_Warehouse_rowid").val());
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+
+
+<script>
+    function form_control() {
+        debugger;
+        var control_Name = [
+            //{ "dataCol": "ccbill_no", "controlId": "txt_bill", "type": "Text" },
+            { "dataCol": "farmer_code", "controlId": "txt_whs_code", "type": "Text" },
+             { "dataCol": "farmer_name", "controlId": "txt_whs_name", "type": "Text" },
+             { "dataCol": "farmer_addr1", "controlId": "address1", "type": "Text" },
+             { "dataCol": "farmer_addr2", "controlId": "address2", "type": "Text" },
+             { "dataCol": "farmer_pincode", "controlId": "pin_code", "type": "Text" },
+             { "dataCol": "country", "controlId": "combo_country", "type": "Text" },
+             { "dataCol": "state", "controlId": "combo_state", "type": "Text" },
+             { "dataCol": "village", "controlId": "combo_village", "type": "Text" },
+            { "dataCol": "panchayat", "controlId": "combo_grampanchayat", "type": "Text" },
+             { "dataCol": "taluk", "controlId": "combo_taluk", "type": "Text" },
+            { "dataCol": "district", "controlId": "combo_district", "type": "Text" },
+
+              { "dataCol": "farmer_country", "controlId": "combo_countrycode", "type": "Text" },
+             { "dataCol": "farmer_state", "controlId": "combo_statecode", "type": "Text" },
+             { "dataCol": "farmer_village", "controlId": "combo_villagecode", "type": "Text" },
+             { "dataCol": "farmer_panchayat", "controlId": "combo_grampanchayatcode", "type": "Text" },
+             { "dataCol": "farmer_taluk", "controlId": "combo_talukcode", "type": "Text" },
+             { "dataCol": "farmer_dist", "controlId": "combo_districtcode", "type": "Text" },
+
+
+        ];
+        return control_Name;
+    }
+
+    function trans_input_data() {
+        debugger;
+        var trans_coll = [
+            //{ "trasfer": "Yes", "dataCol": "ccbill_no", "controlId": "", "grid_id": "", "grid_row_col": "" },
+            //{ "trasfer": "No", "dataCol": "", "controlId": "", "grid_id": "", "grid_row_col": "" }
+            { "trasfer": "Yes", "dataCol": "farmer_code", "controlId": "txt_whs_code", "grid_id": "", "grid_row_col": "farmer_code" },
+            { "trasfer": "Yes", "dataCol": "farmer_name", "controlId": "txt_whs_name", "grid_id": "", "grid_row_col": "farmer_name" },
+            { "trasfer": "Yes", "dataCol": "village", "controlId": "combo_village", "grid_id": "", "grid_row_col": "village" },
+            { "trasfer": "Yes", "dataCol": "panchayat", "controlId": "combo_grampanchayat", "grid_id": "", "grid_row_col": "panchayat" },
+            { "trasfer": "Yes", "dataCol": "District", "controlId": "combo_district", "grid_id": "", "grid_row_col": "District" },
+            { "trasfer": "Yes", "dataCol": "taluk", "controlId": "combo_taluk", "grid_id": "", "grid_row_col": "taluk" },
+            { "trasfer": "Yes", "dataCol": "state", "controlId": "combo_state", "grid_id": "", "grid_row_col": "state" },
+            { "trasfer": "Yes", "dataCol": "country", "controlId": "combo_country", "grid_id": "", "grid_row_col": "country" },
+
+            { "trasfer": "Yes", "dataCol": "farmer_village", "controlId": "combo_villagecode", "grid_id": "", "grid_row_col": "village" },
+            { "trasfer": "Yes", "dataCol": "farmer_panchayat", "controlId": "combo_grampanchayatcode", "grid_id": "", "grid_row_col": "panchayat" },
+            { "trasfer": "Yes", "dataCol": "farmer_dist", "controlId": "combo_districtcode", "grid_id": "", "grid_row_col": "District" },
+            { "trasfer": "Yes", "dataCol": "farmer_taluk", "controlId": "combo_talukcode", "grid_id": "", "grid_row_col": "taluk" },
+            { "trasfer": "Yes", "dataCol": "farmer_state", "controlId": "combo_statecode", "grid_id": "", "grid_row_col": "state" },
+            { "trasfer": "Yes", "dataCol": "farmer_country", "controlId": "combo_countrycode", "grid_id": "", "grid_row_col": "country" },
+        ];
+        return trans_coll;
+    }
+    function enable() {
+        $("#txt_whs_code").removeAttr("readonly");
+        $("#combo_village").removeAttr("readonly");
+        $("#combo_country").removeAttr("readonly");
+        $("#combo_state").removeAttr("readonly");
+        $("#combo_taluk").removeAttr("readonly");
+        $("#combo_district").removeAttr("readonly");
+        $("#combo_grampanchayat").removeAttr("readonly");
+
+    }
+    function disable() {
+        $("#combo_village").attr("readonly", true);
+        $("#combo_country").attr("readonly", true);
+        $("#combo_state").attr("readonly", true);
+        $("#txt_whs_code").attr("readonly", true);
+        $("#combo_taluk").attr("readonly", true);
+        $("#combo_district").attr("readonly", true);
+        $("#combo_grampanchayat").attr("readonly", true);
+    }
+    function viewdisable() {
+        $("#rdo_own").attr("disabled", true);
+        $("#rdo_Lease").attr("disabled", true);
+        $("#txt_whs_name").attr("disabled", true);
+        $("#txt_whs_add1").attr("disabled", true);
+        $("#txt_whs_add2").attr("disabled", true);
+        $("#txt_whs_sqrf").attr("disabled", true);
+        $("#txt_whspincode").attr("disabled", true);
+
+
+
+    }
+    var validate = false;
+
+    function save() {
+        try {
+                if ($("#text_Warehouse_rowid").val() == "") {
+                    $("#text_Warehouse_rowid").val('0');
+                }
+                if ($("#combo_village").val() == "") {
+                            kendoAlert("Village Cannot Be Blank. Please Fill the Village Field");
+                            return false;
+                }
+               
+                $("#rdo_own").val("Owned");
+                $("#rdo_Lease").val("Leased");
+                enable();
+                var formval = form_Serialize("WarehouseMaster");
+            var obj_val = JSON.parse(formval);
+            obj_val.In_agg_code= obj_val.IOU_agg_code;
+                disable();
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_val;
+            var Context = data.context;
+
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ orgnId: Context.orgnId, locnId: Context.locnId, userId: Context.userId, localeId: Context.localeId, Header: Context.Header }),
+                url: "/PAWHSWarehouseMaster/SaveWarehouseMaster",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    var Res = JSON.parse(response);
+                    if (Res != null) {
+                        var msg = Res.ApplicationException;
+                        //retrive_SingleFetch_Details(Res.context);
+                        if (Res.ApplicationException == null || Res.ApplicationException == "") {
+                            Get_WarehouseMaster_details(Res.context.Header)
+                            kendoAlert("Warehouse Master Saved Successfully");
+                        }
+                        else {
+                            kendoAlert(Res.ApplicationException.errorDescription);
+                        }
+
+                    }
+
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+                //SaveWarehouseMasterList(data);
+                $("#txtMode").val("U");
+                $("#DocStat").val("Active");
+                
+            //}
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function generate_WarehouseMaster_header(res) {
+        try {
+            var formval = form_Serialize("grid_whs_master");
+            var obj_val = JSON.parse(formval);
+            $("#txtagg_code").attr("readonly", "");
+            $("#txt_whs_code").val(res.IOU_whs_code);
+            if (res.whs_type == "Owned") {
+                $("#rdo_own").attr("checked", true);
+            }
+            else if (res.whs_type == "Leased") {
+                $("#rdo_Lease").attr("checked", true);
+            } 
+            $("#txt_whs_name").val(res.In_whs_name);
+            $("#txt_whs_add1").val(res.In_whs_addr1);
+            $("#txt_whs_add2").val(res.In_whs_addr2);
+            $("#txt_whspincode").val(res.In_whs_pincode);
+            $("#text_Warehouse_rowid").val(res.IOU_whs_rowid);
+            $('#combo_village').val(res.In_whs_village_desc);
+            $('#combo_state').val(res.In_whs_state_desc);
+            $('#combo_country').val(res.In_whs_country_desc);
+            $('#combo_grampanchayat').val(res.In_whs_panchayat_desc);
+            $('#combo_taluk').val(res.In_whs_taluk_desc);
+            $('#combo_district').val(res.In_whs_dist_desc);
+            $('#combo_villagecode').val(res.In_whs_village);
+            $('#combo_statecode').val(res.In_whs_state);
+            $('#combo_countrycode').val(res.In_whs_country);
+            $('#combo_grampanchayatcode').val(res.In_whs_panchayat);
+            $('#combo_talukcode').val(res.In_whs_taluk);
+            $('#combo_districtcode').val(res.In_whs_dist);
+            $("#txt_whs_sqrf").val(res.In_sqrf_area);
+            $("#txt_status_code").val(res.In_status_code);
+            $("#DocStat").val(res.In_status_desc);
+            $("#txtMode").val(res.In_mode_flag);
+            $("#txt_row_timestamp").val(res.In_row_timestamp);
+            $("#txtMode").val("U");
+            $("#DocStat").val("Active");
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<script>
+    $("#combo_village").change(function () {
+        debugger;
+        var c = $('#combo_village');
+        var formval = c.data('kendoComboBox').value();
+
+        var villcode = grid_comboScreen_deptcodes(formval);
+        var villdept = villcode[0].dependent;
+
+        var gmap_in = "";
+        $("#combo_grampanchayat").empty();
+        gmap_in = grid_comboScreen_deptcodes(villdept);
+        var villagecode = gmap_in[0].code;
+        var Panchacode = gmap_in[0].dependent;
+        $("#combo_grampanchayat").data("kendoComboBox").value(villagecode);
+
+
+        var gmap_in1 = "";
+        $("#combo_taluk").empty();
+        gmap_in1 = grid_comboScreen_deptcodes(Panchacode);
+        var Pancode = gmap_in1[0].code;
+        var talucode = gmap_in1[0].dependent;
+        $("#combo_taluk").data("kendoComboBox").value(Pancode);
+
+        var gmap_in2 = "";
+        $("#combo_district").empty();
+        gmap_in2 = grid_comboScreen_deptcodes(Pancode);
+        var talcode = gmap_in1[0].code;
+        var disckcode = gmap_in1[0].dependent;
+        $("#combo_district").data("kendoComboBox").value(disckcode);
+    });
+
+</script>
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>
+
+

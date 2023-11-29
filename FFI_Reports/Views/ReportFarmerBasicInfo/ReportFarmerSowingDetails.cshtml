@@ -1,0 +1,1023 @@
+﻿@{
+    ViewBag.Form = "Sowing Details Progress Report";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+<style>
+    #display_loading {
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        transform: translate(-50%, 50%);
+        display: none;
+    }
+
+    body {
+        background-color: #ffffff;
+    }
+
+    span.k-widget.k-datepicker.k-header.cusDate.k-input {
+        background: #fff;
+    }
+
+    button#btnExport {
+        background-color: #00c0ef;
+        border-color: #00acd6;
+        margin-top: -6%;
+        display: inline-block;
+        padding: 6px 12px;
+        margin-bottom: 0;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1.42857143;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        -ms-touch-action: manipulation;
+        touch-action: manipulation;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        background-image: none;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        color: #fff;
+    }
+</style>
+
+<style>
+    .k-grid .k-grid-header .k-header {
+        white-space: normal;
+    }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.min.js"></script>
+<form id="frm_sowingdetailsreport" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px;padding-top:12px;">
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="cmb_startyear" class="col-sm-4 control-label required">Start Year</label>
+                                <input id="cmb_start" name="cmb_start" style="width:50%" data-role="filtercombo">
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="cmb_endyear" class="col-sm-4 control-label required">End Year</label>
+                                <input id="cmb_end" name="cmb_end" style="width:50%" data-role="filtercombo">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="cmb_cropname" class="col-sm-4 control-label required">
+                                    Crop Name
+                                </label>
+                                <input id="cmb_cropname" name="cmb_cropname" style="width:50%" data-role="filtercombo">
+                                <input type="hidden" id="hdn_inputstring">
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4" style=" margin-left: 65%;">
+                            <div class="form-group">
+                                <div style="float:right;">
+                                    <button id="refresh" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button"
+                                            data-original-title="Refresh" onclick="listRefresh()" style="margin-left:16px;">
+                                        <span class="glyphicon glyphicon-refresh"></span>
+                                    </button>
+                                    <div id="display_loading" style="z-index: 999;"><img src="https://i.stack.imgur.com/rBLb3.gif" style="height:100px; width:100px;"></div>
+
+
+
+                                    <button id="clear" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button" onclick="listclear()">Clear</button>
+
+                                    <button id="btnExport" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button" data-original-title="Export" style="background-color: #00c0ef ;border-color: #00acd6; margin-top:0%" ;>
+                                        @*<span class="fa fa-file-excel-o fa-2x" style="background-color: #00c0ef; border-color: #00acd6;"></span>*@
+                                        Export to Excel
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+            <div class="row">
+               
+                    <div id="gd_sowing" style="margin-top: -16px;">
+                        <div id="Sowingdetails_grid"></div>
+                    </div>
+                
+            </div>
+        </div>
+    </div>
+</form>
+
+<script src="~/CommonScripts/Common_func.js"></script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+<script src="~/CommonScripts/ExportExcel.js"></script>
+
+<script>
+    click_act_name = "home ";
+    click_ctrl_name = "home";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+
+</script>
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+        debugger;
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#frm_sowingdetailsreport");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        $("#Topsubheader").show();
+        $("#bottomFooter").show();
+        $("#bottom_menus").hide();
+        $("#btndiv").show();
+        $("#frmlayerdiv").hide();
+        $("#divCreate").hide();
+        $("#divEdit").hide();
+        $("#divView").show();
+        $("#DocStat").show();
+        $(".edtviw_item").show();
+        $(".create_item").hide();
+       
+
+        $(".Export").attr("hdrtitle", "Farmer Sowing Details Report");
+        $(".Export").attr("SubTreeId", "FARMSOWINGDET");
+
+        Screen_Id = "FARMSOWINGDET";
+        permission = sec_PermissionNew(Screen_Id);
+        page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+        var security = permission;
+        console.log(security);
+        if (security['print'] == true) {
+            $("#btnExport").show();
+        }
+        else {
+            $("#btnExport").hide();
+        }
+        listgrid([]);
+        /*  Prema added for fpo based abd ri user base loading*/
+        var role = getlocalStorage("orgn_level");
+        if (role == "ORG_FO") {
+            debugger;
+            $("#RIform").show();
+            $("#FPOform").show();
+            filter_combobox("cmb_RIBelongform", getlocalStorage("rilist"));
+            filter_combobox("cmb_FPOBelongform", getlocalStorage("fpolist"));
+            var cmb_riform3 = $("#cmb_RIBelongform").data("kendoComboBox");
+            cmb_riform3.value(getlocalStorage("org_id"));
+            $("#cmb_RIBelongform").data("kendoComboBox").enable(false);
+            $("#cmb_FPOBelongform").data("kendoComboBox").value("ALL");
+            $("#cmb_FPOBelongform").data("kendoComboBox").enable(true);
+            cropload();
+        }
+        if (role == "ORG_PF") {
+            debugger;
+            $("#RIform").show();
+            $("#FPOform").show();
+            filter_combobox("cmb_RIBelongform", getlocalStorage("rilist"));
+            filter_combobox("cmb_FPOBelongform", getlocalStorage("fpolist"));
+            $("#cmb_RIBelongform").data("kendoComboBox").value("ALL");
+            $("#cmb_FPOBelongform").data("kendoComboBox").value("ALL");
+            $("#cmb_RIBelongform").data("kendoComboBox").enable(true);
+            $("#cmb_FPOBelongform").data("kendoComboBox").enable(true);
+            Alldropdownload();
+            cropload();
+        }
+        if (role == "ORG_FPO") {
+            debugger;
+            $("#RIform").show();
+            $("#FPOform").show();
+            filter_combobox("cmb_RIBelongform", getlocalStorage("rilist"));
+            filter_combobox("cmb_FPOBelongform", getlocalStorage("fpolist"));
+            var cmb_riform3 = $("#cmb_RIBelongform").data("kendoComboBox");
+            cmb_riform3.value(getlocalStorage("parent_code"));
+            $("#cmb_RIBelongform").data("kendoComboBox").enable(false);
+            $("#cmb_FPOBelongform").data("kendoComboBox").enable(false);
+            var cmap_inselform = $("#cmb_FPOBelongform").data("kendoComboBox");
+            cmap_inselform.value(getlocalStorage("org_code"));
+            cropload();
+        }
+        /*  prema ended*/
+        $("#btnExport").kendoButton({
+            click: function () {
+                debugger;
+                ExportButtonClick();
+            }
+        });
+
+        Alldropdownload();
+    });
+       $("#cmb_RIBelongform").change(function () {
+           debugger;
+           $("#cmb_FPOBelongform").data("kendoComboBox").value("ALL");
+             var selected_value = $(this).val();
+             var data1 = { RI_Code: selected_value}
+            $.ajax({
+            url: '@Url.Action("GetFPOlistRIBASE", "Login")',
+            type: "post",
+            contentType: 'application/x-www-form-urlencoded',
+            data: data1,
+            success: function (response1) {
+            debugger;
+                var url_path = JSON.parse(response1);
+                var itemArrFPO = [];
+                for (var i = 0; i < url_path.Table.length; i++) {
+                    var list = {};
+                    list.id = url_path.Table[i].serial_number;
+                    list.code = url_path.Table[i].dist_code;
+                    list.desc = url_path.Table[i].Member_district_name;
+                    itemArrFPO.push(list);
+                }
+                filter_combobox("cmb_FPOBelongform", itemArrFPO);
+                cropload();
+                listgrid([]);
+            },
+                error: function (er)
+                {
+                alert(er)
+                console.log(er)
+                }
+            });
+       });
+    $("#cmb_FPOBelongform").change(function () {
+        listgrid([]);
+    });
+    function Alldropdownload() {
+        load_master_code();
+
+        // STARTYEAR Dropdown Load
+        var Startlist = "";
+        $("#cmb_start").empty();
+        Startlist = grid_comboScreen_mastercodes("QCD_CROP_year");
+        filter_combobox("cmb_start", Startlist);
+        // ENDYEAR Dropdown Load
+        var Endlist = "";
+        $("#cmb_end").empty();
+        Endlist = grid_comboScreen_mastercodes("QCD_CROP_year");
+        filter_combobox("cmb_end", Endlist);
+        // CROP NAME Dropdown Load
+        //var cropnamelist = "";
+        //$("#cmb_cropname").empty();
+        //cropnamelist = grid_comboScreen_mastercodes("QCD_CROPTYPE");
+        //filter_combobox("cmb_cropname", cropnamelist);
+    }
+    $("#cmb_start").change(function () {
+        listgrid([]);
+    });
+    $("#cmb_end").change(function () {
+        listgrid([]);
+    });
+    $("#cmb_cropname").change(function () {
+        listgrid([]);
+    });
+      function cropload() {
+        debugger;
+        var data = {};
+            data.userId = getlocalStorage("User_Id_Value");
+        var parent = $("#cmb_RIBelongform").data("kendoComboBox").value();
+            var user_code = data.userId;
+        var data1 = { user_code: user_code, parent_code: parent}
+            $.ajax({
+            url: '@Url.Action("Getcropname", "ReportFarmerBasicInfo")',
+            type: "post",
+            contentType: 'application/x-www-form-urlencoded',
+            data: data1,
+            success: function (response1) {
+            debugger;
+                var url_path = JSON.parse(response1);
+                var itemArrCROP = [];
+                for (var i = 0; i < url_path.length; i++) {
+                    var list = {};
+                    list.id = url_path[i].serial_number;
+                    list.code = url_path[i].crop_code;
+                    list.desc = url_path[i].CROP;
+                    itemArrCROP.push(list);
+                }
+                filter_combobox("cmb_cropname", itemArrCROP);
+            },
+                error: function (er)
+                {
+                alert(er)
+                console.log(er)
+                }
+            });
+    }
+
+    var isvalid = true;
+    var field = null;
+    function Validation() {
+        if ($("#cmb_start").val() != "") {
+            isvalid = true;
+        }
+        else {
+            isvalid = false;
+            kendoAlert("Please Select the Start Year");
+            return;
+        }
+        if ($("#cmb_end").val() != "") {
+            isvalid = true;
+        }
+        else {
+            isvalid = false;
+            kendoAlert("Please Select the End Year");
+            return;
+        }
+        if ($("#cmb_cropname").val() != "") {
+            isvalid = true;
+        }
+        else {
+            isvalid = false;
+            kendoAlert("Please Select the Crop Name");
+            return;
+        }
+
+    }
+    $(function () {
+        $('#refresh').click(function () {
+            debugger;
+
+            if ($("#cmb_start").val() != "" || $("#cmb_end").val() != "" || $("#cmb_cropname").val() != "") {
+                var isvalid = true;
+                var field = null;
+                if ($("#cmb_start").val() != "") {
+                    isvalid = true;
+                }
+                else {
+                    isvalid = false;
+                    kendoAlert("Please Select the Start Year");
+                    return;
+                }
+                if ($("#cmb_end").val() != "") {
+                    isvalid = true;
+                }
+                else {
+                    isvalid = false;
+                    kendoAlert("Please Select the End Year");
+                    return;
+                }
+                if ($("#cmb_cropname").val() != "") {
+                    isvalid = true;
+                }
+                else {
+                    isvalid = false;
+                    kendoAlert("Please Select the Crop Name");
+                    return;
+                }
+
+                var cmb_start_year = $("#cmb_start").val();
+                var cmb_end_year = $("#cmb_end").val();
+                var user_code = getlocalStorage("User_Id_Value");
+                var parent_code = $("#cmb_RIBelongform").data("kendoComboBox").value();
+                var fpo_code = $("#cmb_FPOBelongform").val();
+                if (cmb_start_year != "QCD_CROPTYPE_ALL" && cmb_end_year != "QCD_CROPTYPE_ALL") {
+                    cmb_start_year = cmb_start_year.substring(9);
+                    cmb_end_year = cmb_end_year.substring(9);
+                    if (cmb_end_year >= cmb_start_year) {
+                        $('#refresh').hide();
+                        $('#lblprog').show();
+                        //$('.load').addClass('loading');
+                        var cmb_start = $("#cmb_start").val();
+                        // cmb_start = cmb_start.substring(9);
+                        var cmb_end = $("#cmb_end").val();
+                        //cmb_end = cmb_end.substring(9);
+                        var cmb_cropname = $("#cmb_cropname").val();
+                        // cmb_cropname = cmb_cropname.substring(9);
+                        //Sp Name For this Report  : Report_FarmerCropSowingDetails
+                        console.log("Report SP :  Report_FarmerCropSowingDetails");
+                        $('#refresh').hide();
+                        $("#btnExport").hide();
+                        $("#clear").hide();
+                        $("#display_loading").show();
+                        $(".panel-default").css("opacity", 0.2);
+                        setTimeout(function () {
+                            $(".panel-default").css("opacity", 1);
+                            $("#display_loading").css({ "display": "none" });
+                        }, 8500);
+                        $.ajax({
+                            type: "POST",
+                            data: '{startyear: "' + cmb_start + '",endyear:"' + cmb_end + '",cropname:"' + cmb_cropname + '",user_code:"' + user_code + '",parent_code:"' + parent_code + '",fpo_code:"' + fpo_code + '"}',
+                            url: "/ReportFarmerBasicInfo/getsowingdetails",
+                            dataType: "json",
+                            contentType: 'application/json; charset=utf-8',
+                            success: function (response) {
+                                debugger;
+                                $('#refresh').show();
+                                Screen_Id = "FARMSOWINGDET";
+                                permission = sec_PermissionNew(Screen_Id);
+                                page_load_list_permission(permission);
+                                setlocalStorage("ls_pageList", "");
+                                var security = permission;
+                                console.log(security);
+                                if (security['print'] == true) {
+                                    $("#btnExport").show();
+                                }
+                                else {
+                                    $("#btnExport").hide();
+                                }
+                                $("#clear").show();
+                                $("#display_loading").hide();
+                                if (response != null) {
+                                    var data = changedataType(response);
+                                    $("#gd_sowing").empty();
+                                    $("#gd_sowing").append("<div id='Sowingdetails_grid'></div>");
+                                    listgrid(data);
+                                    console.log(listgrid);
+                                }
+                            },
+                            error: function (er) {
+                                $('#refresh').show();
+                                $("#btnExport").show();
+                                $("#clear").show();
+                                $("#display_loading").hide();
+                                alert(er)
+                                console.log(er)
+                            }
+                        });
+                    }
+                    else {
+                        kendoAlert('Please Select Correct Date');
+                    }
+                } else {
+                  
+                    //$('.load').addClass('loading');
+                    var cmb_start = $("#cmb_start").val();
+                    // cmb_start = cmb_start.substring(9);
+                    var cmb_end = $("#cmb_end").val();
+                    //cmb_end = cmb_end.substring(9);
+                    var cmb_cropname = $("#cmb_cropname").val();
+                    // cmb_cropname = cmb_cropname.substring(9);
+                    //Sp Name For this Report  : Report_FarmerCropSowingDetails
+                    console.log("Report SP :  Report_FarmerCropSowingDetails");
+                    $('#refresh').hide();
+                    $("#btnExport").hide();
+                    $("#clear").hide();
+                    $("#display_loading").show();
+                    $(".panel-default").css("opacity", 0.2);
+                    setTimeout(function () {
+                        $(".panel-default").css("opacity", 1);
+                        $("#display_loading").css({ "display": "none" });
+                    }, 8500);
+                    $.ajax({
+                        type: "POST",
+                        data: '{startyear: "' + cmb_start + '",endyear:"' + cmb_end + '",cropname:"' + cmb_cropname + '",user_code:"' + user_code + '",parent_code:"' + parent_code + '",fpo_code:"' + fpo_code + '"}',
+                        url: "/ReportFarmerBasicInfo/getsowingdetails",
+                        dataType: "json",
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (response) {
+                            debugger;
+                            $('#refresh').show();
+                            Screen_Id = "FARMSOWINGDET";
+                            permission = sec_PermissionNew(Screen_Id);
+                            page_load_list_permission(permission);
+                            setlocalStorage("ls_pageList", "");
+                            var security = permission;
+                            console.log(security);
+                            if (security['print'] == true) {
+                                $("#btnExport").show();
+                            }
+                            else {
+                                $("#btnExport").hide();
+                            }
+                            $("#clear").show();
+                            $("#display_loading").hide();
+                            if (response != null) {
+                                var data = changedataType(response);
+                                $("#gd_sowing").empty();
+                                $("#gd_sowing").append("<div id='Sowingdetails_grid'></div>");
+                                listgrid(data);
+                            }
+                            var farmergrid = $("#Sowingdetails_grid").data("kendoGrid");
+                            farmergrid.dataSource.read();
+                            var count = farmergrid.dataSource.total();
+                            console.log(count);
+                            if (count == 0) {
+                                kendoAlert('No Records found');
+                            }
+                        },
+                        error: function (er) {
+                            $('#refresh').show();
+                            $("#btnExport").show();
+                            $("#clear").show();
+                            $("#display_loading").hide();
+                            alert(er)
+                            console.log(er)
+                        }
+                    });
+                }
+
+            }
+            else {
+                kendoAlert('Please Select Any One Field');
+            }
+
+            return false;
+        });
+    });
+</script>
+<script>
+    function load_master_code() {
+        try {
+            var data = {};
+            data.screen_Id = "FARMSOWINGDET";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            debugger;
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function ExportButtonClick() {
+        debugger
+        var grid = $("#Sowingdetails_grid").data("kendoGrid");
+        if (grid.dataSource.total() == 0) {
+            kendoAlert('No records available in the Grid to Export!!!');
+        }
+        else {
+            grid.bind("excelExport", function (e) {
+                debugger;
+                e.workbook.fileName = "FarmerSowingDetails.xlsx";
+                var rows1 = e.workbook.sheets[0];
+
+                var sheet = e.workbook.sheets[0];
+                var gd = $("#Sowingdetails_grid").data("kendoGrid");
+                var gd_fi = $("#Sowingdetails_grid").data("kendoGrid").dataSource;
+                var filters = gd_fi.filter();
+                var allData = gd_fi.data();
+                var query = new kendo.data.Query(allData);
+                var data = query.filter(filters).data;
+                var data_tt = gd.dataSource.data();
+                var sheet = e.workbook.sheets[0];
+                var gridColumns = gd.columns;
+
+                var columnCells = [];
+                for (var c = 0; c < gridColumns.length; c++) {
+                    var fieldName = gd.columns[c].hidden;
+                    if (typeof (fieldName) === "undefined") {
+                        var cellValue = gridColumns[c].title ? gridColumns[c].title : gridColumns[c].field;
+                        columnCells.push({ value: cellValue, autoWidth: true, background: "#7a7a7a", color: "#fff" });
+                    }
+                }
+                var rows = [{ cells: columnCells, type: "header" }];
+                for (var i = 0; i < data.length; i++) {
+                    var rowCells = [];
+                    for (var j = 0; j < gridColumns.length; j++) {
+
+                        var fieldName = gd.columns[j].hidden;
+                        if (typeof (fieldName) === "undefined") {
+                            var cellValue = data[i][gridColumns[j].field];
+                            rowCells.push({ value: cellValue });
+                        }
+                    }
+                    rows.push({ cells: rowCells, type: "data" });
+                }
+
+                sheet.rows = rows;
+
+            });
+     var InputString = $("#hdn_inputstring").val();
+            var data = {};
+            data.userId = getlocalStorage("User_Id_Value");
+            var user_code = data.userId;
+                var Report_Name = "Sowing Details Progress Report";
+            var flag = 1;
+            var data = { report_name: Report_Name, input_string: InputString, flag: flag, userid: user_code };
+         $.ajax({
+            url: '@Url.Action("ExportExcelDownload", "ReportFarmerBasicInfo")',
+            type: "post",
+            contentType: 'application/x-www-form-urlencoded',
+            data: data,
+            success: function (response1) {
+            debugger;
+            if (response1 != null) {
+                debugger;
+
+            }
+
+          },
+         error: function (er) {
+         alert(er)
+        console.log(er)
+        }
+         });
+            grid.saveAsExcel();
+            kendoAlert('Exported Sucessfully');
+        }
+    }
+
+</script>
+
+
+<script>
+    function listpageloadfetch() {
+        try {
+
+            var formval = form_Serialize("frm_sowingdetailsreport");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_Fromvalue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_Fromvalue = ".";
+            }
+            obj_val.FilterBy_Tovalue = ".";
+            if (obj_val.status_option == "" || obj_val.status_option == undefined) {
+                obj_val.status_option = "V";
+            }
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Filter = obj_val;
+            var colCount = $("#Sowingdetails_grid").find('.k-grid-header colgroup > col').length;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+
+
+    var status_Priority = [];
+    function listgrid(data) {
+        try {
+            $.each(data, function (index, value) {
+                var flag = false;
+                $.each(status_Priority, function (sindex, svalue) {
+                    if (svalue == value.status_desc) {
+                        flag = true;
+                    }
+                });
+                if (flag == false) {
+                    status_Priority.push(value.status_desc);
+                }
+            });
+            $("#Sowingdetails_grid").kendoGrid({
+                dataSource: {
+                    data: data,
+                    pageSize: 20,
+                   
+                },
+
+                height: 300,
+                sortable: true,
+                selectable: true,
+
+                pageable: {
+                    refresh: false,
+                    pageSizes: true,
+                    buttonCount: 5
+                },
+                navigatable: true,
+                groupable: false,
+                filterable: true,
+                resizable: true, 
+                /* pageable: {
+                     refresh: false,
+                     pageSizes: true,
+                     previousNext: true,
+                     buttonCount: 8,
+                     pageSize: 20,
+                     refresh: true,
+                     pageSizes: true
+                 },*/
+
+                columns: [
+                    {
+                        field: "SowingYear",
+                        title: "Year",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        }, 
+                        width: 80,
+                    },
+                    {
+                        field: "fponame",
+                        title: "FPO Name",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        }, 
+                        width: 150,
+                    },
+                    {
+                        field: "FarmerCode",
+                        title: "Farmer Code",
+                        width: 160,
+                        filterable: false
+                    },
+
+                    {
+                        field: "FarmerName",
+                        title: "Farmer First Name",
+                        width: 100,
+                        filterable: false
+                    },
+
+                    {
+                        field: "district",
+                        title: "District",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        }, 
+                        width: 100
+
+                    },
+
+                    {
+                        field: "taluk",
+                        title: "Taluk",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        }, 
+                        width: 130,
+
+                    },
+                    {
+                        field: "grampanchayat",
+                        title: "Gram Panchayat",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        }, 
+                        width: 130
+
+                    },
+                    {
+                        field: "farmervillage",
+                        title: "FarmerVillage",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        }, 
+                        width: 130
+
+                    },
+
+                    {
+                        field: "Season",
+                        title: "Season",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        }, 
+                        width: 130
+
+                    },
+                    {
+                        field: "CropName",
+                        title: "Crop Classification",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        }, 
+                        width: 130
+
+                    },
+                    {
+                        field: "CropType",
+                        title: "Crop Name",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        }, 
+                        width: 130
+
+                    },
+                    {
+                        field: "CropVariety",
+                        title: "Variety",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        }, 
+                        width: 130
+
+                    },
+                    {
+                        field: "SeedName",
+                        title: "SeedName",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        }, 
+                        width: 130
+                    },
+
+                    {
+                        field: "SeedQuantity",
+                        title: "Seed Qty(Kgs)",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        }, 
+                        width: 130,
+                        attributes: { style: "text-align:right;" },
+                        //editor: function (container, options) {
+                        //    numeric_editor(container, options.field, '50', '0');
+                        //}
+                    },
+                    {
+                        field: "LandArea",
+                        title: "Sowing Area(Acres)",
+                        width: 130,
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        }, 
+                        attributes: { style: "text-align:right;" },
+                        editor: function (container, options) {
+                            numeric_editor(container, options.field, '50', '0');
+                        }
+                    },
+                    {
+                        field: "Yield",
+                        title: "Expected Yield(Quintals)",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        }, 
+                        width: 130,
+                        attributes: { style: "text-align:right;" },
+                        editor: function (container, options) {
+                            numeric_editor(container, options.field, '50', '0');
+                        }
+                    },
+                    {
+                        field: "SowingDate",
+                        title: "Sowing Date",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        },
+                        width: 130
+                    },
+                    {
+                        field: "Pricepaid",
+                        title: "Expected Price(₹ Per Quintal)",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        }, 
+                        width: 130,
+                        attributes: { style: "text-align:right;" },
+                        editor: function (container, options) {
+                            Pricepaid(container, options.field, '9', '2');
+                        },
+                    },
+                    {
+                        field: "createdate",
+                        title: "Created Date",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        }, 
+                        width: 130
+                    },
+                    {
+                        field: "createby",
+                        title: "Create By",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        }, 
+                        width: 130
+                    },
+                ],
+                editable: false,
+
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+
+
+</script>
+
+<script>
+
+    function listRefresh() {
+        debugger;
+        try {
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function listclear() {
+        try {
+            listgrid([]);
+            
+            $('#frm_sowingdetailsreport').find('input:text').val('');
+            var role = getlocalStorage("orgn_level");
+            if (role == "ORG_PF") {
+                $("#cmb_RIBelongform").data("kendoComboBox").value("");
+                $("#cmb_FPOBelongform").data("kendoComboBox").value("");
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+
+<style>
+    .k-footerTemplate {
+        text-align: right;
+    }
+</style>

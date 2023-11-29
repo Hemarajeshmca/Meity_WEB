@@ -1,0 +1,207 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.min.js"></script>
+    <meta name="viewport" content="width=device-width" />
+    <title>Milk Payment Rate</title>
+</head>
+<body>
+    <form class="form-horizontal" id="frm_repaymain" data-role="validator" novalidate="novalidate">
+        <div class="modal-header">
+            <button type="button" class="close" onclick="closeModal()" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Error</h4>
+        </div>
+        <div class="modal-header" style="height:49px">
+            <button type="button" id="btnExport" onclick="excel()" style="background-color:skyblue" class="Export btn btn-sm btn-info"><span class="glyphicon glyphicon-export"></span></button>
+        </div>
+        <div class="modal-body" style="height:434px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-12">
+                    <div id="grid_Error"></div>
+                </div>
+
+
+            </div>
+        </div>
+    </form>
+</body>
+</html>
+<style>
+    .breadcrumb > li + li:before {
+        color: #E6E6E6;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+
+
+        $('#milkview1').on('show.bs.modal', function (e) {
+            grid_Error([]);
+        });
+
+        $('#milkview1').on('loaded.bs.modal', function (e) {
+            grid_Error([]);
+        });
+        $('#milkview1').on('hidden.bs.modal', function () {
+            $('#milkview1').removeData();
+
+        });
+        fetch_milk_rate();
+
+        $("#btnExport").kendoButton({
+            click: function () {
+                $("#grid_Error").data("kendoGrid").saveAsExcel();
+            }
+        })
+    });
+    function closeModal() {
+        debugger;
+        $('#milkview1').modal("hide");
+
+    }
+    function excel() {
+        $("#grid_Error").data("kendoGrid").saveAsExcel();
+    }
+    function fetch_milk_rate() {
+        debugger;
+        var payno1 = getlocalStorage('doc_no');
+        var milkcode1 = "0";
+
+
+        $.ajax({
+            type: "POST",
+            data: '{frm_code: "' + payno1 + '",frm_name:"' + milkcode1 + '"}',
+            url: "/MilkPaymentAdvice/Milk_rate_Error",
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                grid_Error(response);
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+
+        });
+    }
+</script>
+<script>
+    function grid_Error(data) {
+        $("#grid_Error").kendoGrid(
+               {
+                   excel: {
+                       fileName: "Milk Rate Error.xlsx",
+                       filterable: true,
+                       allPages: false
+                   },
+                   dataSource: {
+                       data: data,
+                       schema: {
+                           model: {
+                               fields: {
+                                   farmer_code: { type: "string" },
+                                   farmer_name: { type: "string" },
+                                   Milkman_code: { type: "string" },
+                                   milk_qty: { type: "string" },
+                                   fat_percent: { type: "string" },
+                                   snf_percent: { type: "string" },
+                                   milk_rate: { type: "string" },
+                                   milk_from: { type: "string" },
+                                   milksession_code: { type: "string" },
+                               }
+                           }
+                       }
+                   },
+                   height: 400,
+                   groupable: false,
+                   dataBinding: setDefaultValues,
+
+                   dataBound: function (e) {
+                       resultData = e.sender._data;
+                       var rows = $('#grid_Error').data('kendoGrid').tbody.children();
+                       setColor(rows, resultData);
+                       e.preventDefault();
+                   },
+                   sortable: true,
+                   selectable: true,
+                   navigatable: true,
+                   columns: [
+                    {
+                        field: "farmer_code",
+                        title: "Farmer Code",
+                        width: 100,
+                    },
+                    {
+                        field: "farmer_name",
+                        title: "Farmer Name",
+                        width: 100,
+                        hidden:true
+                    },
+                      {
+                          field: "milkman_code",
+                          title: "Milkman Code",
+                          width: 100,
+                      },
+
+                      {
+                          field: "milksession_code",
+                          title: "Milk Session",
+                          width: 120,
+                      },
+
+                     {
+                         field: "milk_from",
+                         title: "Milk From",
+                         width: 100,
+                     },
+                    {
+                        field: "milk_qty",
+                        title: "pouring milk",
+                        attributes: { style: "text-align:right;" },
+                        width: 100,
+                    },
+                    {
+                        field: "fat_percent",
+                        title: "FAT",
+                        attributes: { style: "text-align:right;" },
+                        width: 100,
+
+                    },
+                    {
+                        field: "snf_percent",
+                        title: "SNF",
+                        attributes: { style: "text-align:right;" },
+                        width: 100,
+                    },
+                    {
+                        field: "awm_percent",
+                        title: "AWN",
+                        attributes: { style: "text-align:right;" },
+                        width: 100,
+
+                    },
+                    {
+                        field: "milk_rate",
+                        title: "Milk Rate",
+                        attributes: { style: "text-align:right;" },
+                        width: 100,
+                    },
+                    {
+                        field: "milk_amount",
+                        title: "Amount",
+                        attributes: { style: "text-align:right;" },
+                        width: 100,
+                    },
+
+                   ],
+                   editable: true
+               });
+    }
+
+
+</script>

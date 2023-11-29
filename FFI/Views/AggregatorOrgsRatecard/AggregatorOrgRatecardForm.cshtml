@@ -1,0 +1,842 @@
+﻿@{
+    ViewBag.Form = "Rate Card";
+    ViewBag.helpName = "AggregatorOrgRatecardForm.html";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+
+<form id="Rate_card" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="txtaggrorgn_code_desc" class="col-sm-4 control-label required">Aggregator Org Name</label>
+                        <div class="col-sm-5">
+                            <input id="txtaggrorgn_code_desc" name="aggrorgn_code_desc" value="" style="width: 100%" disabled>
+                            <input id="txtaggrorgn_code" name="aggrorgn_code" type="hidden" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="txtaggrorgn_type_desc" class="col-sm-4 control-label required">Aggregator Org Type </label>
+                        <div class="col-sm-5">
+                            <input id="txtaggrorgn_type_desc" name="aggrorgn_type_desc" style="width: 100%" disabled>
+                            <input id="txtaggrorgn_type" name="aggrorgn_type" type="hidden" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <div class="col-sm-5">
+                                    <input type="radio" id="analyer" value="R" name="buy_sell_flag" data-role="radio" onclick="changingon()" />Analyzer                                    
+                                </div>
+                                <div class="form-group">                                   
+                                    <div class="col-sm-5">
+                                        <input id="cmbenb" name="buy_orgn_code" style=" width:100%" data-role="filtercombo" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <div class="col-sm-5">
+                                        <input type="radio" id="buy_from" value="B" name="buy_sell_flag" data-role="radio" onclick="changing()" />Buying
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="Cmbfrom" class="col-sm-4 control-label">From</label>
+                                    <div class="col-sm-5">
+                                        <input id="Cmbfrom" name="buy_from" style=" width:100%" data-role="filtercombo" />
+                                    </div>
+                                </div>
+                            </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <div class="col-sm-5">
+                                    <input type="radio" id="sell_to" value="S" name="buy_sell_flag" data-role="radio" onclick="changing()" />Selling
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="Cmbto" class="col-sm-4 control-label">To</label>
+                                <div class="col-sm-5">
+                                    <input id="Cmbto" name="sell_to" style="width:100%" data-role="filtercombo" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="txtsoldto" class="col-sm-4 control-label"></label>
+                                <div class="col-sm-5">
+                                    <input type="text" id="txtsoldto" name="sell_to_desc" class="form-control" maxlength="75">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @*<div class="panel panel-default">
+                <div class="box-body">
+                    <div class="row">                        
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="analyer" class="col-sm-4 control-label">Analyzer</label>
+                                <div class="col-sm-5">
+                                    <input type="radio" id="enable" value="en" name="buy_sell_flag" data-role="radio"  />Enable
+                                    <input type="radio" id="disable" value="ds" name="buy_sell_flag" data-role="radio"  />Disable
+                                </div>
+                            </div>                         
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-6">
+                    <div class=" form-group">
+                        <label for="txtValidity" class=" col-sm-4 control-label required">Effective From</label>
+                        <div class=" col-sm-3">
+                            <input class="cusDate" data-role='datepicker' id="txtValidity" data-required-msg="Date cannot be blank" data-checkdate-msg="Enter Valid Date" name="period_from" style="width:100%" onkeypress="return date_validate(event)" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class=" form-group">
+                        <label for="txtValidity1" class=" col-sm-4 control-label">Effective To</label>
+                        <div class=" col-sm-3">
+                            <input class="cusDate" data-role='datepicker' id="txtValidity1" data-required-msg="Date cannot be blank" data-checkdate-msg="Enter Valid Date" name="period_to" style="width:100%" onkeypress="return date_validate(event)" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:10px">
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="txt_ratecard_rowid" class="col-sm-5 control-label">ratecard_rowid</label>
+                        <div class="col-sm-4">
+                            <input type="number" id="txt_ratecard_rowid" name="ratecard_rowid" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                        <div class="form-group" style="display:none;">
+                            <label for="txt_ratecard_code" class="col-sm-5 control-label">ratecard_code</label>
+                            <div class="col-sm-4">
+                                <input type="text" id="txt_ratecard_code"  class="form-control" maxlength="10">
+                            </div>
+                        </div>
+                    </div>
+                @*<div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="txt_buy_orgn_code" class="col-sm-5 control-label">buy_orgn_code</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txt_buy_orgn_code" name="buy_orgn_code" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>*@
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="txt_sell_orgn_code" class="col-sm-5 control-label">sell_orgn_code</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txt_sell_orgn_code" name="sell_orgn_code" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="status_code" class="col-sm-5 control-label">Status_code</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txt_status_code" name="status_code" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="txtMode" class="col-sm-5 control-label">Mode</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtMode" name="mode_flag" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group" style="display:none;">
+                        <label for="row_timestamp" class="col-sm-5 control-label">Timestamp:</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txt_row_timestamp" name="row_timestamp" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-top:15px;padding-bottom:15px">
+                <div class="col-xs-12">
+                    <div id="grid">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script src="~/API_Scripts/Rate_Card_saveRateCard_APIClient.js"></script>
+<script src="~/API_Scripts/Rate_Card_retrieveRateCard_APIClient.js"></script>
+<script src="~/API_Scripts/Rate_Card_retrieveRateCardList_APIClient.js"></script>
+<script src="~/API_Scripts/RateCard.js"></script>
+<script src="~/API_Scripts/retrieveRateCard_Model.js"></script>
+<script src="~/API_Scripts/retrieveRateCardList_Model.js"></script>
+<script src="~/API_Scripts/saveRateCard_Model.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+
+<script>
+    click_act_name = "AggregatorOrgsRatecardList";
+    click_ctrl_name = "AggregatorOrgsRatecard";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+
+<script>
+    $(document).ready(function () {      
+        var todaysDate = new Date();
+        var dp = $("#txtValidity").kendoDatePicker({         
+            format:'dd/MM/yyyy',
+            open: function (e) {           
+            }
+        }).data("kendoDatePicker");
+
+        var dt = $("#txtValidity1").kendoDatePicker({ 
+            min: todaysDate,
+            format: 'dd/MM/yyyy',
+            open: function (e) { 
+                dt.min(todaysDate);
+            }
+        }).data("kendoDatePicker");
+
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#Rate_card");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+
+        setlocalStorage("status", "Active");
+     
+        grid([]);
+        Screen_Id = "MAPRC";
+        permission = sec_Permission(Screen_Id);
+
+        //screen Id
+        var org_id = getlocalStorage('org_id');
+        var org_type = getlocalStorage('org_type');
+        var orgtname = getlocalStorage('orgtname');
+        var org = getlocalStorage('org');
+        $('#txtaggrorgn_code_desc').val(org);
+        $('#txtaggrorgn_type_desc').val(orgtname);
+        $('#txtaggrorgn_code').val(org_id);
+        $('#txtaggrorgn_type').val(org_type);
+
+        $(".file_attach").attr("hdrtitle", "Rate Card");
+        $(".notes").attr("hdrtitle", "Rate Card");
+        $("#lblForm_menuid").text("MAPRC");
+
+        var combo_data3 = [{ code: "Enable", desc: "Enable" }, { code: "Disable", desc: "Disable" } ];
+        filter_combobox("cmbenb", combo_data3);
+
+        $("#common_id").text("Rate Card ID")
+        $("#txtcommon_id").prop("disabled", true);
+        rate();
+     
+        if (getlocalStorage('btn_clk_val') == "Create") {
+            $('#divCreate #review').hide();
+            $("#bottom_menus").hide();
+            $("#txtMode").val("I");
+            $("#DocStat").val("New");
+            $("#txt_ratecard_code").val("0");
+            //load_master_code();
+        }
+        else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
+            $('#divEdit #reviewEd').hide();
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("Rate_card");
+                var obj_val = JSON.parse(formval);
+                obj_val.ratecard_rowid = data.ratecard_rowid;
+                obj_val.ratecard_code = data.ratecard_code;
+                $("#txtcommon_id").val(data.ratecard_code);
+                $("#txtMode").val("U");
+
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                retrieve_RateCard_details(data);
+              
+                setlocalStorage('doc_no', $("#txtcommon_id").val());
+                setlocalStorage('doc_row_id', $("#txt_ratecard_rowid").val());
+            }
+        }
+
+    });
+</script>
+<script>
+    function load_master_code() {
+        try{
+            debugger;
+            var data = {};
+            var context = WebAPIProxy.getContext();
+            data.userId = context.userId
+            data.orgnId = context.orgnId
+            data.locnId = context.locnId
+            data.localeId = context.localeId
+        data.screen_Id = "MAPRC";
+        var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+<script>
+    var milk_from_desc_list = "";
+    function grid(data) {
+        try {
+            $("#grid").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+
+                                milk_form: { type: "string" },
+                                milk_from_desc: { type: "string" },
+                                milk_rate: { type: "Numeric", validation: { required: { message: "Rate per Liter cannot be blank" } } },
+                                fat_percent: { type: "Numeric", validation: { required: { message: "Fat cannot be blank" } } },
+                                snf_percent: { type: "Numeric", validation: { required: { message: "SNF cannot be blank" } } },
+                                awm_percent: { type: "Numeric", validation: { required: { message: "AWM cannot be blank" } } },
+                                status_code: { type: "string", defaultValue: "A" },
+                                status_desc: { type: "string", defaultValue: getlocalStorage('status'), editable: true },
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+                toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 400,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                edit: OnEdit,
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [{
+                    command: [
+            {
+                name: "Delete",
+                id: "Delete",
+                imageClass: "fa fa-close",
+                click: function (e) {
+                    // e.preventDefault();
+                    var grid = $("#grid").data("kendoGrid");
+                    var dataItem = $("#grid").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                    DeleteWindowEvent(e, dataItem, grid);
+                    e.stopImmediatePropagation()
+                }
+            },
+                    ], title: "Action", width: "50px",
+                },
+                {
+                    field: "ratecarddtl_rowid",
+                    title: "ratecarddtl_rowid",
+                    hidden: true,
+                },
+                 {
+                     field: "milk_from",
+                     title: "milk_from",
+                     hidden: true,
+                 },
+                {
+                    field: "milk_from_desc",
+                    title: "Milk From",
+                    editor: function (container, options) {
+                        combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "milk_from", "grid")
+                    },
+                    width: 100,
+
+                },
+                {
+                    field: "milk_rate",
+                    title: "Rate Per Litre (Rs)",
+                    width: 100,
+                    editor: function (container, options) {
+                        item_rate(container, options.field, '6', '2');
+                    },
+
+                    //  hidden: true,
+                },
+                 {
+                     field: "fat_percent",
+                     title: "Fat%",
+
+                     width: 100,
+                     editor: function (container, options) {
+                         item_rate(container, options.field, '4', '1');
+                     },
+
+                 },
+                  {
+                      field: "snf_percent",
+                      title: "SNF%",
+                      width: 100,
+                      editor: function (container, options) {
+                          item_rate(container, options.field, '4', '1');
+                      },
+                  },
+                 {
+                     field: "awm_percent",
+                     title: "AWM%",
+                     width: 100,
+                     editor: function (container, options) {
+                         item_rate(container, options.field, '4', '1');
+                     },
+                 },
+                 {
+                     field: "status_code",
+                     title: "status_code",
+                     hidden: true,
+                 },
+
+                 {
+                     field: "status_desc",
+                     title: "Status",
+                     editor: function (container, options) {
+                         combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "status_code", "grid")
+                     },
+                     width: 100,
+                 },
+                {
+                    field: "mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }],
+                editable: true
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+
+        }
+    }
+    load_master_code();
+    milk_from_desc_list = grid_comboScreen_mastercodes("QCD_LIVESTYPE");
+    function OnEdit(e) {
+        if ($("#buy_from").is(":checked") || $("#sell_to").is(":checked")) {
+           
+            var colCount = $("#grid").find('.k-grid-header colgroup > col').length;
+            if ($("#grid").data("kendoGrid").dataSource._view.length == 2) {
+                //$("#grid").find('.k-grid-content tbody')
+                //    .append('<tr class="kendo-data-row"><td colspan="' +
+                //        colCount +
+                //   '" style="text-align:center; padding-top:10px;background-color:#AFE4FA"><b></b></td></tr>');
+                $("#grid .k-grid-toolbar").hide();
+            } else {
+                $("#grid .k-grid-toolbar").show();
+            }
+            return false;
+        }
+    }
+</script>
+<script>
+    function save() {
+        try{
+        savecombo();
+        if ($("#txt_ratecard_rowid").val() == "") {
+            $("#txt_ratecard_rowid").val('0');
+        }
+        if ($("#txtcommon_id").val() == "" || $("#txtcommon_id").val() == undefined) {
+            $("#txtcommon_id").val('0');
+        }
+        if ($("#txtMode").val() == "S") {
+            $("#txtMode").val('U');
+        }
+        if ($("#txtMode").val() == "S") {
+            $("#txtMode").val('U');
+        }
+        var formval = form_Serialize("Rate_card");
+        var obj_val = JSON.parse(formval);   
+        //if(obj_val.buy_orgn_code=)
+        obj_val.ratecard_code = $("#txtcommon_id").val();
+        if (obj_val.hasOwnProperty('period_from')) {
+            if (obj_val.period_from != '')
+                obj_val.period_from = getFormated_StringDate(obj_val.period_from);
+        }
+        if (obj_val.hasOwnProperty('period_to')) {
+            if (obj_val.period_to != '')
+                obj_val.period_to = getFormated_StringDate(obj_val.period_to);
+        }
+        if (!$("input[name='buy_sell_flag']:checked").val()) {
+            kendoAlert('Select Buying / Selling');
+            return false;
+        }
+        //---validate Date-----------// 
+        var x = new Date(obj_val.period_from);
+        var y = new Date(obj_val.period_to);
+
+       
+        if (x > y)
+        {
+            kendoAlert("Effective From should be less than Effective To");
+            return false;
+        }
+
+        //---validate Grid-----------//
+        var mandatory_check = true;
+
+        //-----value of radio button -->  var ss = $('.row input[type="radio"]:checked:first').val();
+        var selected_Id = $('input[name="buy_sell_flag"]:checked').attr('id');
+        if (selected_Id == "analyer") {
+            if (obj_val.analyer == "") {
+                kendoAlert("analyer from cannot be blank");
+                return false;
+            }
+        }
+        else if (selected_Id == "buy_from") {
+            if (obj_val.buy_from == "") {
+                kendoAlert("Buying from cannot be blank");
+                return false;
+            }
+        }
+        else {
+            if (obj_val.sell_to == "") {
+                kendoAlert("Selling To cannot be blank");
+                return false;
+            }
+        }
+
+        var a = getlocalStorage('org_type');
+        if (a == "AGGR_ORG_FINAL") {
+            if (obj_val.period_from == "") {
+                kendoAlert("Effective from date cannot be blank");
+                return false;
+            }
+        }
+
+        var grid_val = JSON.stringify($("#grid").data().kendoGrid._data);
+        var Bind = {};
+        Bind = grid_val;
+        var result = JSON.parse(Bind);  
+        var grid_validate_msg = "";
+
+        if (result.length == 0) {
+            kendoAlert("Atleast one record needs to be entered");
+            mandatory_check = false;
+            return false;
+        }
+        $.each(result, function (key, value) {            
+            if (value.milk_from_desc == "" || value.milk_from_desc == undefined) {
+                grid_validate_msg += "Milk from Description cannot be blank <br>";
+                mandatory_check = false;
+            }
+            if (value.milk_rate == "" || value.milk_rate == undefined) {
+                grid_validate_msg += "Milk Rate cannot be blank <br>";
+                mandatory_check = false;
+            }
+            if (value.fat_percent == "" || value.fat_percent == undefined) {
+                grid_validate_msg += "Fat Percentage cannot be blank <br>";
+                mandatory_check = false;            }
+
+            if (value.snf_percent == "" || value.snf_percent == undefined) {
+                grid_validate_msg += "SNF Percentage cannot be blank <br>";
+                mandatory_check = false;
+            }
+            if (value.awm_percent == "" || value.awm_percent == undefined) {
+                grid_validate_msg += "AWM Percentage cannot be blank <br>";
+                mandatory_check = false;
+            }
+            if (mandatory_check == false) {
+                kendoAlert(grid_validate_msg);
+                return false;
+            }
+        });
+        if (mandatory_check == true) {
+            $.each(result, function (index, value) {
+                var row_id = value.ratecarddtl_rowid;
+                var row_code = value.milk_rate;
+                var fat = value.fat_percent;
+                var snf = value.snf_percent;
+                var awm = value.awm_percent;
+                if (row_id == undefined) {
+                    result[index].ratecarddtl_rowid = "0";
+                }
+                if (row_code == undefined) {
+                    result[index].milk_rate = "0";
+                }
+                if (fat == undefined) {
+                    result[index].fat_percent = "0";
+                }
+                if (snf == undefined) {
+                    result[index].snf_percent = "0";
+                }
+                if (awm == undefined) {
+                    result[index].awm_percent = "0";
+                }
+                var mode = value.mode_flag;
+                if (mode == "S") {
+                    result[index].mode_flag = "U";
+                }
+                if ($("#txtMode").val() == "D") {
+                    result[index].mode_flag = "D";
+                }
+            });
+            var obj_grid_val = result;
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_val;
+            data.context.Detail = obj_grid_val;
+            save_RateCard_details(data);
+            changing();
+        }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function DeleteDetails() {
+        $("#txtMode").val('D');
+        save();
+    }
+ 
+    function generate_RateCard_header(res) {
+        try {
+            savecombo();
+       
+        $("#txt_ratecard_rowid").val(res.ratecard_rowid);
+        $("#txtcommon_id").val(res.ratecard_code);
+        //$("#txt_buy_orgn_code").val(res.buy_orgn_code);
+        $("#txt_sell_orgn_code").val(res.sell_orgn_code);     
+        $("#txtValidity").val(res.period_from);
+        $("#txtValidity1").val(res.period_to); 
+        $("#txt_status_code").val(res.status_code);
+        $("#DocStat").val(res.status_desc);
+        $("#txtMode").val(res.mode_flag);
+        $("#txt_row_timestamp").val(res.row_timestamp);
+        if (res.buy_sell_flag == "R") {
+            $("#analyer").attr("checked", "checked");
+            changingon();
+            $('#cmbenb').data("kendoComboBox").value(res.buy_orgn_code);
+        } else
+        if (res.buy_sell_flag == "B") {
+            $("#buy_from").attr("checked", "checked");
+            $('#Cmbfrom').data("kendoComboBox").value(res.buy_from);
+            $("#txtsoldto").val('');
+            changing();
+        }
+        else {
+            $("#sell_to").attr("checked", "checked");
+            $('#Cmbto').data("kendoComboBox").value(res.sell_to);
+            $("#txtsoldto").val(res.sell_to_desc);
+            changing();
+        }
+        
+        
+    }
+    catch (err) {            
+        javascript_log4j_root(arguments.callee.name, err);
+    }
+    }
+
+    function generate_RateCard_detail(res) {
+        try{
+        if (res != null) {
+            var data = changedataType(res);
+            grid(data);
+
+        }
+        else {
+
+            grid([]);
+        }
+    }
+    catch (err) {            
+        javascript_log4j_root(arguments.callee.name, err);
+    }
+    }
+
+</script>
+
+<script>
+    //validation Scripts
+    var a = getlocalStorage('org_type');
+    if (a == "AGGR_ORG_FINAL") {
+        $("#buy_from").attr("checked", "checked");
+        $('#Cmbfrom:input').removeAttr('disabled');
+        $('#Cmbto:input').attr('disabled', 'disabled');
+        $('#txtsoldto').attr('readonly', '');
+    }
+
+    //validation Scripts
+    function rate() {
+        try{
+        var a = getlocalStorage('org_type');
+        if (a == "AGGR_ORG_FINAL") {
+            //buyfrom
+            var FROM = "";
+            $("#Cmbfrom").empty();
+            FROM = grid_comboScreen_mastercodes("Final_ORGINTER");
+            filter_combobox("Cmbfrom", FROM);
+
+            //sellingto
+            var TO = "";
+            $('#sell_to:input').attr('disabled', 'disabled');
+
+            $("#Cmbto").empty();
+            TO = grid_comboScreen_mastercodes("ORGFINAL");
+            filter_combobox("Cmbto", TO);
+        }
+        else {
+            var FROM = "";
+            $("#Cmbfrom").empty();
+            FROM = grid_comboScreen_mastercodes("INT_MILKMAN");
+            filter_combobox("Cmbfrom", FROM);
+            var TO = "";
+            $("#Cmbto").empty();
+            // TO = grid_comboScreen_mastercodes("ORGINTER");
+            TO = grid_comboScreen_mastercodes("ORGFINAL");
+            filter_combobox("Cmbto", TO);
+        }
+    }
+    catch (err) {            
+        javascript_log4j_root(arguments.callee.name, err);
+    }
+    }
+
+    //validation Scripts
+    function get_RateCard_details(id, code) {
+        try{
+        var formval = form_Serialize("Rate_card");
+        var obj_val = JSON.parse(formval);
+        obj_val.ratecard_rowid = id;
+        obj_val.ratecard_code = code;
+        var data = {};
+        data.context = WebAPIProxy.getContext();
+        data.context.Header = obj_val;
+        retrieve_RateCard_details(data);
+        $("#txtcommon_id").val(code);
+        $("#txtMode").val("U");
+    }
+    catch (err) {            
+        javascript_log4j_root(arguments.callee.name, err);
+    }
+    }
+
+    //validation Scripts
+    function changing() {
+        try{
+        var a = getlocalStorage('org_type');
+        if (a == "AGGR_ORG_INTER") {
+            if ($("#buy_from").is(":checked")) {
+                $('#txtsoldto:input').val('');
+                $('#txtsoldto').attr("disabled", true);
+                $('#Cmbfrom').data("kendoComboBox").enable(true);
+                $('#Cmbto').data("kendoComboBox").value('');
+                $('#Cmbto').data("kendoComboBox").enable(false);
+                $('#cmbenb').data("kendoComboBox").value('');
+                $('#cmbenb').data("kendoComboBox").enable(false);
+            }
+            else {
+                $('#txtsoldto').attr("disabled", false);
+                $('#Cmbto').data("kendoComboBox").enable(true);
+                $('#Cmbfrom').data("kendoComboBox").value('');
+                $('#Cmbfrom').data("kendoComboBox").enable(false);
+                $('#cmbenb').data("kendoComboBox").value('');
+                $('#cmbenb').data("kendoComboBox").enable(false);
+                $("#grid .k-grid-toolbar").show();
+            }
+        }
+        else {
+            $('#Cmbto').data("kendoComboBox").enable(false);
+            $('#Cmbto:input').attr('disabled', 'disabled');
+            // $('#Cmbto').data("kendoComboBox").disabled(true);
+        }
+    }
+    catch (err) {            
+        javascript_log4j_root(arguments.callee.name, err);
+    }
+    }
+    function changingon() {
+        try {
+            var a = getlocalStorage('org_type');
+            if (a == "AGGR_ORG_INTER") {
+                if ($("#analyer").is(":checked")) {
+                    $('#txtsoldto:input').val('');
+                    $('#txtsoldto').attr("disabled", true);
+                    $('#Cmbfrom').data("kendoComboBox").enable(true);
+                    $('#Cmbto').data("kendoComboBox").value('');
+                    $('#Cmbto').data("kendoComboBox").enable(false);
+                    $('#cmbenb').data("kendoComboBox").value('');
+                    $('#cmbenb').data("kendoComboBox").enable(true);
+                    //$('#txtsoldto').attr("disabled", false);
+                    //$('#Cmbto').data("kendoComboBox").enable(true);
+                    $('#Cmbfrom').data("kendoComboBox").value('');
+                    $('#Cmbfrom').data("kendoComboBox").enable(false);
+                }
+            }
+            else {
+                $('#Cmbto').data("kendoComboBox").enable(false);
+                $('#Cmbto:input').attr('disabled', 'disabled');
+                // $('#Cmbto').data("kendoComboBox").disabled(true);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    //validation Scripts
+    function ratecard() {
+        try{
+        if ($("#buy_from").is(":checked")) {
+            // $('#Cmbfrom:input').removeAttr('disabled');
+            $('#Cmbto:input').attr('disabled', 'disabled');
+            $('#txtsoldto').attr("disabled", true);
+        }
+        else {
+            $('#Cmbfrom:input').removeAttr('disabled');
+            //$('#txtsoldto:input').removeAttr('disabled');
+
+        }
+    }
+    catch (err) {            
+        javascript_log4j_root(arguments.callee.name, err);
+    }
+    }
+
+    //validation Scripts
+    function savecombo() {
+        try{
+        $('#Cmbfrom').data("kendoComboBox").enable(true);
+        $('#Cmbto').data("kendoComboBox").enable(true);
+        $('#cmbenb').data("kendoComboBox").enable(true);
+        $('#txtsoldto').attr("disabled", false);
+    }
+    catch (err) {            
+        javascript_log4j_root(arguments.callee.name, err);
+    }
+    }
+
+</script>
+
+<style>
+    .k-widget.k-tooltip {
+        background-color: #ffe79e;
+        color: #6b5100;
+    }
+
+    span.k-tooltip {
+        white-space: pre-line;
+    }
+</style>

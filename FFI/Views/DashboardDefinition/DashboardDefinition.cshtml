@@ -1,0 +1,160 @@
+﻿
+@{
+    ViewBag.Form = "Dashboard Definition";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+<form id="rolescreen_form" class="form-horizontal" data-role="validator" novalidate="novalidate">
+<div class="panel panel-default">
+    <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+        <div class="row">
+            <!-- Left col -->
+            <div class="col-lg-3">
+                <!-- Custom tabs (Charts with tabs)-->
+                <div id="grid_role">
+
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class=" row">
+                    <div class="col-sm-5">
+                        <div class="form-group">
+                            <label for="lbl_RoleId" class="col-sm-5 control-label required">Organization Level:</label>
+                            <div class="col-sm-7">
+                                <input type="text" id="txt_RoleId" onchange=" return roleid_onchange();" name="role_id" class="form-control" maxlength="10">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-5">
+                        <div class="form-group">
+                            <label for="lbl_RoleName" class="col-sm-5 control-label required">Description:</label>
+                            <div class="col-sm-7">
+                                <input type="text" id="txt_RoleName" name="role_description" class="form-control" maxlength="125">
+                            </div>
+                        </div>
+                    </div>
+
+
+                    
+
+
+                    <div class="col-sm-3" style=" display:none">
+                        <div class="form-group" style=" display:none">
+                            <label for="txtMode" class="col-sm-5 control-label">Mode Flag</label>
+                            <div class="col-sm-7">
+                                <input type="text" id="txtMode" name="mode_flag" class="form-control" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" col-md-12 ">
+                       
+                                    <div id="grid_role_list">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+
+</form>
+
+<script>
+    $(document).ready(function () {
+        //default
+        master_userRoleNew();
+      
+        grid_role([]);
+        grid_permission([]);
+
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        //end default
+
+        var EmptyData = "";
+        var Getgridval = [];
+        var grid_roleUrl = ajaxcall_param("../DashboardDefinition/RoleInfo", JSON.stringify(EmptyData));
+        Getgridval = JSON.parse(grid_roleUrl);
+        grid_role(Getgridval);
+
+    });
+
+</script>
+
+<script>
+    function grid_role(data)
+    {
+        $("#grid_role").kendoGrid({
+            dataSource:{data: data, //  pageSize: 20
+                },
+            height: 470,
+            sortable: true,
+            selectable: true,
+
+            selectable: "singl",   //  Grid Row Selection
+            navigatable: true,
+            columns: [{
+                field: "org_level",
+                title: "Organization Level",
+                width: 30
+            },
+
+            {
+                field: "description",
+                title: "Description",
+                width: 30
+            }]
+
+
+        });
+
+
+    }
+
+    function grid_permission(role_data) {
+        $("#grid_role_list").kendoGrid({
+            dataSource: {
+                data: role_data,
+                // pageSize: 20,
+                schema: {
+                    model: {
+                        fields: {
+                            section: { editable: false, validation: { required: true } },
+                            value_display: { editable: false },
+                           
+                        }
+                    }
+                },
+            },
+            height: 380,
+            sortable: true,
+            //pageable: {
+            //    refresh: true,
+            //    pageSizes: true,
+            //    buttonCount: 5
+            //},
+            columns: [
+                {
+                    field: "section",
+                    title: "Section",
+                    width: 200,
+                    update: false,
+                    editable: false
+
+                }, {
+
+                    field: "value_display",
+                    title: "value to Display",
+                    template: '<input type="checkbox" #= new_perm == "1" ? "checked=checked" : "" # class="chkbx1" ></input>',
+                    update: true,
+                    width: 100
+                },
+           ],
+
+            editable: true
+        });
+    }
+
+</script>
+
+
+

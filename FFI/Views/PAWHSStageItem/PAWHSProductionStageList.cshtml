@@ -1,0 +1,348 @@
+﻿@{
+    ViewBag.List = "Stage Item Definition";
+    Layout = "~/Views/Shared/ListViewLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-xs-12">
+        <div id="grid_stage_item"></div>
+    </div>
+</div>
+
+<script>
+
+    var data = [];
+    function StageItemDefinition(data) {
+        $("#grid_stage_item").kendoGrid(
+         {
+             dataSource: {
+                 data: data,
+                 pageSize: 20,
+                 change: function (e) {
+                     setTimeout(function () {
+                         var gd = $("#grid_stage_item").data("kendoGrid");
+                         filter_row(gd);
+                         $('.k-i-close').css('display', 'none');
+                         $('button.k-button-icon').css('display', 'none');
+                         $('#grid_stage_item .k-input').prop('disabled', false);
+                         $('#grid_stage_item .k-input').prop('readonly', true);
+
+           }, 1);
+                 },
+             },
+             toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+             excelExport: function (e) {
+                 var gd = $("#grid_stage_item").data("kendoGrid");
+                 var len = gd.dataSource._data.length;
+                 var chkall = $('#chkall').is(':checked');
+                 var chkfilter = $('#chkfilter').is(':checked');
+                 var chktemp = $('#chktemp').is(':checked');
+                 var twokendobox = true;
+                 gd.dataSource.pageSize(len);
+                 if (e.sender.dataSource._data.length == len) {
+                     twokendobox = false;
+                     exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                 }
+                 else {
+                     exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                 }
+                 gd.dataSource.pageSize('10');
+                 return false;
+             },
+             filterable: {
+                 enabled: true,
+                 delay: 1500,
+                 mode: "menu, row",
+                 height: 200,
+                 click: function (e) {
+                     var gd = $("#grid_stage_item").data("kendoGrid");
+                     filter_row(gd);
+                 }
+             },
+             filterMenuInit: function (e) {
+                 var gd = $("#grid_stage_item").data("kendoGrid");
+                 filter_row(gd);
+             },
+             dataBound: function (o) {
+             },
+             height: 450,
+             sortable: true,
+             selectable: true,
+             //change: onChangeSelection,
+             selectable: "singl",   //  Grid Row Selection
+             pageable: {
+                 refresh: false,
+                 pageSizes: true,
+                 buttonCount: 5
+             },
+             navigatable: true,
+             groupable: false,
+             change: selectRow,
+             columns: [
+                   {
+                     field: "Out_aggregator_code",
+                       title: "Aggregator Code",
+                       filterable: {
+                           cell: {
+                               operator: "contains",
+                               inputWidth: 1500
+                           }
+                       }
+                   },
+                  {
+                      field: "Out_fg_code",
+                      title: "FG Code",
+                      filterable: {
+                          cell: {
+                              operator: "contains",
+                              inputWidth: 1500
+                          }
+                      }
+                  },
+                  {
+                      field: "Out_no_of_stage",
+                      title: "No of stages",
+                      filterable: {
+                          cell: {
+                              operator: "contains",
+                              inputWidth: 1500
+                          }
+                      }
+                  },
+                  {
+                      field: "Out_final_output",
+                      title: "Final Output",
+                      filterable: {
+                          cell: {
+                              operator: "contains",
+                              inputWidth: 1500
+                          }
+                      }
+                  },
+             {
+                 field: "Out_row_timestamp",
+                 title: "Row Timestamp",
+                 hidden: true,
+             },
+             {
+                 field: "Out_status_code",
+                 title: "Status Code",
+                 hidden: true,
+             },
+             {
+                 field: "Out_status_desc",
+                 title: "Status Desc",
+                 hidden: true,
+             },
+             {
+                 field: "Out_List",
+                 title: "Status Code",
+                 hidden: true,
+             },
+             {
+                 field: "Out_stage_item_rowid",
+                 title: "Status Desc",
+                 hidden: true,
+             },
+             ]
+         });
+        $(".k-dropdown-operator").css('display', 'none');
+        $("#grid_stage_item .k-input").attr('disabled', 'false');
+    }
+
+    var gridRowID = -1;
+    function sel_checkbox() {
+        gridRowID++;
+        return '<input id="chk_sel_' + gridRowID + '" class="checkbox" type="checkbox" />';
+    }
+
+    function selectRow() {
+        try {
+            var grid = $("#grid_stage_item").data("kendoGrid");
+            var selectedItem = grid.dataItem(grid.select());
+            setlocalStorage("ls_pageList", selectedItem);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<script>
+    $("#btn_Edit").bind("click", function () {
+        btn_onClick('Edit');
+        getSerializedSelectedRows('edit');
+    });
+
+    $("#btn_View").bind("click", function () {
+        btn_onClick('view');
+        getSerializedSelectedRows('View');
+    });
+
+    function getSerializedSelectedRows(mode) {
+        try {
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var items = getlocalStorage("ls_pageList");
+                if (items.length == 0) {
+                    kendoAlert("Please select records");
+                }
+
+                else {
+                    if (mode == "edit") {
+                        btn_onClick('Edit');
+                        location.href = "../PAWHSStageItem/PAWHSProductionStageForm";
+                    }
+                    else if (mode == "View") {
+                        btn_onClick('View');
+                        location.href = "../PAWHSStageItem/PAWHSProductionStageForm";
+                    }
+                }
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+<script src="~/CommonScripts/common.js"></script>
+<script src="~/CommonScripts/ExportExcel.js"></script>
+
+
+<script>
+    $(document).ready(function () {
+       // StageItemDefinition();
+        $("#btn_new").hide();
+        $("#divEdit").hide();
+        $("#divCreate").hide();
+        $("#divEdit").hide();
+        $("#divView").hide();
+        $('#frmlayerdiv').hide();
+        $('#divUserRole8').hide();
+        $("#hide_div").hide();
+        $('#first_layer').hide();
+        $("#pay_help2").hide();
+        $("#Topsubheader").hide();
+        $(".adv_filter").attr("hdrtitle", "");
+        $(".adv_filter").attr("fltid", "Produc_Stage");
+        $(".Export").attr("hdrtitle", "Stage Item Definition List");
+        $(".Export").attr("SubTreeId", "Stage Item Definition ");
+        listpageloadfetch();
+        //Screen_Id = "STAGITEMDEF";
+        //permission = sec_Permission(Screen_Id);
+        //page_load_list_permission(permission);
+        //setlocalStorage("ls_pageList", "");
+        //filterhover();
+    });
+    function listpageloadfetch() {
+        try {
+            var formval = form_Serialize("StageItemDefinition");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_FromValue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_FromValue = ".";
+            }
+            obj_val.FilterBy_ToValue = ".";
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Filter = obj_val;
+            var Context = data.context;
+            $.ajax({
+                type: "POST",
+                url: '/PAWHSStageItem/PAWHSProductionStageListfetch',
+                dataType: 'json',
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, FilterBy_Option: Context.Filter.FilterBy_Option, FilterBy_Code: Context.Filter.FilterBy_Code, FilterBy_Fromvalue: Context.Filter.FilterBy_FromValue, FilterBy_ToValue: Context.Filter.FilterBy_ToValue }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    //var list = JSON.parse(response);
+                    if (response.context.List != null) {
+                        generate_StageItemList(response.context.List);
+                    }
+                    else {
+                        StageItemDefinition([]);
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function generate_StageItemList(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                $("#grid_stage_item").empty();
+                StageItemDefinition(data);
+            }
+            else {
+                StageItemDefinition([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function getSerializedSelectedRows(mode) {
+        try {
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var items = getlocalStorage("ls_pageList");
+                if (items.length == 0) {
+                    kendoAlert("Please select records");
+                }
+
+                else {
+                    if (mode == "edit") {
+                        btn_onClick('Edit');
+                        location.href = "../PAWHSStageItem/PAWHSProductionStageForm";
+                    }
+                    else if (mode == "View") {
+                        btn_onClick('View');
+                        location.href = "../PAWHSStageItem/PAWHSProductionStageForm";
+                    }
+                }
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function listRefresh() {
+        try {
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script>
+    $("#btn_Edit").bind("click", function () {
+        btn_onClick('Edit');
+        getSerializedSelectedRows('edit');
+    });
+
+    $("#btn_View").bind("click", function () {
+        btn_onClick('View');
+        getSerializedSelectedRows('View');
+    });
+
+</script>
+
+
+
+
+

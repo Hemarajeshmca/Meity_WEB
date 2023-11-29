@@ -1,0 +1,523 @@
+﻿@{
+    ViewBag.Form = "Procurement And Sales";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+
+<style>
+    .k-grid .k-grid-header .k-header {
+        white-space: normal;
+    }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.min.js"></script>
+<form id="frm_yieldandproreport" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-bottom:15px;padding-top:12px;">
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label for="cmb_startyear" class="col-sm-4 control-label">Start Year</label>
+                                <input id="cmb_start" name="cmb_start" style="width:50%" data-role="filtercombo">
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label for="cmb_endyear" class="col-sm-4 control-label">End Year</label>
+                                <input id="cmb_end" name="cmb_end" style="width:50%" data-role="filtercombo">
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <button id="refresh" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button"
+                                        data-original-title="Refresh" onclick="listRefresh()">
+                                    @*<span class="glyphicon glyphicon-refresh"></span>*@
+                                    Refresh
+                                </button>
+                                <label id="lblprog" style="color:red;display:none"> In Progress..Please Wait </label>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <button id="clear" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button"
+                                    data-original-title="clear" onclick="listclear()">
+                                clear
+                            </button>
+                            <button id="btnExport" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button" data-original-title="Export" style="background-color: #00c0ef ; border-color: #00acd6" ;><span class="fa fa-file-excel-o"></span></button>
+                        </div>
+
+
+
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div id="gd_yieldprocurement">
+                                <div id="YieldAndProreport_grid"></div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+</form>
+
+<script src="~/CommonScripts/Common_func.js"></script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+<script src="~/CommonScripts/ExportExcel.js"></script>
+
+<script>
+    click_act_name = "home ";
+    click_ctrl_name = "home";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+
+</script>
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+        debugger;
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#frm_yieldandproreport");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        $("#Topsubheader").show();
+        $("#bottomFooter").show();
+        $("#bottom_menus").hide();
+        $("#btndiv").show();
+        $("#frmlayerdiv").hide();
+        $("#divCreate").hide();
+        $("#divEdit").hide();
+        $("#divView").show();
+        $("#DocStat").show();
+        $(".edtviw_item").show();
+        $(".create_item").hide();
+
+        $(".Export").attr("hdrtitle", "Yield And Procurement Report");
+        $(".Export").attr("SubTreeId", "FARMYIELDPROC");
+
+        Screen_Id = "FARMYIELDPROC";
+        permission = sec_Permission(Screen_Id);
+        page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+
+        listgrid([]);
+
+        $("#btnExport").kendoButton({
+            click: function () {
+                debugger;
+                ExportButtonClick();
+            }
+        })
+        var Villagelist = "";
+        // $("#cmb_filter").empty();
+        var list_in = [
+            { "code": "All", "desc": "All" }
+        ];
+        Alldropdownload();
+    });
+    function Alldropdownload() {
+        load_master_code();
+
+        // STARTYEAR Dropdown Load
+        var Startlist = "";
+        $("#cmb_start").empty();
+        Startlist = grid_comboScreen_mastercodes("QCD_CROP_year");
+        filter_combobox("cmb_start", Startlist);
+        // ENDYEAR Dropdown Load
+        var Endlist = "";
+        $("#cmb_end").empty();
+        Endlist = grid_comboScreen_mastercodes("QCD_CROP_year");
+        filter_combobox("cmb_end", Endlist);
+        // VILLAGE Dropdown Load
+        //var Villagelist = "";
+        //$("#cmb_village").empty();
+        //Villagelist = grid_comboScreen_mastercodes("QCD_UN_VILLAGE");
+        //filter_combobox("cmb_village", Villagelist);
+
+
+    }
+
+
+    $(function () {
+        $('#refresh').click(function () {
+            debugger;
+            if ($("#cmb_start").val() != "") {
+                if ($("#cmb_end").val() != "") {
+                    var cmb_start = $("#cmb_start").data("kendoComboBox").text();;
+                    var cmb_end = $("#cmb_end").data("kendoComboBox").text();;
+                    // kendoAlert('No Records Found');
+                    $('#refresh').hide();
+                    $('#lblprog').show();
+                    //Sp Name For this Report : Report_yieldandprocurement
+                    console.log("Report SP : Report_yieldandprocurement");
+                    $.ajax({
+                        type: "POST",
+                        data: '{startyear: "' + cmb_start + '",endyear:"' + cmb_end + '"}',
+                        url: "/ReportFarmerBasicInfo/yieldandprocurement",
+                        dataType: "json",
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (response) {
+                            $('#lblprog').hide();
+                            $('#refresh').show();
+                            if (response != null) {
+                                $("#gd_yieldprocurement").empty();
+                                $("#gd_yieldprocurement").append("<div id='YieldAndProreport_grid'></div>");
+                                listgrid(response);
+                            }
+                            else {
+                                listgrid([]);
+                                kendoAlert('No Records Found');
+                            }
+                        },
+                        error: function (er) {
+                            alert(er)
+                            console.log(er)
+                        }
+                    });
+                }
+                else {
+                    kendoAlert('Please Select the End Year');
+                }
+            }
+
+
+            else {
+                kendoAlert('Please Select the Start Year');
+            }
+
+            return false;
+
+        });
+    });
+</script>
+<script>
+    function load_master_code() {
+        try {
+            var data = {};
+            data.screen_Id = "FARMYIELDPROC";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            debugger;
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function ExportButtonClick() {
+        debugger
+        var grid = $("#YieldAndProreport_grid").data("kendoGrid");
+        if (grid.dataSource.total() == 0) {
+            kendoAlert('No records available in the Grid to Export!!!');
+        }
+        else {
+            grid.bind("excelExport", function (e) {
+                debugger;
+                e.workbook.fileName = "Procurement and Sales Report.xlsx";
+                var rows1 = e.workbook.sheets[0];
+
+                var sheet = e.workbook.sheets[0];
+                var gd = $("#YieldAndProreport_grid").data("kendoGrid");
+                var gd_fi = $("#YieldAndProreport_grid").data("kendoGrid").dataSource;
+                var filters = gd_fi.filter();
+                var allData = gd_fi.data();
+                var query = new kendo.data.Query(allData);
+                var data = query.filter(filters).data;
+                var data_tt = gd.dataSource.data();
+                var sheet = e.workbook.sheets[0];
+                var gridColumns = gd.columns;
+
+                var columnCells = [];
+                for (var c = 0; c < gridColumns.length; c++) {
+                    var fieldName = gd.columns[c].hidden;
+                    if (typeof (fieldName) === "undefined") {
+                        var cellValue = gridColumns[c].title ? gridColumns[c].title : gridColumns[c].field;
+                        columnCells.push({ value: cellValue, autoWidth: true, background: "#7a7a7a", color: "#fff" });
+                    }
+                }
+                var rows = [{ cells: columnCells, type: "header" }];
+                for (var i = 0; i < data.length; i++) {
+                    var rowCells = [];
+                    for (var j = 0; j < gridColumns.length; j++) {
+
+                        var fieldName = gd.columns[j].hidden;
+                        if (typeof (fieldName) === "undefined") {
+                            var cellValue = data[i][gridColumns[j].field];
+                            rowCells.push({ value: cellValue });
+                        }
+                    }
+                    rows.push({ cells: rowCells, type: "data" });
+                }
+
+                sheet.rows = rows;
+
+            });
+
+            grid.saveAsExcel();
+            kendoAlert('Exported Sucessfully');
+        }
+    }
+
+</script>
+
+
+<script>
+    function listpageloadfetch() {
+        try {
+
+            var formval = form_Serialize("frm_yieldandproreport");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_Fromvalue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_Fromvalue = ".";
+            }
+            obj_val.FilterBy_Tovalue = ".";
+            if (obj_val.status_option == "" || obj_val.status_option == undefined) {
+                obj_val.status_option = "V";
+            }
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Filter = obj_val;
+            var colCount = $("#YieldAndProreport_grid").find('.k-grid-header colgroup > col').length;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    var status_Priority = [];
+    function listgrid(data) {
+        try {
+
+            $("#YieldAndProreport_grid").kendoGrid({
+                excel: {
+                    fileName: "YieldAndprocurmentReport.xlsx",
+                    filterable: true,
+                    allPages: false
+                },
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                SowingYear: { type: "string" },
+                                fponame: { type: "string" },
+                                FarmerCode: { type: "string" },
+                                FarmerName: { type: "string" },
+                                Type: { type: "string" },
+                                CropType: { type: "string" },
+                                CropName: { type: "string" },
+                                CropVariety: { type: "string" },
+                                SeedQuantity: { type: "string" },
+                                Seedprice: { type: "string" },
+                                Pricepaid: { type: "string" },
+                            }
+                        }
+                    },
+
+                    //pageSize: 20
+
+                },
+                filterable: true,
+                resizable: true,
+                height: 300,
+                scrollable: true,
+                sortable: true,
+                pageable: {
+                    refresh: false,
+                    pageSizes: true,
+                    previousNext: true,
+                    buttonCount: 8,
+                    pageSize: 20,
+                },
+
+                columns: [
+                    {
+                        field: "SowingYear",
+                        title: "Year",
+                        width: 50,
+                        filterable: false
+
+                    },
+                    {
+                        field: "fponame",
+                        title: "FPO Name",
+                        width: 130,
+                        filterable: false
+
+                    },
+                    {
+                        field: "FarmerCode",
+                        title: "Farmer Code / Buyer Code",
+                        width: 150,
+                        filterable: false
+
+                    },
+
+                    {
+                        field: "FarmerName",
+                        title: "Farmer Name / Buyer Name",
+                        width: 190,
+                        filterable: false
+                    },
+                    {
+                        field: "Type",
+                        title: "Type",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        },
+                        width: 100,
+
+                    },
+
+                    {
+                        field: "CropType",
+                        title: "Crop Type",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        },
+                        width: 100,
+
+                    },
+
+                    {
+                        field: "CropName",
+                        title: "Crop Name",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        },
+                        width: 100,
+
+                    },
+
+                    {
+                        field: "CropVariety",
+                        title: "Crop Variety",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        },
+                        width: 130,
+
+                    },
+
+                    {
+                        field: "SeedQuantity",
+                        title: "Quantity (Quintal)",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        },
+                        width: 190,
+                        attributes: { style: "text-align:right;" },
+                        editor: function (container, options) {
+                            numeric_editor(container, options.field, '50', '0');
+                        }
+                    },
+                    {
+                        field: "Seedprice",
+                        title: "Rate (Per Quintal)",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        },
+                        width: 220,
+                        attributes: { style: "text-align:right;" },
+                        editor: function (container, options) {
+                            numeric_editor(container, options.field, '50', '0');
+                        }
+                    },
+                    {
+                        field: "Pricepaid",
+                        title: "Total Amt",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        },
+                        width: 120,
+                        attributes: { style: "text-align:right;" },
+                        editor: function (container, options) {
+                            numeric_editor(container, options.field, '50', '0');
+                        }
+                    }
+
+
+
+                ],
+                editable: false,
+
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+
+</script>
+
+<script>
+
+    function listRefresh() {
+        debugger;
+        try {
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function listclear() {
+        try {
+            listgrid([]);
+            $("#cmb_start").empty;
+            $("#cmb_end").empty;
+            //$("#cmb_village").empty;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+
+<style>
+    .k-footerTemplate {
+        text-align: right;
+    }
+</style>

@@ -1,0 +1,417 @@
+﻿
+@{
+    ViewBag.List = "Lot Idenification List";
+    Layout = "~/Views/Shared/ListViewLayout.cshtml";
+}
+
+<form id="frm_productestimate_list" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="gd_product">
+                <div id="Prodcutestimated_grid"></div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/CommonScripts/ExportExcel.js"></script>
+<script src="~/CommonScripts/Common_func.js"></script>
+
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+        debugger;
+        $("#btn_new").hide();
+        $("#btn_Edit").hide();
+        $("#divCreate").hide();
+        $("#divEdit").hide();
+        $(".adv_filter").attr("hdrtitle", "Product Estimated List");
+        $(".adv_filter").attr("fltid", "LotID");
+        $(".Export").attr("hdrtitle", "Product Estimated List");
+        $(".Export").attr("SubTreeId", "Product Estimated List");
+        list_grid_id = "Prodcutestimated_grid";
+        listpageloadfetch();
+        Screen_Id = "PWNEWPEP";
+        permission = sec_Permission(Screen_Id);
+        page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+        filterhover();
+    });
+
+    </script>
+    <script>
+    //Product Estimated List Loaded start  18-05-2020
+
+    function listpageloadfetch() {
+        debugger;
+        try {
+            var formval = form_Serialize("frm_aggr_orgs");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_FromValue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_FromValue = ".";
+            }
+            obj_val.FilterBy_ToValue = ".";
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Filter = obj_val;
+            var Context = data.context;
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, FilterBy_Option: Context.Filter.FilterBy_Option, FilterBy_Code: Context.Filter.FilterBy_Code, FilterBy_FromValue: Context.Filter.FilterBy_FromValue, FilterBy_ToValue: Context.Filter.FilterBy_ToValue }),
+                url: "/PAWHSProductEstimated/GetEstimatedList",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    if (response.context != null) {
+                        debugger;
+                        generate_ProductEstimated_list(response.context.List)
+                    }
+                    else {
+                        ProductEstimategrid([]);
+                    }
+
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+
+            });
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    //Product Estimated list Loaded End
+
+
+    //List Grid Initalization start 21-08-2020
+
+    var status_Priority = [];
+    function ProductEstimategrid(data) {
+        try {
+            $.each(data, function (index, value) {
+                var flag = false;
+                $.each(status_Priority, function (sindex, svalue) {
+                    if (svalue == value.status_desc) {
+                        flag = true;
+                    }
+                });
+                if (flag == false) {
+                    status_Priority.push(value.status_desc);
+                }
+            });
+            $("#Prodcutestimated_grid").kendoGrid(
+                {
+                    excel: {
+                        fileName: "Product Estimated.xlsx",
+                        filterable: true,
+                        allPages: false
+                    },
+                    dataSource: {
+                        data: data,
+                        pageSize: 20,
+                        change: function (e) {
+                            setTimeout(function () {
+                                var gd = $("#Prodcutestimated_grid").data("kendoGrid");
+                                filter_row(gd);
+                                $('.k-i-close').css('display', 'none');
+                                $('button.k-button-icon').css('display', 'none');
+                                $('#Prodcutestimated_grid .k-input').prop('disabled', false);
+                                $('#Prodcutestimated_grid .k-input').prop('readonly', true);
+
+                            }, 1);
+                        },
+                    },
+                    toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                    excelExport: function (e) {
+                        debugger;
+
+                        //Mohan Changes 07-10-2020
+                        var gd = $("#Prodcutestimated_grid").data("kendoGrid");
+                        var gd_fi = $("#Prodcutestimated_grid").data("kendoGrid").dataSource;
+
+                        var filters = gd_fi.filter();
+                        var allData = gd_fi.data();
+                        var query = new kendo.data.Query(allData);
+                        var data = query.filter(filters).data;
+                        var data_tt = gd.dataSource.data();
+
+
+                        var sheet = e.workbook.sheets[0];
+                        var gridColumns = gd.columns;
+
+                        var columnCells = [];
+                        for (var c = 0; c < gridColumns.length; c++) {
+                            var fieldName = gd.columns[c].hidden;
+                            if (typeof (fieldName) === "undefined") {
+                                var cellValue = gridColumns[c].title ? gridColumns[c].title : gridColumns[c].field;
+                                columnCells.push({ value: cellValue, autoWidth: true, background: "#7a7a7a", color: "#fff" });
+                            }
+                        }
+
+                        var rows = [{ cells: columnCells, type: "header" }];
+
+
+                        for (var i = 0; i < data.length; i++) {
+                            var rowCells = [];
+                            for (var j = 0; j < gridColumns.length; j++) {
+
+                                var fieldName = gd.columns[j].hidden;
+                                if (typeof (fieldName) === "undefined") {
+                                    var cellValue = data[i][gridColumns[j].field];
+                                    rowCells.push({ value: cellValue });
+                                }
+                            }
+                            rows.push({ cells: rowCells, type: "data" });
+                        }
+
+                        sheet.rows = rows;
+
+                        return false;
+                    },
+                    //filterable: {
+                    //    enabled: true,
+                    //    delay: 1500,
+                    //    mode: "menu, row",
+                    //    height: 200,
+                    //    click: function (e) {
+                    //        var gd = $("#Prodcutestimated_grid").data("kendoGrid");
+                    //        filter_row(gd);
+                    //    }
+                    //},
+                    filterMenuInit: function (e) {
+                        var gd = $("#Prodcutestimated_grid").data("kendoGrid");
+                        filter_row(gd);
+                    },
+                    change: selectRow,
+                    height: 450,
+                    sortable: true,
+                    selectable: true,
+                    selectable: "singl",   //  Grid Row Selection
+                    pageable: {
+                        refresh: false,
+                        pageSizes: true,
+                        buttonCount: 5
+                    },
+                    navigatable: true,
+                    groupable: false,
+                    columns: [
+                        {
+                            field: "Out_Estm_rowid",
+                            title: "productestimate_rowid",
+                            width: 1,
+                            hidden: true,
+                        },
+                        //{
+                        //    field: "Out_agg_code",
+                        //    title: "agg_code",
+                        //    width: 1,
+                        //    hidden: true,
+                        //},
+                        {
+                            field: "Out_LotNo",
+                            title: "Lot.No",
+                            //filterable: {
+                            //    cell: {
+                            //        operator: "contains",
+                            //        inputWidth: 100
+                            //    }
+                            //}
+                            width: 100
+                        },
+                      
+                       
+                        {
+                            field: "Out_Farmer_Code",
+                            title: "Farmer Code",
+                            width: 100
+
+                        },
+                        {
+                            field: "Out_Farmer_Name",
+                            title: "Farmer Name",
+                            width: 100
+
+                        },
+                        {
+                            field: "Out_Member_Type",
+                            title: "Member Type",
+                            width: 100,
+                            hidden: true
+
+
+                        },
+                        {
+                            field: "Out_Item_Code",
+                            title: "Item Code",
+                            width: 100,
+                            hidden: true
+
+
+                        },
+                        {
+                            field: "Out_Item_Name",
+                            title: "Item Name",
+                            width: 100,
+                             hidden: true
+
+                        },
+                        {
+                            field: "Out_Estimated_Qty",
+                            title: "Estimated Qty",
+                            width: 100,
+                            hidden:true
+
+
+                        },
+                        {
+                            field: "Out_Estimated_Price",
+                            title: "Estimated price",
+                            width: 100,
+                            hidden: true
+
+                        },
+                        {
+                            field: "Out_Estimated_Value",
+                            title: "Estimated Value",
+                            width: 100,
+                            hidden: true
+
+
+                        },
+
+                        {
+                            field: "Out_Estimated_PickDate",
+                            title: "Estimated Pick-up Date",
+                            width: 100
+                        },
+                        {
+                            field: "Out_Remarks",
+                            title: "Remarks",
+                            width: 100
+                          
+                        },
+                        {
+                            field: "Out_row_timestamp",
+                            title: "row_timestamp",
+                            width: 1,
+                            hidden: true,
+                        },
+                    ]
+
+                });
+           // $(".k-dropdown-operator").css('display', 'none');
+            $("#Prodcutestimated_grid .k-input").attr('disabled', 'false');
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    //List Grid Initalization End
+
+
+        //List Grid Select Row Fuction Start 21-08-2020
+
+        function selectRow() {
+            try {
+                var grid = $("#Prodcutestimated_grid").data("kendoGrid");
+                var selectedItem = grid.dataItem(grid.select());
+                setlocalStorage("ls_pageList", selectedItem);
+            }
+            catch (err) {
+                javascript_log4j_root(arguments.callee.name, err);
+            }
+        }
+
+          //List Grid End
+
+</script>
+  <script>
+
+        //View Button Click validation With Redirecting Form start 21-08-2020
+
+      $("#btn_View").bind("click", function () {
+          debugger;
+            getSerializedSelectedRows('view');
+        });
+
+
+        function getSerializedSelectedRows(mode) {
+            try {
+                if (getlocalStorage("ls_pageList") != undefined) {
+                   var items = getlocalStorage("ls_pageList");
+                    if (items.length == 0) {
+                       kendoAlert("Please select records");
+                    }
+
+                   else {
+                        if (mode == "view") {
+                            btn_onClick('View');
+                            location.href = "../PAWHSProductEstimated/PAWHSProductEstimatedForm";
+                        }
+                    }
+               }
+            }
+            catch (err) {
+                javascript_log4j_root(arguments.callee.name, err);
+            }
+        }
+
+
+       // View Button Click Function End
+    </script>
+  <script>
+      //Product Estimated List After Hitting Controller Get Response Start
+
+      function generate_ProductEstimated_list(res) {
+          try {
+              if (res != null) {
+                  var data = changedataType(res);
+                  $("#gd_product").empty();
+                  $("#gd_product").append("<div id='Prodcutestimated_grid'></div>");
+                  ProductEstimategrid(data);
+              }
+              else {
+                  ProductEstimategrid([]);
+              }
+          }
+          catch (err) {
+              javascript_log4j_root(arguments.callee.name, err);
+          }
+      }
+
+      //Product Estimated List After Hitting Controller Get Response End
+
+
+      // list Refresh Click function start 21-08-2020
+      function listRefresh() {
+          try {
+              setlocalStorage('flt_condition', "");
+              listpageloadfetch();
+          }
+          catch (err) {
+              javascript_log4j_root(arguments.callee.name, err);
+          }
+      }
+          // list Refresh Click function End
+
+
+
+
+
+  </script>

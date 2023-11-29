@@ -1,0 +1,514 @@
+﻿@{
+    ViewBag.List = "Farmer Loan Application";
+    Layout = "~/Views/Shared/ListViewLayout.cshtml";
+}
+
+<form id="farmerloanapp_list" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="gd_loanapp">
+                <div id="FarmerloanApp_grid"></div>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="~/Scripts/json2.js"></script>
+<script src="~/API_Scripts/FarmerLoan.js"></script>
+<script src="~/API_Scripts/Farmer_Loan_retrieveProcessFLAppList_APIClient.js"></script>
+<script src="~/API_Scripts/retrieveProcessFarmerLoanAppList_Model.js"></script>
+<script src="~/API_Scripts/Farmer_Loan_retrieveProcessFLApp_APIClient.js"></script>
+<script src="~/API_Scripts/Farmer_Loan_saveProcessFLApp_APIClient.js"></script>
+<script src="~/API_Scripts/retrieveProcessFarmerLoanApp_Model.js"></script>
+<script src="~/API_Scripts/saveProcessFarmerLoanApp_Model.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+
+<script>
+    click_act_name = "FarmerLoanAppForm";
+    click_ctrl_name = "FarmerLoanApp";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+
+</script>
+<script>
+
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+        $(".adv_filter").attr("hdrtitle", "Farmer Loan List");
+        $(".adv_filter").attr("fltid", "LRSLOANAPP");
+        $(".Export").attr("hdrtitle", "Farmer Loan List");
+        $(".Export").attr("SubTreeId", "FLAN");
+        Screen_Id = "FLAN";
+        permission = sec_Permission(Screen_Id);
+        page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+    });
+</script>
+<script>
+    function load_master_code() {
+        debugger;
+        var data = {};
+        var context = WebAPIProxy.getContext();
+        data.userId = context.userId
+        data.orgnId = context.orgnId
+        data.locnId = context.locnId
+        data.localeId = context.localeId
+        data.screen_Id = "FLAN";
+        var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+    }
+</script>
+
+<script>
+    function listpageloadfetch() {
+        try {
+            var formval = form_Serialize("farmerloanapp_list");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_Fromvalue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_Fromvalue = ".";
+            }
+            obj_val.FilterBy_Tovalue = ".";
+
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Filter = obj_val;
+            retrieve_FarmerLoan_list(data);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    var status_Priority = [];
+    function listgrid(data) {
+        try {
+            $.each(data, function (index, value) {
+                var flag = false;
+                $.each(status_Priority, function (sindex, svalue) {
+                    if (svalue == value.status_desc) {
+                        flag = true;
+                    }
+                });
+                if (flag == false) {
+                    status_Priority.push(value.status_desc);
+                }
+            });
+            $("#FarmerloanApp_grid").kendoGrid({
+                dataSource: {
+                    data: data,
+                    pageSize: 20,
+                    change: function (e) {
+                        setTimeout(function () {
+                            var gd = $("#FarmerloanApp_grid").data("kendoGrid");
+                            filter_row(gd);
+                            $('.k-i-close').css('display', 'none');
+                            $('button.k-button-icon').css('display', 'none');
+                            $('#FarmerloanApp_grid .k-input').prop('disabled', false);
+                            $('#FarmerloanApp_grid .k-input').prop('readonly', true);
+                        }, 1);
+                    },
+                },
+                toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                excelExport: function (e) {
+                    var gd = $("#FarmerloanApp_grid").data("kendoGrid");
+                    var len = gd.dataSource._data.length;
+                    var chkall = $('#chkall').is(':checked');
+                    var chkfilter = $('#chkfilter').is(':checked');
+                    var chktemp = $('#chktemp').is(':checked');
+                    var twokendobox = true;
+                    gd.dataSource.pageSize(len);
+                    if (e.sender.dataSource._data.length == len) {
+                        twokendobox = false;
+                        exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                    }
+                    else {
+                        exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                    }
+                    gd.dataSource.pageSize('10');
+                    return false;
+                },
+                filterable: {
+                    enabled: true,
+                    delay: 1500,
+                    mode: "menu, row",
+                    height: 200,
+                    click: function (e) {
+                        var gd = $("#FarmerloanApp_grid").data("kendoGrid");
+                        filter_row(gd);
+                    }
+                },
+                filterMenuInit: function (e) {
+                    var gd = $("#FarmerloanApp_grid").data("kendoGrid");
+                    filter_row(gd);
+                },
+                change: selectRow,
+                height: 450,
+                sortable: true,
+                selectable: true,
+                selectable: "singl",   //  Grid Row Selection
+                pageable: {
+                    refresh: false,
+                    pageSizes: true,
+                    buttonCount: 5
+                },
+                navigatable: true,
+                groupable: false,
+                columns: [
+                        {
+                            field: "loanapp_rowid",
+                            title: "loanapp_rowid",
+                            width: 1,
+                            hidden: true,
+                        },
+                       {
+                           field: "fpomember_code",
+                           title: "Member ID",
+                           width: 200,
+                           filterable: {
+                               cell: {
+                                   operator: "contains",
+                                   inputWidth: 1500
+                               }
+                           }
+                       },
+                   {
+                       field: "farmer_code",
+                       title: "Farmer ID",
+                       width: 200,
+                       filterable: {
+                           cell: {
+                               operator: "contains",
+                               inputWidth: 1500
+                           }
+                       }
+                   },
+
+
+                   {
+                       field: "farmer_name",
+                       title: "Farmer Name",
+                       width: 200,
+                       filterable: {
+                           cell: {
+                               operator: "contains",
+                               inputWidth: 1500
+                           }
+                       }
+                   },
+                   {
+                       field: "sur_name",
+                       title: "Farmer SurName",
+                       width: 200,
+                       filterable: {
+                           cell: {
+                               operator: "contains",
+                               inputWidth: 1500
+                           }
+                       }
+                   },
+                   {
+                       field: "loanapp_no",
+                       title: "Application Ref. No.",
+                       width: 200,
+                       filterable: {
+                           cell: {
+                               operator: "contains",
+                               inputWidth: 1500
+                           }
+                       }
+                   },
+                   {
+                       field: "app_date",
+                       title: "Application Date",
+                       width: 200,
+                       filterable: {
+                           cell: {
+                               operator: "contains",
+                               inputWidth: 1500
+                           }
+                       }
+                   },
+                   {
+                       field: "loanscheme_code",
+                       title: "FL Scheme",
+                       width: 200,
+                       filterable: {
+                           cell: {
+                               operator: "contains",
+                               inputWidth: 1500
+                           }
+                       }
+                   },
+                    {
+                        field: "loanscheme_code",
+                        title: "loanscheme_code",
+                        width: 1,
+                        hidden: true,
+                    },
+                   {
+                       field: "interest_rate",
+                       title: "Int. Rate",
+                       width: 200,
+                       filterable: {
+                           cell: {
+                               operator: "contains",
+                               inputWidth: 1500
+                           }
+                       }
+                   },
+                   {
+                       field: "repayment_in_yrs",
+                       title: "Tenure",
+                       width: 200,
+                       filterable: {
+                           cell: {
+                               operator: "contains",
+                               inputWidth: 1500
+                           }
+                       }
+                   },
+                   {
+                       field: "loan_amount",
+                       title: "Loan Amt Applied",
+                       width: 200,
+                       filterable: {
+                           cell: {
+                               operator: "contains",
+                               inputWidth: 1500
+                           }
+                       }
+                   },
+                   {
+                       field: "beneficiary_type_desc",
+                       title: "Beneficiary Type",
+                       width: 200,
+                       filterable: {
+                           cell: {
+                               operator: "contains",
+                               inputWidth: 1500
+                           }
+                       }
+                   },
+                   {
+                       field: "beneficiary_type",
+                       title: "beneficiary_type",
+                       width: 1,
+                       hidden: true,
+                   },
+                   {
+                       field: "beneficiary_name",
+                       title: "Beneficiary Name",
+                       width: 200,
+                       filterable: {
+                           cell: {
+                               operator: "contains",
+                               inputWidth: 1500
+                           }
+                       }
+                   },
+                   {
+                       field: "bank_acc_type_desc",
+                       title: "Account Type",
+                       width: 200,
+                       filterable: {
+                           cell: {
+                               operator: "contains",
+                               inputWidth: 1500
+                           }
+                       }
+                   },
+                    {
+                        field: "bank_acc_type",
+                        title: "bank_acc_type",
+                        width: 1,
+                        hidden: true,
+                    },
+                   {
+                       field: "bank_acc_no",
+                       title: "Account No.",
+                       width: 200,
+                       filterable: {
+                           cell: {
+                               operator: "contains",
+                               inputWidth: 1500
+                           }
+                       }
+                   },
+                   {
+                       field: "bank_code",
+                       title: "Bank",
+                       width: 200,
+                       filterable: {
+                           cell: {
+                               operator: "contains",
+                               inputWidth: 1500
+                           }
+                       }
+                   },
+
+                   {
+                       field: "bank_ifsc_code",
+                       title: "IFSC Code",
+                       width: 200,
+                       filterable: {
+                           cell: {
+                               operator: "contains",
+                               inputWidth: 1500
+                           }
+                       }
+                   },
+
+                   {
+                       field: "sanctioned_date",
+                       title: "Sanctioned date",
+                       width: 200,
+                       filterable: {
+                           cell: {
+                               operator: "contains",
+                               inputWidth: 1500
+                           }
+                       }
+                   },
+
+               {
+                   field: "status_desc",
+                   title: "Status",
+                   width: 200,
+                   filterable: {
+                       cell: {
+                           operator: "contains",
+                           inputWidth: 1500
+                       }
+                   }
+               },
+               {
+                   field: "status_code",
+                   title: "status_code",
+                   width: 1,
+                   hidden: true,
+               },
+                ]
+
+            });
+
+
+
+            $(".k-dropdown-operator").css('display', 'none');
+            $("#FarmerloanApp_grid .k-input").attr('disabled', 'false');
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function statusFilter(element) {    // Dropdown list functionality
+        element.kendoDropDownList({
+            dataSource: status_Priority,
+            optionLabel: "--Select Value--"
+        });
+    }
+
+    function selectRow() {
+        try {
+            var grid = $("#FarmerloanApp_grid").data("kendoGrid");
+            var selectedItem = grid.dataItem(grid.select());
+            setlocalStorage("ls_pageList", selectedItem);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+
+    }
+
+</script>
+<script>
+    $("#btn_Edit").bind("click", function () {
+        getSerializedSelectedRows('edit');
+    });
+
+    $("#btn_View").bind("click", function () {
+        getSerializedSelectedRows('view');
+    });
+
+    $("#btn_new").bind("click", function () {
+        btn_onClick('Create');
+        location.href = "../FarmerLoanApp/FarmerLoanAppForm";
+    });
+    function getSerializedSelectedRows(mode) {
+        try {
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var items = getlocalStorage("ls_pageList");
+                if (items.length == 0) {
+                    kendoAlert("Please select records");
+                }
+
+                else {
+                    if (mode == "edit") {
+
+                        if (getlocalStorage('role') == ("LRS Maker" || "ROle_fis_lrs_maker") && items.status_code == 'A') {
+                            btn_onClick('Edit');
+                            location.href = "../FarmerLoanApp/FarmerLoanAppForm";
+                        }
+                        else if (getlocalStorage('role') == ("LRS Checker" || "Role_FIS_LRS_Checker") && items.status_code == 'P') {
+                            btn_onClick('Edit');
+                            location.href = "../FarmerLoanApp/FarmerLoanAppForm";
+                              
+                        }
+                        else
+                        {
+                            kendoAlert("This Loan application was approved, you can only view the application details");
+                        }
+                    }
+                    else if (mode == "view") {
+                        btn_onClick('View');
+                        location.href = "../FarmerLoanApp/FarmerLoanAppForm";
+                    }
+                }
+            }
+        }
+        catch (err) {
+
+        }
+
+    }
+</script>
+
+<script>
+    function generate_FarmerLoan_list(res) {
+
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                $("#gd_loanapp").empty();
+                $("#gd_loanapp").append("<div id='FarmerloanApp_grid'></div>");
+                listgrid(data);
+
+
+            }
+            else {
+                listgrid([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function listRefresh() {
+        try {
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+
+
+

@@ -1,0 +1,417 @@
+﻿@{
+    ViewBag.List = "GST";
+    Layout = "~/Views/Shared/ListViewLayout.cshtml";
+}
+
+@*<div class="row">
+        <div class="col-xs-12">
+            <div id="gst_grid"></div>
+        </div>
+    </div>*@
+<form id="frm_gst_tax" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="gd_gst">
+                <div id="gst_grid"></div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+        $(".adv_filter").attr("hdrtitle", "GST List");
+        $(".adv_filter").attr("fltid", "GSTList");
+        $(".Export").attr("hdrtitle", "GST List");
+        $(".Export").attr("SubTreeId", "ICDGST");
+        Screen_Id = "ICDGST";
+        permission = sec_Permission(Screen_Id);
+        //page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+        $("#RI").hide();
+        $("#FPO").hide();
+        listpageloadfetch();
+    });
+</script>
+
+
+<script>
+
+    function listpageloadfetch() {
+        try {
+            var formval = form_Serialize("frm_gst_tax");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_FromValue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_FromValue = ".";
+            }
+            obj_val.FilterBy_Tovalue = ".";
+
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Filter = obj_val;
+            var Context = data.context;
+
+
+
+            $.ajax({
+                type: "POST",
+                url: '/GST/GSTListfetch',
+                dataType: 'json',
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, FilterBy_Option: Context.Filter.FilterBy_Option, FilterBy_Code: Context.Filter.FilterBy_Code, FilterBy_FromValue: Context.Filter.FilterBy_FromValue, FilterBy_ToValue: Context.Filter.FilterBy_Tovalue }),
+                //data: JSON.stringify({ user: Context.userId, org: Context.orgnId, locn: Context.locnId, lang: Context.localeId, filterby_option: Context.Filter.FilterBy_Option, filterby_code: Context.Filter.FilterBy_Code, filterby_fromvalue: Context.Filter.FilterBy_FromValue, filterby_tovalue: Context.Filter.FilterBy_Tovalue }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    //var list = JSON.parse(response);
+                    if (response.context != null) {
+                        generate_gst_list(response.context.List);
+                    }
+                    else {
+                        listgrid([]);
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+             setlocalStorage('flt_condition', "");
+
+
+              var data = { user: Context.userId, org: Context.orgnId, locn: Context.locnId, lang: Context.localeId, filterby_option: Context.Filter.FilterBy_Option, filterby_code: Context.Filter.FilterBy_Code, filterby_fromvalue: Context.Filter.FilterBy_Fromvalue, filterby_tovalue: Context.Filter.FilterBy_Tovalue };
+
+          @*$.ajax({
+          url: '@Url.Action("GSTListfetch", "GST")',
+              type: "GET",
+        contentType: 'application/x-www-form-urlencoded',
+            data: data,
+            success: function (response) {
+                debugger;
+                if (response != null) {
+                    generate_gst_list(response.context.List);
+                }
+                else {
+                    generate_gst_lists([]);
+                }
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+        });*@
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err.message);
+        }
+    }
+
+    var status_Priority = [];
+    function gstgrid(data) {
+        try {
+            $.each(data, function (index, value) {
+                var flag = false;
+                $.each(status_Priority, function (sindex, svalue) {
+                    if (svalue == value.status_desc) {
+                        flag = true;
+                    }
+                });
+                if (flag == false) {
+                    status_Priority.push(value.status_desc);
+                }
+            });
+            $("#gst_grid").kendoGrid(
+                    {
+                        dataSource: {
+                            data: data,
+                            pageSize: 20,
+                            change: function (e) {
+                                setTimeout(function () {
+                                    var gd = $("#gst_grid").data("kendoGrid");
+                                    filter_row(gd);
+                                    $('.k-i-close').css('display', 'none');
+                                    $('button.k-button-icon').css('display', 'none');
+                                    $('#gst_grid .k-input').prop('disabled', false);
+                                    $('#gst_grid .k-input').prop('readonly', true);
+                                }, 1);
+                            },
+                        },
+                        toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                        excelExport: function (e) {
+                            var gd = $("#gst_grid").data("kendoGrid");
+                            var len = gd.dataSource._data.length;
+                            var chkall = $('#chkall').is(':checked');
+                            var chkfilter = $('#chkfilter').is(':checked');
+                            var chktemp = $('#chktemp').is(':checked');
+                            var twokendobox = true;
+                            gd.dataSource.pageSize(len);
+                            if (e.sender.dataSource._data.length == len) {
+                                twokendobox = false;
+                                exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                            }
+                            else {
+                                exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                            }
+                            gd.dataSource.pageSize('10');
+                            return false;
+                        },
+                        filterable: {
+                            enabled: true,
+                            delay: 1500,
+                            mode: "menu, row",
+                            height: 200,
+                            click: function (e) {
+                                var gd = $("#gst_grid").data("kendoGrid");
+                                filter_row(gd);
+                            }
+                        },
+                        filterMenuInit: function (e) {
+                            var gd = $("#gst_grid").data("kendoGrid");
+                            filter_row(gd);
+                        },
+                        change: selectRow,
+                        height: 450,
+                        sortable: true,
+                        selectable: true,
+                        selectable: "singl",   //  Grid Row Selection
+                        pageable: {
+                            refresh: false,
+                            pageSizes: true,
+                            buttonCount: 5
+                        },
+                        navigatable: true,
+                        groupable: false, 
+                        columns: [
+                            {
+                                field: "Out_taxrate_rowid",
+                                title: "taxrate_rowid",
+                                hidden: true,
+                            },
+                            {
+                                field: "Out_provider_location",
+                                title: "provider_location",
+                                hidden: true,
+                            },
+                             {
+                                 field: "Out_reciver_location",
+                                 title: "GST Sl.No",
+                                 filterable: {
+                                     cell: {
+                                         operator: "contains",
+                                         inputWidth: 1500
+                                     }
+                                 }
+                             },
+                            {
+                                field: "Out_provider_location_desc",
+                                title: "State From",
+                                filterable: {
+                                    cell: {
+                                        operator: "contains",
+                                        inputWidth: 1500
+                                    }
+                                }
+                            },
+                            {
+                                field: "Out_reciver_location",
+                                title: "reciver_location",
+                                hidden: true,
+                            },
+                            {
+                                field: "Out_reciver_location_desc",
+                                title: "State To",
+                                filterable: {
+                                    cell: {
+                                        operator: "contains",
+                                        inputWidth: 1500
+                                    }
+                                },
+                                hidden: true,
+                            },
+                              {
+                                  field: "Out_hsn_code",
+                                  title: "HSN Code",
+                                  hidden: true,
+                                  filterable: {
+                                      cell: {
+                                          operator: "contains",
+                                          inputWidth: 1500
+                                      }
+                                  }
+                              },
+                              {
+                                  field: "Out_hsn_category_code",
+                                  title: "hsn_category_code",
+                                  hidden: true,
+                              },
+                              {
+                                  field: "Out_hsn_category",
+                                  title: "HSN Category",
+                                  hidden: true,
+                                  filterable: {
+                                      cell: {
+                                          operator: "contains",
+                                          inputWidth: 1500
+                                      }
+                                  }
+                              },
+                              {
+                                  field: "Out_hsn_description",
+                                  title: "HSN Description",
+                                  hidden: true,
+                                  filterable: {
+                                      cell: {
+                                          operator: "contains",
+                                          inputWidth: 1500
+                                      }
+                                  }
+                              },
+                              {
+                                  field: "Out_status_desc",
+                                  title: "Status",
+                                  filterable: {
+                                      cell: {
+                                          operator: "contains",
+                                          inputWidth: 1500
+                                      }
+                                  }
+                              },
+                        ]
+
+                    });
+
+            $(".k-dropdown-operator").css('display', 'none');
+            $("#gst_grid .k-input").attr('disabled', 'false');
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function selectRow() {
+        var grid = $("#gst_grid").data("kendoGrid");
+        var selectedItem = grid.dataItem(grid.select());
+        setlocalStorage("ls_pageList", selectedItem);
+    }
+
+    function statusFilter(element) {    // Dropdown list functionality
+        element.kendoDropDownList({
+            dataSource: status_Priority,
+            optionLabel: "--Select Value--"
+        });
+    }
+
+</script>
+
+<script>
+    $("#btn_Edit").bind("click", function () {
+        getSerializedSelectedRows('edit');
+    });
+
+    $("#btn_View").bind("click", function () {
+        getSerializedSelectedRows('view');
+    });
+
+    $("#btn_new").bind("click", function () {
+        btn_onClick('Create');
+        location.href = "../GST/GSTForm";
+    });
+
+    function getSerializedSelectedRows(mode) {
+        try {
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var items = getlocalStorage("ls_pageList");
+                if (items.length == 0) {
+                    kendoAlert("Please select records");
+                }
+                else {
+                    if (mode == "edit") {
+                        btn_onClick('Edit');
+                        location.href = "../GST/GSTForm";
+                    }
+                    else if (mode == "view") {
+                        btn_onClick('View');
+                        location.href = "../GST/GSTForm";
+                    }
+                }
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<script>
+    function generate_gst_list(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                $("#gd_gst").empty();
+                $("#gd_gst").append("<div id='gst_grid'></div>");
+                gstgrid(data);
+            }
+            else {
+                gstgrid([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function listRefresh() {
+        try {
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function onChangeSelection() {
+        debugger;
+        try { 
+            var grid = $("#gst_grid").data("kendoGrid");
+            var selectedItem = grid.dataItem(grid.select());
+            var formval = form_Serialize("frm_gst_tax");
+            var obj_val = JSON.parse(formval);
+            obj_val.taxrate_rowid = selectedItem.Out_taxrate_rowid;
+            obj_val.provider_location = selectedItem.Out_provider_location;
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Header = obj_val;
+            var Context = data.context;
+            var data = { user: Context.userId, org: Context.orgnId, locn: Context.locnId, lang: Context.localeId, taxrate_rowid: Context.Header.taxrate_rowid, provider_location: Context.Header.provider_location };
+              $.ajax({
+                        url: '@Url.Action("GSTfetch", "GST")',
+                        type: "post",
+                        contentType: 'application/x-www-form-urlencoded',
+                        data: data,
+                        success: function (response) { 
+                                if (response != null)
+                                {
+                                //  generate_fin_year_header(response.context.Header);
+                                 }
+                            },
+                        error: function (er) {
+                        alert(er)
+                        console.log(er)
+                        }
+                    }); 
+            }
+            catch (err) {
+                javascript_log4j_root(arguments.callee.name, err);
+            }
+    }
+</script>
+

@@ -1,0 +1,144 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Repayment Schedule</title>
+    <script src="~/CommonScripts/report.js"></script>
+</head>
+<body>
+    <form class="form-horizontal" id="frm_repayment" data-role="validator" novalidate="novalidate">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Repayment Schedule</h4>
+        </div>
+        <div class="modal-header" style="height:49px">
+            <div class="col-sm-12" style="margin-top:-7px">
+                <div class="form-group" style="padding-bottom:10px">
+                    <div class="col-sm-3">
+                        <button type="button" class="btn btn-sm btn-primary" id="btnClose" onclick=closeModal(); style="width:85px">
+                            Close
+                        </button>
+                    </div>
+                    <div class="col-sm-10">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-body" style="height:350px">
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="txtlan" class="col-sm-5 control-label ">Request Date</label>
+                        <div class=" col-sm-5">
+                            <input class="cusDate" data-role='datepicker' id="txtValidity" onkeypress="return date_validate(event)" data-checkdate-msg="Enter Valid Date" name="valid_until" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="txtlan" class="col-sm-5 control-label ">Princ. Outstanding</label>
+                        <div class=" col-sm-5">
+                            <input type="text" id="txtPrinc_out" name="principle_due" class="form-control" maxlength="50" >
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="txtlan" class="col-sm-5 control-label ">Waiver</label>
+                        <div class=" col-sm-5">
+                            <input type="text" id="txtlan" name="waive_amount" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="txtlan" class="col-sm-5 control-label ">Penalty / Others Charges</label>
+                        <div class=" col-sm-5">
+                            <input type="text" id="txtPrinc_out" name="other_charges" class="form-control" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="txtlan" class="col-sm-5 control-label ">Net Amount</label>
+                        <div class=" col-sm-5">
+                            <input type="text" id="txtPrinc_out" name="principle_amount" class="form-control" maxlength="50" >
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6" style="padding-bottom:10px">
+                @*<button id="btnview" type="button" style="float:right" class="btn btn-info" onclick="show_rpt()">Export To Excel</button>*@    
+          
+                <a data-toggle="modal" id="btnReport" type="button" class="Export btn btn-sm btn-info" style="float:right" href="/Reportlist/Report" data-target="#ReportModal" onclick="return hideclass()"><span class="glyphicon glyphicon-print"> Print </span></a>
+            </div>
+            </div>
+    </form>
+</body>
+</html>
+<style>
+    .breadcrumb > li + li:before {
+        color: #E6E6E6;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+
+        //$('#repaymentModal').on('show.bs.modal', function (e) {
+        //    gridFilter([]);
+        //});
+
+        //$('#repaymentModal').on('loaded.bs.modal', function (e) {
+        //    gridFilter([]);
+        //});
+        //console.log(Screen_Id);
+
+        kendodate_format();
+
+        $('#btnRepor').on('click', function (e) {
+            
+            this.close();
+        });
+        var lan = localStorage.loan_no;
+        if (lan == '' || lan == undefined) {
+            closeModal();
+            kendoAlert('Please Select any Loan');
+        }
+
+    });
+    function closeModal() {
+        $('#foreclosureModal').modal("hide");
+    }
+    function hideclass()
+    {
+        var formval = form_Serialize("frm_repayment");
+        var obj_val = JSON.parse(formval);
+            
+        localStorage.principle_due = obj_val.principle_due;
+     
+        localStorage.valid_until = obj_val.valid_until;
+      
+        localStorage.waive_amount = obj_val.waive_amount;
+       
+        localStorage.other_charges = obj_val.other_charges;
+
+        localStorage.txtPrinc_out = obj_val.principle_amount;
+      
+        $('#foreclosureModal').modal('toggle');
+    }
+    
+
+  
+</script>
+

@@ -1,0 +1,476 @@
+﻿@{
+    ViewBag.Form = "Expenses";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+
+<form id="Expenses_form" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+            <div class="row" style="padding-top:10px; padding-bottom:15px">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="cmb_collection" class="col-sm-5 control-label">Collection Centre</label>
+                        <div class="col-sm-7">
+                            <input id="cmb_collection" name="cc_aggrloc_code" style="width: 100%" data-role="filtercombo">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="cmb_finyear" class="col-sm-5 control-label">Financial Year</label>
+                        <div class="col-sm-6">
+                            <input id="cmb_finyear" name="finyear_code" style="width: 100%" data-role="filtercombo">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-sm-5" style="display:none">
+                    <div class="form-group">
+                        <label for="txt_expense_rowid" class="col-sm-5 control-label">Expenses Row Id:</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txt_expense_rowid" name="expense_rowid" class="form-control" maxlength="125">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-5" style="display:none">
+                    <div class="form-group">
+                        <label for="txtexpense_id" class="col-sm-5 control-label">Expenses No:</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtexpense_id" name="expense_no" class="form-control" maxlength="125">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-5" style="display:none">
+                    <div class="form-group">
+                        <label for="txt_row_timestamp" class="col-sm-5 control-label">Timestamp:</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txt_row_timestamp" name="row_timestamp" class="form-control" maxlength="125">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-5" style="display:none">
+                    <div class="form-group">
+                        <label for="txt_status_code" class="col-sm-5 control-label">Status Code:</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txt_status_code" name="status_code" class="form-control" maxlength="125">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3" style=" display:none">
+                    <div class="form-group" style=" display:none">
+                        <label for="txtMode" class="col-sm-5 control-label">Mode Flag</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="txtMode" name="mode_flag" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:15px">
+                <div class="col-xs-12">
+                    <div id="grid_expenses">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script src="~/API_Scripts/Expense_Account_retrieveExpenseAccount_APIClient.js"></script>
+<script src="~/API_Scripts/Expense_Account_retrieveExpenseAccountList_APIClient.js"></script>
+<script src="~/API_Scripts/Expense_Account_saveExpenseAccount_APIClient.js"></script>
+<script src="~/API_Scripts/saveExpenseAccount_Model.js"></script>
+<script src="~/API_Scripts/retrieveExpenseAccount_Model.js"></script>
+<script src="~/API_Scripts/retrieveExpenseAccountList_Model.js"></script>
+<script src="~/API_Scripts/ExpenseAccount.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script>
+    click_act_name = "ExpensesList";
+    click_ctrl_name = "Expenses";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+
+<script>
+
+
+    $(document).ready(function () {
+
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#Expenses_form");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        Screen_Id = "EXPACC";
+        permission = sec_Permission(Screen_Id);
+        //  $("#txtexpense_id").hide();
+        $("#common_id").text("Expense ID");
+        // $("#common_id").hide();
+        //$("#review").hide();
+        $("#lblForm_menuid").text("EXPENSES");
+        grid_expenses_details([]);
+
+
+        $("#cmb_finyear").empty();
+        list_in = grid_comboScreen_mastercodes("FY");
+        filter_combobox("cmb_finyear", list_in);
+
+        $("#cmb_collection").empty();
+        list_in = grid_comboScreen_mastercodes("CC");
+        filter_combobox("cmb_collection", list_in);
+
+
+
+        if (getlocalStorage('btn_clk_val') == "Create") {
+            $('#divCreate #review').hide();
+            $("#txtMode").val("I");
+            $("#bottom_menus").hide();
+            $("#DocStat").val("New");
+
+        }
+        else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
+            $('#divEdit #reviewEd').hide();
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("Expenses_form");
+                var obj_val = JSON.parse(formval);
+                obj_val.expense_rowid = data.expense_rowid;
+                obj_val.expense_no = data.expense_no;
+
+                var data = {};
+                data.context = WebAPIProxy.getContext();;
+                data.context.Header = obj_val;
+                retrieve_expense_details(data);
+
+                $("#txt_expense_rowid").val(data.expense_rowid);
+                $("#txtcommon_id").val(data.expense_no);
+                $("#txtMode").val("U");
+                $('#cmb_collection').data("kendoComboBox").enable(false);
+                $('#cmb_finyear').data("kendoComboBox").enable(false);
+
+                setlocalStorage('doc_row_id', $("#txt_expense_rowid").val());
+                setlocalStorage('doc_no', $("#txtcommon_id").val());
+            }
+        }
+        setlocalStorage('status_desc', "Active");
+        setlocalStorage('status_code', "A");
+
+
+
+    });
+
+
+    function load_master_code() {
+        try {
+            debugger;
+            var data = {};
+            var context = WebAPIProxy.getContext();
+            data.userId = context.userId
+            data.orgnId = context.orgnId
+            data.locnId = context.locnId
+            data.localeId = context.localeId
+            data.screen_Id = "EXPACC";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+
+    function clear_val() {
+        try {
+            $("#txt_expense_rowid").val("");
+            $("#txtexpense_id").val("");
+            $('#cmb_collection').data("kendoComboBox").value('');
+            $('#cmb_finyear').data("kendoComboBox").value('');
+            $("#txt_status_code").val("");
+            $("#txtMode").val("");
+            $("#txt_row_timestamp").val("");
+
+            grid_expenses_details([]);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    var status_desc_list = "";
+    var expense_head_desc_list = "";
+    function grid_expenses_details(data) {
+        try {
+            $("#grid_expenses").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                expensedtl_rowid: { type: "string" },
+                                incurred_on: { type: "date", defaultValue: "" },
+                                expense_code: { type: "string" },
+                                expense_head_desc: { type: "string" },
+                                expense_desc: { type: "string" },
+                                expense_amount: { type: "string" },
+                                row_timestamp: { type: "string" },
+                                status_code: { type: "string", defaultValue: getlocalStorage('status_code') },
+                                status_desc: { type: "string", defaultValue: getlocalStorage('status_desc') },
+                                mode_flag: { type: "string", defaultValue: "I" }
+                            }
+                        }
+                    }
+                },
+                toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 400,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_expenses').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+
+                sortable: true,
+                selectable: true,
+
+                navigatable: true,
+                columns: [{
+                    command: [
+                {
+                    name: "Delete",
+                    id: "Delete",
+                    imageClass: "fa fa-close",
+                    click: function (e) {
+                        // e.preventDefault();
+                        var grid = $("#grid_expenses").data("kendoGrid");
+                        var dataItem = $("#grid_expenses").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                        DeleteWindowEvent(e, dataItem, grid);
+                        e.stopImmediatePropagation()
+                    }
+                },
+                    ], title: "&nbsp;", width: "25px",
+                },
+                 {
+                     field: "expensedtl_rowid",
+                     title: "Expense Dt1 Row Id",
+                     hidden: true,
+                     width: 100,
+
+                 },
+                 {
+                     field: "incurred_on",
+                     title: "Incurred On",
+                     format: "{0:dd/MM/yyyy}",
+
+                     width: 100,
+
+                 },
+                   {
+                       field: "expense_code",
+                       title: "Expense Code",
+                       hidden: true,
+                       width: 100
+                   },
+
+                 {
+                     field: "expense_head_desc",
+                     title: "Expense Head",
+                     editor: function (container, options) {
+                         combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "expense_code", "grid_expenses")
+                     },
+                     width: 100,
+
+                 },
+                 {
+                     field: "expense_desc",
+                     title: "Description",
+                     width: 100
+                 },
+                 {
+                     field: "expense_amount",
+                     title: "Amount(Rs.)",
+                     editor: function (container, options) {
+                         item_rate(container, options.field, '9', '2');
+                     },
+                     width: 100,
+
+                 },
+
+             //    {
+             //        field: "status_desc",
+             //        title: "Status ",
+             //        editor: function (container, options) {
+             //            combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "status_code", "grid_expenses")
+             //        },
+             //        width: 100,
+             //    },
+             //{
+             //    field: "status_code",
+             //    title: "Status",
+             //    hidden: true,
+             //    width: 100
+             //},
+                   {
+                       field: "row_timestamp",
+                       title: "Timestamp",
+                       hidden: true
+                   },
+
+                {
+                    field: "mode_flag",
+                    title: "Mode",
+                    hidden: true
+                }],
+                editable: true,
+                //edit: function (e) {
+                //    var fieldName = e.container.find("input").attr("name");
+                //    if (fieldName == 'entity_code' && e.model.mode_flag != 'I') { this.closeCell(); }
+                //},
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    load_master_code();
+
+    //status_desc_list = grid_combo_mastercodes("STATUS");
+    expense_head_desc_list = grid_combo_mastercodes("QCD_EXP_HEAD");
+
+    function generate_expense_header(res) {
+        try {
+            $("#txt_expense_rowid").val(res.expense_rowid);
+            $("#txtcommon_id").val(res.expense_no);
+            $('#cmb_collection').data("kendoComboBox").value(res.cc_aggrloc_code);
+            $('#cmb_finyear').data("kendoComboBox").value(res.finyear_code);
+            $("#txt_status_code").val(res.status_code);
+            $("#DocStat").val(res.status_desc);
+            $("#txtMode").val(res.mode_flag);
+            $("#txt_row_timestamp").val(res.row_timestamp);
+            $('#cmb_collection').data("kendoComboBox").enable(false);
+            $('#cmb_finyear').data("kendoComboBox").enable(false);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+
+    function generate_expense_detail(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+
+                grid_expenses_details(data);
+            }
+            else {
+                grid_expenses_details([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function DeleteDetails() {
+        try {
+            //   $("#txtMode").val('D');
+            save("D");
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function get_expense_details(id) {
+        try {
+            //clear_val();
+
+            var formval = form_Serialize("Expenses_form");
+            var obj_val = JSON.parse(formval);
+            obj_val.expense_rowid = id;
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();;
+            data.context.Header = obj_val;
+            retrieve_expense_details(data);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+    function save(mode) {
+        try {
+            var id = $("#txtcommon_id").val();
+            $("#txtexpense_id").val(id);
+            if ($("#txt_expense_rowid").val() == "") {
+                $("#txt_expense_rowid").val('0');
+            }
+            if ($("#txtexpense_id").val() == "") {
+                $("#txtexpense_id").val('0');
+            }
+            if ($("#txtMode").val() == "") {
+                $("#txtMode").val('I');
+            }
+            if ($("#DocStat").val() == "Active") {
+                $("#txtMode").val('U');
+            }
+
+            if (mode != undefined) {
+                $("#txtMode").val('D');
+            }
+            $('#cmb_collection').data("kendoComboBox").enable(true);
+            $('#cmb_finyear').data("kendoComboBox").enable(true);
+            var formval = form_Serialize("Expenses_form");
+            var obj_val = JSON.parse(formval);
+
+            var grid_val = JSON.stringify($("#grid_expenses").data().kendoGrid._data);
+            var Bind = {};
+            Bind = grid_val;
+            var result = JSON.parse(Bind);
+            //  result.entity_rowid = "0";
+            $.each(result, function (index, value) {
+                var d = value.incurred_on;
+                var date1 = kendo.parseDate(d);
+                value1 = kendo.toString(date1, "MM/dd/yyyy");
+                result[index].incurred_on = value1;
+
+                var row_id = value.expensedtl_rowid;
+                if (row_id == undefined || row_id == "") {
+                    result[index].expensedtl_rowid = "0";
+                }
+
+                var mode = value.mode_flag;
+                if (mode == "S") {
+                    result[index].mode_flag = "U";
+                }
+
+            });
+            var obj_grid_val = result;
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_val;
+            data.context.Detail = obj_grid_val;
+            save_expense_details(data);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+
+</script>
+
+
+

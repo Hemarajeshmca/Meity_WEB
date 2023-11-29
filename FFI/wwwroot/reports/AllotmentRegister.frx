@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="05/28/2020 14:07:58" ReportInfo.Modified="05/28/2020 16:46:56" ReportInfo.CreatorVersion="2020.1.0.0">
+  <Styles Name="Standard">
+    <Style Name="Title" Font="Arial, 12pt, style=Bold"/>
+    <Style Name="Header" Font="Arial, 10pt, style=Bold"/>
+    <Style Name="Group" Font="Arial, 10pt, style=Bold"/>
+    <Style Name="Data" Font="Arial, 10pt"/>
+    <Style Name="Footer" Font="Arial, 10pt"/>
+    <Style Name="EvenRows" Fill.Color="WhiteSmoke" Font="Arial, 10pt"/>
+  </Styles>
+  <Dictionary>
+    <MySqlDataConnection Name="Connection" ConnectionString="rijcmlqJ9ltPwNsYyX+2oAnmCElmGIz/SJ0vefyWJNqFvJ9CpVcxZe7+FQFpmKpxbZDWz0V6JezihMLHf9zFqtmqW5z1unHeKGPASi0hgvgtC37css=" CommandTimeout="0">
+      <TableDataSource Name="Table" DataType="System.Int32" Enabled="true" SelectCommand="call FIS_report_AllotmentRegister('UTRFPCL','Gingee','utmfis','en_US');&#13;&#10;">
+        <Column Name="ApplicationNo" DataType="System.String"/>
+        <Column Name="RtaRefNo" DataType="System.String"/>
+        <Column Name="Title" DataType="System.String"/>
+        <Column Name="Shareholder" DataType="System.String"/>
+        <Column Name="FHName" DataType="System.String"/>
+        <Column Name="addr1" DataType="System.String"/>
+        <Column Name="addr2" DataType="System.String"/>
+        <Column Name="City" DataType="System.String"/>
+        <Column Name="MState" DataType="System.String"/>
+        <Column Name="member_country" DataType="System.String"/>
+        <Column Name="Pincode" DataType="System.String"/>
+        <Column Name="JointName1" DataType="System.String"/>
+        <Column Name="FHJoint1" DataType="System.String"/>
+        <Column Name="JointName2" DataType="System.String"/>
+        <Column Name="FHJoint2" DataType="System.String"/>
+        <Column Name="Nominee" DataType="System.String"/>
+        <Column Name="SharesApplied" DataType="System.Int32"/>
+        <Column Name="AmountPaid" DataType="System.String"/>
+        <Column Name="ChequeNo" DataType="System.String"/>
+        <Column Name="ChequeAmout" DataType="System.Decimal"/>
+        <Column Name="SharesAllotted" DataType="System.Int32"/>
+        <Column Name="ValueofShares" DataType="System.Decimal"/>
+        <Column Name="Refundamount" DataType="System.Decimal"/>
+        <Column Name="PayWarNo" DataType="System.String"/>
+        <Column Name="unpaidAmount" DataType="System.String"/>
+        <Column Name="CertificateNo" DataType="System.String"/>
+        <Column Name="DistinctiveNoFrom" DataType="System.Int32"/>
+        <Column Name="DistinctiveNoTo" DataType="System.Int32"/>
+        <Column Name="orgn_name" DataType="System.String"/>
+        <CommandParameter Name="orgnId" DataType="253"/>
+        <CommandParameter Name="locnId" DataType="253"/>
+        <CommandParameter Name="userId" DataType="253"/>
+        <CommandParameter Name="localeId" DataType="253"/>
+      </TableDataSource>
+    </MySqlDataConnection>
+    <Parameter Name="orgnId" DataType="System.String"/>
+    <Parameter Name="locnId" DataType="System.String"/>
+    <Parameter Name="userId" DataType="System.String"/>
+    <Parameter Name="localeId" DataType="System.String"/>
+  </Dictionary>
+  <ReportPage Name="Page1" Landscape="true" PaperWidth="600" PaperHeight="210" Watermark.Font="Arial, 60pt">
+    <ReportTitleBand Name="ReportTitle1" Width="2192.4" Height="37.8">
+      <TextObject Name="Text1" Left="926.1" Top="9.45" Width="283.5" Height="28.35" Text="Allotment Register" HorzAlign="Center" Font="Calibri, 14pt, style=Bold"/>
+    </ReportTitleBand>
+    <PageHeaderBand Name="PageHeader1" Top="41.8" Width="2192.4" Height="75.6">
+      <TableObject Name="Table9" Left="9.45" Top="9.45" Width="2204.87" Height="66.15" Fill.Color="White">
+        <TableColumn Name="Column1" Width="62.75"/>
+        <TableColumn Name="Column2" Width="128.8"/>
+        <TableColumn Name="Column3" Width="81.57"/>
+        <TableColumn Name="Column27" Width="80.64"/>
+        <TableColumn Name="Column4" Width="100.47"/>
+        <TableColumn Name="Column5" Width="91.01"/>
+        <TableColumn Name="Column7" Width="79.67"/>
+        <TableColumn Name="Column8" Width="89.13"/>
+        <TableColumn Name="Column9" Width="70.23"/>
+        <TableColumn Name="Column10" Width="60.77"/>
+        <TableColumn Name="Column11" Width="79.67"/>
+        <TableColumn Name="Column12" Width="71.19"/>
+        <TableColumn Name="Column13" Width="90.09"/>
+        <TableColumn Name="Column14" Width="90.09"/>
+        <TableColumn Name="Column15" Width="118.44"/>
+        <TableColumn Name="Column16" Width="90.09"/>
+        <TableColumn Name="Column17" Width="90.09"/>
+        <TableColumn Name="Column18" Width="90.09"/>
+        <TableColumn Name="Column19" Width="90.09"/>
+        <TableColumn Name="Column20" Width="90.09"/>
+        <TableColumn Name="Column21" Width="90.09"/>
+        <TableColumn Name="Column22" Width="90.09"/>
+        <TableColumn Name="Column23" Width="90.09"/>
+        <TableColumn Name="Column24" Width="90.09"/>
+        <TableColumn Name="Column25" Width="99.54"/>
+        <TableRow Name="Row1" Height="66.15">
+          <TableCell Name="Cell1" Text="Sl.No." HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          <TableCell Name="Cell2" Text="Application No." HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          <TableCell Name="Cell3" Text="Rta Ref.No.&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          <TableCell Name="Cell27" Text="Title" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          <TableCell Name="Cell4" Text="Name of the&#13;&#10; Shareholder" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          <TableCell Name="Cell5" Text="F/H Name&#13;&#10;&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          <TableCell Name="Cell7" Text="Address &#13;&#10;Line 1&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          <TableCell Name="Cell8" Text="Address&#13;&#10;Line 2&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          <TableCell Name="Cell9" Text="City&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          <TableCell Name="Cell10" Text="State&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          <TableCell Name="Cell11" Text="Country&#13;&#10;" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          <TableCell Name="Cell12" Text="Pincode" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          <TableCell Name="Cell13" Text="Nominee" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          <TableCell Name="Cell14" Text="No. of &#13;&#10;Shares &#13;&#10;Applied" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          <TableCell Name="Cell15" Text="Amount &#13;&#10;Paid on &#13;&#10;Application" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          <TableCell Name="Cell16" Text="Cheque No" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          <TableCell Name="Cell17" Text="Cheque Amout" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          <TableCell Name="Cell18" Text="No. of Shares Allotted" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          <TableCell Name="Cell19" Text="Face Value of Shares" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          <TableCell Name="Cell20" Text="Refund Amount" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          <TableCell Name="Cell21" Text="Ref.Pay War.No." HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          <TableCell Name="Cell22" Text="Allotment Money Unpaid Amount" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          <TableCell Name="Cell23" Text="Certificate No." HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          <TableCell Name="Cell24" Text="Distinctive No. From" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          <TableCell Name="Cell25" Text="Distinctive No. To" HorzAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+        </TableRow>
+      </TableObject>
+    </PageHeaderBand>
+    <DataBand Name="Data1" Top="121.4" Width="2192.4" Height="47.25" EvenStyle="EvenRows" Guides="0" DataSource="Table">
+      <TableObject Name="Table1" Left="9.45" Width="2204.87" Height="47.25" Fill.Color="White">
+        <TableColumn Name="Column28" Width="62.75"/>
+        <TableColumn Name="Column29" Width="128.8"/>
+        <TableColumn Name="Column30" Width="81.57"/>
+        <TableColumn Name="Column31" Width="80.64"/>
+        <TableColumn Name="Column32" Width="100.47"/>
+        <TableColumn Name="Column33" Width="91.01"/>
+        <TableColumn Name="Column34" Width="79.67"/>
+        <TableColumn Name="Column35" Width="89.13"/>
+        <TableColumn Name="Column36" Width="70.23"/>
+        <TableColumn Name="Column37" Width="60.77"/>
+        <TableColumn Name="Column38" Width="79.67"/>
+        <TableColumn Name="Column39" Width="71.19"/>
+        <TableColumn Name="Column40" Width="90.09"/>
+        <TableColumn Name="Column41" Width="90.09"/>
+        <TableColumn Name="Column42" Width="118.44"/>
+        <TableColumn Name="Column43" Width="90.09"/>
+        <TableColumn Name="Column44" Width="90.09"/>
+        <TableColumn Name="Column45" Width="90.09"/>
+        <TableColumn Name="Column46" Width="90.09"/>
+        <TableColumn Name="Column47" Width="90.09"/>
+        <TableColumn Name="Column48" Width="90.09"/>
+        <TableColumn Name="Column49" Width="90.09"/>
+        <TableColumn Name="Column50" Width="90.09"/>
+        <TableColumn Name="Column51" Width="90.09"/>
+        <TableColumn Name="Column52" Width="99.54"/>
+        <TableRow Name="Row2" Height="47.25">
+          <TableCell Name="Cell28" Text="[Row#]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell29" Text="[Table.ApplicationNo]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell30" Text="[Table.RtaRefNo]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell31" Text="[Table.Title]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell32" Text="[Table.Shareholder]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell33" Text="[Table.FHName]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell34" Text="[Table.addr1]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell35" Text="[Table.addr2]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell36" Text="[Table.City]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell37" Text="[Table.MState]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell38" Text="[Table.member_country]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell39" Text="[Table.Pincode]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell40" Text="[Table.Nominee]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell41" Text="[Table.SharesApplied]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell42" Text="[Table.AmountPaid]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell43" Text="[Table.ChequeNo]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell44" Text="[Table.ChequeAmout]" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell45" Text="[Table.SharesAllotted]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell46" Text="[Table.ValueofShares]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell47" Text="[Table.Refundamount]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell48" Text="[Table.PayWarNo]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell49" Text="[Table.unpaidAmount]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell50" Text="[Table.CertificateNo]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell51" Text="[Table.DistinctiveNoFrom]" HorzAlign="Center" Font="Calibri, 10pt"/>
+          <TableCell Name="Cell52" Text="[Table.DistinctiveNoTo]" HorzAlign="Center" Font="Calibri, 10pt"/>
+        </TableRow>
+      </TableObject>
+    </DataBand>
+    <PageFooterBand Name="PageFooter1" Top="172.65" Width="2192.4" Height="18.9">
+      <TextObject Name="Text60" Width="2192.4" Height="18.9" Dock="Fill" Text="[PageN]" HorzAlign="Right" Font="Arial, 10pt" Style="Footer"/>
+    </PageFooterBand>
+  </ReportPage>
+</Report>

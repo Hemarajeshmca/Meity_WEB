@@ -1,0 +1,574 @@
+﻿
+@{
+    ViewBag.List = "Farmer Loan Disbursement";
+    Layout = "~/Views/Shared/ListViewLayout.cshtml";
+    //Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+
+
+<form id="frm_FLDisbursementList" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div id="Disbursement" class="row">
+        <div class="col-xs-12">
+            <div id="gd_Disbursement">
+                <div id="FLDisbursementList_grid"></div>
+            </div>
+    </div>
+        </div>
+    </form>
+
+<script src="~/API_Scripts/Loan_Disbursement_retrieveFLDisbursementList_APIClient.js"></script>
+<script src="~/API_Scripts/Loan_Disbursement_retrieveFLDisbursement_APIClient.js"></script>
+<script src="~/API_Scripts/Loan_Disbursement_saveFLDisbursement_APIClient.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/API_Scripts/retrieveFLDisbursement_Model.js"></script>
+<script src="~/API_Scripts/retrieveFLDisbursementList_Model.js"></script>
+<script src="~/API_Scripts/saveFLDisbursement_Model.js"></script>
+<script src="~/API_Scripts/FLDisbursement.js"></script>
+
+ <script>
+   click_act_name = "frm_FLDisbursementList";
+   click_ctrl_name = "FLDisbursement";
+   form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+  </script>
+
+   
+<script>
+    $(document).ready(function () {
+       
+        $(".adv_filter").attr("hdrtitle", "Farmer Loan Disbursement List Record");
+        $(".adv_filter").attr("fltid", "FLDisbursementList");
+        $(".Export").attr("hdrtitle", "Farmer Loan Disbursement List");
+        $(".Export").attr("SubTreeId", "FLDISB");
+        
+        Screen_Id = "FLDISB";
+        permission = sec_Permission(Screen_Id);
+        page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+
+    });
+</script>
+<script>
+    function listpageloadfetch() {
+        var formval = form_Serialize("frm_FLDisbursementList");
+        var obj_val = JSON.parse(formval);      
+         obj_val.FilterBy_Option = "ALL";
+        obj_val.FilterBy_Code = ".";
+        if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+            obj_val.FilterBy_Fromvalue = getlocalStorage('flt_condition');
+        }
+        else {
+            obj_val.FilterBy_Fromvalue = ".";
+        }
+        obj_val.FilterBy_Tovalue = ".";
+        var data = {};
+        data.context = WebAPIProxy.getContext();;
+        data.context.Filter = obj_val;
+        retrieve_FLDisbursement_List(data);
+        
+    }
+</script>
+
+    <script> 
+    
+       var status_Priority = [];
+
+       function FLDisbursementGrid(data) {
+
+           $.each(data, function (index, value) {
+               var flag = false;
+               $.each(status_Priority, function (sindex, svalue) {
+                   if (svalue == value.status_desc) {
+                       flag = true;
+                   }
+               });
+               if (flag == false) {
+                   status_Priority.push(value.status_desc);
+               }
+           });
+
+           $("#FLDisbursementList_grid").kendoGrid(
+                   {
+                       dataSource: {
+                           data: data,
+                           pageSize: 20,
+                           change: function (e) {
+                               setTimeout(function () {
+                                   var gd = $("#FLDisbursementList_grid").data("kendoGrid");
+                                   filter_row(gd);
+                                   $('.k-i-close').css('display', 'none');
+                                   $('button.k-button-icon').css('display', 'none');
+                                   $('#FLDisbursementList_grid .k-input').prop('disabled', false);
+                                   $('#FLDisbursementList_grid .k-input').prop('readonly', true);
+                               }, 1);
+                           },
+                       },
+                       toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                       excelExport: function (e) {
+                           var gd = $("#FLDisbursementList_grid").data("kendoGrid");
+                           var len = gd.dataSource._data.length;
+                           var chkall = $('#chkall').is(':checked');
+                           var chkfilter = $('#chkfilter').is(':checked');
+                           var chktemp = $('#chktemp').is(':checked');
+                           var twokendobox = true;
+                           gd.dataSource.pageSize(len);
+                           if (e.sender.dataSource._data.length == len) {
+                               twokendobox = false;
+                               exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                           }
+                           else {
+                               exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                           }
+                           gd.dataSource.pageSize('10');
+                           return false;
+                       },
+                       filterable: {
+                           enabled: true,
+                           delay: 1500,
+                           mode: "menu, row",
+                           height: 200,
+                           click: function (e) {
+                               var gd = $("#FLDisbursementList_grid").data("kendoGrid");
+                               filter_row(gd);
+                           }
+                       },
+                       filterMenuInit: function (e) {
+                           var gd = $("#FLDisbursementList_grid").data("kendoGrid");
+                           filter_row(gd);
+                       },
+                       change: selectRow,
+                       height: 450,
+                       sortable: true,
+                       selectable: true,
+                       selectable: "singl",   //  Grid Row Selection
+                       pageable: {
+                           refresh: false,
+                           pageSizes: true,
+                           buttonCount: 5
+                       },
+                       navigatable: true,
+                       groupable: false,
+                       columns: [
+                             
+
+                             {
+                                 field: "loanapp_rowid",
+                                 title: "Loanapp Rowid",
+                                 width: 200,
+                                 hidden: true ,
+                             },
+
+                              {
+                                  field: "fpoorgn_code",
+                                  title: "Fpoorgn Code",
+                                  width: 200,
+                                  hidden: true,
+                              },
+
+                               {
+                                   field: "loanapp_no",
+                                   title: "ARN",
+                                   width: 200,
+                                   filterable: {
+                                   cell: {
+                                          operator: "contains",
+                                          inputWidth: 1500
+                                         }
+                                       }
+                               },
+
+
+                              {
+                                  field: "fpomember_code",
+                                  title: "Member ID",
+                                  width: 200,
+                                  filterable: {
+                                      cell: {
+                                          operator: "contains",
+                                          inputWidth: 1500
+                                            }
+                                          }
+                            },
+
+                         {
+                           field: "member_name",
+                           title: "Member Name ",
+                           width: 200,
+                           hidden: true,
+                         },
+
+                         {
+                              field: "farmer_code",
+                              title: "Farmer ID",
+                              width: 200,
+                              filterable: {
+                                  cell: {
+                                      operator: "contains",
+                                      inputWidth: 1500
+                                        }
+                                   }
+                          },
+
+
+                          {
+                              field: "farmer_name",
+                              title: "Farmer Name",
+                              width: 200,
+                              filterable: {
+                                  cell: {
+                                      operator: "contains",
+                                      inputWidth: 1500
+                                       }
+                                  }
+                          },
+
+                          {
+                              field: "sur_name",
+                              title: "Farmer SurName",
+                              width: 200,
+                              filterable: {
+                                  cell: {
+                                      operator: "contains",
+                                      inputWidth: 1500
+                                      }
+                                     }
+                          },
+
+                          {
+                              field: "app_date",
+                              title: "Application Date",
+                              width: 200,
+                              format: "{0:dd/MM/yyyy}",
+                              filterable: {
+                                  cell: {
+                                      operator: "contains",
+                                      inputWidth: 1500
+                                        }
+                                    }
+
+                          },
+
+                          {
+                              field: "loanscheme_code",
+                              title: "Loanscheme Code",
+                              width: 200,
+                              hidden: true,
+                               
+                          },
+
+                         {
+                             field: "loanscheme_desc",
+                             title: "FL Scheme",
+                             width: 200,
+                             filterable: {
+                                 cell: {
+                                      operator: "contains",
+                                      inputWidth: 1500
+                                      }
+                                    }
+                          },
+
+                          
+                          {
+                              field: "loan_amount",
+                              title: "Loan Amount",
+                              width: 200,
+                              hidden: true,
+                          },
+                           {
+                               field: "loan_no",
+                               title: "Loan No",
+                               width: 200,
+                               hidden: true,
+                           },
+                           {
+                               field: "sanctioned_date",
+                               title: "Sanctioned Date",
+                               width: 200,
+                               hidden: true,
+                           },
+
+                           {
+                               field: "sanctioned_amount",
+                               title: "Sanctioned Amount",
+                               width: 200,
+                               filterable: {
+                                   cell: {
+                                       operator: "contains",
+                                       inputWidth: 1500
+                                   }
+                               }
+                                
+                           },
+                           {
+                               field: "beneficiary_type_desc",
+                               title: "Beneficiary Type",
+                               width: 200,
+                               filterable: {
+                                   cell: {
+                                       operator: "contains",
+                                       inputWidth: 1500
+                                         }
+                                     }
+                           },
+                            {
+                               field: "beneficiary_type",
+                               title: "Beneficiary Type Desc",
+                               width: 200,
+                               hidden: true,
+                            },
+
+                         {
+                             field: "beneficiary_name",
+                             title: "Beneficiary Name",
+                             width: 200,
+                             filterable: {
+                                 cell: {
+                                     operator: "contains",
+                                     inputWidth: 1500
+                                      }
+                                  }
+                         },
+
+                         {
+                             field: "payment_mode",
+                             title: "Payment Mode",
+                             width: 200,
+                             hidden: true,
+                         },
+
+                          {
+                              field: "payment_mode_desc",
+                              title: "Payment Mode Desc",
+                              width: 200,
+                              hidden: true,
+                          },
+
+                           {
+                               field: "bank_acc_type_desc",
+                               title: "Account Type",
+                               width: 200,
+                               filterable: {
+                                   cell: {
+                                       operator: "contains",
+                                       inputWidth: 1500
+                                        }
+                                    }
+                           },
+                         
+                          {
+                              field: "bank_acc_type",
+                              title: "Account Type Desc",
+                              width: 200,
+                              hidden: true,
+                              
+                          },
+                          {
+                              field: "bank_acc_no",
+                              title: "Account No.",
+                              width: 200,
+                              filterable: {
+                                  cell: {
+                                      operator: "contains",
+                                      inputWidth: 1500
+                                        }
+                                  }
+                          },
+                          {
+                              field: "bank_code",
+                              title: "Bank",
+                              width: 200,
+                              filterable: {
+                                  cell: {
+                                      operator: "contains",
+                                      inputWidth: 1500
+                                  }
+                              }
+                          },
+
+                          {
+                              field: "bank_ifsc_code",
+                              title: "IFSC Code",
+                              width: 200,
+                              filterable: {
+                                  cell: {
+                                      operator: "contains",
+                                      inputWidth: 1500
+                                  }
+                              }
+                          },
+
+                           
+                          {
+                              field: "disbursement_Ref_No",
+                              title: "Disbursement Ref No",
+                              width: 200,
+                              filterable: {
+                                  cell: {
+                                      operator: "contains",
+                                      inputWidth: 1500
+                                  }
+                              }
+                          },
+                          {
+                              field: "disbursement_date",
+                              title: "Disbursement Date",
+                              width: 200,
+                              filterable: {
+                                  cell: {
+                                      operator: "contains",
+                                      inputWidth: 1500
+                                  }
+                              }
+                          },
+                          {
+                              field: "status_of_client",
+                              title: "Status Of Client",
+                              width: 200,
+                              hidden: true,
+                              filterable: {
+                                  cell: {
+                                      operator: "contains",
+                                      inputWidth: 1500
+                                  }
+                              }
+                          },
+                       
+                          {
+                              field: "status_of_client_desc ",
+                              title: "Status Of Credit",
+                              width: 200,
+                              filterable: {
+                                  cell: {
+                                      operator: "contains",
+                                      inputWidth: 1500
+                                  }
+                              }
+                          },
+                      {
+                          field: "status_desc",
+                          title: "Status",
+                          width: 200,
+                          filterable: {
+                              cell: {
+                                  operator: "contains",
+                                  inputWidth: 1500
+                              }
+                          }
+                      },
+
+                      {
+                          field: "status_code",
+                          title: "Status Code",
+                          width: 200,
+                          hidden: true,
+                          filterable: {
+                              cell: {
+                                  operator: "contains",
+                                  inputWidth: 1500
+                              }
+                          }
+                      },
+                       ]
+
+                   });
+           $(".k-dropdown-operator").css('display', 'none');
+           $("#FarmerloanDis_grid .k-input").attr('disabled', 'false');
+       }
+        
+       function statusFilter(element) {    // Dropdown list functionality
+           element.kendoDropDownList({
+               dataSource: status_Priority,
+               optionLabel: "--Select Value--"
+           });
+       }
+
+       function selectRow() {
+           var grid = $("#FLDisbursementList_grid").data("kendoGrid");
+           var selectedItem = grid.dataItem(grid.select());
+           setlocalStorage("ls_pageList", selectedItem);
+       }
+
+
+    var gridRowID = -1; 
+       
+</script>
+<script>
+    $("#btn_Edit").bind("click", function () {
+        getSerializedSelectedRows('edit');
+    });
+
+    $("#btn_View").bind("click", function () {
+        getSerializedSelectedRows('view');
+    });
+
+    $("#btn_new").bind("click", function () {
+        btn_onClick('Create');
+        location.href = "../FLDisbursement/FLDisbursementEdit";
+    });
+
+    function getSerializedSelectedRows(mode) {
+        try {
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var items = getlocalStorage("ls_pageList");
+                if (items.length == 0) {
+                    kendoAlert("Please select records");
+                }
+                else {
+                    if (mode == "edit") {
+                        //if (items.status_code != 'A') {
+                        //    kendoAlert("This Loan disbursement was approved, you can only view the disbursement details");
+                        //}
+                        //else {
+                        //    btn_onClick('Edit');
+                        //    location.href = "../FLDisbursement/FLDisbursementEdit";
+                        //}
+                        //if (getlocalStorage('role') == "LRS Maker" && items.status_code == 'S') {
+                        //    btn_onClick('Edit');
+                        //    location.href = "../FLDisbursement/FLDisbursementEdit";
+                        //}
+                        //else if (getlocalStorage('role') == "LRS Checker" && items.status_code == 'P') {
+                            btn_onClick('Edit');
+                            location.href = "../FLDisbursement/FLDisbursementEdit";
+
+                        //}
+                        //else {
+                        //    kendoAlert("This Loan disbursement was approved, you can only view the disbursement details");
+                        //}
+                    }
+                    else if (mode == "view") {
+                        btn_onClick('View');
+                        location.href = "../FLDisbursement/FLDisbursementEdit";
+                    }
+                }
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+
+        }
+    }
+</script>
+<script>
+    function generate_FLDisbursement_list(res) {
+        if (res != null) {
+            var data = changedataType(res);
+            $("#gd_Disbursement").empty();
+            $("#gd_Disbursement").append("<div id='FLDisbursementList_grid'></div>");
+            FLDisbursementGrid(data);
+        }
+        else {
+            FLDisbursementGrid([]);
+        }
+    }
+
+    function listRefresh() {
+        setlocalStorage('flt_condition', "");
+        listpageloadfetch();
+    }
+</script>
+
+
+
+
+
+

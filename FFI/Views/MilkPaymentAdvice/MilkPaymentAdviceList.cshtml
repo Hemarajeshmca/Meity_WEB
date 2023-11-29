@@ -1,0 +1,344 @@
+﻿@{
+    ViewBag.List = "Milk Payment Advice";
+    Layout = "~/Views/Shared/ListViewLayout.cshtml";
+}
+
+<form id="frm_pymt_advise" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="gd_pymt_advise_list">
+                <div id="PaymentAdvise_grid"></div>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="~/API_Scripts/Payment_Advice_retrievePaymentAdvice_APIClient.js"></script>
+<script src="~/API_Scripts/Payment_Advice_retrievePaymentAdviceBillDetail_APIClient.js"></script>
+<script src="~/API_Scripts/Payment_Advice_retrievePaymentAdviceList_APIClient.js"></script>
+<script src="~/API_Scripts/Payment_Advice_savePaymentAdvice_APIClient.js"></script>
+<script src="~/API_Scripts/PaymentAdvice.js"></script>
+<script src="~/API_Scripts/retrievePaymentAdvice_Model.js"></script>
+<script src="~/API_Scripts/retrievePaymentAdviceBillDetail_Model.js"></script>
+<script src="~/API_Scripts/retrievePaymentAdviceList_Model.js"></script>
+<script src="~/API_Scripts/savePaymentAdvice_Model.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+
+<script>
+    click_act_name = "MilkPaymentAdviceForm";
+    click_ctrl_name = "MilkPaymentAdvice";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+        //master_MapUser();
+        $(".adv_filter").attr("hdrtitle", "Milk Payment Advise List Record");
+        $(".adv_filter").attr("fltid", "MILKPAY");
+        $(".Export").attr("hdrtitle", "Milk Payment Advise List");
+        $(".Export").attr("SubTreeId", "MBADVGEN");
+
+        Screen_Id = "MBADVGEN";
+        permission = sec_Permission(Screen_Id);
+        page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+        //  pymtadvise_list([]);
+
+    });
+</script>
+<script>
+    function listpageloadfetch() {
+        try {
+            var formval = form_Serialize("frm_expenses_form");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_Fromvalue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_Fromvalue = ".";
+            }
+            obj_val.FilterBy_Tovalue = ".";
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Filter = obj_val;
+            retrieve_payment_ad_list(data);
+            //setlocalStorage('flt_condition', "");
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+  
+    function pymtadvise_list(data) {
+        try {         
+            gridRowID = -1;
+            data = addRandomNum(data);
+            $("#PaymentAdvise_grid").kendoGrid(
+             {
+                 dataSource: {
+                     data: data,
+                     schema: {
+                         model: {
+                             fields: {
+                                 payment_date: { type: "date" },                                 
+                             }
+                         }
+                     },
+                     pageSize: 20,
+                     change: function (e) {
+                         setTimeout(function () {
+                             var gd = $("#PaymentAdvise_grid").data("kendoGrid");
+                             filter_row(gd);
+                             $('.k-i-close').css('display', 'none');
+                             $('button.k-button-icon').css('display', 'none');
+                             $('#PaymentAdvise_grid .k-input').prop('disabled', false);
+                             $('#PaymentAdvise_grid .k-input').prop('readonly', true);
+                         }, 1);
+                     },
+                 },
+                 toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                 excelExport: function (e) {
+                     var gd = $("#PaymentAdvise_grid").data("kendoGrid");
+                     var len = gd.dataSource._data.length;
+                     var chkall = $('#chkall').is(':checked');
+                     var chkfilter = $('#chkfilter').is(':checked');
+                     var chktemp = $('#chktemp').is(':checked');
+                     var twokendobox = true;
+                     gd.dataSource.pageSize(len);
+                     if (e.sender.dataSource._data.length == len) {
+                         twokendobox = false;
+                         exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                     }
+                     else {
+                         exportfunction(e, chkall, chkfilter, chktemp, twokendobox, gd);
+                     }
+                     gd.dataSource.pageSize('10');
+                     return false;
+                 },
+                 filterable: {
+                     enabled: true,
+                     delay: 1500,
+                     mode: "menu, row",
+                     height: 200,
+                     click: function (e) {
+                         var gd = $("#PaymentAdvise_grid").data("kendoGrid");
+                         filter_row(gd);
+                     }
+                 },
+                 filterMenuInit: function (e) {
+                     var gd = $("#PaymentAdvise_grid").data("kendoGrid");
+                     filter_row(gd);
+                 },
+                 change: selectRow,
+                 height: 450,
+                 sortable: true,
+                 selectable: true,
+                 selectable: "singl",   //  Grid Row Selection
+                 pageable: {
+                     refresh: false,
+                     pageSizes: true,
+                     buttonCount: 5
+                 },
+                 navigatable: true,
+                 groupable: false,
+
+                 columns: [
+
+                     {
+                         field: "payment_no",
+                         title: "Payment Advise ID",
+                         filterable: {
+                             cell: {
+                                 operator: "contains",
+                                 inputWidth: 1500
+                             }
+                         },
+                         width: 80
+                     },
+                      {
+                          field: "payment_date",
+                          title: "Payment Advise Date",
+                          format: "{0:dd/MM/yyyy}",
+                          filterable: {
+                              cell: {
+                                  operator: "contains",
+                                  inputWidth: 1500
+                              },
+                              ui: function (element) {
+                                  element.kendoDatePicker({
+                                      format: "dd/MM/yyyy"
+                                  });
+                              },
+                          },
+
+                          width: 80
+                      },
+                         {
+                             field: "ccbill_no",
+                             title: "Bill ID",
+                             filterable: {
+                                 cell: {
+                                     operator: "contains",
+                                     inputWidth: 1500
+                                 }
+                             },
+                             width: 80
+                         },
+
+
+                         {
+                             field: "milk_supply_period",
+                             title: "Milk Supply Period",
+                             filterable: {
+                                 cell: {
+                                     operator: "contains",
+                                     inputWidth: 1500
+                                 }
+                             },
+                             width: 80
+                         },
+                          {
+                              field: "process_status_desc",
+                              title: "Process Status",
+                              filterable: {
+                                  cell: {
+                                      operator: "contains",
+                                      inputWidth: 1500
+                                  }
+                              },
+                              //  hidden: true,
+                              width: 110
+                          },
+                          {
+                              field: "status_code",
+                              title: "STATUS Id",
+                              width: 1,
+                              hidden: true,
+                          },
+                         {
+                             field: "status_desc",
+                             title: "Status",
+                             filterable: {
+                                 ui: statusFilter,
+                                 cell: {
+                                     operator: "contains",
+                                     inputWidth: 1500
+                                 }
+                             },
+                             width: 80
+                         },
+                            {
+                                field: "process_status",
+                                title: "STATUS Id",
+                                width: 1,
+                                hidden: true,
+                            },
+                 {
+                     field: "paymenthead_rowid",
+                     title: "Pay Row  Id",
+                     width: 1,
+                     hidden: true,
+                 },
+                 
+                 ]
+             });
+
+            $(".k-dropdown-operator").css('display', 'none');
+            $("#PaymentAdvise_grid .k-input").attr('disabled', 'false');
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function selectRow() {
+        try {
+            var grid = $("#PaymentAdvise_grid").data("kendoGrid");
+            var selectedItem = grid.dataItem(grid.select());
+            setlocalStorage("ls_pageList", selectedItem);
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function statusFilter(element) {    // Dropdown list functionality
+        element.kendoDropDownList({
+            dataSource: status_Priority,
+            optionLabel: "--Select Value--"
+        });
+    }
+
+</script>
+<script>
+    $("#btn_Edit").bind("click", function () {
+        btn_onClick('Edit');
+        location.href = "../MilkPaymentAdvice/MilkPaymentAdviceForm";   
+    });
+
+    $("#btn_View").bind("click", function () {
+        //btn_onClick('View');
+        //location.href = "../MilkPaymentAdvice/MilkPaymentAdviceForm";
+        getSerializedSelectedRows('view');
+    });
+
+    $("#btn_new").bind("click", function () {
+        btn_onClick('Create');
+        location.href = "../MilkPaymentAdvice/MilkPaymentAdviceForm";
+    });
+    function getSerializedSelectedRows(mode) {
+        try {
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var items = getlocalStorage("ls_pageList");
+                if (items.length == 0) {
+                    kendoAlert("Please select records");
+                }
+
+                else {
+                    if (mode == "edit") {
+                        btn_onClick('Edit');
+                        location.href = "../MilkPaymentAdvice/MilkPaymentAdviceForm";
+                    }
+                    else if (mode == "view") {
+                        btn_onClick('View');
+                        location.href = "../MilkPaymentAdvice/MilkPaymentAdviceForm";
+                    }
+                }
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<script>
+    function generate_paymentadvce_list(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                $("#gd_pymt_advise_list").empty();
+                $("#gd_pymt_advise_list").append("<div id='PaymentAdvise_grid'></div>");
+                pymtadvise_list(data);
+            }
+            else {
+                pymtadvise_list([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function listRefresh() {
+        try {
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+

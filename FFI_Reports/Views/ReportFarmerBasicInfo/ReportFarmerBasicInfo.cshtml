@@ -1,0 +1,804 @@
+﻿@{
+    ViewBag.Form = "Basic Profile Report";
+    Layout = "~/Views/Shared/FormViewLayout2.cshtml";
+}
+<style>
+    #display_loading {
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        transform: translate(-50%, 50%);
+        display: none;
+    }
+
+    body {
+        background-color: #ffffff;
+    }
+    button#btnExport {
+        background-color: #00c0ef;
+        border-color: #00acd6;
+        margin-top: -6%;
+        display: inline-block;
+        padding: 6px 12px;
+        margin-bottom: 0;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1.42857143;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        -ms-touch-action: manipulation;
+        touch-action: manipulation;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        background-image: none;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        color: #fff;
+    }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.min.js"></script>
+<body>
+    <form id="frm_basicinforeport" class="form-horizontal">
+
+        <div class="panel panel-default">
+            <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+                <div class="row" style="padding-top:12px;">
+                    <div class="col-sm-12">
+                        <div class="row">
+
+                            <div class="col-sm-4" id="cmddist">
+                                <div class="form-group">
+                                    <label for="cmb_farmerdist" class="col-sm-5 control-label required">Farmer District</label>
+                                    
+                                    <div class="col-sm-7">
+
+                                        <input id="cmb_dist" name="cmb_dist" style="width: 100%" data-role="filtercombo">
+                                        <input type="hidden" id="hdn_inputstring">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pull-right" style="margin-top: 1px; margin-right: 5px;">
+                                <button id="refresh" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button"
+                                        data-original-title="Refresh" onclick="listRefresh()" style="">
+                                    <span class="glyphicon glyphicon-refresh"></span>
+                                </button>
+                                @*<label id="lblprog" style="color:red;display:none"> In Progress..Please Wait </label>*@
+                                <div id="display_loading" style="z-index: 999;"><img src="https://i.stack.imgur.com/rBLb3.gif" style="height: 100px; width: 100px;"></div>
+
+                                <button id="clear" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button"
+                                        data-original-title="clear" onclick="listclear()" style="">
+                                    clear
+                                </button>
+                                <button id="btnExport" title="" data-placement="top" data-toggle="tooltip" class="btn btn-info" type="button" data-original-title="Export" style="background-color: #00c0ef ;border-color: #00acd6; margin-top:0%" ;>
+                                    @*<span class="fa fa-file-excel-o"></span>*@
+                                    Export to Excel
+                                </button>
+                            </div>
+                        </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="gd_basic">
+                            <div id="Basicinforeport_grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            </div>
+    </form>
+</body>
+
+<script src="~/CommonScripts/Common_func.js"></script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+<script src="~/CommonScripts/ExportExcel.js"></script>
+
+<script>
+    click_act_name = "home ";
+    click_ctrl_name = "home";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+
+</script>
+<script>
+    var menuId = "";
+    var permission = "";
+    $(document).ready(function () {
+        debugger;
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#frm_basicinforeport");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        $("#Topsubheader").show();
+        $("#bottomFooter").show();
+        $("#bottom_menus").hide();
+        $("#btndiv").show();
+        $("#frmlayerdiv").hide();
+        $("#divCreate").hide();
+        $("#divEdit").hide();
+        $("#divView").show();
+        $("#DocStat").show();
+        $(".edtviw_item").show();
+        $(".create_item").hide();
+        $("#btnExport").hide();
+        $(".Export").attr("hdrtitle", "Farmer Profile Basic Report");
+        $(".Export").attr("SubTreeId", "FARMPROFINFOCRPT");
+
+        Screen_Id = "FARMPROFINFOCRPT";
+        permission = sec_PermissionNew(Screen_Id);
+        page_load_list_permission(permission);
+        setlocalStorage("ls_pageList", "");
+        var security = permission;
+        console.log(security);
+        if (security['print'] == true) {
+            $("#btnExport").show();
+        }
+        else {
+            $("#btnExport").hide();
+        }
+
+        listgrid([]);
+
+        $("#btnExport").kendoButton({
+            click: function () {
+                debugger;
+                ExportButtonClick();
+            }
+        })
+        var list_in = "";
+        // $("#cmb_filter").empty();
+        var list_in = [
+            { "code": "Fpo Name", "desc": "Fpo Name" },
+            { "code": "Dist", "desc": "Dist" }
+        ];
+
+        /*  Prema added for fpo based abd ri user base loading*/
+        var role = getlocalStorage("orgn_level");
+        if (role == "ORG_FO") {
+            debugger;
+            $("#RIform").show();
+            $("#FPOform").show();
+            filter_combobox("cmb_RIBelongform", getlocalStorage("rilist"));
+            filter_combobox("cmb_FPOBelongform", getlocalStorage("fpolist"));
+            var cmb_riform3 = $("#cmb_RIBelongform").data("kendoComboBox");
+            cmb_riform3.value(getlocalStorage("org_id"));
+            $("#cmb_FPOBelongform").data("kendoComboBox").value("ALL");
+            $("#cmb_RIBelongform").data("kendoComboBox").enable(false);
+            $("#cmb_FPOBelongform").data("kendoComboBox").enable(true);
+            Alldropdownload();
+            fpoload();
+        }
+        if (role == "ORG_PF") {
+            debugger;
+            $("#RIform").show();
+            $("#FPOform").show();
+            filter_combobox("cmb_RIBelongform", getlocalStorage("rilist"));
+            $("#cmb_RIBelongform").data("kendoComboBox").value("ALL");
+            filter_combobox("cmb_FPOBelongform", getlocalStorage("fpolist"));
+            $("#cmb_FPOBelongform").data("kendoComboBox").value("ALL");
+            $("#cmb_RIBelongform").data("kendoComboBox").enable(true);
+            $("#cmb_FPOBelongform").data("kendoComboBox").enable(true);
+            Alldropdownload();
+            fpoload();
+        }
+        if (role == "ORG_FPO") {
+            debugger;
+            $("#RIform").show();
+            $("#FPOform").show();
+            filter_combobox("cmb_RIBelongform", getlocalStorage("rilist"));
+            filter_combobox("cmb_FPOBelongform", getlocalStorage("fpolist"));
+            var cmb_riform3 = $("#cmb_RIBelongform").data("kendoComboBox");
+            cmb_riform3.value(getlocalStorage("parent_code"));           
+            $("#cmb_RIBelongform").data("kendoComboBox").enable(false);
+            $("#cmb_FPOBelongform").data("kendoComboBox").enable(false);
+            var cmap_inselform = $("#cmb_FPOBelongform").data("kendoComboBox");
+            cmap_inselform.value(getlocalStorage("org_code"));
+            Alldropdownload();
+        }
+        /*  prema ended*/
+
+    });
+    $("#cmb_RIBelongform").change(function () {
+        debugger;
+        $("#cmb_FPOBelongform").data("kendoComboBox").value("ALL");
+             var selected_value = $(this).val();
+        var data1 = { RI_Code: selected_value}
+            $.ajax({
+            url: '@Url.Action("GetFPOlistRIBASE", "Login")',
+            type: "post",
+            contentType: 'application/x-www-form-urlencoded',
+            data: data1,
+            success: function (response1) {
+            debugger;
+                var url_path = JSON.parse(response1);
+                var itemArrFPO = [];
+                for (var i = 0; i < url_path.Table.length; i++) {
+                    var list = {};
+                    list.id = url_path.Table[i].serial_number;
+                    list.code = url_path.Table[i].dist_code;
+                    list.desc = url_path.Table[i].Member_district_name;
+                    itemArrFPO.push(list);
+                }
+                filter_combobox("cmb_FPOBelongform", itemArrFPO);
+                Alldropdownload();
+            },
+                error: function (er)
+                {
+                alert(er)
+                console.log(er)
+                }
+            });
+    });
+    function fpoload() {
+        var data = {};
+            data.userId = getlocalStorage("User_Id_Value");
+        var orgnid = $("#cmb_RIBelongform").data("kendoComboBox").value();
+            var user_code = data.userId;
+            var data1 = {User_code: user_code, orgn_code: orgnid}
+            $.ajax({
+            url: '@Url.Action("GetFPOlist", "Login")',
+            type: "post",
+            contentType: 'application/x-www-form-urlencoded',
+            data: data1,
+            success: function (response1) {
+            debugger;
+                var url_path = JSON.parse(response1);
+                var itemArrFPO = [];
+                for (var i = 0; i < url_path.Table.length; i++) {
+                    var list = {};
+                    list.id = url_path.Table[i].serial_number;
+                    list.code = url_path.Table[i].dist_code;
+                    list.desc = url_path.Table[i].Member_district_name;
+                    itemArrFPO.push(list);
+                }
+                filter_combobox("cmb_FPOBelongform", itemArrFPO);
+            },
+                error: function (er)
+                {
+                alert(er)
+                console.log(er)
+                }
+            });
+    }
+    function Alldropdownload() {
+        debugger;
+        load_master_code();
+        var orgcode = $("#cmb_FPOBelongform").data("kendoComboBox").value();
+        var parentcode = $("#cmb_RIBelongform").data("kendoComboBox").value();
+        var selected_value = orgcode;
+        var data = { fpo_code: selected_value, parent_code: parentcode};
+         $.ajax({
+            url: '@Url.Action("GetDistrict", "ReportFarmerBasicInfo")',
+            type: "post",
+            contentType: 'application/x-www-form-urlencoded',
+            data: data,
+            success: function (response1) {
+            debugger;
+            if (response1 != null) {
+                debugger;
+                $("#cmb_dist").val('');
+                var url_path = JSON.parse(response1);
+                var itemArr = [];
+                for (var i = 0; i < url_path.length; i++) {
+                    var list = {};
+                    list.id = url_path[i].serial_number
+                    list.code = url_path[i].dist_code;
+                    list.desc = url_path[i].Member_district_name;
+                    itemArr.push(list);
+                }
+                filter_combobox("cmb_dist", itemArr);
+                listgrid([]);
+            }
+
+          },
+         error: function (er) {
+         alert(er)
+        console.log(er)
+        }
+         });
+
+    }
+    //Venkat Introduced Purpose FPO Name based  district Loaded 02-01-2020
+    $("#cmb_FPOBelongform").change(function () {
+        debugger;
+        var selected_value = $(this).val();
+        var parentcode = $("#cmb_RIBelongform").data("kendoComboBox").value();
+        var data = { fpo_code: selected_value, parent_code: parentcode };
+         $.ajax({
+            url: '@Url.Action("GetDistrict", "ReportFarmerBasicInfo")',
+            type: "post",
+            contentType: 'application/x-www-form-urlencoded',
+            data: data,
+            success: function (response1) {
+            debugger;
+            if (response1 != null) {
+                debugger;
+                $("#cmb_dist").val('');
+                var url_path = JSON.parse(response1);
+                var itemArr = [];
+                for (var i = 0; i < url_path.length; i++) {
+                    var list = {};
+                    list.id = url_path[i].serial_number
+                    list.code = url_path[i].dist_code;
+                    list.desc = url_path[i].Member_district_name;
+                    itemArr.push(list);
+                }
+                filter_combobox("cmb_dist", itemArr);
+                listgrid([]);
+            }
+
+          },
+         error: function (er) {
+         alert(er)
+        console.log(er)
+        }
+         });
+
+       })
+      //End
+    $("#cmb_dist").change(function () {
+        listgrid([]);
+    });
+
+    $(function () {
+        $('#refresh').click(function () {
+            debugger;
+            if ($("#cmb_FPOBelongform").val() != "" || $("#cmb_dist").val() == "" || $("#cmb_RIBelongform").val() !="Select") {
+                var cmb_ricode = $("#cmb_RIBelongform").val();
+                var orgnid = $("#cmb_RIBelongform").data("kendoComboBox").value();
+                var cmb_fpocode = $("#cmb_FPOBelongform").val();
+                var cmb_dist = $("#cmb_dist").val();
+                var user_code = getlocalStorage("User_Id_Value");
+                if (cmb_ricode != "Select") {
+                    if (cmb_fpocode != "") {
+                        if (cmb_dist != "") {
+                            $('#refresh').hide();
+
+                            $("#btnExport").hide();
+                            $("#clear").hide();
+                            $("#display_loading").show();
+                            $(".panel-default").css("opacity", 0.2);
+                            setTimeout(function () {
+                                $(".panel-default").css("opacity", 1);
+                                $("#display_loading").css({ "display": "none" });
+                            }, 8500);
+                            var ABC = "Input";
+                            var InputString = ABC.concat(" ","{",cmb_fpocode, ",", cmb_dist, ",", orgnid, ",",user_code,"}"); 
+                            console.log(InputString);
+                            $("#hdn_inputstring").val(InputString);
+                            $.ajax({
+                                type: "POST",
+                                data: '{fpocode: "' + cmb_fpocode + '",district:"' + cmb_dist + '",parent_code:"' + orgnid + '",user:"' + user_code +'"}',
+                                url: "/ReportFarmerBasicInfo/Farmerprofilebasicinfo",
+                                dataType: "json",
+                                contentType: 'application/json; charset=utf-8',
+                                success: function (response)
+                                {
+                                    if (response.length == 0) {
+                                        kendoAlert('No Records found');
+                                    }
+                                    $("#display_loading").hide();
+                                    $('#refresh').show();
+                                    Screen_Id = "FARMPROFINFOCRPT";
+                                    permission = sec_PermissionNew(Screen_Id);
+                                    var security = permission;
+                                    console.log(security);
+                                    if (security['print'] == true) {
+                                        $("#btnExport").show();
+                                    }
+                                    else {
+                                        $("#btnExport").hide();
+                                    }
+                                  /*  $("#btnExport").show();*/
+                                    $("#clear").show();
+
+                                    if (response != null) {
+                                        console.log(response)
+                                        $("#gd_basic").empty();
+                                        $("#gd_basic").append("<div id='Basicinforeport_grid'></div>");
+                                        listgrid(response);
+                                    }
+                                   
+                                },
+                                error: function (er) {
+                                    $("#display_loading").hide();
+                                    $('#refresh').show();
+                                    $("#btnExport").show();
+                                    $("#clear").show();
+                                    alert(er)
+                                    console.log(er)
+                                }
+
+                            });
+                        }
+                        else {
+                            kendoAlert('Please Select The Farmer District');
+                        }
+                    }
+                    else {
+                        kendoAlert('Please Select The FPO Name');
+                    }
+                }
+                else {
+                    kendoAlert('Please Select The RI Name');
+                }
+                }
+
+            else {
+                kendoAlert('Please Select Any One Field');
+            }
+            return false;
+        });
+    });
+</script>
+<script>
+
+    function load_master_code() {
+        try {
+            var data = {};
+            data.screen_Id = "FARMPROFINFO";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+    function ExportButtonClick() {
+        debugger;
+
+        var grid = $("#Basicinforeport_grid").data("kendoGrid");
+        if (grid.dataSource.total() == 0) {
+            kendoAlert('No records available in the Grid to Export!!!');
+        }
+        else {
+            grid.bind("excelExport", function (e) {
+                debugger;
+                e.workbook.fileName = "Farmer Profile Info.xlsx";
+                var rows1 = e.workbook.sheets[0];
+
+                var sheet = e.workbook.sheets[0];
+                var gd = $("#Basicinforeport_grid").data("kendoGrid");
+                var gd_fi = $("#Basicinforeport_grid").data("kendoGrid").dataSource;
+                var filters = gd_fi.filter();
+                var allData = gd_fi.data();
+                var query = new kendo.data.Query(allData);
+                var data = query.filter(filters).data;
+                var data_tt = gd.dataSource.data();
+                var sheet = e.workbook.sheets[0];
+                var gridColumns = gd.columns;
+
+                var columnCells = [];
+                for (var c = 0; c < gridColumns.length; c++) {
+                    var fieldName = gd.columns[c].hidden;
+                    if (typeof (fieldName) === "undefined") {
+                        var cellValue = gridColumns[c].title ? gridColumns[c].title : gridColumns[c].field;
+                        columnCells.push({ value: cellValue, autoWidth: true, background: "#7a7a7a", color: "#fff" });
+                    }
+                }
+                var rows = [{ cells: columnCells, type: "header" }];
+                for (var i = 0; i < data.length; i++) {
+                    var rowCells = [];
+                    for (var j = 0; j < gridColumns.length; j++) {
+
+                        var fieldName = gd.columns[j].hidden;
+                        if (typeof (fieldName) === "undefined") {
+                            var cellValue = data[i][gridColumns[j].field];
+                            rowCells.push({ value: cellValue });
+                        }
+                    }
+                    rows.push({ cells: rowCells, type: "data" });
+                }
+
+                sheet.rows = rows;
+
+            });
+            var InputString = $("#hdn_inputstring").val();
+            var data = {};
+            data.userId = getlocalStorage("User_Id_Value");
+            var user_code = data.userId;
+            var Report_Name = "Farmer Profile Basic Report";
+            var flag = 1;
+            var data = { report_name: Report_Name, input_string: InputString, flag: flag, userid: user_code };
+         $.ajax({
+            url: '@Url.Action("ExportExcelDownload", "ReportFarmerBasicInfo")',
+            type: "post",
+            contentType: 'application/x-www-form-urlencoded',
+            data: data,
+            success: function (response1) {
+            debugger;
+            if (response1 != null) {
+                debugger;
+              
+            }
+
+          },
+         error: function (er) {
+         alert(er)
+        console.log(er)
+        }
+         });
+            grid.saveAsExcel();
+            kendoAlert('Exported Sucessfully');
+        }
+    }
+
+</script>
+
+
+<script>
+    function listpageloadfetch() {
+        try {
+
+            var formval = form_Serialize("frm_basicinforeport");
+            var obj_val = JSON.parse(formval);
+            obj_val.FilterBy_Option = "ALL";
+            obj_val.FilterBy_Code = ".";
+            if (getlocalStorage('flt_condition') != undefined && getlocalStorage('flt_condition') != "") {
+                obj_val.FilterBy_Fromvalue = getlocalStorage('flt_condition');
+            }
+            else {
+                obj_val.FilterBy_Fromvalue = ".";
+            }
+            obj_val.FilterBy_Tovalue = ".";
+            if (obj_val.status_option == "" || obj_val.status_option == undefined) {
+                obj_val.status_option = "V";
+            }
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Filter = obj_val;
+            var colCount = $("#Basicinforeport_grid").find('.k-grid-header colgroup > col').length;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    var status_Priority = [];
+    function listgrid(data) {
+        try {
+
+            $("#Basicinforeport_grid").kendoGrid({
+                excel: {
+                    fileName: "Farmer Basic Report.xlsx",
+                    filterable: true,
+                    allPages: true
+                },
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+                                FPOName: { type: "string" },
+                                FarmerCode: { type: "string" },
+                                FarmerName: { type: "string" },
+                                SurName: { type: "string" },
+                                FatherName: { type: "string" },
+                                GenderFlag: { type: "string" },
+                                Village: { type: "string" },
+                                GramPanchayat: { type: "string" },
+                                Taluk: { type: "string" },
+                                District: { type: "string" },
+                                State: { type: "string" },
+
+                            }
+                        }
+                    },
+                    //pageSize: 20
+                },
+                toolbar: "<button type='button' id='Exportclick' class='k-grid-excel' style='display:none' href=''><span class='fa fa-file-excel-o' style='color: Black;'> &nbsp Export To Excel</span></button>",
+                filterable: {
+                    enabled: true,
+                },
+                resizable: true,
+                height: 400,
+                scrollable: true,
+                sortable: true,
+                pageable: {
+                    refresh: false,
+                    pageSizes: true,
+                    previousNext: true,
+                    buttonCount: 8,
+                    pageSize: 20,
+                },
+                columns: [
+                    {
+                        field: "FPOName",
+                        title: "FPO Name",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        },
+                        width: 150
+
+                    },
+                    {
+                        field: "FarmerCode",
+                        title: "Farmer Code",
+                        width: 130,
+                        filterable: false,
+                    },
+
+                    {
+                        field: "FarmerName",
+                        title: "Farmer First Name",
+                        width: 100,
+                        filterable: false,
+                    },
+                    {
+                        field: "SurName",
+                        title: "Surname",
+                        width: 100,
+                        filterable: false,
+                    },
+                    {
+                        field: "FatherName",
+                        title: "Father/Husband Name",
+                        width: 80,
+                        filterable: false,
+                    },
+
+                    {
+                        field: "MobileNo",
+                        title: "Farmer Mobile Number",
+                        width: 130,
+                        filterable: false,
+                    },
+                    {
+                        field: "DOB",
+                        title: "DOB",
+                        width: 80,
+                        filterable: false,
+                    },
+                    {
+                        field: "GenderFlag",
+                        title: "Gender",
+
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Equal to"
+                                }
+                            }
+                        },
+                        width: 80,
+                    },
+
+                    {
+                        field: "Village",
+                        title: "Village",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        },
+                        width: 80,
+                    },
+
+                    {
+                        field: "GramPanchayat",
+                        title: "Gram Panchayat",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        },
+                        width: 80,
+                    },
+                    {
+                        field: "Taluk",
+                        title: "Taluk",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        },
+                        width: 80,
+                    },
+
+                    {
+                        field: "District",
+                        title: "District",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        },
+                        width: 80,
+                    },
+                    {
+                        field: "State",
+                        title: "State",
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains"
+                                }
+                            }
+                        },
+                        width: 80,
+                    },
+                    {
+                        field: "createddate",
+                        title: "created date",
+                        filterable: false,
+                        width: 80,
+                    },
+                    {
+                        field: "ConsentFlag",
+                        title: "Consent Flag",
+                        filterable: false,
+                        width: 80,
+                    }
+                ],
+                editable: false,
+
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+
+</script>
+
+<script>
+
+    function listRefresh() {
+        debugger;
+        try {
+            setlocalStorage('flt_condition', "");
+            listpageloadfetch();
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function listclear() {
+        try {
+            var role = getlocalStorage("orgn_level");
+            if (role == "ORG_PF") {
+                $("#cmb_RIBelongform").data("kendoComboBox").value("");
+                $("#cmb_FPOBelongform").data("kendoComboBox").value("");
+            }
+
+            $("#cmb_dist").data("kendoComboBox").value("");
+
+            listgrid([]);
+
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+</script>
+
+<style>
+    .k-footerTemplate {
+        text-align: right;
+    }
+</style>

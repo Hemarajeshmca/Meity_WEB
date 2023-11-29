@@ -1,0 +1,639 @@
+﻿@{
+    ViewBag.Form = "Stage Item Definition";
+    Layout = "~/Views/Shared/FormViewLayout1.cshtml";
+}
+
+<form id="Production_Stage" class="form-horizontal" data-role="validator" novalidate="novalidate">
+    <div class="panel panel-default">
+        <div class="panel-body" style="padding-top:6px;padding-bottom:2px">
+
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="txtfg_code" class="col-sm-5 control-label required">FG code </label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txtfg_code" name="IOU_fg_code" class="form-control" data-toggle="tooltip" data-placement="bottom" placeholder="" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                    <div class=" form-group">
+                        <label for="cmb_produc_stage" class=" col-sm-5 control-label required">Production Stage</label>
+                        <div class=" col-sm-5">
+                            <input id="cmb_produc_stage" name="In_production_stage_code" onclick="testing()">
+                        </div>
+                    </div>
+                </div>
+                @*<div class="col-xs-4" style="display:none">
+                        <div class=" form-group">
+                            <label for="cmb_produc_stage_desc" class=" col-sm-5 control-label ">Production Stage Desc</label>
+                            <div class=" col-sm-4">
+                                <input id="cmb_produc_stage_desc" name="production_stage_desc" onclick="testing()">
+                            </div>
+                        </div>
+                    </div>*@
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="txt_status_code" class="col-sm-5 control-label ">Seq No</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txt_status_code" name="In_status_code" class="form-control" data-toggle="tooltip" data-placement="bottom" disabled>
+                        </div>
+                    </div>
+                </div>
+                @*<div class="col-sm-3">
+                        <div class=" form-group">
+                            <label for="txt_seq_no" class="col-sm-5 control-label required">Seq No</label>
+                            <div class=" col-sm-3">
+                                <input id="txt_seq_no" name="seq_no">
+                            </div>
+                        </div>
+                    </div>*@
+                <div class="col-xs-3">
+                    <div class=" form-group">
+                        <label for="txt_final_Output" class=" col-sm-5 control-label required">Final Output</label>
+                        <div class=" col-sm-4">
+                            <input type="text" id="txt_final_Output" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4" style="display:none">
+                    <div class="form-group">
+                        <label for="txt_status_code" class="col-sm-5 control-label ">Status Desc</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txt_status_code" name="In_status_code" class="form-control" data-toggle="tooltip" data-placement="bottom" placeholder="">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3" style="display:none">
+                    <div class="form-group">
+                        <label for="txt_stage_rowid" class="col-sm-5 control-label ">Stage RowId</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="txt_stage_rowid" name="IOU_stage_rowid" class="form-control" data-toggle="tooltip" data-placement="bottom" placeholder="">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3" style="display:none">
+                    <div class="form-group">
+                        <label for="txtMode" class="col-sm-5 control-label">Mode</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtMode" name="In_mode_flag" class="form-control" maxlength="10" value="I">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group" style="display:none;">
+                        <label for="row_timestamp" class="col-sm-5 control-label">Timestamp:</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txt_row_timestamp" name="In_row_timestamp" class="form-control" maxlength="10" value="Time  ">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="row_timestamp" class="col-sm-5 control-label">Agg Code</label>
+                        <div class="col-sm-7">
+                            <input type="text" id="agg_code" class="form-control" maxlength="10" value="Time  ">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <label id="lblstage">Stage</label>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div id="grid_StageItem">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</form>
+
+<script src="~/API_Scripts/PAWHSStageItemDefinition.js"></script>
+<script src="~/API_Scripts/UmoldITWebAPIProxy.js"></script>
+<script src="~/API_Scripts/StageItem_Definition_PAWHS_getStageItemDefinition_APIClient.js"></script>
+<script src="~/API_Scripts/StageItem_Definition_PAWHS_getStageItemDefinitionList_APIClient.js"></script>
+<script src="~/API_Scripts/StageItem_Definition_PAWHS_saveStageItemDefinition_APIClient.js"></script>
+<script src="~/API_Scripts/PAWHS_getStageItemDefinition_Model.js"></script>
+<script src="~/API_Scripts/PAWHS_getStageItemDefinitionList_Model.js"></script>
+<script src="~/API_Scripts/PAWHS_saveStageItemDefinition_Model.js"></script>
+<script src="~/API_Scripts/PAWHS_getProductionStage_Model.js"></script>
+<script src="~/API_Scripts/StageItem_Definition_PAWHS_getProductionStage_APIClient.js"></script>
+
+<script>
+    click_act_name = "PAWHSProductionStageList";
+    click_ctrl_name = "PAWHSStageItem";
+    form_list_url = '../' + click_ctrl_name + '/' + click_act_name;
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        //master_aggregator();
+        kendodate_format();
+        $("#divCreate").hide();
+        $("#divEdit").hide();
+        $("#divView").hide();
+        $('#frmlayerdiv').show();
+        $('#divUserRole8').show();
+        $("#hide_div").hide();
+        $("#pay_help2").hide();
+        $("#bottom_menus").hide();
+        $(".file_attach").attr("hdrtitle", "Stage Item Definition ");
+        $(".notes").attr("hdrtitle", "Stage Item Definition ");
+        $("#lblForm_menuid").text("AGGR_SETUP");
+
+        grid_StageItem_details([]);
+
+        Form_validate_Name = $('form.form-horizontal').attr('id');
+        var container = $("#Production_Stage");
+        kendo.init(container);
+        container.kendoValidator({
+        });
+        var org = getlocalStorage('org_id');
+        $('#agg_code').val(org);
+        load_master_code();
+        Screen_Id = "STAGITEMDEF";
+        permission = sec_Permission(Screen_Id);
+        if (getlocalStorage('btn_clk_val') == "Edit") {
+
+            if (getlocalStorage("ls_pageList") != undefined) {
+                $('#divUserRole8 #review').hide();
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("Production_Stage");
+                $("#txt_final_Output").val(data.Out_final_output);
+                var obj_val = JSON.parse(formval);
+                obj_val.fg_code = data.Out_fg_code;
+
+                //obj_val.stage_rowid = data.stage_rowid;
+
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                //retrieve_StageItemsForEdit(data);
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, fg_code: Context.Header.fg_code }),
+                    url: "/PAWHSStageItem/PAWHSProductionStageitemfetch",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        debugger;
+                        if (response.context != null) {
+                            GenerateStageHeader(response.context);
+                        }
+                        else {
+
+                        }
+                    },
+                    error: function (er) {
+                        alert(er)
+                        console.log(er)
+                    }
+                });
+                $("#DocStat").val("Active");
+            }
+        }
+        else if (getlocalStorage('btn_clk_val') == "View") {
+            //$('#divEdit #reviewEd').hide();
+
+            $("#divCreate").hide();
+            $("#divEdit").hide();
+            $("#divView").hide();
+            $('#frmlayerdiv').show();
+            $('#divUserRole8').hide();
+            $("#hide_div").hide();
+            $("#pay_help2").hide();
+            $('#btndiv').css("padding-left", "100px");
+
+            if (getlocalStorage("ls_pageList") != undefined) {
+                var data = getlocalStorage("ls_pageList");
+                var formval = form_Serialize("Production_Stage");
+                $("#txt_final_Output").val(data.Out_final_output);
+                var obj_val = JSON.parse(formval);
+                obj_val.fg_code = data.Out_fg_code;
+
+                var data = {};
+                data.context = WebAPIProxy.getContext();
+                data.context.Header = obj_val;
+                var Context = data.context;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, fg_code: Context.Header.fg_code }),
+                    url: "/PAWHSStageItem/PAWHSProductionStageitemfetch",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        debugger;
+                        if (response.context != null) {
+                            GenerateStageHeader(response.context);
+                        }
+                        else {
+
+                        }
+                    },
+                    error: function (er) {
+                        alert(er)
+                        console.log(er)
+                    }
+                });
+                $("#txtMode").val("U");
+                $("#DocStat").val("Active");
+            }
+        }
+    });
+</script>
+
+<script>
+    function grid_StageItem_details(data) {
+        try {
+            $("#grid_StageItem").kendoGrid({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model: {
+                            fields: {
+
+                                In_stage_item_rowid: { type: "string" },
+                                In_input_output_code: { type: "string" },
+                                In_item_code: { type: "string" },
+                                In_item_name: { type: "string" },
+                                In_item_type: { type: "string" },
+                                In_uom: { type: "string" },
+                                In_quantity: { type: "string" },
+                                In_status_code: { type: "string", defaultValue: "A" },
+                                In_status_desc: { type: "string" },
+                                In_mode_flag: { type: "string" }
+                            }
+                        }
+                    }
+                },
+                toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+                height: 400,
+                groupable: false,
+                dataBinding: setDefaultValues,
+
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_StageItem').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                columns: [{
+                    command: [
+            {
+                name: "Delete",
+                id: "Delete",
+                imageClass: "fa fa-close",
+                click: function (e) {
+                    // e.preventDefault();
+                    var grid = $("#grid_StageItem").data("kendoGrid");
+                    var dataItem = $("#grid_StageItem").data("kendoGrid").dataItem($(e.target).closest("tr"));
+                    DeleteWindowEvent(e, dataItem, grid);
+                    e.stopImmediatePropagation()
+                }
+            },
+                    ], title: "Action", width: "50px",
+                },
+                 {
+                     field: "In_stage_item_rowid",
+                     title: "Stage Item RowID",
+                     hidden: true,
+                 },
+                 {
+                     field: "In_input_output_code",
+                     title: "Input/Ouput",
+                     editor: function (container, options) {
+                         combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "", "grid_StageItem")
+                     },
+                     width: 100,
+                 },
+               
+                 {
+                     field: "In_item_code",
+                     title: "Item Code",
+                     hidden: true,
+                     width: 100,
+                 },
+                 {
+                     field: "In_item_name",
+                     title: "Item Name",
+                     editor: '<div class="input-group input-group-sm"><input type="text" readonly name="In_item_name" maxlength="50" style="width:150px;color:black"  onkeypress="return speical_char(event)" data-bind="value:In_item_name"/><span class="input-group-btn" style="padding-right: 200px;"><a class="HelpWindow fa fa-search fa-lg" data-toggle="modal" href="/HelpFilter/HelpFilter" hdrtitle="Item Details Search" searchid="PW04" data-target="#HelpModal" onclick=transfer(this,"grid","grid_StageItem","grid_StageItem_details") title="Search" style="font-size: 15px; padding-left: 10px; color:white"></a> </span> </div>',
+                     width: 100,
+                 },
+                  {
+                      field: "In_item_type",
+                     title: "Item Type",
+                     width: 100,
+                     //hidden: true,
+
+                 },
+                 {
+                     field: "In_uom",
+                     title: "UOM",
+                     width: 100,
+
+                 },
+                 {
+                     field: "In_quantity",
+                     title: "Quantity",
+                     attributes: { style: "text-align:right;" },
+                     editor: function (container, options) {
+                         numeric_editor(container, options.field, '50', '0');
+
+                     },
+                     width: 100,
+                 },
+                 {
+                     field: "In_status_code",
+                     title: "Staus Code",
+                     hidden: true
+                 },
+                 {
+                     field: "In_status_desc",
+                     title: "Staus Desc",
+                     hidden: true
+                 },
+                {
+                    field: "In_mode_flag",
+                    title: "Mode",
+                    hidden: true
+                },
+                ],
+                editable: true
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+    //load_master_code();
+    var iotype = [{ code: 1, description: "Input" }, { code: 2, description: "Output" }];
+    In_input_output_code_list = getGridComboList(iotype);
+
+
+</script>
+
+<script>
+    function save() {
+        try {
+            debugger;
+            var entityGrid = $("#grid_StageItem").data("kendoGrid");
+
+            var data = entityGrid.dataSource.data();
+            var totalNumber = data.length;
+            if (data.length == 0) {
+                kendoAlert("Kindly fill the grid");
+                return false;
+            }
+            for (var i = 0; i < totalNumber; i++) {
+                var currentDataItem = data[i];
+                var qty = currentDataItem.In_quantity;
+                if (qty == "" || qty == 0) {
+                    kendoAlert("kindly fill the quantity");
+                        return false;
+                    }
+                }
+                
+            
+            if ($("#txt_stage_rowid").val() == "") {
+                $("#txt_stage_rowid").val('0');
+            }
+            var object = $("#cmb_produc_stage").data('kendoComboBox').dataItem()
+            var formval = form_Serialize("Production_Stage");
+            var obj_val = JSON.parse(formval);
+            var grid_val = JSON.stringify($("#grid_StageItem").data().kendoGrid._data);
+            var Bind = {};
+            Bind = grid_val;
+            var result = JSON.parse(Bind);
+            $.each(result, function (index, value) {
+                var row_id = value.In_stage_item_rowid;
+                if (row_id == undefined || row_id == '') {
+                    result[index].In_stage_item_rowid = object.id;
+                }
+                else {
+                    result[index].In_mode_flag = "S";
+                }
+                var mode = value.In_mode_flag;
+                if (mode == "") {
+                    result[index].In_mode_flag = "I";
+                }
+                if (mode == "S") {
+                    result[index].In_mode_flag = "U";
+                }
+                if (row_id == "0") {
+                    result[index].In_mode_flag = "I";
+                }
+
+            });
+            var obj_grid_val = result;
+
+            var data = {};
+            data.context = WebAPIProxy.getContext();
+            data.context.Header = obj_val;
+            data.context.Stage = obj_grid_val;
+            var Context = data.context;
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, Header: Context.Header, Stage: Context.Stage }),
+                url: "/PAWHSStageItem/PAWHSProductionStageSave",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    console.log(response)
+                    var Res = JSON.parse(response);
+                    if (Res.context != null) {
+                        kendoAlert("Stage Item Definition Saved Successfully");
+                    }
+                    else {
+                        kendoAlert(Res.ApplicationException.errorDescription);
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
+                }
+
+            });
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function grid_control() {
+        try {
+            var control_Name = [
+                { "dataCol": "", "grid_row_col": "In_stage_item_rowid" },
+                { "dataCol": "item_code", "grid_row_col": "In_item_code" },
+                { "dataCol": "item_name", "grid_row_col": "In_item_name" },
+                { "dataCol": "uom_desc", "grid_row_col": "In_uom" },
+                { "dataCol": "", "grid_row_col": "In_input_output_code" },
+                { "dataCol": "", "grid_row_col": "In_input_output_desc" },
+                { "dataCol": "", "grid_row_col": "In_quantity" },
+                { "dataCol": "", "grid_row_col": "In_status_code" },
+                { "dataCol": "", "grid_row_col": "In_status_desc" },
+                { "dataCol": "", "grid_row_col": "In_mode_flag" },
+                { "dataCol": "item_type", "grid_row_col": "In_item_type" },
+            { "dataCol": "", "grid_row_col": "uid" }
+            ];
+
+            return control_Name
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function controlName() {
+        try {
+            var control_Name = [
+            ];
+            return control_Name
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+
+    function trans_input_data() {
+        try {
+            var trans_coll = [
+               { "trasfer": "NO", "dataCol": "", "controlId": "", "grid_id": "", "grid_row_col": "" },
+                { "trasfer": "NO", "dataCol": "item_code", "controlId": "", "grid_id": "grid_StageItem", "grid_row_col": "" },
+                { "trasfer": "NO", "dataCol": "item_name", "controlId": "", "grid_id": "grid_StageItem", "grid_row_col": "" },
+               { "trasfer": "Yes", "dataCol": "uom_desc", "controlId": "", "grid_id": "grid_StageItem", "grid_row_col": "" },
+               { "trasfer": "Yes", "dataCol": "agg_code", "controlId": "agg_code", "grid_id": "", "grid_row_col": "" },
+                { "trasfer": "NO", "dataCol": "item_type", "controlId": "", "grid_id": "grid_StageItem", "grid_row_col": "" }
+            ];
+            return trans_coll;
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+<script src="~/CommonScripts/HelpFile.js"></script>
+
+<script>
+    $("#cmb_produc_stage").change(function () {
+
+        var object = $("#cmb_produc_stage").data('kendoComboBox').dataItem()
+        $("#txt_stage_rowid").val(object.id);
+        document.getElementById('lblstage').innerHTML = object.desc;
+
+        var data = getlocalStorage("ls_pageList");
+        var formval = form_Serialize("Production_Stage");
+        var obj_val = JSON.parse(formval);
+        obj_val.fg_code = data.Out_fg_code;
+        obj_val.stage_rowid = object.id;
+
+        var data = {};
+        data.context = WebAPIProxy.getContext();
+        data.context.Header = obj_val;
+        var Context = data.context;
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({ userId: Context.userId, orgnId: Context.orgnId, locnId: Context.locnId, localeId: Context.localeId, stage_rowid: Context.Header.stage_rowid, fg_code: Context.Header.fg_code }),
+            url: "/PAWHSStageItem/PAWHSProductionStagefetch",
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                debugger;
+                if (response.context != null) {
+                    GenerateSeqNo(response.context.Header);
+                    generate_StageItemDefinition(response.context.Stage);
+                }
+                else {
+
+                }
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+        });
+        $("#txtMode").val("U");
+    });
+
+    function GenerateStageHeader(res) {
+
+        //$("#txt_stage_rowid").val(res.Stage.stage_item_rowid);
+        $("#txtfg_code").val(res.Header.IOU_fg_code);
+        var itemArr = [];
+        for (var i = 0 ; i < res.Stage.length; i++) {
+            var list = {};
+            //list.code = res.Stage[i].input_output_code;
+            //list.description = res.Stage[i].input_output_desc;
+            list.id = res.Stage[i].In_stage_rowid
+            list.code = res.Stage[i].In_stage_code;
+            list.desc = res.Stage[i].In_stage_desc;
+            itemArr.push(list);
+        }
+        //var SeqNo = [];
+        //for (var i = 0 ; i < res.Stage.length; i++) {
+        //    var list = {};
+        //    //list.code = res.Stage[i].input_output_code;
+        //    //list.description = res.Stage[i].input_output_desc;
+        //    list.code =i;
+        //    list.desc = res.Stage[i].seq_no;
+        //    SeqNo.push(list);
+        //}
+        filter_combobox("cmb_produc_stage", itemArr);
+        //filter_combobox("cmb_seq_no", SeqNo);
+
+
+    }
+
+    function GenerateSeqNo(res) {
+        $("#txt_status_code").val(res.In_status_code);
+    }
+    function generate_StageItemDefinition(res) {
+        try {
+            if (res != null) {
+                var data = changedataType(res);
+                for (var i = 0; i < data.length; i++) {                  
+                    data[i].In_stage_item_rowid = data[i].In_stage_item_rowid;
+                    data[i].In_input_output_code = data[i].In_input_output_code;
+                    data[i].In_input_output_desc = data[i].In_item_type;
+                    data[i].In_item_code = data[i].In_item_code;
+                    data[i].In_item_desc = data[i].In_item_name;
+                    data[i].In_uom = data[i].In_uom;
+                    data[i].In_quantity = data[i].In_qty;
+                    data[i].In_status_code = data[i].In_status_code;                            
+                    data[i].In_mode_flag = data[i].In_mode_flag;
+                }
+              
+                grid_StageItem_details(data);
+            }
+            else {
+
+                grid_StageItem_details([]);
+            }
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+<script>
+    function load_master_code() {
+        try {
+            var data = {};
+            data.screen_Id = "STAGITEMDEF";
+            var tab_values = ajaxcall_param("/Home/screenId_mastercodelist", JSON.stringify(data));
+        }
+        catch (err) {
+            javascript_log4j_root(arguments.callee.name, err);
+        }
+    }
+</script>
+
+
+
+

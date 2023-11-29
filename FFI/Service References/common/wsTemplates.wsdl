@@ -1,0 +1,690 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:s10="http://127.0.0.1/getTemplateList/Response" xmlns:s12="http://127.0.0.1/saveNotes/Response" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:s4="http://127.0.0.1/execute_sql/Response" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:s8="http://127.0.0.1/getTemplate/Response" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:s5="http://127.0.0.1/getNotes/Request" xmlns:s1="http://127.0.0.1/downloadableTemplate/Request" xmlns:s9="http://127.0.0.1/getTemplateList/Request" xmlns:tns="http://127.0.0.1" xmlns:s6="http://127.0.0.1/getNotes/Response" xmlns:s2="http://127.0.0.1/downloadableTemplate/Response" xmlns:s11="http://127.0.0.1/saveNotes/Request" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:s7="http://127.0.0.1/getTemplate/Request" xmlns:s3="http://127.0.0.1/execute_sql/Request" targetNamespace="http://127.0.0.1" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Webservice handled  for Templates</wsdl:documentation>
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://127.0.0.1">
+      <s:import namespace="http://127.0.0.1/downloadableTemplate/Request" />
+      <s:import namespace="http://127.0.0.1/downloadableTemplate/Response" />
+      <s:import namespace="http://127.0.0.1/execute_sql/Request" />
+      <s:import namespace="http://127.0.0.1/execute_sql/Response" />
+      <s:import namespace="http://127.0.0.1/getNotes/Request" />
+      <s:import namespace="http://127.0.0.1/getNotes/Response" />
+      <s:import namespace="http://127.0.0.1/getTemplate/Request" />
+      <s:import namespace="http://127.0.0.1/getTemplate/Response" />
+      <s:import namespace="http://127.0.0.1/getTemplateList/Request" />
+      <s:import namespace="http://127.0.0.1/getTemplateList/Response" />
+      <s:import namespace="http://127.0.0.1/saveNotes/Request" />
+      <s:import namespace="http://127.0.0.1/saveNotes/Response" />
+      <s:element name="downloadableTemplate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" ref="s1:document" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="downloadableTemplateResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" ref="s2:document" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="execute_sql">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" ref="s3:document" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="execute_sqlResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" ref="s4:document" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getNotes">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" ref="s5:document" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getNotesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" ref="s6:document" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getTemplate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" ref="s7:document" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getTemplateResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" ref="s8:document" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getTemplateList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" ref="s9:document" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getTemplateListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" ref="s10:document" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="saveNotes">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" ref="s11:document" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="saveNotesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" ref="s12:document" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://127.0.0.1/downloadableTemplate/Request">
+      <s:element name="document" type="s1:downloadableTemplateRequest" />
+      <s:complexType name="downloadableTemplateRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="context" type="s1:downloadableTemplateRequestcontext" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="downloadableTemplateRequestcontext">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="sessionId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="userId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbServer" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbName" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbUser" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbPwd" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="orgnId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="locnId" nillable="true" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="Header" type="s1:downloadableTemplateRequestHeader" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="Template" type="s1:downloadableTemplateRequestTemplate" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="downloadableTemplateRequestHeader">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="menu_rowid" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="downloadableTemplateRequestTemplate">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="tmpl_rowid" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="type_code" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="seq_no" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="template_name" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="note" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="file_path" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="mode_flag" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://127.0.0.1/downloadableTemplate/Response">
+      <s:element name="document" type="s2:downloadableTemplateResponse" />
+      <s:complexType name="downloadableTemplateResponse">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="context" type="s2:downloadableTemplateResponsecontext" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="ApplicationException" type="s2:downloadableTemplateResponseApplicationException" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="downloadableTemplateResponsecontext">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="sessionId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="userId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbServer" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbName" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbUser" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbPwd" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="orgnId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="locnId" nillable="true" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="Template" type="s2:downloadableTemplateResponseTemplate" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="downloadableTemplateResponseTemplate">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="tmpl_rowid" nillable="true" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="downloadableTemplateResponseApplicationException">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="errorNumber" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="errorDescription" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://127.0.0.1/execute_sql/Request">
+      <s:element name="document" type="s3:execute_sqlRequest" />
+      <s:complexType name="execute_sqlRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="context" type="s3:execute_sqlRequestcontext" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="execute_sqlRequestcontext">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="sessionId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="userId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbServer" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbName" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbUser" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbPwd" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="orgnId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="locnId" nillable="true" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="Detail" type="s3:execute_sqlRequestDetail" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="execute_sqlRequestDetail">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="menu_id" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="option_code" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="param_value" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://127.0.0.1/execute_sql/Response">
+      <s:element name="document" type="s4:execute_sqlResponse" />
+      <s:complexType name="execute_sqlResponse">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="context" type="s4:execute_sqlResponsecontext" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="ApplicationException" type="s4:execute_sqlResponseApplicationException" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="execute_sqlResponsecontext">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="sessionId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="userId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbServer" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbName" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbUser" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbPwd" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="orgnId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="locnId" nillable="true" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="Detail" type="s4:execute_sqlResponseDetail" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="execute_sqlResponseDetail">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="result_msg" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="result_doc_id" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="execute_sqlResponseApplicationException">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="errorNumber" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="errorDescription" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://127.0.0.1/getNotes/Request">
+      <s:element name="document" type="s5:getNotesRequest" />
+      <s:complexType name="getNotesRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="context" type="s5:getNotesRequestcontext" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="getNotesRequestcontext">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="sessionId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="userId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbServer" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbName" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbUser" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbPwd" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="orgnId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="locnId" nillable="true" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="Header" type="s5:getNotesRequestHeader" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="getNotesRequestHeader">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="menu_id" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="doc_rowid" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="doc_number" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://127.0.0.1/getNotes/Response">
+      <s:element name="document" type="s6:getNotesResponse" />
+      <s:complexType name="getNotesResponse">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="context" type="s6:getNotesResponsecontext" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="ApplicationException" type="s6:getNotesResponseApplicationException" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="getNotesResponsecontext">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="sessionId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="userId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbServer" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbName" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbUser" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbPwd" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="orgnId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="locnId" nillable="true" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="Header" type="s6:getNotesResponseHeader" />
+          <s:element minOccurs="0" maxOccurs="unbounded" form="unqualified" name="List" type="s6:getNotesResponseList" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="getNotesResponseHeader">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="notes" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="getNotesResponseList">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="created_by_name" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="created_datetime" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="notes" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="getNotesResponseApplicationException">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="errorNumber" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="errorDescription" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://127.0.0.1/getTemplate/Request">
+      <s:element name="document" type="s7:getTemplateRequest" />
+      <s:complexType name="getTemplateRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="context" type="s7:getTemplateRequestcontext" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="getTemplateRequestcontext">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="sessionId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="userId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbServer" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbName" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbUser" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbPwd" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="orgnId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="locnId" nillable="true" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="Header" type="s7:getTemplateRequestHeader" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="getTemplateRequestHeader">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="menu_rowid" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://127.0.0.1/getTemplate/Response">
+      <s:element name="document" type="s8:getTemplateResponse" />
+      <s:complexType name="getTemplateResponse">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="context" type="s8:getTemplateResponsecontext" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="ApplicationException" type="s8:getTemplateResponseApplicationException" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="getTemplateResponsecontext">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="sessionId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="userId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbServer" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbName" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbUser" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbPwd" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="orgnId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="locnId" nillable="true" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="unbounded" form="unqualified" name="Template" type="s8:getTemplateResponseTemplate" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="getTemplateResponseTemplate">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="tmpl_rowid" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="type_code" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="type_desc" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="seq_no" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="template_name" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="note" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="file_path" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="mode_flag" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="getTemplateResponseApplicationException">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="errorNumber" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="errorDescription" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://127.0.0.1/getTemplateList/Request">
+      <s:element name="document" type="s9:getTemplateListRequest" />
+      <s:complexType name="getTemplateListRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="context" type="s9:getTemplateListRequestcontext" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="getTemplateListRequestcontext">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="sessionId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="userId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbServer" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbName" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbUser" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbPwd" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="orgnId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="locnId" nillable="true" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="Filter" type="s9:getTemplateListRequestFilter" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="getTemplateListRequestFilter">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="FilterBy_code" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="FilterBy_Option" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="FilterBy_FromValue" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="FilterBy_ToValue" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://127.0.0.1/getTemplateList/Response">
+      <s:element name="document" type="s10:getTemplateListResponse" />
+      <s:complexType name="getTemplateListResponse">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="context" type="s10:getTemplateListResponsecontext" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="ApplicationException" type="s10:getTemplateListResponseApplicationException" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="getTemplateListResponsecontext">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="sessionId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="userId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbServer" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbName" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbUser" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbPwd" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="orgnId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="locnId" nillable="true" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="unbounded" form="unqualified" name="List" type="s10:getTemplateListResponseList" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="getTemplateListResponseList">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="menu_rowid" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="menu_name" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="tmpl_rowid" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="type_code" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="type_desc" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="seq_no" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="template_name" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="note" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="file_path" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="getTemplateListResponseApplicationException">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="errorNumber" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="errorDescription" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://127.0.0.1/saveNotes/Request">
+      <s:element name="document" type="s11:saveNotesRequest" />
+      <s:complexType name="saveNotesRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="context" type="s11:saveNotesRequestcontext" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="saveNotesRequestcontext">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="sessionId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="userId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbServer" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbName" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbUser" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbPwd" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="orgnId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="locnId" nillable="true" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="Header" type="s11:saveNotesRequestHeader" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="saveNotesRequestHeader">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="menu_id" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="doc_rowid" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="doc_number" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="notes" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="mode_flag" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://127.0.0.1/saveNotes/Response">
+      <s:element name="document" type="s12:saveNotesResponse" />
+      <s:complexType name="saveNotesResponse">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="context" type="s12:saveNotesResponsecontext" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="ApplicationException" type="s12:saveNotesResponseApplicationException" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="saveNotesResponsecontext">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="sessionId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="userId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbServer" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbName" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbUser" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dbPwd" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="orgnId" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="locnId" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="saveNotesResponseApplicationException">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="errorNumber" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="errorDescription" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="downloadableTemplateSoapIn">
+    <wsdl:part name="parameters" element="tns:downloadableTemplate" />
+  </wsdl:message>
+  <wsdl:message name="downloadableTemplateSoapOut">
+    <wsdl:part name="parameters" element="tns:downloadableTemplateResponse" />
+  </wsdl:message>
+  <wsdl:message name="execute_sqlSoapIn">
+    <wsdl:part name="parameters" element="tns:execute_sql" />
+  </wsdl:message>
+  <wsdl:message name="execute_sqlSoapOut">
+    <wsdl:part name="parameters" element="tns:execute_sqlResponse" />
+  </wsdl:message>
+  <wsdl:message name="getNotesSoapIn">
+    <wsdl:part name="parameters" element="tns:getNotes" />
+  </wsdl:message>
+  <wsdl:message name="getNotesSoapOut">
+    <wsdl:part name="parameters" element="tns:getNotesResponse" />
+  </wsdl:message>
+  <wsdl:message name="getTemplateSoapIn">
+    <wsdl:part name="parameters" element="tns:getTemplate" />
+  </wsdl:message>
+  <wsdl:message name="getTemplateSoapOut">
+    <wsdl:part name="parameters" element="tns:getTemplateResponse" />
+  </wsdl:message>
+  <wsdl:message name="getTemplateListSoapIn">
+    <wsdl:part name="parameters" element="tns:getTemplateList" />
+  </wsdl:message>
+  <wsdl:message name="getTemplateListSoapOut">
+    <wsdl:part name="parameters" element="tns:getTemplateListResponse" />
+  </wsdl:message>
+  <wsdl:message name="saveNotesSoapIn">
+    <wsdl:part name="parameters" element="tns:saveNotes" />
+  </wsdl:message>
+  <wsdl:message name="saveNotesSoapOut">
+    <wsdl:part name="parameters" element="tns:saveNotesResponse" />
+  </wsdl:message>
+  <wsdl:portType name="WsTemplatesSoap">
+    <wsdl:operation name="downloadableTemplate">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Save/Attach applicable template</wsdl:documentation>
+      <wsdl:input message="tns:downloadableTemplateSoapIn" />
+      <wsdl:output message="tns:downloadableTemplateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="execute_sql">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">execute_sql  with parameters with in a transaction scope</wsdl:documentation>
+      <wsdl:input message="tns:execute_sqlSoapIn" />
+      <wsdl:output message="tns:execute_sqlSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getNotes">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">getNotes details</wsdl:documentation>
+      <wsdl:input message="tns:getNotesSoapIn" />
+      <wsdl:output message="tns:getNotesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getTemplate">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Save/Attach applicable template</wsdl:documentation>
+      <wsdl:input message="tns:getTemplateSoapIn" />
+      <wsdl:output message="tns:getTemplateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getTemplateList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Save/Attach applicable template</wsdl:documentation>
+      <wsdl:input message="tns:getTemplateListSoapIn" />
+      <wsdl:output message="tns:getTemplateListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="saveNotes">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">saveNotes details</wsdl:documentation>
+      <wsdl:input message="tns:saveNotesSoapIn" />
+      <wsdl:output message="tns:saveNotesSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="WsTemplatesSoap" type="tns:WsTemplatesSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="downloadableTemplate">
+      <soap:operation soapAction="http://127.0.0.1/downloadableTemplate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="execute_sql">
+      <soap:operation soapAction="http://127.0.0.1/execute_sql" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getNotes">
+      <soap:operation soapAction="http://127.0.0.1/getNotes" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getTemplate">
+      <soap:operation soapAction="http://127.0.0.1/getTemplate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getTemplateList">
+      <soap:operation soapAction="http://127.0.0.1/getTemplateList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="saveNotes">
+      <soap:operation soapAction="http://127.0.0.1/saveNotes" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="WsTemplatesSoap12" type="tns:WsTemplatesSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="downloadableTemplate">
+      <soap12:operation soapAction="http://127.0.0.1/downloadableTemplate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="execute_sql">
+      <soap12:operation soapAction="http://127.0.0.1/execute_sql" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getNotes">
+      <soap12:operation soapAction="http://127.0.0.1/getNotes" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getTemplate">
+      <soap12:operation soapAction="http://127.0.0.1/getTemplate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getTemplateList">
+      <soap12:operation soapAction="http://127.0.0.1/getTemplateList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="saveNotes">
+      <soap12:operation soapAction="http://127.0.0.1/saveNotes" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="WsTemplates">
+    <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Webservice handled  for Templates</wsdl:documentation>
+    <wsdl:port name="WsTemplatesSoap" binding="tns:WsTemplatesSoap">
+      <soap:address location="http://169.38.82.131:90/ws/Templates/wsTemplates.asmx" />
+    </wsdl:port>
+    <wsdl:port name="WsTemplatesSoap12" binding="tns:WsTemplatesSoap12">
+      <soap12:address location="http://169.38.82.131:90/ws/Templates/wsTemplates.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
